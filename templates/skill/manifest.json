@@ -1,0 +1,15 @@
+{
+  "name": "replace-with-skill-name",
+  "version": "0.1.0",
+  "owner": "replace-with-owner",
+  "updated_at": "YYYY-MM-DD",
+  "last_freshness_check": "YYYY-MM-DD",
+  "review_cadence": "quarterly",
+  "status": "experimental",
+  "maturity_tier": "production",
+  "lifecycle_stage": "production",
+  "target_platforms": [
+    "agent-skills"
+  ],
+  "private_provenance_record": "replace-with-opaque-id"
+}

@@ -1,0 +1,12 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+.code-review-graph/
+
+# Build and local installation outputs.
+/dist/
+/build/
+/*.zip

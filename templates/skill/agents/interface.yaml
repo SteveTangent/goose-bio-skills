@@ -1,0 +1,4 @@
+interface:
+  display_name: Replace with display name
+  short_description: Replace with a concise user-facing capability summary
+  default_prompt: Replace with a representative request that should activate the Skill
