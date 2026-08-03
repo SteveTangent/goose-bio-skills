@@ -42,9 +42,10 @@ A Skill owns one repeatable outcome, not an entire discipline. “Analyze single
 
 ## 7. Evidence and provenance
 
-- Each material recommendation must be traceable to current official guidance or suitable scientific evidence.
+- Each material recommendation must be traceable inside private `skill-research` to current official guidance or suitable scientific evidence.
 - Community reports may identify failure modes but cannot alone establish a recommendation.
-- Public provenance must satisfy licenses without exposing the private source map.
+- The core Skill must not contain upstream repository credits, source watermarks, or private provenance IDs; publication credits are added later by the project owner.
+- Legally required licenses, notices, copyright, and attribution remain mandatory and cannot be hidden by the source-clean policy.
 
 ## 8. Evaluation and lifecycle
 

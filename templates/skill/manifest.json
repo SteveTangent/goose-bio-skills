@@ -10,6 +10,5 @@
   "lifecycle_stage": "production",
   "target_platforms": [
     "agent-skills"
-  ],
-  "private_provenance_record": "replace-with-opaque-id"
+  ]
 }

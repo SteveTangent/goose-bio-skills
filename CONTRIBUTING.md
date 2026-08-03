@@ -16,6 +16,8 @@ Provide:
 
 Source identities and raw comparison notes belong in private `skill-research` records.
 
+The installable core must not contain upstream repository credits, source watermarks, or private provenance IDs. The project owner will add an approved source list or unified credit treatment later in the publication cover/release layer.
+
 ## Promotion checklist
 
 - [ ] Capability boundary is narrower than a whole scientific field.
@@ -26,7 +28,9 @@ Source identities and raw comparison notes belong in private `skill-research` re
 - [ ] Near-neighbor routing remains clean.
 - [ ] Scientific limitations and human review points are explicit.
 - [ ] No secret, private path, protected data, or unnecessary source identity is present.
-- [ ] Required attribution remains intact.
+- [ ] No upstream source credit, source watermark, or private provenance ID is embedded in the core Skill.
+- [ ] No third-party watermark was removed from a reused asset.
+- [ ] Legally required `LICENSE`, `NOTICE`, copyright, and attribution remain intact.
 - [ ] Owner, version, status, and review cadence are declared.
 
 ## Public release
