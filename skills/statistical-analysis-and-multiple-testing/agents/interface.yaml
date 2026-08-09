@@ -1,0 +1,20 @@
+interface:
+  display_name: "Offline BH or Holm Correction"
+  short_description: "Correct declared p-value families with offline BH or Holm."
+  default_prompt: "Apply BH at alpha 0.05 to this local p-value table; all rows are the declared primary-endpoint family, and write a new result without overwriting anything."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

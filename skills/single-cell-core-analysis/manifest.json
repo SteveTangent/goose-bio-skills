@@ -1,0 +1,97 @@
+{
+  "schema_version": "0.2.0",
+  "name": "single-cell-core-analysis",
+  "version": "0.2.0",
+  "maturity_tier": "production",
+  "context_budget_tier": "production",
+  "domain_id": "D05",
+  "cluster_id": "C14",
+  "risk_tier": "R2",
+  "owner": "project-owner",
+  "updated_at": "2026-08-09",
+  "last_freshness_check": "2026-08-08",
+  "review_cadence": "quarterly",
+  "status": "active",
+  "lifecycle_stage": "production",
+  "distribution_status": "installable",
+  "release_stage": "preview",
+  "assurance_level": "reviewed",
+  "assurance": {
+    "runtime_evaluation": "not-performed",
+    "scientific_benchmark": "not-performed",
+    "human_expert_review": "not-performed",
+    "better_than_baseline_claim": false,
+    "clinical_use": "prohibited",
+    "unverified_boundaries": [
+      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "Scientific benchmark performance has not been established.",
+      "Human-expert review has not been performed.",
+      "Normalization, HVG, PCA, graph, UMAP, and clustering were not executed on an exact package fixture.",
+      "GPU, distributed, cloud, integration, annotation, trajectory, and condition-inference paths are outside the reviewed runtime scope.",
+      "No outbound project license has been selected; distribution is limited to the private preview repository."
+    ]
+  },
+  "intake_contract_version": "1.3.0",
+  "intake_contract": {
+    "facts_before_questions": true,
+    "question_policy": "one-unresolved-load-bearing-decision-at-a-time-with-recommendation",
+    "wait_after_each_question": true,
+    "explicit_safe_local_execution": "proceed-without-repeat-confirmation",
+    "side_effect_confirmation": "only-when-not-already-authorized-for-current-action-and-scope",
+    "decision_sequence": [
+      {
+        "decision_id": "single-cell-assay",
+        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "question": "Which assay should drive core single-cell preprocessing?",
+        "recommended_answer": "Use the validated assay handed off by object I/O and QC."
+      },
+      {
+        "decision_id": "single-cell-objective",
+        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "question": "Which exploratory objective should determine normalization and feature selection?",
+        "recommended_answer": "Use a small assay-appropriate baseline and preserve authoritative counts."
+      }
+    ]
+  },
+  "script_verification": {
+    "bundled_scripts": false,
+    "implementation_origin": "none",
+    "self_test_status": "not-applicable",
+    "self_test_command": null,
+    "runtime_versions": []
+  },
+  "runtime_verification": {
+    "mode": "skipped-complex-tool",
+    "status": "skipped",
+    "reason": "Object-scale preprocessing, graph construction, embedding, clustering, GPU, and distributed paths were not run.",
+    "tool_versions": [
+      "Scanpy 1.12.1 + AnnData 0.13.2",
+      "Seurat 5.5.1"
+    ],
+    "unverified_boundaries": [
+      "Normalization, HVG, PCA, graph, UMAP, and clustering were not executed on an exact package fixture.",
+      "GPU, distributed, cloud, integration, annotation, trajectory, and condition-inference paths are outside the reviewed runtime scope."
+    ]
+  },
+  "legal_notices": {
+    "required": false,
+    "files": []
+  },
+  "rollback": {
+    "previous_version": "0.1.2",
+    "boundary": "Restore package version 0.1.2 and its matching registry entry."
+  },
+  "network_mode": "none",
+  "local_adapters": [
+    "Scanpy",
+    "AnnData",
+    "Seurat"
+  ],
+  "external_services": [],
+  "depends_on": [
+    "single-cell-object-io-and-qc"
+  ],
+  "target_platforms": [
+    "agent-skills"
+  ]
+}

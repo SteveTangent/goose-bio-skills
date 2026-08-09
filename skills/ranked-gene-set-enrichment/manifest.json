@@ -1,0 +1,112 @@
+{
+  "schema_version": "0.2.0",
+  "name": "ranked-gene-set-enrichment",
+  "version": "0.2.0",
+  "maturity_tier": "production",
+  "context_budget_tier": "production",
+  "domain_id": "D11",
+  "cluster_id": "C31",
+  "risk_tier": "R2",
+  "owner": "project-owner",
+  "updated_at": "2026-08-09",
+  "last_freshness_check": "2026-08-08",
+  "review_cadence": "quarterly",
+  "status": "active",
+  "lifecycle_stage": "production",
+  "distribution_status": "installable",
+  "release_stage": "preview",
+  "assurance_level": "reviewed",
+  "assurance": {
+    "runtime_evaluation": "not-performed",
+    "scientific_benchmark": "not-performed",
+    "human_expert_review": "not-performed",
+    "better_than_baseline_claim": false,
+    "clinical_use": "prohibited",
+    "unverified_boundaries": [
+      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "Scientific benchmark performance has not been established.",
+      "Human-expert review has not been performed.",
+      "Large permutation counts, full catalogs, multi-core scaling, and dependency source builds have not been evaluated.",
+      "Live Enrichr or other rolling gene-set services are outside the reproducible preview path.",
+      "No outbound project license has been selected; distribution is limited to the private preview repository."
+    ]
+  },
+  "intake_contract_version": "1.3.0",
+  "intake_contract": {
+    "facts_before_questions": true,
+    "question_policy": "one-unresolved-load-bearing-decision-at-a-time-with-recommendation",
+    "wait_after_each_question": true,
+    "explicit_safe_local_execution": "proceed-without-repeat-confirmation",
+    "side_effect_confirmation": "only-when-not-already-authorized-for-current-action-and-scope",
+    "decision_sequence": [
+      {
+        "decision_id": "ranked-duplicate-policy",
+        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "question": "How should duplicate identifiers be collapsed?",
+        "recommended_answer": "Use one deterministic rule declared before enrichment."
+      },
+      {
+        "decision_id": "ranked-tie-policy",
+        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "question": "How should tied ranking statistics be ordered?",
+        "recommended_answer": "Use a deterministic tie policy and report tie prevalence."
+      },
+      {
+        "decision_id": "ranked-permutation-policy",
+        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "question": "Which gene-set permutation count and random seed should the preranked run use?",
+        "recommended_answer": "Use gene-set permutations with a recorded seed; phenotype permutation requires a separate expression-matrix and sample-label contract."
+      }
+    ]
+  },
+  "script_verification": {
+    "bundled_scripts": false,
+    "implementation_origin": "none",
+    "self_test_status": "not-applicable",
+    "self_test_command": null,
+    "runtime_versions": []
+  },
+  "runtime_verification": {
+    "mode": "skipped-complex-tool",
+    "status": "skipped",
+    "reason": "Large permutation runs, full catalogs, multi-core execution, and R/Rust source builds were not run.",
+    "tool_versions": [
+      "GSEApy 1.3.0",
+      "clusterProfiler 4.20.0",
+      "GO 2026-06-19",
+      "Reactome V97",
+      "WikiPathways 20260710",
+      "KEGG 119.0"
+    ],
+    "unverified_boundaries": [
+      "Large permutation counts, full catalogs, multi-core scaling, and dependency source builds have not been evaluated.",
+      "Live Enrichr or other rolling gene-set services are outside the reproducible preview path."
+    ]
+  },
+  "legal_notices": {
+    "required": false,
+    "files": []
+  },
+  "rollback": {
+    "previous_version": "0.1.2",
+    "boundary": "Restore package version 0.1.2 and its matching registry entry."
+  },
+  "network_mode": "optional",
+  "local_adapters": [
+    "Gene Ontology",
+    "Reactome",
+    "WikiPathways",
+    "KEGG",
+    "GSEApy",
+    "clusterProfiler"
+  ],
+  "external_services": [
+    "enrichr"
+  ],
+  "depends_on": [
+    "statistical-analysis-and-multiple-testing"
+  ],
+  "target_platforms": [
+    "agent-skills"
+  ]
+}

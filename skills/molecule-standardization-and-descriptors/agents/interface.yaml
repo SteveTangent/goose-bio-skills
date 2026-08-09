@@ -1,0 +1,20 @@
+interface:
+  display_name: "Molecule Standardization and Descriptors"
+  short_description: "Create traceable standardized molecular representations and descriptors without erasing the original records."
+  default_prompt: "Standardize these SMILES, keep stereochemistry, remove declared counterions and compute basic descriptors."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

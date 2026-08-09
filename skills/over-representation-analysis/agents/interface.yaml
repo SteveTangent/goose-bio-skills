@@ -1,0 +1,20 @@
+interface:
+  display_name: "Over-representation Analysis"
+  short_description: "Produce an auditable contingency-test enrichment result for a selected set against a defensible universe."
+  default_prompt: "Run ORA for these significant genes using all tested genes as background."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

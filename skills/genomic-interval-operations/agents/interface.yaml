@@ -1,0 +1,20 @@
+interface:
+  display_name: "Genomic Interval Operations"
+  short_description: "Apply deterministic same-build interval algebra under an auditable coordinate contract."
+  default_prompt: "Intersect these BED peaks with promoters while respecting strand and report the coordinate convention."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

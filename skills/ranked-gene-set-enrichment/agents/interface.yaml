@@ -1,0 +1,20 @@
+interface:
+  display_name: "Ranked Gene-set Enrichment"
+  short_description: "Produce reproducible ranked-set enrichment statistics without converting the task into cutoff-based ORA."
+  default_prompt: "Run preranked enrichment with gene-set permutations, a fixed gene-set release, and a recorded seed."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

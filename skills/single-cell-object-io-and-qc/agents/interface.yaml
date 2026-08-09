@@ -1,0 +1,20 @@
+interface:
+  display_name: "Single-cell Object I/O and QC"
+  short_description: "Inspect, load, and quality-check supported single-cell objects without silent mutation; cross-ecosystem conversion requires a declared converter."
+  default_prompt: "Inspect this h5ad, identify its count layer and calculate QC metrics without filtering cells."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

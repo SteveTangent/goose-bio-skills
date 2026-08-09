@@ -1,0 +1,20 @@
+interface:
+  display_name: "Chemical Similarity and Substructure Search"
+  short_description: "Return reproducible chemical matches with exact representation, fingerprint, metric and threshold provenance."
+  default_prompt: "Search this standardized library for molecules containing this substructure and report exact query semantics."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

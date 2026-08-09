@@ -13,6 +13,13 @@ State one recurring outcome and the adjacent requests that must route elsewhere.
 
 List only the inputs required to choose a safe and scientifically valid path.
 
+## Before execution
+
+1. **Discover facts first.** Safely inspect supplied inputs, the local environment, and authoritative references before asking. Do not ask for a fact that can be established safely.
+2. **Ask only when necessary.** If one unresolved user choice would materially change the result, ask exactly one atomic question, include one recommended answer and a short rationale, then wait. Repeat one question at a time only while another load-bearing choice remains.
+3. **Respect existing authorization.** When the current request already authorizes safe local, non-destructive execution and the scope has not changed, proceed without a shared-understanding confirmation or a second execution confirmation.
+4. **Confirm only new side effects.** Ask one scoped authorization question only when a material external, destructive, sensitive-data, paid, or otherwise consequential action is not already explicitly authorized for the current action and scope.
+
 ## Workflow
 
 1. Validate inputs and identify assumptions that change the analysis.
@@ -29,11 +36,19 @@ Define the exact artifact or answer the user receives, including required versio
 - State scientific, privacy, security, and clinical boundaries relevant to this capability.
 - Require human review where biological interpretation or consequential action cannot be automated safely.
 - Do not treat community opinion as scientific consensus.
+- Keep the core local and provider-neutral. External services are optional adapters, never silent fallbacks.
+- For an optional adapter, disclose provider, purpose, network/data sent, and credential requirement.
+- Do not add platform advertising, sign-up funnels, tracking identifiers, forced caller identities, or unsupported vendor rankings.
+- Existing authorization never expands to a new upload, payment, external write, destructive action, controlled-data access, or physical execution. Ask only when that new side effect is not already authorized for the current action and scope.
 
 ## Final checks
 
 - Inputs and environment assumptions are visible.
+- Discoverable facts were checked before questions, and only unresolved load-bearing choices were asked one at a time with a recommendation and a wait.
+- An explicitly requested safe local action did not receive a duplicate confirmation.
+- Any new material side effect received scoped authorization unless it was already explicitly authorized for the same action and scope.
 - Current tool/API compatibility is verified or marked unknown.
+- Optional adapters and network behavior are explicit.
 - Required output fields and evidence are present.
 - No upstream source credit, source watermark, private provenance ID, secret, protected data, or unsupported claim is exposed.
 - Any legally mandatory license or attribution notice is preserved outside the ordinary generated output.

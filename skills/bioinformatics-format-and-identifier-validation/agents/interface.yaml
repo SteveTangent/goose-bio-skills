@@ -1,0 +1,20 @@
+interface:
+  display_name: "Bioinformatics Format and Identifier Validation"
+  short_description: "Return non-mutating structural findings for declared sequence, HTS, variant, or NCBI accession.version inputs supported by the reviewed interfaces."
+  default_prompt: "Validate these declared FASTA records and NCBI accession.version identifiers without changing them."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

@@ -1,0 +1,20 @@
+interface:
+  display_name: "Experimental Design, Power and Batch Planning"
+  short_description: "Produce a feasible, auditable design that separates the primary contrast from known batches and states power assumptions."
+  default_prompt: "Plan treatment and control samples across three sequencing batches and show whether treatment is confounded."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"
