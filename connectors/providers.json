@@ -1,0 +1,349 @@
+{
+  "schema_version": "0.1.0",
+  "mode": "plan-only",
+  "freshness_checked_at": "2026-08-09",
+  "provider_ids": [
+    "ncbi-eutils",
+    "europe-pmc",
+    "openalex",
+    "ebi-biostudies",
+    "rcsb-pdb",
+    "alphafold-db",
+    "pubchem-pug-rest",
+    "chembl-rest",
+    "crossref-rest",
+    "quickgo",
+    "enrichr",
+    "kegg-rest",
+    "embl-ebi-job-dispatcher",
+    "ncbi-blast-remote"
+  ],
+  "providers": {
+    "ncbi-eutils": {
+      "display_name": "NCBI E-utilities",
+      "purpose": "Search public biomedical literature and study metadata or resolve NCBI accession.version identifiers.",
+      "would_send": [
+        "query terms",
+        "database name",
+        "date and field filters",
+        "public accession identifiers",
+        "pagination parameters",
+        "contact email"
+      ],
+      "credential_fields": [
+        {
+          "name": "email",
+          "kind": "contact",
+          "requirement": "required"
+        },
+        {
+          "name": "api_key",
+          "kind": "secret",
+          "requirement": "optional"
+        }
+      ],
+      "billing": {
+        "mode": "public-free",
+        "requires_separate_paid_authorization": false,
+        "summary": "No-key access is rate limited; an API key raises the default request allowance."
+      },
+      "allowed_hosts": [
+        "eutils.ncbi.nlm.nih.gov"
+      ],
+      "official_docs": "https://www.ncbi.nlm.nih.gov/books/NBK25497/"
+    },
+    "europe-pmc": {
+      "display_name": "Europe PMC",
+      "purpose": "Search public publication and biomedical study metadata.",
+      "would_send": [
+        "query terms",
+        "date and source filters",
+        "public identifiers",
+        "pagination parameters"
+      ],
+      "credential_fields": [],
+      "billing": {
+        "mode": "public-free",
+        "requires_separate_paid_authorization": false,
+        "summary": "The reviewed public REST path does not require a credential."
+      },
+      "allowed_hosts": [
+        "europepmc.org",
+        "www.ebi.ac.uk"
+      ],
+      "official_docs": "https://europepmc.org/RestfulWebService"
+    },
+    "openalex": {
+      "display_name": "OpenAlex",
+      "purpose": "Search metered scholarly-work and source metadata.",
+      "would_send": [
+        "query terms",
+        "work and source filters",
+        "selected fields",
+        "cursor and pagination parameters"
+      ],
+      "credential_fields": [
+        {
+          "name": "api_key",
+          "kind": "secret",
+          "requirement": "required"
+        }
+      ],
+      "billing": {
+        "mode": "metered",
+        "requires_separate_paid_authorization": true,
+        "summary": "Production API use requires a key and is metered; crossing free or paid quota requires explicit authorization."
+      },
+      "allowed_hosts": [
+        "api.openalex.org"
+      ],
+      "official_docs": "https://developers.openalex.org/guides/authentication"
+    },
+    "ebi-biostudies": {
+      "display_name": "EMBL-EBI BioStudies",
+      "purpose": "Search public study records and retrieve public study metadata.",
+      "would_send": [
+        "query terms",
+        "public study accessions",
+        "study filters",
+        "pagination parameters"
+      ],
+      "credential_fields": [],
+      "billing": {
+        "mode": "public-free",
+        "requires_separate_paid_authorization": false,
+        "summary": "Only the reviewed public-study path is in scope; private-study access is excluded."
+      },
+      "allowed_hosts": [
+        "www.ebi.ac.uk"
+      ],
+      "official_docs": "https://www.ebi.ac.uk/biostudies/help%23API"
+    },
+    "rcsb-pdb": {
+      "display_name": "RCSB PDB Data API",
+      "purpose": "Retrieve public experimental-structure metadata and files by structure identifier.",
+      "would_send": [
+        "PDB identifiers",
+        "search criteria",
+        "assembly and chain selectors",
+        "requested response fields"
+      ],
+      "credential_fields": [],
+      "billing": {
+        "mode": "public-free",
+        "requires_separate_paid_authorization": false,
+        "summary": "The reviewed public archive interfaces do not require a credential."
+      },
+      "allowed_hosts": [
+        "data.rcsb.org",
+        "files.rcsb.org"
+      ],
+      "official_docs": "https://data.rcsb.org/"
+    },
+    "alphafold-db": {
+      "display_name": "AlphaFold Protein Structure Database",
+      "purpose": "Retrieve public predicted-structure metadata and model files by accession.",
+      "would_send": [
+        "UniProt accessions",
+        "AlphaFold model identifiers",
+        "requested file type"
+      ],
+      "credential_fields": [],
+      "billing": {
+        "mode": "public-free",
+        "requires_separate_paid_authorization": false,
+        "summary": "The reviewed public model-retrieval path does not require a credential."
+      },
+      "allowed_hosts": [
+        "alphafold.ebi.ac.uk"
+      ],
+      "official_docs": "https://alphafold.ebi.ac.uk/download"
+    },
+    "pubchem-pug-rest": {
+      "display_name": "PubChem PUG REST",
+      "purpose": "Run public compound identifier, similarity, or substructure queries.",
+      "would_send": [
+        "chemical structures or public identifiers",
+        "similarity threshold",
+        "substructure query parameters",
+        "requested properties"
+      ],
+      "credential_fields": [],
+      "billing": {
+        "mode": "public-free",
+        "requires_separate_paid_authorization": false,
+        "summary": "PubChem does not issue API keys; fair-use rate limits apply."
+      },
+      "allowed_hosts": [
+        "pubchem.ncbi.nlm.nih.gov"
+      ],
+      "official_docs": "https://pubchem.ncbi.nlm.nih.gov/docs/pug-rest"
+    },
+    "chembl-rest": {
+      "display_name": "ChEMBL REST API",
+      "purpose": "Query public compound, target, activity, similarity, and substructure records.",
+      "would_send": [
+        "chemical structures or public identifiers",
+        "target or activity filters",
+        "similarity or substructure parameters",
+        "pagination parameters"
+      ],
+      "credential_fields": [],
+      "billing": {
+        "mode": "public-free",
+        "requires_separate_paid_authorization": false,
+        "summary": "The reviewed public REST path does not declare a credential requirement; current terms and fair use still apply."
+      },
+      "allowed_hosts": [
+        "www.ebi.ac.uk"
+      ],
+      "official_docs": "https://www.ebi.ac.uk/chembl/api/data/docs"
+    },
+    "crossref-rest": {
+      "display_name": "Crossref REST API",
+      "purpose": "Correct or enrich public DOI and bibliographic metadata.",
+      "would_send": [
+        "DOIs",
+        "bibliographic query terms",
+        "date and type filters",
+        "pagination parameters",
+        "contact email when configured"
+      ],
+      "credential_fields": [
+        {
+          "name": "email",
+          "kind": "contact",
+          "requirement": "optional"
+        },
+        {
+          "name": "metadata_plus_token",
+          "kind": "secret",
+          "requirement": "optional"
+        }
+      ],
+      "billing": {
+        "mode": "mixed",
+        "requires_separate_paid_authorization": true,
+        "summary": "Public and polite pools are available without a paid token; Metadata Plus use requires separate authorization."
+      },
+      "allowed_hosts": [
+        "api.crossref.org"
+      ],
+      "official_docs": "https://www.crossref.org/documentation/retrieve-metadata/rest-api/access-and-authentication/"
+    },
+    "quickgo": {
+      "display_name": "QuickGO REST API",
+      "purpose": "Retrieve public Gene Ontology terms, annotations, and gene-product mappings.",
+      "would_send": [
+        "gene or gene-product identifiers",
+        "GO term identifiers",
+        "taxon",
+        "evidence and annotation filters",
+        "pagination parameters"
+      ],
+      "credential_fields": [],
+      "billing": {
+        "mode": "public-free",
+        "requires_separate_paid_authorization": false,
+        "summary": "The reviewed public REST path does not declare a credential requirement."
+      },
+      "allowed_hosts": [
+        "www.ebi.ac.uk"
+      ],
+      "official_docs": "https://www.ebi.ac.uk/QuickGO/api/"
+    },
+    "enrichr": {
+      "display_name": "Enrichr API",
+      "purpose": "Discover or query rolling public gene-set libraries and enrichment results.",
+      "would_send": [
+        "gene lists",
+        "list description",
+        "gene-set library name",
+        "organism or query parameters"
+      ],
+      "credential_fields": [],
+      "billing": {
+        "mode": "public-free",
+        "requires_separate_paid_authorization": false,
+        "summary": "The reviewed public path does not declare a credential requirement; service terms and fair use apply."
+      },
+      "allowed_hosts": [
+        "maayanlab.cloud"
+      ],
+      "official_docs": "https://maayanlab.cloud/Enrichr/help%23api"
+    },
+    "kegg-rest": {
+      "display_name": "KEGG API",
+      "purpose": "Retrieve public academic-use pathway, gene, and identifier records.",
+      "would_send": [
+        "gene or pathway identifiers",
+        "organism",
+        "database operation",
+        "query parameters"
+      ],
+      "credential_fields": [],
+      "billing": {
+        "mode": "terms-restricted",
+        "requires_separate_paid_authorization": false,
+        "summary": "The public REST service is restricted to academic use by academic users and currently limits calls to three per second."
+      },
+      "allowed_hosts": [
+        "rest.kegg.jp"
+      ],
+      "official_docs": "https://www.kegg.jp/kegg/rest/"
+    },
+    "embl-ebi-job-dispatcher": {
+      "display_name": "EMBL-EBI Job Dispatcher",
+      "purpose": "Submit a disclosed hosted Clustal Omega alignment job.",
+      "would_send": [
+        "complete sequence data",
+        "sequence identifiers",
+        "alignment parameters",
+        "contact email"
+      ],
+      "credential_fields": [
+        {
+          "name": "email",
+          "kind": "contact",
+          "requirement": "required"
+        }
+      ],
+      "billing": {
+        "mode": "public-free",
+        "requires_separate_paid_authorization": false,
+        "summary": "The public service requires a valid contact email and enforces job and concurrency limits."
+      },
+      "allowed_hosts": [
+        "www.ebi.ac.uk"
+      ],
+      "official_docs": "https://www.ebi.ac.uk/Tools/common/tools/help/index.html?tool=clustalo"
+    },
+    "ncbi-blast-remote": {
+      "display_name": "NCBI BLAST remote service",
+      "purpose": "Submit a disclosed remote sequence-similarity search against an NCBI database.",
+      "would_send": [
+        "complete query sequence data",
+        "sequence identifiers",
+        "database name",
+        "search parameters",
+        "contact email"
+      ],
+      "credential_fields": [
+        {
+          "name": "email",
+          "kind": "contact",
+          "requirement": "required"
+        }
+      ],
+      "billing": {
+        "mode": "public-free",
+        "requires_separate_paid_authorization": false,
+        "summary": "The reviewed public remote-search path is subject to NCBI usage limits and requires contact identification."
+      },
+      "allowed_hosts": [
+        "blast.ncbi.nlm.nih.gov"
+      ],
+      "official_docs": "https://www.ncbi.nlm.nih.gov/books/NBK279684/"
+    }
+  }
+}

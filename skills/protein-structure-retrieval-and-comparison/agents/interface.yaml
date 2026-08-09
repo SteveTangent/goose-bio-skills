@@ -1,0 +1,20 @@
+interface:
+  display_name: "Protein Structure Retrieval and Comparison"
+  short_description: "Resolve structure identity, assembly, chain and confidence before producing an auditable structural comparison."
+  default_prompt: "Retrieve the experimental structures for this accession and compare chain A across two entries."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

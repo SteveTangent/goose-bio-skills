@@ -1,0 +1,20 @@
+interface:
+  display_name: "Biomedical Literature and Public Study Search"
+  short_description: "Retrieve and screen a traceable corpus of publications or public studies while separating discovery signals from scientific evidence."
+  default_prompt: "Find public single-cell studies of human liver fibrosis and preserve the exact queries and accessions."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

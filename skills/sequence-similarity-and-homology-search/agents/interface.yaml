@@ -1,0 +1,20 @@
+interface:
+  display_name: "Sequence Similarity and Homology Search"
+  short_description: "Run or plan a reproducible query-to-database similarity search and qualify what the hits do and do not support."
+  default_prompt: "Search this protein against a fixed, question-appropriate complete or curated database and record its release and digest."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

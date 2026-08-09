@@ -1,0 +1,20 @@
+interface:
+  display_name: "Evidence Synthesis and Research Traceability"
+  short_description: "Produce a transparent evidence synthesis in which every material claim maps to appropriate sources and dissent remains visible."
+  default_prompt: "Synthesize these six papers into a claim-to-source table and preserve conflicting findings."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"
