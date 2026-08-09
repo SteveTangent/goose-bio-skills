@@ -51,10 +51,10 @@ A connector configuration is user- or host-provided runtime input, not package c
 1. **Phase 1 — disclose only.** Disclose provider, purpose, fields or files that would be sent, credential requirement, network destination, rate/cost boundary, and output location. Return a `confirmation_token`. Do not open, parse, stat, validate, or otherwise read connector configuration, even if a path or reference was supplied early.
 2. **Phase 2 — exact acknowledgement.** Read configuration only when a later request contains both `--acknowledge <exact-confirmation-token>` and `--config <path>` for a local JSON file.
 3. Reject a missing or mismatched token before reading configuration. The acknowledgement applies only to the disclosure and task scope bound to that exact token.
-4. After a valid acknowledgement, the v0.2.0 doctor may read and validate only the connector plan within that acknowledged scope. It never performs a live API call. Never echo, persist, infer, or manufacture credentials.
+4. After a valid acknowledgement, the v0.2.1 doctor may read and validate only the connector plan within that acknowledged scope. It never performs a live API call. Never echo, persist, infer, or manufacture credentials.
 5. Missing or mismatched acknowledgement returns `needs-user-confirmation` before any configuration access. After valid acknowledgement, absent configuration or credentials returns `needs-user-config` or `needs-credential`. These are non-secret plan results and make zero network calls.
 
-The placeholder is an output aid, not an incomplete package or silently persisted configuration. Issuing a token is not permission to read configuration or use the network. A future live adapter would require a separate reviewed implementation and fresh execution approval; none is bundled in v0.2.0. Optional adapters remain provider-neutral at the Skill boundary and cannot silently fall back to another service.
+The placeholder is an output aid, not an incomplete package or silently persisted configuration. Issuing a token is not permission to read configuration or use the network. A future live adapter would require a separate reviewed implementation and fresh execution approval; none is bundled in v0.2.1. Optional adapters remain provider-neutral at the Skill boundary and cannot silently fall back to another service.
 
 ## Package skeleton
 
@@ -63,6 +63,7 @@ The placeholder is an output aid, not an incomplete package or silently persiste
 ├── README.md
 ├── AGENTS.md
 ├── CONTRIBUTING.md
+├── LICENSE
 ├── registry.json
 ├── docs/
 ├── templates/skill/
@@ -70,12 +71,13 @@ The placeholder is an output aid, not an incomplete package or silently persiste
 └── skills/
     ├── README.md
     └── <skill-name>/
+        ├── LICENSE              Apache-2.0 terms
         ├── SKILL.md
         ├── manifest.json
         ├── agents/interface.yaml
         ├── references/           only when directly used
         ├── scripts/              original, reviewed, self-tested logic only
-        └── LICENSE or NOTICE     whenever legally required
+        └── NOTICE                when third-party obligations require it
 ```
 
 Every installable package declares:

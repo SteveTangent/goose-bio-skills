@@ -1,6 +1,9 @@
 ---
 name: alignment-file-operations
 description: "A user needs metadata inspection, sorting, indexing, region extraction, filtering or basic query operations on SAM/BAM/CRAM. Exclude: aligning raw reads; variant calling; assuming a missing or mismatched reference."
+license: Apache-2.0
+metadata:
+  version: "0.2.1"
 ---
 
 # Alignment File Operations

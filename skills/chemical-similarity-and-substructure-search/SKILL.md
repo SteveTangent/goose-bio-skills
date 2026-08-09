@@ -1,6 +1,9 @@
 ---
 name: chemical-similarity-and-substructure-search
 description: "A user has standardized query and reference molecules and needs fingerprint similarity or SMARTS-like substructure retrieval. Exclude: molecule standardization ownership; biological activity or mechanism inference; docking or QSAR."
+license: Apache-2.0
+metadata:
+  version: "0.2.1"
 ---
 
 # Chemical Similarity and Substructure Search
@@ -9,7 +12,7 @@ description: "A user has standardized query and reference molecules and needs fi
 
 ## Owns
 
-Return reproducible chemical matches with exact representation, fingerprint, metric and threshold provenance. Exclusions are declared in the trigger above.
+Return reproducible matches with exact representation, fingerprint, metric, and threshold provenance.
 
 ## Inputs
 
@@ -47,8 +50,8 @@ Return `completed`, `dry-run`, `needs-tool`, or `invalid-input`. `completed` inc
 - fingerprint, metric and threshold record
 - invalid-query and standardization-compatibility findings
 
-Record fingerprints, parameters, versions, warnings, limitations, and remaining
-judgment. Never fabricate a run.
+Record fingerprints, parameters, versions, warnings, and limitations. Never
+fabricate a run.
 
 ## Runtime and scientific boundaries
 

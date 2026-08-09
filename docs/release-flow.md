@@ -47,7 +47,7 @@ The first request must only disclose provider, purpose, data sent, credential re
 
 A second request may read a local configuration file only when it supplies both `--acknowledge <exact-confirmation-token>` and `--config <path>`. Missing or mismatched acknowledgement fails before configuration access with `needs-user-confirmation`. After acknowledgement, an absent configuration or required credential returns `needs-user-config` or `needs-credential`; a valid plan returns `config-validated`. Every result is zero-network. The token binds the disclosed provider set and catalog boundary; it does not authorize a live call or broaden any other permission.
 
-The v0.2.0 connector doctor stops at configuration-plan validation and always reports zero network activity. No live API client is bundled; adding one requires a separate reviewed implementation and fresh execution approval.
+The v0.2.1 connector doctor stops at configuration-plan validation and always reports zero network activity. No live API client is bundled; adding one requires a separate reviewed implementation and fresh execution approval.
 
 ## Evaluation and stability
 

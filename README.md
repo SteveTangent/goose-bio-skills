@@ -6,7 +6,7 @@ Bio 02 Skills is a focused collection of 20 Agent Skills for common bioinformati
 
 | Current version | Packages | Release status | External services |
 | --- | ---: | --- | --- |
-| `0.2.0` | 20 | `preview + reviewed` | User-configured, disclosure-first, plan-only |
+| `0.2.1` | 20 | `preview + reviewed` | User-configured, disclosure-first, plan-only |
 
 ## Why Bio 02 Skills
 
@@ -44,7 +44,7 @@ git clone https://github.com/SteveTangent/02-bio-skills.git
 cd 02-bio-skills
 ```
 
-Choose a Skill from [`skills/`](skills/) and install the complete `skills/<slug>/` directory in an Agent Skills-compatible host. Keep its `SKILL.md`, manifest, interface, references, and scripts together. The repository root is a catalog, not a single installable Skill.
+Choose a Skill from [`skills/`](skills/) and install the complete `skills/<slug>/` directory in an Agent Skills-compatible host. Keep its `LICENSE`, `SKILL.md`, manifest, interface, references, and scripts together. The repository root is a catalog, not a single installable Skill.
 
 Then ask your agent naturally, for example:
 
@@ -98,7 +98,11 @@ python3 scripts/check_research_connectors.py \
 
 The configuration contains provider enablement and `BIO02_...` environment-variable names, never credential values. Missing or mismatched confirmation leaves the configuration unread. Missing configuration or credentials returns an explicit `needs-user-config` or `needs-credential` result.
 
-The v0.2.0 connector doctor is deliberately **plan-only**: `config-validated` does not mean an API call was made. It always reports `network_performed=false`, `live_ready=false`, and `paid_use_authorized=false`. See [connectors/README.md](connectors/README.md) for the provider catalog and configuration example.
+The v0.2.1 connector doctor is deliberately **plan-only**: `config-validated` does not mean an API call was made. It always reports `network_performed=false`, `live_ready=false`, and `paid_use_authorized=false`. See [connectors/README.md](connectors/README.md) for the provider catalog and configuration example.
+
+### External API, data, and tool terms
+
+Apache-2.0 covers Bio 02 Skills itself. External APIs, databases, downloaded datasets, and research tools keep their providers' own terms, licenses, citation requirements, access rules, and usage limits. Review the applicable provider terms before enabling a connector or using external data or software.
 
 ## Package contents
 
@@ -106,6 +110,7 @@ Each installable package contains the files needed for that Skill:
 
 ```text
 skills/<slug>/
+├── LICENSE                  Apache-2.0 terms for standalone distribution
 ├── SKILL.md
 ├── manifest.json
 ├── agents/interface.yaml
@@ -130,9 +135,9 @@ python3 scripts/validate_skeleton.py --self-test
 python3 scripts/check_research_connectors.py --self-test
 ```
 
-## Project status
+## License
 
-This repository is currently private and does not yet declare an outbound project license. Do not redistribute it until a project license and any required service notices are added.
+Bio 02 Skills is licensed under the [Apache License 2.0](LICENSE). Each installable Skill carries the same license text so the terms remain available when a package is installed on its own.
 
 - [Architecture](docs/architecture.md)
 - [Catalog](docs/catalog.md)

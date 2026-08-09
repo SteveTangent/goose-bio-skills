@@ -1,6 +1,9 @@
 ---
 name: over-representation-analysis
 description: "A user has a selected gene list plus an appropriate measured or tested universe and requests categorical enrichment. Exclude: ranked-list enrichment; using the whole genome as an unexamined default universe; causal pathway claims."
+license: Apache-2.0
+metadata:
+  version: "0.2.1"
 ---
 
 # Over-representation Analysis

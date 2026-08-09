@@ -1,6 +1,9 @@
 ---
 name: biomedical-literature-and-public-study-search
 description: "A user needs publication or public-study literature, metadata, or accession discovery for a defined biomedical question. Exclude: claim-level evidence synthesis; treating community posts as validation; clinical recommendation; community-discussion or complaint-only search; non-publication and non-study accession resolution."
+license: Apache-2.0
+metadata:
+  version: "0.2.1"
 ---
 
 # Biomedical Literature and Public Study Search

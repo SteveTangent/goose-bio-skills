@@ -1,7 +1,7 @@
 {
   "schema_version": "0.2.0",
   "name": "evidence-synthesis-and-research-traceability",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D13",
@@ -27,8 +27,7 @@
       "Scientific benchmark performance has not been established.",
       "Human-expert review has not been performed.",
       "Full-text OCR, large citation graphs, automated risk-of-bias judgments, and complex meta-analysis have not been evaluated.",
-      "The package does not establish scientific validity of the frozen corpus or its included studies.",
-      "No outbound project license has been selected; distribution is limited to the private preview repository."
+      "The package does not establish scientific validity of the frozen corpus or its included studies."
     ]
   },
   "intake_contract_version": "1.3.0",
@@ -75,12 +74,14 @@
     ]
   },
   "legal_notices": {
-    "required": false,
-    "files": []
+    "required": true,
+    "files": [
+      "LICENSE"
+    ]
   },
   "rollback": {
-    "previous_version": "0.1.2",
-    "boundary": "Restore package version 0.1.2 and its matching registry entry."
+    "previous_version": "0.2.0",
+    "boundary": "Restore package version 0.2.0 and its matching registry entry."
   },
   "network_mode": "optional",
   "local_adapters": [

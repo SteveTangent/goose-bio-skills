@@ -1,7 +1,7 @@
 {
   "schema_version": "0.2.0",
   "name": "single-cell-object-io-and-qc",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D05",
@@ -27,8 +27,7 @@
       "Scientific benchmark performance has not been established.",
       "Human-expert review has not been performed.",
       "Large, backed, sparse, and Zarr object behavior has not been evaluated.",
-      "AnnData, Seurat, and SingleCellExperiment cross-conversion loss and compatibility have not been runtime-tested.",
-      "No outbound project license has been selected; distribution is limited to the private preview repository."
+      "AnnData, Seurat, and SingleCellExperiment cross-conversion loss and compatibility have not been runtime-tested."
     ]
   },
   "intake_contract_version": "1.3.0",
@@ -70,12 +69,14 @@
     ]
   },
   "legal_notices": {
-    "required": false,
-    "files": []
+    "required": true,
+    "files": [
+      "LICENSE"
+    ]
   },
   "rollback": {
-    "previous_version": "0.1.2",
-    "boundary": "Restore package version 0.1.2 and its matching registry entry."
+    "previous_version": "0.2.0",
+    "boundary": "Restore package version 0.2.0 and its matching registry entry."
   },
   "network_mode": "none",
   "local_adapters": [

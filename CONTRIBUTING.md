@@ -1,6 +1,12 @@
 # Contributing
 
-The repository is private during the research phase. Contributions should start as evidence-backed proposals rather than copied Skill folders.
+Contributions should start as evidence-backed proposals rather than copied Skill folders.
+
+## Contribution license
+
+Unless explicitly stated otherwise, an intentionally submitted contribution is provided under the [Apache License 2.0](LICENSE), consistent with section 5 of that license. By submitting a contribution, you confirm that you have the right to provide it under those terms.
+
+Do not submit third-party text, code, data, or assets unless their redistribution terms are compatible and all required copyright, license, notice, and attribution material is preserved.
 
 ## Propose a Skill
 
@@ -39,8 +45,8 @@ The installable core must not contain upstream repository credits, source waterm
 - [ ] Owner, version, `release_stage`, `assurance_level`, freshness date, and review cadence are declared.
 - [ ] A preview package makes no validated, proven-better, or better-than-baseline claim.
 
-## Public release
+## Release checks
 
-Do not make this repository public until a project license is chosen, every included dependency and derived artifact is license-compatible, and the provenance/sanitization audit passes.
+Before release, confirm that every included dependency and derived artifact is compatible with Apache-2.0, all required third-party notices are present, and the provenance/sanitization audit passes.
 
 Run `python3 scripts/validate_skeleton.py` before review. It checks the intake contract, atomic package/registry boundary, local-path leakage, and common GitHub secret patterns.

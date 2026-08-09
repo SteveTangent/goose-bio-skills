@@ -54,8 +54,10 @@
     ]
   },
   "legal_notices": {
-    "required": false,
-    "files": []
+    "required": true,
+    "files": [
+      "LICENSE"
+    ]
   },
   "rollback": {
     "previous_version": null,

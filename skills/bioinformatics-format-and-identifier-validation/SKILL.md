@@ -1,6 +1,9 @@
 ---
 name: bioinformatics-format-and-identifier-validation
 description: "A user requests bounded structural validation of declared FASTA, FASTQ, GenBank, SAM/BAM/CRAM, VCF/BCF, or NCBI accession.version input. Exclude: sequence transformation or format conversion; VCF allele normalization, filtering, query, genotype semantics or VCF-specific QC; whole-dataset scientific analysis or biological interpretation; unrequested file rewriting; pure memory or capacity preflight without a bioinformatics format or identifier contract; single-cell object, molecule, or protein-structure validation owned by a dedicated Skill."
+license: Apache-2.0
+metadata:
+  version: "0.2.1"
 ---
 
 # Bioinformatics Format and Identifier Validation

@@ -1,6 +1,9 @@
 ---
 name: ranked-gene-set-enrichment
 description: "A user has a complete ranked gene list and requests gene-set enrichment without selecting a significance cutoff. Exclude: selected-list ORA; silent duplicate collapsing; causal pathway claims; per-sample pathway activity scoring; phenotype permutation without a separate expression-matrix and label contract."
+license: Apache-2.0
+metadata:
+  version: "0.2.1"
 ---
 
 # Ranked Gene-set Enrichment

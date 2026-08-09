@@ -1,7 +1,7 @@
 {
   "schema_version": "0.2.0",
   "name": "genomic-interval-operations",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D02",
@@ -27,8 +27,7 @@
       "Scientific benchmark performance has not been established.",
       "Human-expert review has not been performed.",
       "Whole-genome large joins, cloud or distributed tables, and performance scaling have not been evaluated.",
-      "Cross-engine result equivalence outside the declared coordinate contract is not established.",
-      "No outbound project license has been selected; distribution is limited to the private preview repository."
+      "Cross-engine result equivalence outside the declared coordinate contract is not established."
     ]
   },
   "intake_contract_version": "1.3.0",
@@ -75,12 +74,14 @@
     ]
   },
   "legal_notices": {
-    "required": false,
-    "files": []
+    "required": true,
+    "files": [
+      "LICENSE"
+    ]
   },
   "rollback": {
-    "previous_version": "0.1.2",
-    "boundary": "Restore package version 0.1.2 and its matching registry entry."
+    "previous_version": "0.2.0",
+    "boundary": "Restore package version 0.2.0 and its matching registry entry."
   },
   "network_mode": "none",
   "local_adapters": [

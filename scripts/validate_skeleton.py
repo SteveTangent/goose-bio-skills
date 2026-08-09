@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
 """Validate the source-clean installable-package boundary."""
 
 from __future__ import annotations
@@ -10,16 +11,19 @@ import re
 import shlex
 import subprocess
 import sys
+import tempfile
 from datetime import date
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-VALIDATOR_VERSION = "0.4.0"
-PUBLIC_PACKAGE_VERSION = "0.2.0"
+VALIDATOR_VERSION = "0.5.0"
+PUBLIC_PACKAGE_VERSION = "0.2.1"
 MANIFEST_SCHEMA_VERSION = "0.2.0"
 REGISTRY_SCHEMA_VERSION = "0.5.0"
 PROVIDER_CATALOG_SCHEMA_VERSION = "0.1.0"
+LICENSE_ID = "Apache-2.0"
+APACHE_LICENSE_SHA256 = "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
 ERRORS: list[str] = []
 
 INTAKE_CONTRACT_VERSION = "1.3.0"
@@ -239,26 +243,165 @@ def validate_connector_example_config(provider_ids: set[str]) -> None:
             )
 
 
-def read_frontmatter(path: Path) -> dict[str, str]:
+def display_path(path: Path) -> str:
+    try:
+        return path.relative_to(ROOT).as_posix()
+    except ValueError:
+        return path.as_posix()
+
+
+def parse_frontmatter_scalar(raw: str, label: str, field: str) -> str:
+    value = raw.strip()
+    if not value:
+        return ""
+    if field in {"description", "version"} and not (
+        value.startswith('"') and value.endswith('"')
+    ):
+        ERRORS.append(f"{label}: {field} must be a double-quoted text scalar")
+        return ""
+    if field in {"name", "license"} and any(
+        character in value for character in {'"', "'"}
+    ):
+        ERRORS.append(f"{label}: {field} must use the canonical plain scalar form")
+        return ""
+    if value in {">", ">-", ">+", "|", "|-", "|+"}:
+        ERRORS.append(f"{label}: YAML block scalars are not supported in package frontmatter")
+        return ""
+    if value[0] in {'"', "'"}:
+        quote = value[0]
+        if len(value) < 2 or value[-1] != quote:
+            ERRORS.append(f"{label}: unterminated frontmatter scalar")
+            return ""
+        if quote == '"':
+            try:
+                decoded = json.loads(value)
+            except (json.JSONDecodeError, TypeError):
+                ERRORS.append(f"{label}: invalid double-quoted frontmatter scalar")
+                return ""
+            if not isinstance(decoded, str):
+                ERRORS.append(f"{label}: frontmatter scalar must be text")
+                return ""
+            return decoded
+        inner = value[1:-1]
+        if "'" in inner.replace("''", ""):
+            ERRORS.append(f"{label}: invalid single-quoted frontmatter scalar")
+            return ""
+        return inner.replace("''", "'")
+    if any(character in value for character in {'"', "'"}):
+        ERRORS.append(f"{label}: stray quote in frontmatter scalar")
+        return ""
+    return value
+
+
+def read_frontmatter(path: Path) -> dict[str, object]:
+    label = display_path(path)
     try:
         lines = path.read_text(encoding="utf-8").splitlines()
     except OSError as exc:
-        ERRORS.append(f"{path.relative_to(ROOT)}: unreadable: {exc}")
+        ERRORS.append(f"{label}: unreadable: {exc}")
         return {}
     if not lines or lines[0] != "---":
-        ERRORS.append(f"{path.relative_to(ROOT)}: missing frontmatter")
+        ERRORS.append(f"{label}: missing frontmatter")
         return {}
     try:
         end = lines.index("---", 1)
     except ValueError:
-        ERRORS.append(f"{path.relative_to(ROOT)}: unterminated frontmatter")
+        ERRORS.append(f"{label}: unterminated frontmatter")
         return {}
-    fields: dict[str, str] = {}
+    fields: dict[str, object] = {}
+    active_mapping: dict[str, str] | None = None
     for line in lines[1:end]:
-        if ":" in line:
-            key, value = line.split(":", 1)
-            fields[key.strip()] = value.strip().strip('"\'')
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        if ":" not in line:
+            ERRORS.append(f"{label}: malformed frontmatter line")
+            continue
+        if line[0].isspace():
+            if active_mapping is None or not line.startswith("  ") or line.startswith("   "):
+                ERRORS.append(f"{label}: unexpected nested frontmatter field")
+                continue
+            key, value = line.strip().split(":", 1)
+            if key in active_mapping:
+                ERRORS.append(f"{label}: duplicate nested frontmatter field: {key}")
+                continue
+            active_mapping[key] = parse_frontmatter_scalar(value, label, key)
+            continue
+        key, value = line.split(":", 1)
+        key = key.strip()
+        if key in fields:
+            ERRORS.append(f"{label}: duplicate frontmatter field: {key}")
+            continue
+        scalar = parse_frontmatter_scalar(value, label, key)
+        if key == "metadata" and not scalar:
+            active_mapping = {}
+            fields[key] = active_mapping
+        else:
+            active_mapping = None
+            fields[key] = scalar
     return fields
+
+
+def validate_frontmatter(
+    frontmatter: dict[str, object],
+    *,
+    expected_name: str,
+    expected_version: str,
+    label: str,
+) -> None:
+    require(
+        set(frontmatter) == {"name", "description", "license", "metadata"},
+        f"{label}: frontmatter fields differ",
+    )
+    name = frontmatter.get("name")
+    require(name == expected_name, f"{label}: frontmatter name mismatch")
+    require(
+        isinstance(name, str)
+        and 1 <= len(name) <= 64
+        and bool(re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", name)),
+        f"{label}: invalid frontmatter name",
+    )
+    description = frontmatter.get("description")
+    require(
+        nonempty_string(description) and isinstance(description, str) and len(description) <= 1024,
+        f"{label}: frontmatter description is required",
+    )
+    require(frontmatter.get("license") == LICENSE_ID, f"{label}: frontmatter license must be {LICENSE_ID}")
+    metadata = frontmatter.get("metadata")
+    require(isinstance(metadata, dict), f"{label}: frontmatter metadata must be a mapping")
+    if isinstance(metadata, dict):
+        require(set(metadata) == {"version"}, f"{label}: frontmatter metadata fields differ")
+        require(
+            metadata.get("version") == expected_version,
+            f"{label}: frontmatter metadata version mismatch",
+        )
+
+
+def validate_apache_license(path: Path, label: str) -> None:
+    require(path.is_file() and not path.is_symlink(), f"{label}: Apache-2.0 LICENSE is missing or symlinked")
+    if path.is_file() and not path.is_symlink():
+        require(
+            sha256_file(path) == APACHE_LICENSE_SHA256,
+            f"{label}: Apache-2.0 LICENSE bytes differ from the canonical text",
+        )
+
+
+def validate_spdx_header(path: Path, label: str) -> None:
+    try:
+        first_lines = path.read_text(encoding="utf-8").splitlines()[:5]
+    except OSError as exc:
+        require(False, f"{label}: unreadable Python source: {exc}")
+        return
+    require(
+        "# SPDX-License-Identifier: Apache-2.0" in first_lines,
+        f"{label}: missing Apache-2.0 SPDX header",
+    )
+
+
+def python_sources(root: Path) -> list[Path]:
+    return sorted(
+        item for item in root.rglob("*") if item.is_file() and item.suffix.lower() == ".py"
+    )
 
 
 def validate_manifest_intake(manifest: dict[str, object], label: str) -> None:
@@ -335,6 +478,15 @@ def validate_assurance(manifest: dict[str, object], label: str) -> None:
     require(assurance.get("clinical_use") == "prohibited", f"{label}: clinical_use must be prohibited")
     boundaries = assurance.get("unverified_boundaries")
     require(nonempty_strings(boundaries), f"{label}: unverified_boundaries must be a string list")
+    if isinstance(boundaries, list):
+        require(
+            not any(
+                isinstance(item, str)
+                and "outbound project license" in item.casefold()
+                for item in boundaries
+            ),
+            f"{label}: obsolete outbound-license boundary is forbidden",
+        )
 
     if assurance_level == "reviewed":
         require(runtime == "not-performed", f"{label}: reviewed assurance cannot claim runtime evaluation")
@@ -456,7 +608,8 @@ def validate_legal_notices(
     require(nonempty_strings(files), f"{label}: legal_notices.files must be a string list")
     if not isinstance(files, list):
         return
-    require(not required or bool(files), f"{label}: required legal notices need at least one file")
+    require(required is True, f"{label}: Apache-2.0 LICENSE must be required")
+    require(files == ["LICENSE"], f"{label}: legal_notices.files must be exactly ['LICENSE']")
     for item in files:
         if not isinstance(item, str):
             continue
@@ -468,6 +621,8 @@ def validate_legal_notices(
         )
         if package is not None:
             require((package / relative).is_file(), f"{label}: declared legal notice is missing: {item}")
+    if package is not None:
+        validate_apache_license(package / "LICENSE", label)
 
 
 def validate_manifest_policy(
@@ -604,6 +759,14 @@ def validate_template() -> None:
     require(isinstance(manifest, dict), "template manifest: expected an object")
     if isinstance(manifest, dict):
         validate_manifest_policy(manifest, "template manifest", allow_template_placeholders=True)
+        frontmatter = read_frontmatter(template_path)
+        validate_frontmatter(
+            frontmatter,
+            expected_name="replace-with-skill-name",
+            expected_version=str(manifest.get("version", "")),
+            label="template",
+        )
+    validate_apache_license(ROOT / "templates/skill/LICENSE", "template")
 
 
 def validate_release_version() -> None:
@@ -613,6 +776,7 @@ def validate_release_version() -> None:
         require(False, f"VERSION: unreadable: {exc}")
         return
     require(release_version == PUBLIC_PACKAGE_VERSION, "VERSION: wrong public release version")
+    validate_apache_license(ROOT / "LICENSE", "repository")
 
 
 def package_has_scripts(package: Path) -> bool:
@@ -906,16 +1070,20 @@ def validate_installable_boundary() -> int:
                 allowed_package_relative(relative),
                 f"skills/{name}: hidden or cache package entry is forbidden: {relative}",
             )
-        for relative in ("SKILL.md", "manifest.json", "agents/interface.yaml"):
+        for relative in ("LICENSE", "SKILL.md", "manifest.json", "agents/interface.yaml"):
             require((package / relative).is_file(), f"skills/{name}: missing {relative}")
         if not (package / "SKILL.md").is_file() or not (package / "manifest.json").is_file():
             continue
         frontmatter = read_frontmatter(package / "SKILL.md")
         manifest = load_json(f"skills/{name}/manifest.json")
-        require(frontmatter.get("name") == name, f"skills/{name}: frontmatter name mismatch")
-        require(nonempty_string(frontmatter.get("description")), f"skills/{name}: frontmatter description is required")
         if not isinstance(manifest, dict):
             continue
+        validate_frontmatter(
+            frontmatter,
+            expected_name=name,
+            expected_version=str(manifest.get("version", "")),
+            label=f"skills/{name}",
+        )
         require(manifest.get("name") == name, f"skills/{name}: manifest name mismatch")
         require(
             manifest.get("version") == PUBLIC_PACKAGE_VERSION,
@@ -965,6 +1133,11 @@ def validate_installable_boundary() -> int:
 def validate_source_cleanliness() -> None:
     secret = re.compile(r"\bgh[pousr]_[A-Za-z0-9]{20,}\b")
     local_markers = ("/" + "Users/", "/" + "home/")
+    obsolete_license_phrases = (
+        "No outbound project " + "license has been selected",
+        "does not yet declare an outbound " + "project license",
+        "The repository is private during the " + "research phase",
+    )
     text_suffixes = {".md", ".json", ".yaml", ".yml", ".py", ".tmpl", ".txt"}
     for path in ROOT.rglob("*"):
         relative = path.relative_to(ROOT)
@@ -978,6 +1151,16 @@ def validate_source_cleanliness() -> None:
         text = path.read_text(encoding="utf-8", errors="replace")
         require(not secret.search(text), f"{relative}: possible GitHub secret")
         require(not any(marker in text for marker in local_markers), f"{relative}: local absolute path")
+        require(
+            not any(phrase in text for phrase in obsolete_license_phrases),
+            f"{relative}: obsolete outbound-license wording",
+        )
+
+    for path in python_sources(ROOT):
+        relative = path.relative_to(ROOT)
+        if any(part.startswith(".") or part == "__pycache__" for part in relative.parts):
+            continue
+        validate_spdx_header(path, relative.as_posix())
 
 
 def captured_errors(action: object) -> list[str]:
@@ -1032,6 +1215,207 @@ def run_self_test() -> int:
     require(bool(captured_errors(lambda: validate_manifest_policy(invalid_stable, "stable-reviewed"))), "self-test: stable+reviewed accepted")
     checks.append("stable-reviewed-rejected")
 
+    with tempfile.TemporaryDirectory(prefix="bio02-license-selftest-") as temp_name:
+        package = Path(temp_name)
+        license_path = package / "LICENSE"
+        license_path.write_bytes((ROOT / "LICENSE").read_bytes())
+        require(
+            not captured_errors(
+                lambda: validate_legal_notices(template, "valid-license", package)
+            ),
+            "self-test: canonical package LICENSE rejected",
+        )
+        license_path.unlink()
+        require(
+            bool(
+                captured_errors(
+                    lambda: validate_legal_notices(template, "missing-license", package)
+                )
+            ),
+            "self-test: missing package LICENSE accepted",
+        )
+        license_path.write_text("not the Apache license\n", encoding="utf-8")
+        require(
+            bool(
+                captured_errors(
+                    lambda: validate_legal_notices(template, "changed-license", package)
+                )
+            ),
+            "self-test: changed package LICENSE accepted",
+        )
+        bad_frontmatter: dict[str, object] = {
+            "name": "example-skill",
+            "description": "Example.",
+            "license": "MIT",
+            "metadata": {"version": template["version"]},
+        }
+        require(
+            bool(
+                captured_errors(
+                    lambda: validate_frontmatter(
+                        bad_frontmatter,
+                        expected_name="example-skill",
+                        expected_version=str(template["version"]),
+                        label="wrong-license-frontmatter",
+                    )
+                )
+            ),
+            "self-test: wrong frontmatter license accepted",
+        )
+        bad_frontmatter["license"] = LICENSE_ID
+        bad_frontmatter["metadata"] = {"version": "9.9.9"}
+        require(
+            bool(
+                captured_errors(
+                    lambda: validate_frontmatter(
+                        bad_frontmatter,
+                        expected_name="example-skill",
+                        expected_version=str(template["version"]),
+                        label="wrong-frontmatter-version",
+                    )
+                )
+            ),
+            "self-test: mismatched frontmatter version accepted",
+        )
+        long_name = "a" * 65
+        long_name_frontmatter: dict[str, object] = {
+            "name": long_name,
+            "description": "Example.",
+            "license": LICENSE_ID,
+            "metadata": {"version": str(template["version"])},
+        }
+        require(
+            bool(
+                captured_errors(
+                    lambda: validate_frontmatter(
+                        long_name_frontmatter,
+                        expected_name=long_name,
+                        expected_version=str(template["version"]),
+                        label="long-frontmatter-name",
+                    )
+                )
+            ),
+            "self-test: overlong frontmatter name accepted",
+        )
+        python_path = package / "example.py"
+        python_path.write_text("#!/usr/bin/env python3\nprint('example')\n", encoding="utf-8")
+        require(
+            bool(captured_errors(lambda: validate_spdx_header(python_path, "missing-spdx"))),
+            "self-test: missing SPDX header accepted",
+        )
+        uppercase_python = package / "UPPER.PY"
+        uppercase_python.write_text("print('example')\n", encoding="utf-8")
+        require(
+            uppercase_python in python_sources(package),
+            "self-test: uppercase Python suffix escaped SPDX discovery",
+        )
+        require(
+            bool(
+                captured_errors(
+                    lambda: validate_spdx_header(uppercase_python, "uppercase-missing-spdx")
+                )
+            ),
+            "self-test: uppercase Python source without SPDX accepted",
+        )
+        malformed_quote = package / "malformed-quote.md"
+        malformed_quote.write_text(
+            "---\n"
+            "name: example-skill\n"
+            'description: "Example."\n'
+            "license: 'Apache-2.0\"\n"
+            "metadata:\n"
+            f'  version: "{template["version"]}"\n'
+            "---\n",
+            encoding="utf-8",
+        )
+        require(
+            bool(
+                captured_errors(
+                    lambda: validate_frontmatter(
+                        read_frontmatter(malformed_quote),
+                        expected_name="example-skill",
+                        expected_version=str(template["version"]),
+                        label="malformed-quote-frontmatter",
+                    )
+                )
+            ),
+            "self-test: malformed quoted frontmatter accepted",
+        )
+        block_scalar = package / "block-scalar.md"
+        block_scalar.write_text(
+            "---\n"
+            "name: example-skill\n"
+            "description: >\n"
+            "license: Apache-2.0\n"
+            "metadata:\n"
+            f'  version: "{template["version"]}"\n'
+            "---\n",
+            encoding="utf-8",
+        )
+        require(
+            bool(
+                captured_errors(
+                    lambda: validate_frontmatter(
+                        read_frontmatter(block_scalar),
+                        expected_name="example-skill",
+                        expected_version=str(template["version"]),
+                        label="block-scalar-frontmatter",
+                    )
+                )
+            ),
+            "self-test: unsupported block-scalar frontmatter accepted",
+        )
+        bare_line = package / "bare-line.md"
+        bare_line.write_text(
+            "---\n"
+            "name: example-skill\n"
+            'description: "Example."\n'
+            "BROKEN\n"
+            "license: Apache-2.0\n"
+            "metadata:\n"
+            f'  version: "{template["version"]}"\n'
+            "---\n",
+            encoding="utf-8",
+        )
+        require(
+            bool(
+                captured_errors(
+                    lambda: validate_frontmatter(
+                        read_frontmatter(bare_line),
+                        expected_name="example-skill",
+                        expected_version=str(template["version"]),
+                        label="bare-line-frontmatter",
+                    )
+                )
+            ),
+            "self-test: malformed bare frontmatter line accepted",
+        )
+        implicit_null = package / "implicit-null.md"
+        implicit_null.write_text(
+            "---\n"
+            "name: example-skill\n"
+            "description: null\n"
+            "license: Apache-2.0\n"
+            "metadata:\n"
+            f'  version: "{template["version"]}"\n'
+            "---\n",
+            encoding="utf-8",
+        )
+        require(
+            bool(
+                captured_errors(
+                    lambda: validate_frontmatter(
+                        read_frontmatter(implicit_null),
+                        expected_name="example-skill",
+                        expected_version=str(template["version"]),
+                        label="implicit-null-frontmatter",
+                    )
+                )
+            ),
+            "self-test: YAML implicit null description accepted",
+        )
+    checks.append("apache-license-frontmatter-and-spdx-enforced")
+
     script = copy.deepcopy(template)
     script["script_verification"] = {
         "bundled_scripts": True,
@@ -1046,8 +1430,8 @@ def run_self_test() -> int:
     require(
         not captured_errors(
             lambda: parse_script_self_test_output(
-                '{"status":"pass","version":"0.2.0"}\n',
-                "0.2.0",
+                f'{{"status":"pass","version":"{PUBLIC_PACKAGE_VERSION}"}}\n',
+                PUBLIC_PACKAGE_VERSION,
                 "matching-script-version",
             )
         ),
@@ -1058,7 +1442,7 @@ def run_self_test() -> int:
             captured_errors(
                 lambda: parse_script_self_test_output(
                     '{"status":"pass","version":"9.9.9"}\n',
-                    "0.2.0",
+                    PUBLIC_PACKAGE_VERSION,
                     "mismatched-script-version",
                 )
             )

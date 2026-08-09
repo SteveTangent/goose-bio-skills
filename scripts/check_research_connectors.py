@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
 """Disclosure-first, zero-network doctor for optional research connectors."""
 
 from __future__ import annotations
