@@ -3,7 +3,7 @@ name: pairwise-and-multiple-sequence-alignment
 description: "A user needs global, local or multiple alignment of an existing sequence set. Exclude: database similarity search; tree inference; asserting positional homology without qualification."
 license: Apache-2.0
 metadata:
-  version: "0.2.1"
+  version: "0.3.0"
 ---
 
 # Pairwise and Multiple Sequence Alignment
@@ -30,11 +30,19 @@ Decision order:
 
 1. **alignment-objective.** Which downstream question must the alignment support? Recommended: Select local, global or multiple alignment from the declared downstream question.
 
+## Public network execution
+
+Prefer a local aligner. An explicit hosted-alignment request naming input and
+scope authorizes the matching `embl-ebi-job-dispatcher` job; otherwise disclose
+the sequence upload and ask once. Always confirm sensitive sequences. Record
+input digest, parameters, job ID, provider status, result hash, and network use.
+Failures remain `needs-tool` or partial.
+
 ## Workflow
 
 1. Check sequence type, count, length and divergence clues.
 2. Select global, local or multiple alignment based on the stated objective.
-3. Run with recorded parameters and stable input ordering.
+3. Run locally or submit the explicitly authorized bounded remote job with recorded parameters and stable input ordering.
 4. Report coverage, gaps, unstable regions and downstream-use limitations.
 5. Without a compatible declared adapter, return `needs-tool` or `dry-run`; never imply execution.
 
@@ -51,8 +59,8 @@ judgment. Never fabricate a run.
 
 ## Runtime and scientific boundaries
 
-Read [runtime-boundaries.md](references/runtime-boundaries.md). Network adapters
-disclose provider, purpose, data sent, and credentials; no silent fallback.
+See [runtime boundaries](references/runtime-boundaries.md). Remote completion
+does not establish positional homology or cross-engine equivalence.
 
 ## Guardrails
 

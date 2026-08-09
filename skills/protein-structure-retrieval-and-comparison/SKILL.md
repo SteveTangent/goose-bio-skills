@@ -3,7 +3,7 @@ name: protein-structure-retrieval-and-comparison
 description: "A user needs to retrieve known structures or compare two existing protein structures or models. Exclude: predicting a new structure; docking or molecular dynamics; equating prediction confidence with experimental resolution; structural database search beyond pairwise comparison."
 license: Apache-2.0
 metadata:
-  version: "0.2.1"
+  version: "0.3.0"
 ---
 
 # Protein Structure Retrieval and Comparison
@@ -23,23 +23,29 @@ Resolve structure identity, assembly, chain and confidence before producing an a
 
 ## Intake
 
-Inspect inputs, tools, versions, and safe metadata first. Ask one unresolved
-result-changing question with a recommendation, then wait. Continue approved
-safe local work; seek permission for new material side effects.
+Inspect safe facts first. Ask one recommended question only when a
+result-changing choice remains, then wait; otherwise continue authorized work.
 
 Decision order:
 
-1. **structure-assembly.** Which biological assembly should be compared? Recommended: Prefer the relevant experimental biological assembly when available and report predicted alternatives separately.
-2. **structure-chain.** Which chain should be compared? Recommended: Resolve one exact chain mapping rather than assuming chain labels are equivalent across entries.
-3. **structure-range.** Which residue range should be compared? Recommended: Use the shared resolved region and report missing or unmapped residues.
+1. **structure-assembly.** Which assembly? Recommended: prefer the relevant experimental assembly and separate predictions.
+2. **structure-chain.** Which chain? Recommended: resolve an exact mapping across entries.
+3. **structure-range.** Which residues? Recommended: use the shared resolved region and report missing residues.
+
+## Public network execution
+
+An explicit public retrieval authorizes bounded anonymous metadata and file
+downloads from `rcsb-pdb` or `alphafold-db`. Confirm sensitive data, non-default
+hosts, or unrequested bulk. On failure, use a hash-bound local structure or
+return `needs-tool`/partial. Record accession, model version, assembly or chain,
+provider, access time, hashes, and network use.
 
 ## Workflow
 
 1. Resolve protein, structure, assembly and chain identifiers.
-2. Retrieve through a pinned snapshot or disclosed read-only adapter.
+2. Retrieve through a pinned snapshot or the bounded public providers above.
 3. Separate experimental quality from prediction confidence.
 4. Compare declared regions and report mapping, metric and missing residues.
-5. Without a compatible declared adapter, return `needs-tool` or `dry-run`; never imply execution.
 
 ## Output contract
 
@@ -49,13 +55,12 @@ Return `completed`, `dry-run`, `needs-tool`, or `invalid-input`. `completed` inc
 - experimental and prediction confidence metadata
 - alignment mapping and comparison metrics with caveats
 
-Record fingerprints, parameters, versions, warnings, limitations, and remaining
-judgment. Never fabricate a run.
+Record versions and limitations; never fabricate execution.
 
 ## Runtime and scientific boundaries
 
-Read [runtime-boundaries.md](references/runtime-boundaries.md). Network adapters
-disclose provider, purpose, data sent, and credentials; no silent fallback.
+See [runtime boundaries](references/runtime-boundaries.md). Retrieval does not
+make a prediction experimental evidence or prove the selected assembly.
 
 ## Guardrails
 

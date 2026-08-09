@@ -12,9 +12,11 @@ flowchart LR
     G --> C["Provider-neutral core"]
     C --> O["Reproducible output<br/>+ declared status"]
     P --> X["registry.json"]
-    C -. "optional" .-> A["Bounded adapter"]
-    A --> D["Phase 1 disclosure<br/>+ confirmation_token; no config read"]
-    D --> K["Phase 2 exact acknowledgement<br/>+ user-provided configuration"]
+    C -. "optional" .-> A["Reviewed public adapter"]
+    A --> D{"Execution class"}
+    D -- "Direct public read" --> L["Bounded GET/HEAD<br/>+ provenance"]
+    D -- "Terms-restricted read" --> T["Acknowledge current terms<br/>then bounded GET/HEAD"]
+    D -- "Conditional remote job" --> H["Reviewed host adapter<br/>or needs-tool"]
 ```
 
 Only the one-job Skill directory is installable. Domains and Clusters organize the catalog; tools, databases, connectors, adapters, fixtures, and review roles do not increase the Skill count.
@@ -32,29 +34,45 @@ flowchart TD
     ASK --> WAIT["Wait, then refresh facts"]
     WAIT --> GAP
     GAP -- "No" --> CORE["Run or plan the provider-neutral core"]
-    CORE --> NEED{"Optional connector needed?"}
+    CORE --> NEED{"Reviewed public service needed?"}
     NEED -- "No" --> CHECK["Validate output and status"]
-    NEED -- "Yes" --> DISCLOSE["Phase 1: disclose boundaries<br/>+ issue confirmation_token; do not read config"]
-    DISCLOSE --> CONFIG{"Second request includes exact<br/>--acknowledge token + local --config path?"}
-    CONFIG -- "Yes" --> CONNECT["Read and validate configuration plan<br/>zero network; no live API call"]
-    CONNECT --> CHECK
-    CONFIG -- "No or mismatch" --> PLACEHOLDER["Do not read configuration;<br/>explicit needs-* status; zero network"]
-    PLACEHOLDER --> CHECK
+    NEED -- "Yes" --> CONDITIONAL{"Sensitive upload, remote job,<br/>unrequested bulk, or terms?"}
+    CONDITIONAL -- "No" --> LIVE["Execute bounded public GET/HEAD"]
+    CONDITIONAL -- "Yes" --> DISCLOSE["Disclose provider, data, scope,<br/>destination, and governing terms"]
+    DISCLOSE --> CONFIRM["Confirm the exact conditional action"]
+    CONFIRM --> PATH{"Reviewed execution path available?"}
+    PATH -- "Yes" --> LIVE
+    PATH -- "No" --> NEEDSTOOL["Return needs-tool;<br/>do not imply execution"]
+    LIVE --> CHECK
+    NEEDSTOOL --> CHECK
 ```
 
-Ask no question when facts already resolve the choice. Ask exactly one question at a time when a load-bearing choice remains. Do not repeat confirmation for an already requested safe local action, and never expand that authorization to a new upload, payment, external write, destructive action, controlled-data access, or physical execution.
+Ask no question when facts already resolve the choice. Ask exactly one question at a time when a load-bearing choice remains. An explicit request authorizes its bounded public read and requested download; it does not silently authorize a sensitive upload, remote job, unrequested bulk expansion, new external write, destructive action, controlled-data access, or physical execution.
 
-## Connector contract
+## Public connector contract
 
-A connector configuration is user- or host-provided runtime input, not package content. Access uses two separate requests.
+The v0.3.0 public connector contract has four execution boundaries:
 
-1. **Phase 1 — disclose only.** Disclose provider, purpose, fields or files that would be sent, credential requirement, network destination, rate/cost boundary, and output location. Return a `confirmation_token`. Do not open, parse, stat, validate, or otherwise read connector configuration, even if a path or reference was supplied early.
-2. **Phase 2 — exact acknowledgement.** Read configuration only when a later request contains both `--acknowledge <exact-confirmation-token>` and `--config <path>` for a local JSON file.
-3. Reject a missing or mismatched token before reading configuration. The acknowledgement applies only to the disclosure and task scope bound to that exact token.
-4. After a valid acknowledgement, the v0.2.1 doctor may read and validate only the connector plan within that acknowledged scope. It never performs a live API call. Never echo, persist, infer, or manufacture credentials.
-5. Missing or mismatched acknowledgement returns `needs-user-confirmation` before any configuration access. After valid acknowledgement, absent configuration or credentials returns `needs-user-config` or `needs-credential`. These are non-secret plan results and make zero network calls.
+1. **Bounded public access.** A user's explicit search or retrieval request authorizes the matching allowlisted public `GET` or `HEAD` and requested download. The shared companion enforces reviewed HTTPS hosts and path prefixes, rate limits, timeouts, retry limits, page and byte caps, redirect checks, and non-overwriting output publication.
+2. **Anonymous-only companion.** The shared companion does not read contact, API-key, token, or paid-credential variables. A host may provide a separate authenticated adapter only after disclosing that adapter's data, identity, storage, and billing boundary.
+3. **Conditional actions.** Disclose and confirm the exact scope before a sensitive or controlled upload, remote compute submission, unrequested bulk expansion, or terms-restricted read. KEGG public academic use requires its explicit terms acknowledgement. A confirmation never expands beyond the named data, provider, operation, and scope.
+4. **No active paid path.** Metered and paid providers are absent from the executable catalog. The shared companion does not read paid credentials or switch to a paid fallback.
 
-The placeholder is an output aid, not an incomplete package or silently persisted configuration. Issuing a token is not permission to read configuration or use the network. A future live adapter would require a separate reviewed implementation and fresh execution approval; none is bundled in v0.2.1. Optional adapters remain provider-neutral at the Skill boundary and cannot silently fall back to another service.
+The shared companion at `scripts/run_research_connector.py` currently executes
+`GET` and `HEAD` only. Its direct-read providers cover public database queries
+and bounded downloads; its terms-read path adds a declared terms gate. Hosted
+alignment and remote BLAST remain `conditional-job` providers: they require a
+reviewed adapter supplied by the agent host, and otherwise degrade to
+`needs-tool` without claiming submission.
+
+Status is evidence-backed. The shared companion emits `completed` only for a
+checked live response and an atomic payload/provenance pair with
+`network_performed=true`; otherwise it emits `blocked-or-failed` and reports
+whether the network was reached. At the Skill layer, incomplete or truncated
+retrieval stays partial and non-completed, and unsupported jobs return
+`needs-tool`. Provenance binds the provider, redacted request, method,
+timestamps, responses, byte count, output digest, pagination, anonymous mode,
+and terms state.
 
 ## Package skeleton
 

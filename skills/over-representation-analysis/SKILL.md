@@ -3,7 +3,7 @@ name: over-representation-analysis
 description: "A user has a selected gene list plus an appropriate measured or tested universe and requests categorical enrichment. Exclude: ranked-list enrichment; using the whole genome as an unexamined default universe; causal pathway claims."
 license: Apache-2.0
 metadata:
-  version: "0.2.1"
+  version: "0.3.0"
 ---
 
 # Over-representation Analysis
@@ -31,10 +31,18 @@ Decision order:
 
 1. **ora-universe.** Which features were actually eligible to enter the selected set? Recommended: Use measured or statistically tested features as the universe, not the whole genome by default.
 
+## Public network execution
+
+Prefer a versioned local collection. An explicit refresh authorizes bounded
+public reads from `quickgo` or Enrichr library metadata; `kegg-rest` also
+requires its academic-terms acknowledgement. Enrichr gene-list submission is a
+separate upload. Confirm sensitive lists, remote jobs, or unrequested bulk.
+Record collection release, input digests, provider, hashes, and network status.
+
 ## Workflow
 
 1. Validate namespace, organism and selected-list membership in the universe.
-2. Freeze the gene-set release and mapping policy.
+2. Freeze the local or retrieved gene-set release and mapping policy.
 3. Compute contingency statistics and multiplicity correction.
 4. Report overlaps, unmapped genes, universe sensitivity and non-causal interpretation.
 5. Without a compatible declared adapter, return `needs-tool` or `dry-run`; never imply execution.
@@ -52,8 +60,8 @@ judgment. Never fabricate a run.
 
 ## Runtime and scientific boundaries
 
-Read [runtime-boundaries.md](references/runtime-boundaries.md). Network adapters
-disclose provider, purpose, data sent, and credentials; no silent fallback.
+See [runtime boundaries](references/runtime-boundaries.md). Retrieval does not
+establish mapping, universe choice, causality, or reproducibility.
 
 ## Guardrails
 

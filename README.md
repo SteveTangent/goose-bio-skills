@@ -6,7 +6,7 @@ Bio 02 Skills is a focused collection of 20 Agent Skills for common bioinformati
 
 | Current version | Packages | Release status | External services |
 | --- | ---: | --- | --- |
-| `0.2.1` | 20 | `preview + reviewed` | User-configured, disclosure-first, plan-only |
+| `0.3.0` | 20 | `preview + reviewed` | Bounded public read/download; anonymous-first |
 
 ## Why Bio 02 Skills
 
@@ -14,8 +14,8 @@ Bio 02 Skills is a focused collection of 20 Agent Skills for common bioinformati
 - **One job per Skill.** Sequence I/O, alignment handling, differential expression, enrichment, single-cell analysis, structure comparison, statistics, and literature work have separate boundaries.
 - **Facts before questions.** The agent inspects what is safely discoverable, then asks one recommended question only when an unresolved choice would change the result.
 - **Version-aware guidance.** Packages record the relevant tool, interface, and database versions or freshness dates.
-- **Fail-closed behavior.** Missing inputs, unresolved decisions, unavailable tools, or absent configuration are reported explicitly instead of being presented as completed analysis.
-- **Provider-neutral core.** External services are isolated behind a shared configuration boundary and never become an implicit requirement for offline work.
+- **Truthful execution.** Missing inputs, unresolved decisions, unavailable tools, partial retrievals, and failed calls are reported explicitly instead of being presented as completed analysis.
+- **Provider-neutral core.** Reviewed public services extend a Skill when needed without becoming an implicit requirement for offline work.
 
 ## How it works
 
@@ -28,9 +28,10 @@ flowchart LR
     A --> F
     D -- "No" --> C["Provider-neutral research workflow"]
     C --> O["Versioned output contract<br/>and provenance"]
-    C -. "when declared" .-> X["Disclose external-service boundary"]
-    X --> T["User or agent confirms exact token"]
-    T --> P["Validate user configuration<br/>zero network; no live API call"]
+    C -. "when declared" .-> X["Reviewed public adapter"]
+    X --> T{"Action boundary"}
+    T -- "Bounded public GET/HEAD" --> P["Execute live read/download<br/>and record provenance"]
+    T -- "Sensitive upload, remote job,<br/>unrequested bulk, or terms" --> H["Confirm exact scope<br/>or return needs-tool"]
 ```
 
 The detailed interaction and connector rules are in [docs/architecture.md](docs/architecture.md).
@@ -57,7 +58,7 @@ Inspect this single-cell object, define QC decisions, and identify what can be r
 
 Apply Holm correction at alpha 0.05 to these already-computed p-values as one declared family.
 
-Build a traceable search plan for public studies on human liver fibrosis.
+Search public studies on human liver fibrosis and return a traceable result set.
 ```
 
 ## Skill catalog
@@ -79,30 +80,45 @@ See [docs/catalog.md](docs/catalog.md) for Domain, Cluster, risk, dependency, an
 
 ## External research services
 
-Some Skills declare an external service, but Bio 02 Skills never reads configuration silently.
+An explicit request to search or retrieve from a declared public research
+database authorizes the matching bounded read and requested download. Ordinary
+public access uses reviewed HTTPS hosts, rate and response-size limits, and
+`GET` or `HEAD`; it does not require a second acknowledgement.
 
-Phase 1 prints the provider, purpose, data that would be sent, credential requirements, billing or rate limits, allowed hosts, and output boundary. It returns a deterministic confirmation token without reading a configuration file:
+The shared executor is anonymous-only: it does not read contact, API-key, token,
+or paid-credential variables. A user-supplied host adapter may manage identity
+separately after disclosing that boundary. Paid or metered providers are absent
+from the active catalog.
+
+Separate confirmation is reserved for sending sensitive, controlled, patient,
+proprietary, or unpublished material; starting a remote compute job; expanding
+into bulk work that the user did not request; or accepting provider-specific
+terms such as KEGG's academic-use boundary. The shared companion currently
+executes bounded `GET` and `HEAD` requests only. Conditional job providers such
+as hosted alignment and remote BLAST require a reviewed host adapter; without
+one, the Skill returns `needs-tool` instead of implying submission.
+
+For example, this command performs a live bounded UniProt retrieval and writes
+both the response and a separate provenance record:
 
 ```bash
-python3 scripts/check_research_connectors.py --provider openalex
+python3 scripts/run_research_connector.py \
+  --provider uniprot-rest \
+  --url https://rest.uniprot.org/uniprotkb/P04637.json \
+  --output results/P04637.json
 ```
 
-After the user or supervising agent reviews that disclosure, Phase 2 requires both the exact token and a local configuration path:
-
-```bash
-python3 scripts/check_research_connectors.py \
-  --provider openalex \
-  --acknowledge bio02-ack-v1-<exact-token-from-phase-1> \
-  --config /path/to/research-connectors.json
-```
-
-The configuration contains provider enablement and `BIO02_...` environment-variable names, never credential values. Missing or mismatched confirmation leaves the configuration unread. Missing configuration or credentials returns an explicit `needs-user-config` or `needs-credential` result.
-
-The v0.2.1 connector doctor is deliberately **plan-only**: `config-validated` does not mean an API call was made. It always reports `network_performed=false`, `live_ready=false`, and `paid_use_authorized=false`. See [connectors/README.md](connectors/README.md) for the provider catalog and configuration example.
+The shared companion emits `completed` only after a live response was checked;
+otherwise it emits `blocked-or-failed` and reports whether any network request
+occurred. At the Skill layer, incomplete or truncated work remains explicitly
+partial and non-completed, and an unsupported job returns `needs-tool`. Live
+provenance records the provider, redacted request URL, method, timestamps,
+responses, byte count, digest, output path, optional identity use, terms state,
+and `network_performed=true`.
 
 ### External API, data, and tool terms
 
-Apache-2.0 covers Bio 02 Skills itself. External APIs, databases, downloaded datasets, and research tools keep their providers' own terms, licenses, citation requirements, access rules, and usage limits. Review the applicable provider terms before enabling a connector or using external data or software.
+Apache-2.0 covers Bio 02 Skills itself. External APIs, databases, downloaded datasets, and research tools keep their providers' own terms, licenses, citation requirements, access rules, and usage limits. Comply with the applicable terms before using external data or software; terms-restricted paths require the declared acknowledgement.
 
 ## Package contents
 
@@ -132,7 +148,7 @@ The repository includes dependency-free checks for package structure and the sha
 ```bash
 python3 scripts/validate_skeleton.py
 python3 scripts/validate_skeleton.py --self-test
-python3 scripts/check_research_connectors.py --self-test
+python3 scripts/run_research_connector.py --self-test
 ```
 
 ## License

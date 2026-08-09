@@ -3,7 +3,7 @@ name: sequence-similarity-and-homology-search
 description: "A user needs candidate homologs or similar sequences from a fixed, question-appropriate complete or curated database, or a disclosed remote adapter. Exclude: building or downloading a complete reference database; multiple sequence alignment; claiming function from percent identity alone."
 license: Apache-2.0
 metadata:
-  version: "0.2.1"
+  version: "0.3.0"
 ---
 
 # Sequence Similarity and Homology Search
@@ -22,21 +22,27 @@ Run or plan a reproducible query-to-database similarity search and qualify what 
 
 ## Intake
 
-Inspect inputs, tools, versions, and safe metadata first. Ask one unresolved
-result-changing question with a recommendation, then wait. Continue approved
-safe local work; seek permission for new material side effects.
+Inspect safe facts first. Ask one recommended question only when a
+result-changing choice remains, then wait; otherwise continue authorized work.
 
 Decision order:
 
 1. **database-mode.** Which fixed complete or curated database is appropriate for this research question? Recommended: Use a question-appropriate database fixed by release and digest; reserve a micro database for installation smoke only.
 
+## Public network execution
+
+Prefer a pinned local database. An explicit remote-BLAST request naming query,
+database, and scope authorizes `ncbi-blast-remote`; otherwise disclose the
+sequence upload and ask once. Always confirm sensitive sequences. Record query
+digest, database, parameters, RID, provider status, result hash, and network
+use. Failure or truncation remains `needs-tool` or partial.
+
 ## Workflow
 
 1. Validate query alphabet and target database identity.
 2. Choose a search strategy from sequence type and sensitivity needs.
-3. Run a pinned local search or disclose an optional network adapter.
+3. Run a pinned local search or submit the explicitly authorized bounded remote job.
 4. Filter and report hits using coverage and statistical evidence, not identity alone.
-5. Without a compatible declared adapter, return `needs-tool` or `dry-run`; never imply execution.
 
 ## Output contract
 
@@ -46,13 +52,12 @@ Return `completed`, `dry-run`, `needs-tool`, or `invalid-input`. `completed` inc
 - database, version and parameter record
 - homology and annotation caveats
 
-Record fingerprints, parameters, versions, warnings, limitations, and remaining
-judgment. Never fabricate a run.
+Record versions and limitations; never fabricate execution.
 
 ## Runtime and scientific boundaries
 
-Read [runtime-boundaries.md](references/runtime-boundaries.md). Network adapters
-disclose provider, purpose, data sent, and credentials; no silent fallback.
+See [runtime boundaries](references/runtime-boundaries.md). Remote completion
+does not prove function or database completeness.
 
 ## Guardrails
 

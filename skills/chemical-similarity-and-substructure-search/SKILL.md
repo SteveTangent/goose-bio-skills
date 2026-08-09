@@ -1,9 +1,9 @@
 ---
 name: chemical-similarity-and-substructure-search
-description: "A user has standardized query and reference molecules and needs fingerprint similarity or SMARTS-like substructure retrieval. Exclude: molecule standardization ownership; biological activity or mechanism inference; docking or QSAR."
+description: "A user has standardized molecules and needs fingerprint similarity or SMARTS-like substructure retrieval. Exclude standardization, biological or mechanism inference, docking, and QSAR."
 license: Apache-2.0
 metadata:
-  version: "0.2.1"
+  version: "0.3.0"
 ---
 
 # Chemical Similarity and Substructure Search
@@ -23,24 +23,30 @@ Return reproducible matches with exact representation, fingerprint, metric, and 
 
 ## Intake
 
-Inspect inputs, tools, versions, and safe metadata first. Ask one unresolved
-result-changing question with a recommendation, then wait. Continue approved
-safe local work; seek permission for new material side effects.
+Inspect safe facts first. Ask one recommended question only when a
+result-changing choice remains, then wait; otherwise continue authorized work.
 
 Decision order:
 
-1. **search-mode.** Is the requested retrieval based on similarity or an exact substructure query? Recommended: Choose one search semantics before selecting a representation.
-2. **fingerprint-representation.** Which fingerprint representation should encode similarity? Recommended: Use a domain-matched versioned fingerprint.
-3. **similarity-metric.** Which similarity metric should score the selected fingerprint? Recommended: Use a metric compatible with the fingerprint and retrieval objective.
+1. **search-mode.** Similarity or exact substructure? Recommended: choose one before selecting representation.
+2. **fingerprint-representation.** Which fingerprint? Recommended: use a domain-matched versioned fingerprint.
+3. **similarity-metric.** Which metric? Recommended: match it to the fingerprint and objective.
 4. **similarity-threshold.** Which calibrated threshold should define a reported similarity match? Recommended: Use a fixture-calibrated threshold and never present it as biological equivalence.
+
+## Public network execution
+
+An explicit public structure search authorizes bounded anonymous reads from
+`pubchem-pug-rest` or the user-selected `chembl-rest`. Confirm proprietary or
+unpublished structures, non-default hosts, and unrequested bulk. On failure,
+return `needs-tool` or partial. Record provider, access time, standardized-query
+digest, pagination, hashes, and network use.
 
 ## Workflow
 
 1. Verify query and library share the same standardization contract.
 2. Declare fingerprint, metric, threshold or substructure semantics.
-3. Run a bounded deterministic search.
+3. Run a bounded deterministic local or public-provider search.
 4. Report matches and explain that structural similarity is not functional equivalence.
-5. Without a compatible declared adapter, return `needs-tool` or `dry-run`; never imply execution.
 
 ## Output contract
 
@@ -50,13 +56,12 @@ Return `completed`, `dry-run`, `needs-tool`, or `invalid-input`. `completed` inc
 - fingerprint, metric and threshold record
 - invalid-query and standardization-compatibility findings
 
-Record fingerprints, parameters, versions, warnings, and limitations. Never
-fabricate a run.
+Record versions and limitations; never fabricate execution.
 
 ## Runtime and scientific boundaries
 
-Read [runtime-boundaries.md](references/runtime-boundaries.md). Network adapters
-disclose provider, purpose, data sent, and credentials; no silent fallback.
+See [runtime boundaries](references/runtime-boundaries.md). A live hit does not
+make structural similarity biological equivalence.
 
 ## Guardrails
 

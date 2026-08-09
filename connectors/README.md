@@ -1,130 +1,116 @@
-# Research connectors
+# Public research connectors
 
-This directory is the optional, repository-level configuration boundary for
-reviewed external research services. It is not an additional Skill and is not
-required by any offline core.
+Bio 02 can make bounded `GET` and `HEAD` requests to reviewed public research
+services. Public, no-key access is the default. Users do not need a provider
+configuration file or a confirmation token for ordinary public queries and small
+downloads.
 
-The current connector mode is **plan-only**. The doctor never imports a network
-client, opens a socket, calls a provider, submits a job, downloads a file, or
-charges a quota. Live provider adapters remain separate future work.
+`providers.json` is an internal execution policy, not user configuration. Each
+entry fixes:
 
-## Files
+- whether access is direct read-only, terms-restricted, a conditional remote job,
+  or disabled;
+- exact HTTPS URL prefixes and hosts;
+- request rate and maximum response size;
+- credential, billing, and provider-documentation boundaries.
 
-- `providers.json` is the exact provider-ID and host allowlist. It records the
-  purpose, fields that would leave the machine, credential shape, billing or
-  access boundary, and official documentation for each reviewed provider.
-- `example.config.json` shows user configuration. Copy it outside the repository
-  and keep only the providers you intend to use.
-- `../scripts/check_research_connectors.py` is the single placeholder and doctor
-  for all Skills.
+The shared standard-library executor is
+`../scripts/run_research_connector.py`.
 
-Skill manifests use:
+## Current execution boundary
 
-- `network_mode`: exactly `none`, `optional`, or `required`;
-- `external_services`: only canonical IDs present in `providers.json`.
+| Access | Services | Behavior |
+|---|---|---|
+| Direct public read | NCBI EInfo/ESearch/ESummary/EFetch without History state, UniProt REST, Europe PMC, BioStudies, RCSB PDB, AlphaFold DB, synchronous PubChem PUG REST, ChEMBL, anonymous Crossref, QuickGO, public Enrichr GET paths | Execute bounded `GET` or `HEAD` without a key |
+| Terms-restricted read | KEGG REST | Requires `--acknowledge-terms`; academic-use terms still apply |
+| Conditional remote job | EMBL-EBI Job Dispatcher, NCBI Remote BLAST | Not implemented by this read-only executor; it never uploads a sequence or claims a job was submitted |
+| Commercial or paid | None | Paid and metered services are excluded from the executable catalog |
 
-An unspecified hosted service, object store, cloud environment, or arbitrary URL
-must not be assigned a guessed provider ID.
+Enrichr gene-list submission is a write/upload action and is not covered by its
+public GET boundary. Similarly, UniProt ID-mapping submission is not covered by
+the read-only executor. NCBI EPost, ESearch History writes, and PubChem queued,
+ListKey, or CacheKey operations are also excluded because a `GET` can create
+remote state on those paths.
 
-## User configuration
+## Examples
 
-User configuration contains only provider enablement and **environment-variable
-names**. It never contains an email address, token, API key, password, endpoint,
-query, accession, sequence, gene list, molecule, or other research data.
-
-```json
-{
-  "schema_version": "0.1.0",
-  "providers": {
-    "openalex": {
-      "enabled": true,
-      "credential_env": {
-        "api_key": "BIO02_OPENALEX_API_KEY"
-      }
-    }
-  }
-}
-```
-
-Environment-variable names must use the dedicated `BIO02_` prefix followed by
-uppercase ASCII letters, digits, and underscores. Secret values remain in the
-user's environment or secret manager. The doctor reports only whether a
-credential mapping is configured and available; it prints neither the variable
-name nor its value.
-
-## Two-stage disclosure and confirmation
-
-Stage 1 names the provider but does not provide a config path:
+Retrieve one public UniProt record:
 
 ```text
-python3 scripts/check_research_connectors.py --provider openalex
+python3 scripts/run_research_connector.py \
+  --provider uniprot-rest \
+  --url 'https://rest.uniprot.org/uniprotkb/P04637.json' \
+  --output P04637.uniprot.json
 ```
 
-The doctor emits the complete disclosure followed by
-`status: needs-user-confirmation` and a deterministic `confirmation_token`. It
-does not inspect a user configuration or credential environment variable.
-
-After reviewing that disclosure, stage 2 repeats the same provider selection and
-supplies the exact token:
+Search PubMed without an API key:
 
 ```text
-python3 scripts/check_research_connectors.py \
-  --provider openalex \
-  --config /path/to/research-connectors.json \
-  --acknowledge bio02-ack-v1-<exact-token-from-stage-1>
+python3 scripts/run_research_connector.py \
+  --provider ncbi-eutils \
+  --url 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=BRCA1&retmode=json&retmax=20' \
+  --output brca1-pubmed.json
 ```
 
-The same handshake works across the complete allowlist:
+The shared executor is deliberately anonymous-only. It does not read NCBI,
+Crossref, or other contact, API-key, token, or paid-credential environment
+variables, and it rejects credential or contact query parameters in `--url`.
+A user-supplied host adapter may manage identity separately after disclosing its
+provider, data, credential, storage, and billing boundary; that adapter is not
+this shared executor.
+
+For APIs with numeric pagination, the executor can issue a bounded sequence and
+atomically write one JSON bundle:
 
 ```text
-python3 scripts/check_research_connectors.py \
-  --all \
-  --config /path/to/research-connectors.json \
-  --acknowledge bio02-ack-v1-<exact-token-for-the-all-disclosure>
+python3 scripts/run_research_connector.py \
+  --provider ebi-biostudies \
+  --url 'https://www.ebi.ac.uk/biostudies/api/v1/search?query=liver&pageSize=20' \
+  --pages 3 \
+  --page-param page \
+  --page-start 1 \
+  --output liver-biostudies-pages.json
 ```
 
-Output is JSON Lines. For every requested provider, the first event is always a
-`disclosure` containing:
+Cursor pagination remains provider-specific and is not guessed by the shared
+executor.
 
-- canonical provider ID and allowed hosts;
-- purpose;
-- `would_send` fields;
-- credential requirements;
-- billing, quota, or terms boundary;
-- plan output (`stdout-jsonl`) and remote output (`none`);
-- `network_performed: false`.
+## Safety and provenance
 
-If `--acknowledge` is absent or differs by even one character, the doctor returns
-`needs-user-confirmation` without opening, parsing, checking the existence of, or
-otherwise touching the supplied config path. Only an exact acknowledgement lets
-it read configuration and emit provider `plan` events plus one `summary` event.
+The executor:
 
-After acknowledgement, missing configuration is `needs-user-config`; a
-configured but unset required environment variable is `needs-credential`.
-Successful validation is `config-validated`, never `live-ready`. Every event
-keeps `network_performed: false`, `live_ready: false`, and
-`paid_use_authorized: false`; providers whose paid tier exists continue to state
-that separate paid authorization is required.
+- accepts only `GET` and `HEAD`;
+- rejects arbitrary hosts, unreviewed path prefixes, URL credentials, path
+  traversal, non-HTTPS URLs, and redirect escapes;
+- caps pagination at 20 pages, timeout at 120 seconds, retries at four, and total
+  bytes at the lower of the CLI request and provider limit;
+- retries only transient network failures and HTTP `429/5xx` responses;
+- treats only HTTP `200` or `204` as a completed response, rejects asynchronous
+  `202` and partial `206`, and verifies a declared response length before
+  publication;
+- creates new files only and never overwrites an existing payload or provenance
+  file;
+- publishes payload and provenance through same-directory temporary files and
+  no-clobber hard links, rolling back its own first file if the pair cannot be
+  completed;
+- records provider, redacted URLs, response status, timestamps, byte count, and
+  SHA-256 digest in `<output>.provenance.json`;
+- emits a completed result with `network_performed=true` only after a checked
+  response and both output files are published. A failed event reports whether a
+  network attempt began, so it can be `true` without a success artifact.
 
-Exit codes:
+Large datasets, bulk raw reads, whole database snapshots, paid APIs, arbitrary
+URLs, private studies, controlled data, and remote write/job submission are
+outside this layer.
 
-- `0`: every requested provider configuration is `config-validated`;
-- `2`: user configuration is missing, disabled, or incomplete;
-- `3`: catalog, argument, or configuration validation failed;
-- `4`: required environment variables are named but not set.
-- `5`: disclosure has not received the exact confirmation token.
-
-Unknown provider IDs, arbitrary hosts, direct credential values, and extra
-configuration fields fail closed.
-
-## Deterministic check
+## Deterministic self-test
 
 ```text
-python3 scripts/check_research_connectors.py --self-test
+python3 scripts/run_research_connector.py --self-test
 ```
 
-The self-test validates the frozen provider allowlist, deterministic token,
-disclosure order, environment-name-only configuration, fail-closed unknown
-providers, missing configuration status, and zero-network plan output. A
-malicious config-loader probe and an mtime assertion prove that absent or wrong
-acknowledgement cannot touch the supplied config file.
+The self-test makes no network request. It covers the catalog policy, UniProt
+allowlist, real redirect-handler rejection, NCBI History and PubChem asynchronous
+path rejection, paid/job boundaries, KEGG terms gate, anonymous-only behavior,
+HTTP `202`, short bodies, retries, byte limits, temporary-file cleanup, and
+atomic create-new publication with existing-file preservation.

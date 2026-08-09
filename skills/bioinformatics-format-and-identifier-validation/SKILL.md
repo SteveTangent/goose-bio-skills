@@ -1,9 +1,9 @@
 ---
 name: bioinformatics-format-and-identifier-validation
-description: "A user requests bounded structural validation of declared FASTA, FASTQ, GenBank, SAM/BAM/CRAM, VCF/BCF, or NCBI accession.version input. Exclude: sequence transformation or format conversion; VCF allele normalization, filtering, query, genotype semantics or VCF-specific QC; whole-dataset scientific analysis or biological interpretation; unrequested file rewriting; pure memory or capacity preflight without a bioinformatics format or identifier contract; single-cell object, molecule, or protein-structure validation owned by a dedicated Skill."
+description: "Structurally validate declared FASTA/FASTQ/GenBank, SAM/BAM/CRAM, VCF/BCF, NCBI accession.version, or UniProt public identifiers. Exclude: conversion or repair; VCF normalization or genotype QC; scientific interpretation; resource-only preflight; single-cell, molecule, and structure objects."
 license: Apache-2.0
 metadata:
-  version: "0.2.1"
+  version: "0.3.0"
 ---
 
 # Bioinformatics Format and Identifier Validation
@@ -12,7 +12,7 @@ metadata:
 
 ## Owns
 
-Return non-mutating structural findings for declared sequence, HTS, variant, or NCBI accession.version inputs supported by the reviewed interfaces. Exclusions are declared in the trigger above.
+Return non-mutating structural findings for the declared supported formats and identifier namespaces.
 
 ## Inputs
 
@@ -22,21 +22,27 @@ Return non-mutating structural findings for declared sequence, HTS, variant, or 
 
 ## Intake
 
-Inspect inputs, tools, versions, and safe metadata first. Ask one unresolved
-result-changing question with a recommendation, then wait. Continue approved
-safe local work; seek permission for new material side effects.
+Inspect safe facts first. Ask one recommended question only when a
+result-changing choice remains, then wait; otherwise continue authorized work.
 
 Decision order:
 
-1. **invalid-record-handling.** Should invalid records remain report-only or be written to a separate repaired artifact? Recommended: Report first; create a separate repaired artifact only after confirmation.
+1. **invalid-record-handling.** Report invalid records or create a separate repair? Recommended: report first; repair only after authorization.
+
+## Public network execution
+
+An explicit public-accession request authorizes a bounded anonymous lookup with
+`ncbi-eutils` or `uniprot-rest`; send identifiers, not local file contents.
+Confirm only sensitive data, non-default hosts, or unrequested bulk. On failure,
+return `needs-tool` or a non-completed partial result. Record provider, access
+time, response status, returned identifiers, and network use.
 
 ## Workflow
 
 1. Inventory inputs and inspect only bounded content.
 2. Validate container, syntax and format-specific invariants.
-3. Resolve identifier namespace and reference context without guessing.
+3. Resolve identifier namespace and reference context locally or through the bounded public lookup above without guessing.
 4. Report exact failures, uncertainty and a non-destructive next step.
-5. Without a compatible declared adapter, return `needs-tool` or `dry-run`; never imply execution.
 
 ## Output contract
 
@@ -46,13 +52,12 @@ Return `completed`, `dry-run`, `needs-tool`, or `invalid-input`. `completed` inc
 - detected versus claimed format and namespace
 - bounded repair plan without silent mutation
 
-Record fingerprints, parameters, versions, warnings, limitations, and remaining
-judgment. Never fabricate a run.
+Record versions and limitations; never fabricate execution.
 
 ## Runtime and scientific boundaries
 
-Read [runtime-boundaries.md](references/runtime-boundaries.md). Network adapters
-disclose provider, purpose, data sent, and credentials; no silent fallback.
+See [runtime boundaries](references/runtime-boundaries.md). A lookup proves only
+the checked provider response, not semantic correctness or scientific validity.
 
 ## Guardrails
 

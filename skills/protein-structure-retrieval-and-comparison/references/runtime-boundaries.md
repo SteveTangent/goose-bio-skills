@@ -33,27 +33,27 @@ dependencies. Record the exact local version and command before execution.
 
 Online PDB and AlphaFold DB retrieval requires network access and sends accession queries. Fixed local structure files can be compared offline; record exact archive/model version and hash.
 
-Before any network call, disclose the provider, query or data fields sent,
-credential requirement, rate or access constraint, and local output location.
-Never upload controlled or patient data under this preview contract.
+The user's explicit retrieval request authorizes targeted public reads and
+bounded structure downloads. Anonymous access requires no provider
+configuration or optional API key. Confirm only an unrequested bulk expansion,
+sensitive upload, remote job, credential-required path, paid use, or non-default
+host.
 
 ### External service gate
 
-- `disclosure`: `provider-purpose-would_send-credential-billing`
-- `confirmation`: `two-stage-exact-token`
-- `config_access`: `after-exact-token-only`
-- `companion_mode`: `zero-network-plan-only`
-- `standalone_fallback`: `needs-user-config-or-needs-tool`
-- `call_claim`: `forbidden-before-live-execution`
+- `public_access`: `explicit-request-authorizes-bounded-read-download`
+- `confirmation`: `sensitive-upload-remote-job-bulk-or-paid`
+- `config_access`: `shared-companion-reads-no-user-config`
+- `credential_policy`: `shared-companion-anonymous-only`
+- `standalone_fallback`: `needs-tool-dry-run-or-partial`
+- `call_claim`: `only-after-checked-live-response`
 
-Before any external-service call, disclose the catalog provider ID, purpose,
-`would_send` fields, credential requirements, and billing or quota terms. With
-the repository companion, stage 1 runs root `scripts/check_research_connectors.py`
-with provider IDs only and no config path; it emits a `confirmation_token`
-without touching user config. Stage 2 may read config and produce a zero-network
-plan only after the user returns that exact token; neither stage calls a provider.
-For a standalone install or missing user configuration, fail closed with
-`needs-user-config` or `needs-tool`; never claim that the service was called.
+Use the declared default public provider directly for the requested bounded
+read or download. If a confirmation condition applies, disclose the exact
+provider, data, scope, destination, credential and billing boundary first; do
+not reconfirm an exact action already authorized by the current request, except
+for sensitive data. On missing adapters, unavailable network, provider failure,
+truncation, or missing authorization, degrade honestly and never claim a call.
 
 ## Verification status
 

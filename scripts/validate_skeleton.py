@@ -14,14 +14,15 @@ import sys
 import tempfile
 from datetime import date
 from pathlib import Path
+from urllib.parse import urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
-VALIDATOR_VERSION = "0.5.0"
-PUBLIC_PACKAGE_VERSION = "0.2.1"
+VALIDATOR_VERSION = "0.6.0"
+PUBLIC_PACKAGE_VERSION = "0.3.0"
 MANIFEST_SCHEMA_VERSION = "0.2.0"
 REGISTRY_SCHEMA_VERSION = "0.5.0"
-PROVIDER_CATALOG_SCHEMA_VERSION = "0.1.0"
+PROVIDER_CATALOG_SCHEMA_VERSION = "0.2.0"
 LICENSE_ID = "Apache-2.0"
 APACHE_LICENSE_SHA256 = "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
 ERRORS: list[str] = []
@@ -89,6 +90,7 @@ PROVIDER_FIELDS = {
     "credential_fields",
     "billing",
     "allowed_hosts",
+    "execution",
     "official_docs",
 }
 PROVIDER_CATALOG_FIELDS = {
@@ -99,13 +101,25 @@ PROVIDER_CATALOG_FIELDS = {
     "providers",
 }
 DEPRECATED_MANIFEST_FIELDS = {"requires_network", "optional_adapters"}
+PROVIDER_EXECUTION_FIELDS = {
+    "execution_mode",
+    "allowed_url_prefixes",
+    "rate_limit_per_second",
+    "max_response_bytes",
+}
+PROVIDER_EXECUTION_MODES = {
+    "direct-read",
+    "terms-read",
+    "conditional-job",
+    "disabled",
+}
 EXTERNAL_SERVICE_BOUNDARY_CONTRACT = {
-    "disclosure": "provider-purpose-would_send-credential-billing",
-    "confirmation": "two-stage-exact-token",
-    "config_access": "after-exact-token-only",
-    "companion_mode": "zero-network-plan-only",
-    "standalone_fallback": "needs-user-config-or-needs-tool",
-    "call_claim": "forbidden-before-live-execution",
+    "public_access": "explicit-request-authorizes-bounded-read-download",
+    "confirmation": "sensitive-upload-remote-job-bulk-or-paid",
+    "config_access": "shared-companion-reads-no-user-config",
+    "credential_policy": "shared-companion-anonymous-only",
+    "standalone_fallback": "needs-tool-dry-run-or-partial",
+    "call_claim": "only-after-checked-live-response",
 }
 LEGAL_NOTICE_PREFIXES = (
     "LICENSE",
@@ -169,7 +183,10 @@ def validate_connector_catalog() -> set[str]:
         catalog.get("schema_version") == PROVIDER_CATALOG_SCHEMA_VERSION,
         "connector catalog: wrong schema version",
     )
-    require(catalog.get("mode") == "plan-only", "connector catalog: mode must be plan-only")
+    require(
+        catalog.get("mode") == "live-public-read-only",
+        "connector catalog: mode must be live-public-read-only",
+    )
     require(valid_date(catalog.get("freshness_checked_at")), "connector catalog: invalid freshness date")
     provider_ids = catalog.get("provider_ids")
     providers = catalog.get("providers")
@@ -203,44 +220,52 @@ def validate_connector_catalog() -> set[str]:
             if nonempty_strings(values):
                 require(len(values) == len(set(values)), f"{label}: {field} contains duplicates")
         require(isinstance(provider.get("credential_fields"), list), f"{label}: credential_fields must be a list")
-        require(isinstance(provider.get("billing"), dict), f"{label}: billing must be an object")
-    return {item for item in provider_ids if isinstance(item, str)}
-
-
-def validate_connector_example_config(provider_ids: set[str]) -> None:
-    config = load_json("connectors/example.config.json")
-    require(isinstance(config, dict), "connector example config: expected an object")
-    if not isinstance(config, dict):
-        return
-    require(set(config) == {"schema_version", "providers"}, "connector example config: unexpected fields")
-    require(
-        config.get("schema_version") == PROVIDER_CATALOG_SCHEMA_VERSION,
-        "connector example config: wrong schema version",
-    )
-    configured = config.get("providers")
-    require(isinstance(configured, dict), "connector example config: providers must be an object")
-    if not isinstance(configured, dict):
-        return
-    require(set(configured).issubset(provider_ids), "connector example config: unknown provider reference")
-    for provider_id, settings in configured.items():
-        label = f"connector example config provider {provider_id}"
-        require(isinstance(settings, dict), f"{label}: settings must be an object")
-        if not isinstance(settings, dict):
+        billing = provider.get("billing")
+        require(isinstance(billing, dict), f"{label}: billing must be an object")
+        execution = provider.get("execution")
+        require(isinstance(execution, dict), f"{label}: execution must be an object")
+        if not isinstance(execution, dict):
             continue
-        require(set(settings) == {"enabled", "credential_env"}, f"{label}: unexpected settings")
-        require(isinstance(settings.get("enabled"), bool), f"{label}: enabled must be boolean")
-        credential_env = settings.get("credential_env")
-        require(isinstance(credential_env, dict), f"{label}: credential_env must be an object")
-        if isinstance(credential_env, dict):
-            require(
-                all(
-                    nonempty_string(key)
-                    and isinstance(value, str)
-                    and bool(re.fullmatch(r"[A-Z][A-Z0-9_]*", value))
-                    for key, value in credential_env.items()
-                ),
-                f"{label}: credential_env must map fields to environment variable names",
-            )
+        require(
+            set(execution) == PROVIDER_EXECUTION_FIELDS,
+            f"{label}: execution fields do not match catalog contract",
+        )
+        mode = execution.get("execution_mode")
+        prefixes = execution.get("allowed_url_prefixes")
+        rate = execution.get("rate_limit_per_second")
+        max_bytes = execution.get("max_response_bytes")
+        require(mode in PROVIDER_EXECUTION_MODES, f"{label}: invalid execution_mode")
+        require(nonempty_strings(prefixes) and bool(prefixes), f"{label}: allowed_url_prefixes must be non-empty")
+        require(
+            isinstance(rate, (int, float)) and not isinstance(rate, bool) and rate >= 0,
+            f"{label}: invalid rate_limit_per_second",
+        )
+        require(
+            isinstance(max_bytes, int) and not isinstance(max_bytes, bool) and max_bytes >= 0,
+            f"{label}: invalid max_response_bytes",
+        )
+        active = mode in {"direct-read", "terms-read"}
+        if active:
+            require(bool(rate and rate > 0), f"{label}: active provider needs a positive rate limit")
+            require(bool(max_bytes and max_bytes > 0), f"{label}: active provider needs a positive byte limit")
+            if isinstance(billing, dict):
+                require(
+                    billing.get("requires_separate_paid_authorization") is False,
+                    f"{label}: paid provider cannot be directly executable",
+                )
+        else:
+            require(rate == 0 and max_bytes == 0, f"{label}: inactive provider limits must be zero")
+        hosts = provider.get("allowed_hosts")
+        if isinstance(prefixes, list) and isinstance(hosts, list):
+            for prefix in prefixes:
+                parsed = urlsplit(prefix) if isinstance(prefix, str) else None
+                require(
+                    parsed is not None
+                    and parsed.scheme == "https"
+                    and parsed.hostname in hosts,
+                    f"{label}: executable URL prefix escapes allowed_hosts",
+                )
+    return {item for item in provider_ids if isinstance(item, str)}
 
 
 def display_path(path: Path) -> str:
@@ -609,7 +634,8 @@ def validate_legal_notices(
     if not isinstance(files, list):
         return
     require(required is True, f"{label}: Apache-2.0 LICENSE must be required")
-    require(files == ["LICENSE"], f"{label}: legal_notices.files must be exactly ['LICENSE']")
+    require(bool(files) and files[0] == "LICENSE", f"{label}: legal_notices.files must start with LICENSE")
+    require(len(files) == len(set(files)), f"{label}: legal_notices.files contains duplicates")
     for item in files:
         if not isinstance(item, str):
             continue
@@ -777,6 +803,42 @@ def validate_release_version() -> None:
         return
     require(release_version == PUBLIC_PACKAGE_VERSION, "VERSION: wrong public release version")
     validate_apache_license(ROOT / "LICENSE", "repository")
+
+
+def run_connector_self_test() -> None:
+    script = ROOT / "scripts/run_research_connector.py"
+    require(script.is_file(), "connector runtime: shared executor is missing")
+    if not script.is_file():
+        return
+    try:
+        completed = subprocess.run(
+            [sys.executable, script.name, "--self-test"],
+            cwd=script.parent,
+            capture_output=True,
+            check=False,
+            text=True,
+            timeout=30,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        require(False, f"connector runtime: self-test could not complete: {exc}")
+        return
+    require(completed.returncode == 0, f"connector runtime: self-test exited {completed.returncode}")
+    lines = [line for line in completed.stdout.splitlines() if line.strip()]
+    require(bool(lines), "connector runtime: self-test produced no JSON result")
+    if completed.returncode != 0 or not lines:
+        return
+    try:
+        result = json.loads(lines[-1])
+    except json.JSONDecodeError:
+        require(False, "connector runtime: self-test final output is not JSON")
+        return
+    require(isinstance(result, dict), "connector runtime: self-test result must be an object")
+    if not isinstance(result, dict):
+        return
+    require(result.get("status") == "passed", "connector runtime: self-test did not pass")
+    require(result.get("version") == PUBLIC_PACKAGE_VERSION, "connector runtime: version differs from release")
+    require(result.get("network_performed") is False, "connector runtime: self-test unexpectedly used network")
+    require(result.get("paid_use_authorized") is False, "connector runtime: self-test authorized paid use")
 
 
 def package_has_scripts(package: Path) -> bool:
@@ -967,7 +1029,6 @@ def validate_external_service_boundary(
 
 def validate_installable_boundary() -> int:
     provider_ids = validate_connector_catalog()
-    validate_connector_example_config(provider_ids)
     registry = load_json("registry.json")
     if not isinstance(registry, dict):
         require(False, "registry: expected an object")
@@ -1491,8 +1552,11 @@ def run_self_test() -> int:
     checks.append("undocumented-complex-skip-rejected")
 
     provider_ids = validate_connector_catalog()
-    validate_connector_example_config(provider_ids)
     require(bool(provider_ids), "self-test: connector catalog was empty")
+    require(
+        not captured_errors(run_connector_self_test),
+        "self-test: shared connector runtime self-test failed",
+    )
     connector_manifest = copy.deepcopy(template)
     connector_manifest["network_mode"] = "optional"
     connector_manifest["external_services"] = ["ncbi-eutils"]
@@ -1521,6 +1585,7 @@ def run_self_test() -> int:
         "self-test: unknown connector reference accepted",
     )
     checks.append("connector-catalog-and-references-checked")
+    checks.append("connector-runtime-self-test-passed")
 
     preview_disclaimer = "This preview is not scientifically validated."
     positive_claim = "This preview is scientifically validated."
@@ -1549,6 +1614,7 @@ def main() -> int:
         return 2
 
     validate_release_version()
+    run_connector_self_test()
     validate_template()
     installable_packages = validate_installable_boundary()
     validate_source_cleanliness()

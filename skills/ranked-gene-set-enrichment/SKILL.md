@@ -1,9 +1,9 @@
 ---
 name: ranked-gene-set-enrichment
-description: "A user has a complete ranked gene list and requests gene-set enrichment without selecting a significance cutoff. Exclude: selected-list ORA; silent duplicate collapsing; causal pathway claims; per-sample pathway activity scoring; phenotype permutation without a separate expression-matrix and label contract."
+description: "A user has a complete ranked gene list and requests cutoff-free gene-set enrichment. Exclude selected-list ORA, silent duplicate collapsing, causal claims, per-sample pathway scoring, or phenotype permutation without a separate matrix-and-label contract."
 license: Apache-2.0
 metadata:
-  version: "0.2.1"
+  version: "0.3.0"
 ---
 
 # Ranked Gene-set Enrichment
@@ -23,23 +23,30 @@ Produce reproducible ranked-set enrichment statistics without converting the tas
 
 ## Intake
 
-Inspect inputs, tools, versions, and safe metadata first. Ask one unresolved
-result-changing question with a recommendation, then wait. Continue approved
-safe local work; seek permission for new material side effects.
+Inspect safe facts first. Ask one recommended question only when a
+result-changing choice remains, then wait; otherwise continue authorized work.
 
 Decision order:
 
-1. **ranked-duplicate-policy.** How should duplicate identifiers be collapsed? Recommended: Use one deterministic rule declared before enrichment.
-2. **ranked-tie-policy.** How should tied ranking statistics be ordered? Recommended: Use a deterministic tie policy and report tie prevalence.
-3. **ranked-permutation-policy.** Which gene-set permutation count and random seed should the preranked run use? Recommended: Use gene-set permutations with a recorded seed; phenotype permutation requires a separate expression-matrix and sample-label contract.
+1. **ranked-duplicate-policy.** How should duplicates collapse? Recommended: declare one deterministic rule.
+2. **ranked-tie-policy.** How should ties order? Recommended: use a deterministic policy and report prevalence.
+3. **ranked-permutation-policy.** Which count and seed? Recommended: use gene-set permutations; phenotype permutation needs a separate matrix-and-label contract.
+
+## Public network execution
+
+Prefer a versioned local collection. An explicit refresh authorizes bounded
+public Enrichr library metadata reads; submitting a ranked list is a separate
+remote job. Confirm sensitive rankings, remote jobs not already requested, or
+unrequested bulk. On failure, use the pinned collection or return
+`needs-tool`/partial. Record input and collection digests, provider, parameters,
+hashes, and network or job status.
 
 ## Workflow
 
 1. Validate ranking completeness, direction, ties and duplicate identifiers.
-2. Freeze gene-set release and deterministic duplicate policy.
+2. Freeze the local or retrieved gene-set release and deterministic duplicate policy.
 3. Run preranked enrichment with gene-set permutations and a recorded seed.
 4. Report leading edges, stability, multiplicity and interpretation limits.
-5. Without a compatible declared adapter, return `needs-tool` or `dry-run`; never imply execution.
 
 ## Output contract
 
@@ -49,13 +56,12 @@ Return `completed`, `dry-run`, `needs-tool`, or `invalid-input`. `completed` inc
 - leading-edge features
 - ranking, duplicates, seed, permutations and release provenance
 
-Record fingerprints, parameters, versions, warnings, limitations, and remaining
-judgment. Never fabricate a run.
+Record versions and limitations; never fabricate execution.
 
 ## Runtime and scientific boundaries
 
-Read [runtime-boundaries.md](references/runtime-boundaries.md). Network adapters
-disclose provider, purpose, data sent, and credentials; no silent fallback.
+See [runtime boundaries](references/runtime-boundaries.md). Rolling libraries do
+not replace a versioned collection or make results causal.
 
 ## Guardrails
 

@@ -1,9 +1,9 @@
 ---
 name: biomedical-literature-and-public-study-search
-description: "A user needs publication or public-study literature, metadata, or accession discovery for a defined biomedical question. Exclude: claim-level evidence synthesis; treating community posts as validation; clinical recommendation; community-discussion or complaint-only search; non-publication and non-study accession resolution."
+description: "A user needs publications, public-study metadata, or study-accession discovery for a biomedical question. Exclude claim synthesis, community-only search, clinical recommendations, and non-study identifier resolution."
 license: Apache-2.0
 metadata:
-  version: "0.2.1"
+  version: "0.3.0"
 ---
 
 # Biomedical Literature and Public Study Search
@@ -23,21 +23,28 @@ Retrieve and screen a traceable corpus of publications or public studies while s
 
 ## Intake
 
-Inspect inputs, tools, versions, and safe metadata first. Ask one unresolved
-result-changing question with a recommendation, then wait. Continue approved
-safe local work; seek permission for new material side effects.
+Inspect safe facts first. Ask one recommended question only when a
+result-changing choice remains, then wait; otherwise continue authorized work.
 
 Decision order:
 
 1. **retrieval-objective.** Should this search prioritize recall for screening or precision for a bounded quick answer? Recommended: Start with reproducible recall, then apply explicit screening criteria.
 
+## Public network execution
+
+An explicit search authorizes bounded anonymous reads from `ncbi-eutils`,
+`europe-pmc`, and `ebi-biostudies`, including requested public metadata and
+open-access files. Paid providers are not fallbacks. Confirm only sensitive
+material, non-default hosts, or unrequested bulk. On failure, return
+`needs-tool` or partial, never `completed`. Record query, provider, pages,
+identifiers, access time, hashes, and network use.
+
 ## Workflow
 
 1. Translate the question into concepts, synonyms and database-specific queries.
 2. Choose broad recall or narrow precision deliberately.
-3. Retrieve through recorded responses or disclosed read-only adapters.
+3. Retrieve through recorded responses or the bounded public adapters above.
 4. Deduplicate, screen and report query, date, identifiers and missing coverage.
-5. Without a compatible declared adapter, return `needs-tool` or `dry-run`; never imply execution.
 
 ## Output contract
 
@@ -47,13 +54,12 @@ Return `completed`, `dry-run`, `needs-tool`, or `invalid-input`. `completed` inc
 - deduplicated result set with stable identifiers
 - screening decisions and unresolved retrieval gaps
 
-Record fingerprints, parameters, versions, warnings, limitations, and remaining
-judgment. Never fabricate a run.
+Record versions and limitations; never fabricate execution.
 
 ## Runtime and scientific boundaries
 
-Read [runtime-boundaries.md](references/runtime-boundaries.md). Network adapters
-disclose provider, purpose, data sent, and credentials; no silent fallback.
+See [runtime boundaries](references/runtime-boundaries.md). Live retrieval does
+not prove corpus completeness; `completed` requires all declared pages.
 
 ## Guardrails
 

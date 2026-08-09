@@ -1,11 +1,11 @@
 {
-  "schema_version": "0.1.0",
-  "mode": "plan-only",
+  "schema_version": "0.2.0",
+  "mode": "live-public-read-only",
   "freshness_checked_at": "2026-08-09",
   "provider_ids": [
     "ncbi-eutils",
+    "uniprot-rest",
     "europe-pmc",
-    "openalex",
     "ebi-biostudies",
     "rcsb-pdb",
     "alphafold-db",
@@ -27,30 +27,57 @@
         "database name",
         "date and field filters",
         "public accession identifiers",
-        "pagination parameters",
-        "contact email"
+        "pagination parameters"
       ],
-      "credential_fields": [
-        {
-          "name": "email",
-          "kind": "contact",
-          "requirement": "required"
-        },
-        {
-          "name": "api_key",
-          "kind": "secret",
-          "requirement": "optional"
-        }
-      ],
+      "credential_fields": [],
       "billing": {
         "mode": "public-free",
         "requires_separate_paid_authorization": false,
-        "summary": "No-key access is rate limited; an API key raises the default request allowance."
+        "summary": "The shared executor uses anonymous no-key access at the public rate limit; host-managed identity or API keys stay outside this adapter."
       },
       "allowed_hosts": [
         "eutils.ncbi.nlm.nih.gov"
       ],
+      "execution": {
+        "execution_mode": "direct-read",
+        "allowed_url_prefixes": [
+          "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi",
+          "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi",
+          "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi",
+          "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+        ],
+        "rate_limit_per_second": 3,
+        "max_response_bytes": 16777216
+      },
       "official_docs": "https://www.ncbi.nlm.nih.gov/books/NBK25497/"
+    },
+    "uniprot-rest": {
+      "display_name": "UniProt REST API",
+      "purpose": "Retrieve public UniProtKB, UniRef, UniParc, proteome, and supporting metadata records.",
+      "would_send": [
+        "public accession identifiers",
+        "query terms",
+        "selected fields",
+        "format and pagination parameters"
+      ],
+      "credential_fields": [],
+      "billing": {
+        "mode": "public-free",
+        "requires_separate_paid_authorization": false,
+        "summary": "The reviewed public GET and HEAD paths do not require a credential; write and asynchronous submission endpoints are outside this executor."
+      },
+      "allowed_hosts": [
+        "rest.uniprot.org"
+      ],
+      "execution": {
+        "execution_mode": "direct-read",
+        "allowed_url_prefixes": [
+          "https://rest.uniprot.org/"
+        ],
+        "rate_limit_per_second": 3,
+        "max_response_bytes": 33554432
+      },
+      "official_docs": "https://www.uniprot.org/help/programmatic_access"
     },
     "europe-pmc": {
       "display_name": "Europe PMC",
@@ -71,33 +98,15 @@
         "europepmc.org",
         "www.ebi.ac.uk"
       ],
-      "official_docs": "https://europepmc.org/RestfulWebService"
-    },
-    "openalex": {
-      "display_name": "OpenAlex",
-      "purpose": "Search metered scholarly-work and source metadata.",
-      "would_send": [
-        "query terms",
-        "work and source filters",
-        "selected fields",
-        "cursor and pagination parameters"
-      ],
-      "credential_fields": [
-        {
-          "name": "api_key",
-          "kind": "secret",
-          "requirement": "required"
-        }
-      ],
-      "billing": {
-        "mode": "metered",
-        "requires_separate_paid_authorization": true,
-        "summary": "Production API use requires a key and is metered; crossing free or paid quota requires explicit authorization."
+      "execution": {
+        "execution_mode": "direct-read",
+        "allowed_url_prefixes": [
+          "https://www.ebi.ac.uk/europepmc/webservices/rest/"
+        ],
+        "rate_limit_per_second": 3,
+        "max_response_bytes": 16777216
       },
-      "allowed_hosts": [
-        "api.openalex.org"
-      ],
-      "official_docs": "https://developers.openalex.org/guides/authentication"
+      "official_docs": "https://europepmc.org/RestfulWebService"
     },
     "ebi-biostudies": {
       "display_name": "EMBL-EBI BioStudies",
@@ -117,6 +126,14 @@
       "allowed_hosts": [
         "www.ebi.ac.uk"
       ],
+      "execution": {
+        "execution_mode": "direct-read",
+        "allowed_url_prefixes": [
+          "https://www.ebi.ac.uk/biostudies/api/v1/"
+        ],
+        "rate_limit_per_second": 3,
+        "max_response_bytes": 33554432
+      },
       "official_docs": "https://www.ebi.ac.uk/biostudies/help%23API"
     },
     "rcsb-pdb": {
@@ -138,6 +155,15 @@
         "data.rcsb.org",
         "files.rcsb.org"
       ],
+      "execution": {
+        "execution_mode": "direct-read",
+        "allowed_url_prefixes": [
+          "https://data.rcsb.org/",
+          "https://files.rcsb.org/download/"
+        ],
+        "rate_limit_per_second": 3,
+        "max_response_bytes": 67108864
+      },
       "official_docs": "https://data.rcsb.org/"
     },
     "alphafold-db": {
@@ -157,6 +183,15 @@
       "allowed_hosts": [
         "alphafold.ebi.ac.uk"
       ],
+      "execution": {
+        "execution_mode": "direct-read",
+        "allowed_url_prefixes": [
+          "https://alphafold.ebi.ac.uk/api/",
+          "https://alphafold.ebi.ac.uk/files/"
+        ],
+        "rate_limit_per_second": 2,
+        "max_response_bytes": 67108864
+      },
       "official_docs": "https://alphafold.ebi.ac.uk/download"
     },
     "pubchem-pug-rest": {
@@ -177,6 +212,14 @@
       "allowed_hosts": [
         "pubchem.ncbi.nlm.nih.gov"
       ],
+      "execution": {
+        "execution_mode": "direct-read",
+        "allowed_url_prefixes": [
+          "https://pubchem.ncbi.nlm.nih.gov/rest/pug/"
+        ],
+        "rate_limit_per_second": 5,
+        "max_response_bytes": 33554432
+      },
       "official_docs": "https://pubchem.ncbi.nlm.nih.gov/docs/pug-rest"
     },
     "chembl-rest": {
@@ -197,6 +240,14 @@
       "allowed_hosts": [
         "www.ebi.ac.uk"
       ],
+      "execution": {
+        "execution_mode": "direct-read",
+        "allowed_url_prefixes": [
+          "https://www.ebi.ac.uk/chembl/api/data/"
+        ],
+        "rate_limit_per_second": 3,
+        "max_response_bytes": 33554432
+      },
       "official_docs": "https://www.ebi.ac.uk/chembl/api/data/docs"
     },
     "crossref-rest": {
@@ -206,29 +257,25 @@
         "DOIs",
         "bibliographic query terms",
         "date and type filters",
-        "pagination parameters",
-        "contact email when configured"
+        "pagination parameters"
       ],
-      "credential_fields": [
-        {
-          "name": "email",
-          "kind": "contact",
-          "requirement": "optional"
-        },
-        {
-          "name": "metadata_plus_token",
-          "kind": "secret",
-          "requirement": "optional"
-        }
-      ],
+      "credential_fields": [],
       "billing": {
-        "mode": "mixed",
-        "requires_separate_paid_authorization": true,
-        "summary": "Public and polite pools are available without a paid token; Metadata Plus use requires separate authorization."
+        "mode": "public-free",
+        "requires_separate_paid_authorization": false,
+        "summary": "Only anonymous public access is supported; Crossref polite-pool identity and paid Metadata Plus tokens stay outside this adapter."
       },
       "allowed_hosts": [
         "api.crossref.org"
       ],
+      "execution": {
+        "execution_mode": "direct-read",
+        "allowed_url_prefixes": [
+          "https://api.crossref.org/"
+        ],
+        "rate_limit_per_second": 5,
+        "max_response_bytes": 16777216
+      },
       "official_docs": "https://www.crossref.org/documentation/retrieve-metadata/rest-api/access-and-authentication/"
     },
     "quickgo": {
@@ -250,16 +297,23 @@
       "allowed_hosts": [
         "www.ebi.ac.uk"
       ],
+      "execution": {
+        "execution_mode": "direct-read",
+        "allowed_url_prefixes": [
+          "https://www.ebi.ac.uk/QuickGO/services/"
+        ],
+        "rate_limit_per_second": 3,
+        "max_response_bytes": 16777216
+      },
       "official_docs": "https://www.ebi.ac.uk/QuickGO/api/"
     },
     "enrichr": {
       "display_name": "Enrichr API",
       "purpose": "Discover or query rolling public gene-set libraries and enrichment results.",
       "would_send": [
-        "gene lists",
-        "list description",
         "gene-set library name",
-        "organism or query parameters"
+        "organism or query parameters",
+        "public result identifier"
       ],
       "credential_fields": [],
       "billing": {
@@ -270,6 +324,14 @@
       "allowed_hosts": [
         "maayanlab.cloud"
       ],
+      "execution": {
+        "execution_mode": "direct-read",
+        "allowed_url_prefixes": [
+          "https://maayanlab.cloud/Enrichr/"
+        ],
+        "rate_limit_per_second": 2,
+        "max_response_bytes": 16777216
+      },
       "official_docs": "https://maayanlab.cloud/Enrichr/help%23api"
     },
     "kegg-rest": {
@@ -290,6 +352,14 @@
       "allowed_hosts": [
         "rest.kegg.jp"
       ],
+      "execution": {
+        "execution_mode": "terms-read",
+        "allowed_url_prefixes": [
+          "https://rest.kegg.jp/"
+        ],
+        "rate_limit_per_second": 3,
+        "max_response_bytes": 16777216
+      },
       "official_docs": "https://www.kegg.jp/kegg/rest/"
     },
     "embl-ebi-job-dispatcher": {
@@ -316,6 +386,14 @@
       "allowed_hosts": [
         "www.ebi.ac.uk"
       ],
+      "execution": {
+        "execution_mode": "conditional-job",
+        "allowed_url_prefixes": [
+          "https://www.ebi.ac.uk/Tools/services/rest/"
+        ],
+        "rate_limit_per_second": 0,
+        "max_response_bytes": 0
+      },
       "official_docs": "https://www.ebi.ac.uk/Tools/common/tools/help/index.html?tool=clustalo"
     },
     "ncbi-blast-remote": {
@@ -343,6 +421,14 @@
       "allowed_hosts": [
         "blast.ncbi.nlm.nih.gov"
       ],
+      "execution": {
+        "execution_mode": "conditional-job",
+        "allowed_url_prefixes": [
+          "https://blast.ncbi.nlm.nih.gov/Blast.cgi"
+        ],
+        "rate_limit_per_second": 0,
+        "max_response_bytes": 0
+      },
       "official_docs": "https://www.ncbi.nlm.nih.gov/books/NBK279684/"
     }
   }

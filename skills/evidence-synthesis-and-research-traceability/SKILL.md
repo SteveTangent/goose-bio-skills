@@ -3,7 +3,7 @@ name: evidence-synthesis-and-research-traceability
 description: "A user has a defined corpus or retrieval record and needs comparison, synthesis, conflict handling or research traceability. Exclude: unlogged corpus expansion; majority vote over conflicting evidence; clinical advice without governed specialist review."
 license: Apache-2.0
 metadata:
-  version: "0.2.1"
+  version: "0.3.0"
 ---
 
 # Evidence Synthesis and Research Traceability
@@ -23,22 +23,28 @@ Produce a transparent evidence synthesis in which every material claim maps to a
 
 ## Intake
 
-Inspect inputs, tools, versions, and safe metadata first. Ask one unresolved
-result-changing question with a recommendation, then wait. Continue approved
-safe local work; seek permission for new material side effects.
+Inspect safe facts first. Ask one recommended question only when a
+result-changing choice remains, then wait; otherwise continue authorized work.
 
 Decision order:
 
-1. **evidence-hierarchy.** Which evidence hierarchy should govern conflicts in this corpus? Recommended: Define the hierarchy before synthesis and keep community signals separate from scientific evidence.
-2. **claim-criteria.** Which criteria determine whether a source supports a material claim? Recommended: Predeclare claim inclusion, contradiction and uncertainty criteria before mapping sources.
+1. **evidence-hierarchy.** Which hierarchy governs conflicts? Recommended: define it before synthesis and separate community signals.
+2. **claim-criteria.** What supports a material claim? Recommended: predeclare inclusion, contradiction, and uncertainty rules.
+
+## Public network execution
+
+An explicit citation check authorizes bounded public/polite `crossref-rest`
+lookups for records already in the frozen corpus. Do not expand the corpus or
+use a paid fallback. Confirm sensitive material or unrequested bulk. Preserve
+unresolved citations on failure and record provider, access time, request
+digest, response status, and network use.
 
 ## Workflow
 
 1. Freeze the corpus and synthesis questions.
 2. Extract claims, methods, populations and limitations without losing source identity.
 3. Map support and conflict under an explicit evidence hierarchy.
-4. Report qualified conclusions, dissent, missing evidence and traceability links.
-5. Without a compatible declared adapter, return `needs-tool` or `dry-run`; never imply execution.
+4. Resolve included-record metadata when needed, then report qualified conclusions, dissent, missing evidence and traceability links.
 
 ## Output contract
 
@@ -48,13 +54,12 @@ Return `completed`, `dry-run`, `needs-tool`, or `invalid-input`. `completed` inc
 - evidence-quality and conflict summary
 - qualified conclusions, gaps and excluded evidence
 
-Record fingerprints, parameters, versions, warnings, limitations, and remaining
-judgment. Never fabricate a run.
+Record versions and limitations; never fabricate execution.
 
 ## Runtime and scientific boundaries
 
-Read [runtime-boundaries.md](references/runtime-boundaries.md). Network adapters
-disclose provider, purpose, data sent, and credentials; no silent fallback.
+See [runtime boundaries](references/runtime-boundaries.md). DOI metadata lookup
+does not validate evidence quality or support a scientific claim.
 
 ## Guardrails
 

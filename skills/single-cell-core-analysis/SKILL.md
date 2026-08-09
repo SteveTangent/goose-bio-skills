@@ -3,7 +3,7 @@ name: single-cell-core-analysis
 description: "A user has a small validated single-cell count object and needs normalization, feature selection, PCA, neighborhood graph, embedding or clustering. Exclude: object conversion or QC ownership; batch integration; automatic cell-type annotation; trajectory, velocity or condition-level differential testing."
 license: Apache-2.0
 metadata:
-  version: "0.2.1"
+  version: "0.3.0"
 ---
 
 # Single-cell Core Analysis

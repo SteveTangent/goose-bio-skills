@@ -1,7 +1,7 @@
 {
   "schema_version": "0.2.0",
   "name": "evidence-synthesis-and-research-traceability",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D13",
@@ -27,6 +27,7 @@
       "Scientific benchmark performance has not been established.",
       "Human-expert review has not been performed.",
       "Full-text OCR, large citation graphs, automated risk-of-bias judgments, and complex meta-analysis have not been evaluated.",
+      "Live Crossref DOI metadata resolution, rate limiting, and failure handling have not been runtime-evaluated.",
       "The package does not establish scientific validity of the frozen corpus or its included studies."
     ]
   },
@@ -62,7 +63,7 @@
   "runtime_verification": {
     "mode": "not-performed",
     "status": "not-performed",
-    "reason": "The core is an instruction-only synthesis contract over a frozen corpus; no automated full-text, bias, citation-graph, or meta-analysis runtime is bundled.",
+    "reason": "The core is an instruction-only synthesis contract over a frozen corpus; live Crossref DOI resolution and automated full-text, bias, citation-graph, or meta-analysis behavior were not runtime-tested.",
     "tool_versions": [
       "PRISMA 2020",
       "Cochrane Handbook 6.5.1",
@@ -70,6 +71,7 @@
     ],
     "unverified_boundaries": [
       "Full-text OCR, large citation graphs, automated risk-of-bias judgments, and complex meta-analysis have not been evaluated.",
+      "Live Crossref DOI metadata resolution, rate limiting, and failure handling have not been runtime-evaluated.",
       "The package does not establish scientific validity of the frozen corpus or its included studies."
     ]
   },
@@ -80,8 +82,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.2.0",
-    "boundary": "Restore package version 0.2.0 and its matching registry entry."
+    "previous_version": "0.2.1",
+    "boundary": "Restore package version 0.2.1 and its matching registry entry."
   },
   "network_mode": "optional",
   "local_adapters": [

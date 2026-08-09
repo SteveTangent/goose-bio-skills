@@ -33,7 +33,7 @@ Research comes first, but preview admission stays lightweight: it requires a rev
 
 1. **Research contract:** the recurring job, inputs, outputs, exclusions, current official/scientific interfaces, assumptions, limits, and owner review are bound to the candidate.
 2. **Rights and trust:** redistribution obligations and required `LICENSE`, `NOTICE`, copyright, or attribution are resolved; dependencies, writes, secrets, protected data, and optional adapters are reviewed.
-3. **Interaction and connectors:** Grill is fact-first and asks one recommended question at a time only when needed. Connector access is two-phase: first disclose and issue a `confirmation_token` without reading configuration; only a later request with both `--acknowledge <exact-confirmation-token>` and a local `--config <path>` may read it. Exact zero-network outcomes are `needs-user-confirmation`, `needs-user-config`, `needs-credential`, and `config-validated`.
+3. **Interaction and public services:** Grill is fact-first and asks one recommended question at a time only when needed. An explicit request authorizes its bounded allowlisted public read and requested download. The shared companion is anonymous-only. Sensitive uploads, remote jobs, unrequested bulk expansion, and terms-restricted access require an exact scoped confirmation. Paid or metered providers are absent from the executable catalog.
 4. **Original implementation:** every bundled deterministic script is an original reviewed implementation and passes an offline self-test. Batch, GPU, network, or complex-tool runtime work may be skipped only with the reason, relevant versions, and exact unverified boundary.
 5. **Sanitized atomic admission:** the exact file set, package digest, and matching registry entry are admitted together; private paths, credentials, protected data, hidden network behavior, and unlicensed material are absent.
 
@@ -41,13 +41,37 @@ A `preview + reviewed` package may omit a runtime evaluation, scientific benchma
 
 ## Connector release boundary
 
-Connector configuration is supplied by the user or host at runtime. It is not bundled in a Skill package or registry entry.
+Public-service declarations are package metadata. The shared companion does not
+accept identity or credential values. Any separate host adapter that uses them
+must disclose its own boundary and never bundle secrets in a package or registry.
 
-The first request must only disclose provider, purpose, data sent, credential requirement, network destination, rate/cost boundary, and output location, then issue a disclosure-bound `confirmation_token`. It must not read configuration, including a path or reference supplied before acknowledgement.
+The v0.3.0 executable catalog contains reviewed public-free and
+terms-restricted providers only. A user's explicit search or retrieval request
+authorizes the matching bounded `GET` or `HEAD` and requested download without a
+second acknowledgement. The shared companion at
+`scripts/run_research_connector.py` enforces the provider allowlist, HTTPS host
+and path prefixes, rate, retry, timeout, pagination and byte limits, redirect
+checks, secret redaction, and non-overwriting output publication.
 
-A second request may read a local configuration file only when it supplies both `--acknowledge <exact-confirmation-token>` and `--config <path>`. Missing or mismatched acknowledgement fails before configuration access with `needs-user-confirmation`. After acknowledgement, an absent configuration or required credential returns `needs-user-config` or `needs-credential`; a valid plan returns `config-validated`. Every result is zero-network. The token binds the disclosed provider set and catalog boundary; it does not authorize a live call or broaden any other permission.
+The shared companion uses anonymous access only. Paid credentials and paid
+fallbacks are outside the executable boundary.
 
-The v0.2.1 connector doctor stops at configuration-plan validation and always reports zero network activity. No live API client is bundled; adding one requires a separate reviewed implementation and fresh execution approval.
+Confirmation is conditional, not universal: disclose the provider, data,
+operation, scope, destination, and governing terms before a sensitive or
+controlled upload, remote compute job, unrequested bulk expansion, or
+terms-restricted read. The shared companion currently implements public
+`GET`/`HEAD` only. Hosted alignment and remote BLAST therefore require a reviewed
+host adapter; when none is available, the package returns `needs-tool` and must
+not imply that a job was submitted.
+
+Execution claims follow evidence. The shared companion emits `completed` only
+when a live response was checked and an atomic payload/provenance pair was
+published with `network_performed=true`; otherwise it emits
+`blocked-or-failed`, reports whether network access began, and leaves no success
+artifact. At the Skill layer, incomplete or truncated work is partial and
+non-completed, while an unsupported job is `needs-tool`. Provenance records the
+provider, redacted request, method, response metadata, timestamps, pagination,
+bytes, digest, output, optional identity use, and terms state.
 
 ## Evaluation and stability
 
@@ -69,7 +93,7 @@ Each installable version changes two public objects together:
 1. one complete `skills/<name>/` package;
 2. the matching `registry.json` entry with the same name, version, Domain, Cluster, release stage, assurance level, previous version, and canonical package digest.
 
-Incomplete package placeholders, partial directories, roadmap entries, and mismatched lifecycle metadata are rejected. A runtime connector placeholder is different: it is a non-secret dry-run output and is never treated as an installable package.
+Incomplete package placeholders, partial directories, roadmap entries, and mismatched lifecycle metadata are rejected. An unsupported conditional external action is a truthful `needs-tool` runtime outcome, not an installable package or a claimed execution.
 
 The canonical package digest is SHA-256 of canonical JSON for the path-sorted `[{path, sha256, kind}]` inventory. `manifest.json` and `agents/interface.yaml` are metadata; files under `scripts/` or with recognized code suffixes are code; legal-notice prefixes are license material; other files are text.
 
