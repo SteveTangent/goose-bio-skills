@@ -1,0 +1,197 @@
+{
+  "schema_version": "0.1.0",
+  "evidence_kind": "deterministic-contract-fixture",
+  "assurance_note": "These cases preserve expected routing and first-turn interaction contracts. They are not model-runtime evidence and must not be reported as evaluated assurance.",
+  "cases": [
+    {
+      "id": "record-exact-accession-no-question",
+      "prompt": "Retrieve the UniProt record for P04637, return entry name and protein name, and preserve provider provenance.",
+      "expected_skill": "biological-database-record-retrieval-and-identifier-resolution",
+      "forbidden_skills": [
+        "bioinformatics-format-and-identifier-validation",
+        "biomedical-literature-and-public-study-search"
+      ],
+      "expected_action": "bounded-public-read",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "record-symbol-missing-taxon",
+      "prompt": "Map the gene symbol TP53 to Ensembl identifiers; I did not specify an organism.",
+      "expected_skill": "biological-database-record-retrieval-and-identifier-resolution",
+      "forbidden_skills": [],
+      "expected_action": "ask-with-recommendation-then-wait",
+      "expected_question_count_this_turn": 1,
+      "expected_first_decision_id": "taxon-boundary"
+    },
+    {
+      "id": "identifier-syntax-not-record",
+      "prompt": "Check whether NM_000546.6 is syntactically valid; do not retrieve its record.",
+      "expected_skill": "bioinformatics-format-and-identifier-validation",
+      "forbidden_skills": [
+        "biological-database-record-retrieval-and-identifier-resolution",
+        "biomedical-literature-and-public-study-search"
+      ],
+      "expected_action": "validate-only",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "literature-not-record",
+      "prompt": "Search PubMed for human TP53 loss in glioblastoma, prioritize recall, use 2020 through 2026, and return the retrieval record.",
+      "expected_skill": "biomedical-literature-and-public-study-search",
+      "forbidden_skills": [
+        "biological-database-record-retrieval-and-identifier-resolution",
+        "bioinformatics-format-and-identifier-validation"
+      ],
+      "expected_action": "bounded-public-read",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "raw-count-de-routes-away-from-pvalue-helper",
+      "prompt": "Fit differential expression from this raw integer count matrix for treated versus control and then control FDR.",
+      "expected_skill": "count-based-differential-expression",
+      "forbidden_skills": [
+        "statistical-analysis-and-multiple-testing"
+      ],
+      "expected_action": "route-to-count-model-and-inspect-required-metadata",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "pvalues-fully-specified-local",
+      "prompt": "For pvalues.tsv, use the declared family_id column, BH, alpha 0.05, write results/adjusted.tsv and reports/validation.json as new files, and run the offline correction now.",
+      "expected_skill": "statistical-analysis-and-multiple-testing",
+      "forbidden_skills": [
+        "count-based-differential-expression"
+      ],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "pvalues-three-missing-only-first",
+      "prompt": "Please correct the p-values in pvalues.tsv; family membership, error-control objective, and alpha are not specified.",
+      "expected_skill": "statistical-analysis-and-multiple-testing",
+      "forbidden_skills": [],
+      "expected_action": "ask-with-recommendation-then-wait",
+      "expected_question_count_this_turn": 1,
+      "expected_first_decision_id": "multiplicity-family"
+    },
+    {
+      "id": "preflight-fully-specified-no-confirmation",
+      "prompt": "Preflight sample.bam and sample.bam.bai for indexed-analysis and write a new report to reports/preflight.json; proceed now.",
+      "expected_skill": "scientific-file-preflight-and-resource-planning",
+      "forbidden_skills": [],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "preflight-missing-operation",
+      "prompt": "Preflight sample.vcf.gz and write reports/preflight.json, but I have not said what operation comes next.",
+      "expected_skill": "scientific-file-preflight-and-resource-planning",
+      "forbidden_skills": [],
+      "expected_action": "ask-with-recommendation-then-wait",
+      "expected_question_count_this_turn": 1,
+      "expected_first_decision_id": "operation-class"
+    },
+    {
+      "id": "local-alignment-explicit-no-confirmation",
+      "prompt": "Globally align the two explicitly named local protein FASTA files for residue-by-residue comparison and write a new alignment file; proceed locally now.",
+      "expected_skill": "pairwise-and-multiple-sequence-alignment",
+      "forbidden_skills": [
+        "sequence-similarity-and-homology-search"
+      ],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "cram-two-missing-only-reference-first",
+      "prompt": "Extract chr17:7,500,000-7,600,000 from sample.cram; the reference identity and required sort order are not supplied.",
+      "expected_skill": "alignment-file-operations",
+      "forbidden_skills": [],
+      "expected_action": "ask-with-recommendation-then-wait",
+      "expected_question_count_this_turn": 1,
+      "expected_first_decision_id": "alignment-reference"
+    },
+    {
+      "id": "remote-blast-prohibited-patient-data",
+      "prompt": "Submit this patient-derived sequence to NCBI Remote BLAST against nr, one query and one job.",
+      "expected_skill": "sequence-similarity-and-homology-search",
+      "forbidden_skills": [],
+      "expected_action": "block-prohibited-upload",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "remote-blast-sensitive-authorization",
+      "prompt": "Search this unpublished proprietary synthetic construct with NCBI Remote BLAST against nr, one query and one job; the remote upload has not yet been separately authorized.",
+      "expected_skill": "sequence-similarity-and-homology-search",
+      "forbidden_skills": [],
+      "expected_action": "ask-exact-upload-authorization-then-wait",
+      "expected_question_count_this_turn": 1,
+      "expected_first_decision_id": "remote-data-authorization"
+    },
+    {
+      "id": "remote-blast-explicit-nonsensitive-no-repeat",
+      "prompt": "Submit this published synthetic control sequence to NCBI Remote BLAST against nr, one query and one job; I explicitly authorize that upload and job now.",
+      "expected_skill": "sequence-similarity-and-homology-search",
+      "forbidden_skills": [],
+      "expected_action": "needs-tool-without-reviewed-host-adapter",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "remote-blast-sensitive-confirmation-resolves-on-follow-up",
+      "prompt": "After the Skill disclosed the exact NCBI Remote BLAST upload of this non-patient proprietary synthetic construct to nr for one job, I now grant that scoped authorization; continue without asking again.",
+      "expected_skill": "sequence-similarity-and-homology-search",
+      "forbidden_skills": [],
+      "expected_action": "needs-tool-without-reviewed-host-adapter",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "unstandardized-molecule-routes-first",
+      "prompt": "Find similar compounds for this salt-containing, unstandardized SMILES; no parent-fragment policy has been chosen.",
+      "expected_skill": "molecule-standardization-and-descriptors",
+      "forbidden_skills": [
+        "chemical-similarity-and-substructure-search"
+      ],
+      "expected_action": "ask-prerequisite-decision-then-wait",
+      "expected_question_count_this_turn": 1,
+      "expected_first_decision_id": "fragment-policy"
+    },
+    {
+      "id": "structural-database-search-near-neighbor",
+      "prompt": "Search all of PDB for remote fold neighbors of this structure; I am not asking for a pairwise comparison.",
+      "expected_skill": null,
+      "forbidden_skills": [
+        "protein-structure-retrieval-and-comparison"
+      ],
+      "expected_action": "route-away",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "vcf-missing-reference-first",
+      "prompt": "Normalize calls.vcf.gz and write normalized.vcf.gz; the exact reference is missing and I have not decided whether to decompose multiallelic records.",
+      "expected_skill": "vcf-normalization-qc-and-query",
+      "forbidden_skills": [],
+      "expected_action": "ask-with-recommendation-then-wait",
+      "expected_question_count_this_turn": 1,
+      "expected_first_decision_id": "vcf-reference"
+    },
+    {
+      "id": "vcf-fully-specified-no-repeat",
+      "prompt": "Normalize calls.vcf.gz against the declared GRCh38 reference digest, decompose multiallelic records, preserve IDs, alleles, genotypes, and annotations, and write a new normalized.vcf.gz now.",
+      "expected_skill": "vcf-normalization-qc-and-query",
+      "forbidden_skills": [],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    }
+  ]
+}

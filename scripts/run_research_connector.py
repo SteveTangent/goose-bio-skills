@@ -14,7 +14,7 @@ import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from email.message import Message
-from http.client import HTTPException
+from http.client import HTTPException, InvalidURL
 from pathlib import Path
 from typing import Callable
 from urllib.error import HTTPError, URLError
@@ -24,7 +24,7 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PATH = ROOT / "connectors" / "providers.json"
-VERSION = "0.4.0"
+VERSION = "0.4.1"
 CATALOG_SCHEMA_VERSION = "0.2.0"
 DEFAULT_MAX_BYTES = 32 * 1024 * 1024
 HARD_MAX_BYTES = 128 * 1024 * 1024
@@ -32,7 +32,7 @@ MAX_PAGES = 20
 MAX_RETRIES = 4
 RETRYABLE_STATUS = {429, 500, 502, 503, 504}
 SUCCESS_STATUS = {
-    "GET": {200, 204},
+    "GET": {200},
     "HEAD": {200, 204},
 }
 SECRET_QUERY_KEYS = {
@@ -53,6 +53,9 @@ SECRET_QUERY_KEYS = {
     "mailto",
     "password",
     "passwd",
+    "pass",
+    "passcode",
+    "pwd",
     "secret",
     "username",
     "xapikey",
@@ -243,10 +246,19 @@ def _decoded_path_has_traversal(path: str) -> bool:
     return "\\" in decoded or any(part in {".", ".."} for part in decoded.split("/"))
 
 
+def decoded_query_pairs(url: str) -> list[tuple[str, str]]:
+    """Parse query pairs conservatively, including legacy semicolon separators."""
+    query = decoded_path(urlsplit(url).query).replace(";", "&")
+    return parse_qsl(query, keep_blank_values=True)
+
+
 def validate_read_only_semantics(provider_id: str, url: str) -> None:
     parsed = urlsplit(url)
     path = decoded_path(parsed.path).lower()
-    query = [(key.lower(), value.strip().lower()) for key, value in parse_qsl(parsed.query, keep_blank_values=True)]
+    query = [
+        (key.lower(), value.strip().lower())
+        for key, value in decoded_query_pairs(url)
+    ]
     if provider_id == "ncbi-eutils":
         if path.endswith("/epost.fcgi"):
             raise ConnectorError("NCBI EPost writes to the History server and requires a job adapter")
@@ -272,22 +284,28 @@ def validate_read_only_semantics(provider_id: str, url: str) -> None:
 
 
 def normalized_query_key(key: str) -> str:
-    return re.sub(r"[-_.\s]+", "", key.strip().lower())
+    return re.sub(r"[^a-z0-9]+", "", decoded_path(key).strip().lower())
 
 
 def is_sensitive_query_key(key: str) -> bool:
+    components = re.findall(r"[a-z0-9]+", decoded_path(key).lower())
     normalized = normalized_query_key(key)
     return (
         normalized in SECRET_QUERY_KEYS
         or normalized in SECRET_KEY_FAMILY
+        or any(
+            component in SECRET_KEY_FAMILY
+            or component in {"pass", "passcode", "pwd"}
+            for component in components
+        )
         or any(fragment in normalized for fragment in SECRET_QUERY_FRAGMENTS)
     )
 
 
-def sensitive_query_pairs(url: str) -> frozenset[tuple[str, str]]:
+def sensitive_query_pairs(url: str) -> frozenset[str]:
     return frozenset(
-        (normalized_query_key(key), value)
-        for key, value in parse_qsl(urlsplit(url).query, keep_blank_values=True)
+        normalized_query_key(key)
+        for key, _value in decoded_query_pairs(url)
         if is_sensitive_query_key(key)
     )
 
@@ -297,8 +315,8 @@ def validate_url(
     url: str,
     policy: Policy,
 ) -> str:
-    if any(ord(char) < 32 for char in url):
-        raise ConnectorError("URL contains control characters")
+    if any(ord(char) < 33 or ord(char) > 126 for char in url):
+        raise ConnectorError("URL must use printable ASCII with non-ASCII data percent-encoded")
     try:
         parsed = urlsplit(url)
         hostname = parsed.hostname
@@ -338,6 +356,8 @@ def validate_url(
 
 def redact_url(url: str) -> str:
     parsed = urlsplit(url)
+    if sensitive_query_pairs(url):
+        return urlunsplit((parsed.scheme, parsed.netloc, parsed.path, "redacted_sensitive_query=1", ""))
     redacted = [
         (key, "<redacted>" if is_sensitive_query_key(key) else value)
         for key, value in parse_qsl(parsed.query, keep_blank_values=True)
@@ -398,6 +418,42 @@ def read_bounded(response, remaining: int) -> bytes:  # type: ignore[no-untyped-
             raise ConnectorError("response exceeds --max-bytes")
 
 
+def validate_response_payload(body: bytes, content_type: object) -> None:
+    media_type = str(content_type or "").split(";", 1)[0].strip().lower()
+    prefix = body[:65536]
+    html_prefix = re.compile(
+        rb"^(?:\xef\xbb\xbf)?(?:\s|<!--.*?-->)*(?:<!doctype\s+html|<html(?:\s|>))",
+        re.IGNORECASE | re.DOTALL,
+    )
+    if media_type in {"text/html", "application/xhtml+xml"} or html_prefix.match(prefix):
+        raise ConnectorError("provider returned an HTML page instead of a research payload")
+    if not body.strip():
+        raise ConnectorError("HTTP 200 GET response contained no payload")
+    normalized_prefix = prefix.lstrip(b"\xef\xbb\xbf \t\r\n")
+    looks_like_json = "json" in media_type or normalized_prefix.startswith((b"{", b"["))
+    if looks_like_json:
+        try:
+            decoded = json.loads(body.decode("utf-8-sig"))
+        except (UnicodeError, json.JSONDecodeError) as exc:
+            raise ConnectorError("provider returned malformed JSON") from exc
+        else:
+            if isinstance(decoded, dict):
+                normalized = {str(key).lower(): value for key, value in decoded.items()}
+                error_value = normalized.get(
+                    "error",
+                    normalized.get("errors", normalized.get("fault")),
+                )
+                status_value = str(normalized.get("status", "")).strip().lower()
+                if bool(error_value) or status_value in {"error", "failed", "failure"}:
+                    raise ConnectorError("provider returned an explicit error payload")
+    if re.search(
+        rb"<(?:[A-Za-z_][A-Za-z0-9_.-]*:)?(?:ERROR|ERRORS|FAULT)(?:\s|>)",
+        prefix,
+        re.IGNORECASE,
+    ):
+        raise ConnectorError("provider returned an explicit XML error payload")
+
+
 def request_once(
     provider_id: str,
     policy: Policy,
@@ -425,8 +481,8 @@ def request_once(
     }
     last_error: Exception | None = None
     for attempt in range(retries + 1):
-        request = Request(url, headers=headers, method=method)
         try:
+            request = Request(url, headers=headers, method=method)
             response = open_request(request, timeout)
             try:
                 try:
@@ -441,16 +497,19 @@ def request_once(
                     raise ConnectorError("response body could not be read completely") from exc
                 if status == 204 and body:
                     raise ConnectorError("HTTP 204 response unexpectedly contained a body")
+                response_headers = getattr(response, "headers")
+                content_type = response_headers.get("Content-Type")
+                if method == "GET" and status == 200:
+                    validate_response_payload(body, content_type)
                 response_url = validate_url(
                     provider_id,
                     str(getattr(response, "geturl")()),
                     policy,
                 )
-                response_headers = getattr(response, "headers")
                 return body, {
                     "status": status,
                     "response_url": redact_url(response_url),
-                    "content_type": response_headers.get("Content-Type"),
+                    "content_type": content_type,
                     "etag": response_headers.get("ETag"),
                     "last_modified": response_headers.get("Last-Modified"),
                 }
@@ -460,10 +519,20 @@ def request_once(
                     close()
         except HTTPError as exc:
             last_error = exc
-            if exc.code not in RETRYABLE_STATUS or attempt == retries:
-                raise ConnectorError(f"HTTP request failed with status {exc.code}") from exc
-            sleeper(retry_delay(exc, attempt))
+            try:
+                if exc.code not in RETRYABLE_STATUS or attempt == retries:
+                    raise ConnectorError(f"HTTP request failed with status {exc.code}") from exc
+                sleeper(retry_delay(exc, attempt))
+            finally:
+                exc.close()
         except URLError as exc:
+            last_error = exc
+            if attempt == retries:
+                raise ConnectorError("network request failed after retries") from exc
+            sleeper(retry_delay(None, attempt))
+        except InvalidURL as exc:
+            raise ConnectorError("network URL was rejected") from exc
+        except (HTTPException, OSError, ValueError) as exc:
             last_error = exc
             if attempt == retries:
                 raise ConnectorError("network request failed after retries") from exc
@@ -747,22 +816,42 @@ def self_test(catalog: dict[str, object]) -> int:
         "secret_key",
         "contact",
         "user_email",
+        "pwd",
+        "pass",
+        "auth%5Bpass%5D",
+        "api%255Fkey",
+        "credentials%255Btoken%255D",
     ):
+        secret_url = (
+            f"https://rest.uniprot.org/uniprotkb/P04637.json?{secret_key}=not-a-secret"
+        )
         try:
-            validate_url(
-                "uniprot-rest",
-                f"https://rest.uniprot.org/uniprotkb/P04637.json?{secret_key}=not-a-secret",
-                uniprot,
-            )
-        except ConnectorError:
-            pass
+            validate_url("uniprot-rest", secret_url, uniprot)
+        except ConnectorError as exc:
+            if "not-a-secret" in str(exc) or "not-a-secret" in redact_url(secret_url):
+                raise ConnectorError("credential rejection leaked a query value") from exc
         else:
             raise ConnectorError(f"credential query key was accepted: {secret_key}")
+    for ambiguous_url in (
+        "https://rest.uniprot.org/uniprotkb/P04637.json?term=x;api_key=not-a-secret",
+        "https://rest.uniprot.org/uniprotkb/P04637.json?term=x%3Bapi_key=not-a-secret",
+        "https://rest.uniprot.org/uniprotkb/P04637.json?term=x%3Bapi%5Fkey=not-a-secret",
+        "https://rest.uniprot.org/uniprotkb/P04637.json?term=x%253Bapi%255Fkey=not-a-secret",
+    ):
+        try:
+            validate_url("uniprot-rest", ambiguous_url, uniprot)
+        except ConnectorError as exc:
+            if "not-a-secret" in str(exc) or "not-a-secret" in redact_url(ambiguous_url):
+                raise ConnectorError("credential rejection leaked a query value") from exc
+        else:
+            raise ConnectorError("semicolon-delimited credential field was accepted")
     checks += 1
     for bad_url in (
         "http://rest.uniprot.org/uniprotkb/P04637.json",
         "https://example.org/uniprotkb/P04637.json",
         "https://rest.uniprot.org/../private",
+        "https://rest.uniprot.org/uniprotkb/P0 4637.json",
+        "https://rest.uniprot.org/uniprotkb/search?query=肝癌",
     ):
         try:
             validate_url("uniprot-rest", bad_url, uniprot)
@@ -778,16 +867,59 @@ def self_test(catalog: dict[str, object]) -> int:
         "https://maayanlab.cloud/Enrichr/datasetStatistics",
         enrichr,
     )
+    validate_url(
+        "enrichr",
+        "https://maayanlab.cloud/Enrichr/geneSetLibrary?mode=meta",
+        enrichr,
+    )
     for submission_url in (
         "https://maayanlab.cloud/Enrichr/addList",
         "https://maayanlab.cloud/Enrichr/api/addList",
+        "https://maayanlab.cloud/Enrichr/view",
+        "https://maayanlab.cloud/Enrichr/enrich?userListId=1",
+        "https://maayanlab.cloud/Enrichr/export?userListId=1",
     ):
         try:
             validate_url("enrichr", submission_url, enrichr)
         except ConnectorError:
             pass
         else:
-            raise ConnectorError("Enrichr submission path became executable")
+            raise ConnectorError("unreviewed Enrichr path became executable")
+    with tempfile.TemporaryDirectory(prefix="bio02-enrichr-boundary-") as temp_dir:
+        network_calls = 0
+
+        def must_not_open(_request: Request, _timeout: float) -> object:
+            nonlocal network_calls
+            network_calls += 1
+            raise AssertionError("unreviewed Enrichr path reached the network")
+
+        for index, path in enumerate(("view", "enrich", "export")):
+            output = Path(temp_dir) / f"{index}.json"
+            args = argparse.Namespace(
+                provider="enrichr",
+                url=f"https://maayanlab.cloud/Enrichr/{path}",
+                output=output,
+                provenance=None,
+                method="GET",
+                pages=1,
+                page_param=None,
+                page_start=1,
+                page_step=1,
+                max_bytes=1024,
+                timeout=1,
+                retries=0,
+                acknowledge_terms=False,
+            )
+            try:
+                execute(args, catalog, open_request=must_not_open, sleeper=lambda _seconds: None)
+            except ConnectorError:
+                pass
+            else:
+                raise ConnectorError("unreviewed Enrichr execution was accepted")
+            if output.exists() or output.with_name(f"{output.name}.provenance.json").exists():
+                raise ConnectorError("blocked Enrichr path created an artifact")
+        if network_calls:
+            raise ConnectorError("blocked Enrichr path attempted network access")
     checks += 1
 
     redirect_handler = ReviewedRedirectHandler("uniprot-rest", uniprot)
@@ -838,6 +970,8 @@ def self_test(catalog: dict[str, object]) -> int:
     for remote_state_url in (
         "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/epost.fcgi?db=protein&id=1,2",
         "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=p53&usehistory=y",
+        "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=p53;usehistory=y",
+        "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=p53%3Busehistory=y",
         "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=p53&WebEnv=history",
         "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=pubmed&db=pmc&id=1&cmd=neighbor_history",
     ):
@@ -858,6 +992,8 @@ def self_test(catalog: dict[str, object]) -> int:
     for async_url in (
         "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/similarity_2d/cid/2244/cids/JSON",
         "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/fastformula/C6H12O/cids/JSON?list_return=cachekey",
+        "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/fastformula/C6H12O/cids/JSON?x=1;list_return=cachekey",
+        "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/fastformula/C6H12O/cids/JSON?x=1%3Blist_return=cachekey",
         "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/listkey/example/cids/JSON",
     ):
         try:
@@ -942,6 +1078,45 @@ def self_test(catalog: dict[str, object]) -> int:
             raise ConnectorError("anonymous-only execution self-test failed")
     checks += 1
 
+    with tempfile.TemporaryDirectory(prefix="bio02-pagination-pacing-") as temp_dir:
+        pacing_output = Path(temp_dir) / "pages.json"
+        pacing_sleeps: list[float] = []
+        pacing_urls: list[str] = []
+
+        def capture_page(request: Request, _timeout: float) -> object:
+            pacing_urls.append(request.full_url)
+            return FakeResponse(request.full_url, b'{"ok":true}')
+
+        pacing_args = argparse.Namespace(
+            provider="ncbi-eutils",
+            url="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=p53",
+            output=pacing_output,
+            provenance=None,
+            method="GET",
+            pages=3,
+            page_param="retstart",
+            page_start=0,
+            page_step=20,
+            max_bytes=4096,
+            timeout=1,
+            retries=0,
+            acknowledge_terms=False,
+        )
+        execute(
+            pacing_args,
+            catalog,
+            open_request=capture_page,
+            sleeper=pacing_sleeps.append,
+        )
+        expected_delay = 1.0 / ncbi.requests_per_second
+        if (
+            len(pacing_urls) != 3
+            or len(pacing_sleeps) != 2
+            or any(abs(delay - expected_delay) > 1e-12 for delay in pacing_sleeps)
+        ):
+            raise ConnectorError("single-invocation pagination pacing self-test failed")
+    checks += 1
+
     attempts = 0
 
     def flaky(request: Request, _timeout: float) -> object:
@@ -966,6 +1141,28 @@ def self_test(catalog: dict[str, object]) -> int:
         raise ConnectorError("retry self-test failed")
     checks += 1
 
+    def reject_network_url(_request: Request, _timeout: float) -> object:
+        raise InvalidURL("invalid authority")
+
+    try:
+        request_once(
+            "uniprot-rest",
+            uniprot,
+            "GET",
+            "https://rest.uniprot.org/uniprotkb/P04637.json",
+            1,
+            64,
+            0,
+            open_request=reject_network_url,
+            sleeper=lambda _seconds: None,
+        )
+    except ConnectorError as exc:
+        if str(exc) != "network URL was rejected":
+            raise ConnectorError("invalid URL error was not normalized") from exc
+    else:
+        raise ConnectorError("invalid network URL was accepted")
+    checks += 1
+
     try:
         request_once(
             "uniprot-rest",
@@ -987,6 +1184,79 @@ def self_test(catalog: dict[str, object]) -> int:
         pass
     else:
         raise ConnectorError("HTTP 202 completion self-test failed")
+    checks += 1
+
+    invalid_payloads = (
+        (b"", 200, "application/json"),
+        (b" \n\t", 200, "text/plain"),
+        (b"<html>gateway error</html>", 200, "text/html"),
+        (b"\xef\xbb\xbf<!-- proxy --><html>gateway error</html>", 200, "text/plain"),
+        (b"{malformed", 200, "text/plain"),
+        (b'{"error":"invalid record"}', 200, "application/json"),
+        (b'{"Error":"invalid record"}', 200, "application/json"),
+        (b'{"Fault":{"message":"invalid record"}}', 200, "application/json"),
+        (b"<eSearchResult><ERROR>invalid database</ERROR></eSearchResult>", 200, "application/xml"),
+        (b"<eSearchResult><ns:Fault>invalid database</ns:Fault></eSearchResult>", 200, "application/xml"),
+        (b"", 204, "application/json"),
+    )
+    for invalid_body, invalid_status, invalid_content_type in invalid_payloads:
+        try:
+            request_once(
+                "uniprot-rest",
+                uniprot,
+                "GET",
+                "https://rest.uniprot.org/uniprotkb/P04637.json",
+                1,
+                1024,
+                0,
+                open_request=lambda request, timeout, body=invalid_body, status=invalid_status, content_type=invalid_content_type: FakeResponse(
+                    request.full_url,
+                    body,
+                    status=status,
+                    content_type=content_type,
+                ),
+                sleeper=lambda _seconds: None,
+            )
+        except ConnectorError:
+            pass
+        else:
+            raise ConnectorError("invalid provider payload was accepted")
+    with tempfile.TemporaryDirectory(prefix="bio02-invalid-payload-") as temp_dir:
+        invalid_output = Path(temp_dir) / "invalid.json"
+        invalid_args = argparse.Namespace(
+            provider="uniprot-rest",
+            url="https://rest.uniprot.org/uniprotkb/P04637.json",
+            output=invalid_output,
+            provenance=None,
+            method="GET",
+            pages=1,
+            page_param=None,
+            page_start=1,
+            page_step=1,
+            max_bytes=1024,
+            timeout=1,
+            retries=0,
+            acknowledge_terms=False,
+        )
+        try:
+            execute(
+                invalid_args,
+                catalog,
+                open_request=lambda request, timeout: FakeResponse(
+                    request.full_url,
+                    b"<html>gateway error</html>",
+                    content_type="text/html",
+                ),
+                sleeper=lambda _seconds: None,
+            )
+        except ConnectorError:
+            pass
+        else:
+            raise ConnectorError("invalid payload execution was accepted")
+        if invalid_output.exists() or invalid_output.with_name(
+            f"{invalid_output.name}.provenance.json"
+        ).exists():
+            raise ConnectorError("invalid payload created a success artifact")
     checks += 1
 
     def short_response(request: Request, _timeout: float) -> object:

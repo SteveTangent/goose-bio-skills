@@ -1,14 +1,14 @@
 {
   "schema_version": "0.2.0",
   "name": "single-cell-core-analysis",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D05",
   "cluster_id": "C14",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-09",
+  "updated_at": "2026-08-10",
   "last_freshness_check": "2026-08-08",
   "review_cadence": "quarterly",
   "status": "active",
@@ -40,13 +40,13 @@
     "decision_sequence": [
       {
         "decision_id": "single-cell-assay",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "More than one assay could drive preprocessing and the authoritative assay is absent or ambiguous.",
         "question": "Which assay should drive core single-cell preprocessing?",
         "recommended_answer": "Use the validated assay handed off by object I/O and QC."
       },
       {
         "decision_id": "single-cell-objective",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "The exploratory objective is absent or ambiguous and changes normalization or feature selection.",
         "question": "Which exploratory objective should determine normalization and feature selection?",
         "recommended_answer": "Use a small assay-appropriate baseline and preserve authoritative counts."
       }
@@ -79,8 +79,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.3.0",
-    "boundary": "Restore package version 0.3.0 and its matching registry entry."
+    "previous_version": "0.4.0",
+    "boundary": "Restore package version 0.4.0 and its matching registry entry."
   },
   "network_mode": "none",
   "local_adapters": [

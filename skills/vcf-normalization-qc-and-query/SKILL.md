@@ -3,7 +3,7 @@ name: vcf-normalization-qc-and-query
 description: "A user needs VCF-specific reference, allele, genotype, normalization, filtering or query semantics on an existing callset. Exclude: syntax/schema-only validation without VCF-specific semantic QC or operation; variant calling; clinical classification; treating imputed dosage as a directly observed genotype."
 license: Apache-2.0
 metadata:
-  version: "0.4.0"
+  version: "0.4.1"
 ---
 
 # VCF Normalization, QC and Query
@@ -28,8 +28,9 @@ safe local work; seek permission for new material side effects.
 
 Decision order:
 
-1. **multiallelic-decomposition.** Should multiallelic records be decomposed? Recommended: Decompose only when the downstream contract requires it and preserve a mapping to original records.
-2. **vcf-traceability.** Which original VCF fields must remain traceable after transformation? Recommended: Retain identifiers, alleles, genotype semantics and declared annotations in an explicit transformation log.
+1. **vcf-reference.** Which exact reference FASTA and build should govern this VCF operation? Recommended: Require a compatible immutable reference release or digest and stop on contig or REF incompatibility.
+2. **multiallelic-decomposition.** Should multiallelic records be decomposed? Recommended: Decompose only when the downstream contract requires it and preserve a mapping to original records.
+3. **vcf-traceability.** Which original VCF fields must remain traceable after transformation? Recommended: Retain identifiers, alleles, genotype semantics and declared annotations in an explicit transformation log.
 
 ## Workflow
 

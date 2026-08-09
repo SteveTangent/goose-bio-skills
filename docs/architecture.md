@@ -36,7 +36,10 @@ flowchart TD
     GAP -- "No" --> CORE["Run or plan the provider-neutral core"]
     CORE --> NEED{"Reviewed public service needed?"}
     NEED -- "No" --> CHECK["Validate output and status"]
-    NEED -- "Yes" --> CONDITIONAL{"Sensitive upload, remote job,<br/>unrequested bulk, or terms?"}
+    NEED -- "Yes" --> PROHIBITED{"Patient/PHI/controlled data,<br/>credentials, or secrets?"}
+    PROHIBITED -- "Yes" --> BLOCK["Block upload;<br/>use a local path"]
+    BLOCK --> CHECK
+    PROHIBITED -- "No" --> CONDITIONAL{"Other sensitive upload, remote job,<br/>unrequested bulk, or terms?"}
     CONDITIONAL -- "No" --> LIVE["Execute bounded public GET/HEAD"]
     CONDITIONAL -- "Yes" --> DISCLOSE["Disclose provider, data, scope,<br/>destination, and governing terms"]
     DISCLOSE --> CONFIRM["Confirm the exact conditional action"]
@@ -51,11 +54,11 @@ Ask no question when facts already resolve the choice. Ask exactly one question 
 
 ## Public connector contract
 
-The v0.4.0 public connector contract has four execution boundaries:
+The v0.4.1 public connector contract has four execution boundaries:
 
-1. **Bounded public access.** A user's explicit search or retrieval request authorizes the matching allowlisted public `GET` or `HEAD` and requested download. The shared companion enforces reviewed HTTPS hosts and path prefixes, rate limits, timeouts, retry limits, page and byte caps, redirect checks, and non-overwriting output publication.
-2. **Anonymous-only companion.** The shared companion does not read contact, API-key, token, or paid-credential variables. A host may provide a separate authenticated adapter only after disclosing that adapter's data, identity, storage, and billing boundary.
-3. **Conditional actions.** Disclose and confirm the exact scope before a sensitive or controlled upload, remote compute submission, unrequested bulk expansion, or terms-restricted read. KEGG public academic use requires its explicit terms acknowledgement. A confirmation never expands beyond the named data, provider, operation, and scope.
+1. **Bounded public access.** A user's explicit search or retrieval request authorizes the matching allowlisted public `GET` or `HEAD` and requested download. The shared companion enforces reviewed HTTPS hosts and path prefixes, timeouts, retry limits, page and byte caps, redirect checks, non-overwriting output publication, and pacing between paginated requests within one invocation; retry backoff is separate. The agent host must aggregate rate limits across concurrent processes and other traffic sharing the same source address.
+2. **Anonymous-only companion.** The shared companion reads no provider configuration, contact identity, API key, token, or paid credential. Transport follows the agent host's proxy and CA trust policy; a non-default proxy or CA boundary should be disclosed. A host may provide a separate authenticated adapter only after disclosing that adapter's data, identity, storage, and billing boundary.
+3. **Conditional actions.** Patient data, protected health information, controlled-access data, credentials, and secrets are never uploaded. For other non-prohibited sensitive data, disclose and confirm the exact scope before upload or remote compute submission. Unrequested bulk expansion and terms-restricted reads also require scoped confirmation. KEGG public academic use requires its explicit terms acknowledgement. A confirmation never expands beyond the named data, provider, operation, and scope.
 4. **No active paid path.** Metered and paid providers are absent from the executable catalog. The shared companion does not read paid credentials or switch to a paid fallback.
 
 The shared companion at `scripts/run_research_connector.py` currently executes
@@ -70,7 +73,9 @@ checked live response and a create-new, checked payload/provenance pair with
 `network_performed=true`; otherwise it emits `blocked-or-failed` and reports
 whether the network was reached. At the Skill layer, incomplete or truncated
 retrieval stays partial and non-completed, and unsupported jobs return
-`needs-tool`. Provenance binds the provider, redacted request, method,
+`needs-tool`. `Completed` establishes checked retrieval and publication, not
+scientific relevance, biological correctness, or domain-level semantic
+validation. Provenance binds the provider, redacted request, method,
 timestamps, responses, byte count, output digest, pagination, anonymous mode,
 and terms state.
 

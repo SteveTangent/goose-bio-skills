@@ -3,7 +3,7 @@ name: pairwise-and-multiple-sequence-alignment
 description: "A user needs global, local or multiple alignment of an existing sequence set. Exclude: database similarity search; tree inference; asserting positional homology without qualification."
 license: Apache-2.0
 metadata:
-  version: "0.4.0"
+  version: "0.4.1"
 ---
 
 # Pairwise and Multiple Sequence Alignment
@@ -19,32 +19,35 @@ Produce an alignment fit for a declared downstream purpose and report sensitivit
 - validated sequence records
 - alignment objective
 - sequence type and expected divergence
+- for hosted upload: data class, provider, service, and one-job scope
 
 ## Intake
 
-Inspect inputs, tools, versions, and safe metadata first. Ask one unresolved
-result-changing question with a recommendation, then wait. Continue approved
-safe local work; seek permission for new material side effects.
+Inspect safe facts first. Ask one unresolved question with a recommendation,
+then wait; otherwise continue authorized work. Patient, PHI, and
+controlled-access data are a terminal hosted-upload block.
 
 Decision order:
 
-1. **alignment-objective.** Which downstream question must the alignment support? Recommended: Select local, global or multiple alignment from the declared downstream question.
+1. **remote-data-authorization.** May the disclosed sequences be uploaded to the named EMBL-EBI service for this one job? Recommended: prefer local; authorize only the disclosed non-controlled scope.
+2. **alignment-objective.** Which downstream question must the alignment support? Recommended: choose local, global, or multiple alignment from that question.
 
 ## Public network execution
 
-Prefer a local aligner. An explicit hosted-alignment request naming input and
-scope authorizes the matching `embl-ebi-job-dispatcher` job; otherwise disclose
-the sequence upload and ask once. Always confirm sensitive sequences. Record
-input digest, parameters, job ID, provider status, result hash, and network use.
-Failures remain `needs-tool` or partial.
+Prefer local alignment. An exact current request authorizes one disclosed,
+non-sensitive job without repeat confirmation; other allowed sensitive data
+requires one scoped confirmation. Never upload patient, PHI, controlled data,
+credentials, or secrets. Without a reviewed adapter return `needs-tool`.
+Record input digest, parameters, job ID, status, result hash, and network use.
 
 ## Workflow
 
-1. Check sequence type, count, length and divergence clues.
+1. Check type, count, length, divergence, and upload sensitivity without copying raw data into provenance.
 2. Select global, local or multiple alignment based on the stated objective.
-3. Run locally or submit the explicitly authorized bounded remote job with recorded parameters and stable input ordering.
-4. Report coverage, gaps, unstable regions and downstream-use limitations.
-5. Without a compatible declared adapter, return `needs-tool` or `dry-run`; never imply execution.
+3. Choose local execution or resolve exact hosted-job authorization.
+4. Run locally or use the explicitly authorized adapter with stable input order.
+5. Report coverage, gaps, unstable regions and downstream-use limitations.
+6. Without a compatible adapter, return `needs-tool` or `dry-run`.
 
 ## Output contract
 
@@ -65,9 +68,8 @@ does not establish positional homology or cross-engine equivalence.
 ## Guardrails
 
 - Separate pairwise from multiple alignment and declare nucleotide or protein input
-- Declare global or local objective, scoring matrix, gap penalties, strategy, threads, seed if present, and input order
+- Record objective, scoring, gaps, strategy, threads, seed, and input order
 - Write only to a user-approved new output location; never mutate inputs or overwrite a path
-- Partial output is never `completed`; use the truthful non-completed status
-- Record skipped complex-tool execution as unverified, never as passed
+- Never mark partial or skipped execution `completed`
 - Keep credentials, private paths, patient and controlled data out of artifacts
 - Require researcher review for biological interpretation; no clinical authority

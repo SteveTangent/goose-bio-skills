@@ -167,7 +167,7 @@
         "rate_limit_per_second": 3,
         "max_response_bytes": 33554432
       },
-      "official_docs": "https://www.ebi.ac.uk/biostudies/help%23API"
+      "official_docs": "https://www.ebi.ac.uk/biostudies/help#API"
     },
     "rcsb-pdb": {
       "display_name": "RCSB PDB Data API",
@@ -360,12 +360,13 @@
       "execution": {
         "execution_mode": "direct-read",
         "allowed_url_prefixes": [
-          "https://maayanlab.cloud/Enrichr/"
+          "https://maayanlab.cloud/Enrichr/datasetStatistics",
+          "https://maayanlab.cloud/Enrichr/geneSetLibrary"
         ],
         "rate_limit_per_second": 2,
         "max_response_bytes": 16777216
       },
-      "official_docs": "https://maayanlab.cloud/Enrichr/help%23api"
+      "official_docs": "https://maayanlab.cloud/Enrichr/help#api"
     },
     "kegg-rest": {
       "display_name": "KEGG API",

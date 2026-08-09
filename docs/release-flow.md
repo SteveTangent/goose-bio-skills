@@ -2,7 +2,7 @@
 
 `registry.json` is the versioned index of installable packages, not a roadmap. A planned Skill appears in neither `skills/` nor the registry.
 
-Version `0.4.0` admits 23 exact packages across 11 Domains and 15 Clusters under the same atomic package-and-registry boundary.
+Version `0.4.1` admits 23 exact packages across 11 Domains and 15 Clusters under the same atomic package-and-registry boundary.
 
 ## Flow
 
@@ -35,7 +35,7 @@ Research comes first, but preview admission stays lightweight: it requires a rev
 
 1. **Research contract:** the recurring job, inputs, outputs, exclusions, current official/scientific interfaces, assumptions, limits, and owner review are bound to the candidate.
 2. **Rights and trust:** redistribution obligations and required `LICENSE`, `NOTICE`, copyright, or attribution are resolved; dependencies, writes, secrets, protected data, and optional adapters are reviewed.
-3. **Interaction and public services:** Grill is fact-first and asks one recommended question at a time only when needed. An explicit request authorizes its bounded allowlisted public read and requested download. The shared companion is anonymous-only. Sensitive uploads, remote jobs, unrequested bulk expansion, and terms-restricted access require an exact scoped confirmation. Paid or metered providers are absent from the executable catalog.
+3. **Interaction and public services:** Grill is fact-first and asks one recommended question at a time only when needed. An explicit request authorizes its bounded allowlisted public read and requested download. The shared companion is anonymous-only. Patient data, protected health information, controlled-access data, credentials, and secrets are never uploaded. Other non-prohibited sensitive uploads, remote jobs, unrequested bulk expansion, and terms-restricted access require an exact scoped confirmation. Paid or metered providers are absent from the executable catalog.
 4. **Original implementation:** every bundled deterministic script is an original reviewed implementation and passes an offline self-test. Batch, GPU, network, or complex-tool runtime work may be skipped only with the reason, relevant versions, and exact unverified boundary.
 5. **Sanitized atomic admission:** the exact file set, package digest, and matching registry entry are admitted together; private paths, credentials, protected data, hidden network behavior, and unlicensed material are absent.
 
@@ -47,31 +47,39 @@ Public-service declarations are package metadata. The shared companion does not
 accept identity or credential values. Any separate host adapter that uses them
 must disclose its own boundary and never bundle secrets in a package or registry.
 
-The v0.4.0 executable catalog contains reviewed public-free and
+The v0.4.1 executable catalog contains reviewed public-free and
 terms-restricted providers only. A user's explicit search or retrieval request
 authorizes the matching bounded `GET` or `HEAD` and requested download without a
 second acknowledgement. The shared companion at
 `scripts/run_research_connector.py` enforces the provider allowlist, HTTPS host
-and path prefixes, rate, retry, timeout, pagination and byte limits, redirect
-checks, secret redaction, and non-overwriting output publication.
+and path prefixes, retry, timeout, pagination and byte limits, redirect checks,
+secret redaction, non-overwriting output publication, and provider pacing within
+one paginated invocation; retry backoff is separate. The agent host must
+aggregate rate limits across concurrent processes and other traffic sharing the
+same source address.
 
-The shared companion uses anonymous access only. Paid credentials and paid
-fallbacks are outside the executable boundary.
+The shared companion reads no provider configuration or credentials and uses
+anonymous access only. Transport follows the agent host's proxy and CA trust
+policy; a non-default proxy or CA boundary should be disclosed. Paid credentials
+and paid fallbacks are outside the executable boundary.
 
-Confirmation is conditional, not universal: disclose the provider, data,
-operation, scope, destination, and governing terms before a sensitive or
-controlled upload, remote compute job, unrequested bulk expansion, or
-terms-restricted read. The shared companion currently implements public
-`GET`/`HEAD` only. Hosted alignment and remote BLAST therefore require a reviewed
-host adapter; when none is available, the package returns `needs-tool` and must
-not imply that a job was submitted.
+Patient data, protected health information, controlled-access data,
+credentials, and secrets are never uploaded. Confirmation is conditional, not
+universal: disclose the provider, data, operation, scope, destination, and
+governing terms before another non-prohibited sensitive upload, remote compute
+job, unrequested bulk expansion, or terms-restricted read. The shared companion
+currently implements public `GET`/`HEAD` only. Hosted alignment and remote BLAST
+therefore require a reviewed host adapter; when none is available, the package
+returns `needs-tool` and must not imply that a job was submitted.
 
 Execution claims follow evidence. The shared companion emits `completed` only
 when a live response was checked and a create-new, checked payload/provenance pair was
 published with `network_performed=true`; otherwise it emits
 `blocked-or-failed`, reports whether network access began, and leaves no success
 artifact. At the Skill layer, incomplete or truncated work is partial and
-non-completed, while an unsupported job is `needs-tool`. Provenance records the
+non-completed, while an unsupported job is `needs-tool`. `Completed` means the
+retrieval and publication contract was checked; it is not a scientific or
+semantic validation claim. Provenance records the
 provider, redacted request, method, response metadata, timestamps, pagination,
 bytes, digest, output, anonymous execution state, and terms state.
 

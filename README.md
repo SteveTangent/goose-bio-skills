@@ -6,7 +6,7 @@ Bio 02 Skills is a focused collection of 23 Agent Skills for common bioinformati
 
 | Current version | Packages | Release status | External services |
 | --- | ---: | --- | --- |
-| `0.4.0` | 23 | `preview + reviewed` | Bounded public read/download; anonymous-first |
+| `0.4.1` | 23 | `preview + reviewed` | Bounded public read/download; anonymous-first |
 
 ## Why Bio 02 Skills
 
@@ -31,7 +31,8 @@ flowchart LR
     C -. "when declared" .-> X["Reviewed public adapter"]
     X --> T{"Action boundary"}
     T -- "Bounded public GET/HEAD" --> P["Execute live read/download<br/>and record provenance"]
-    T -- "Sensitive upload, remote job,<br/>unrequested bulk, or terms" --> H["Confirm exact scope<br/>or return needs-tool"]
+    T -- "Patient/PHI/controlled data,<br/>credentials, or secrets" --> B["Block upload;<br/>use a local path"]
+    T -- "Other sensitive upload, remote job,<br/>unrequested bulk, or terms" --> H["Confirm exact scope<br/>or return needs-tool"]
 ```
 
 The detailed interaction and connector rules are in [docs/architecture.md](docs/architecture.md).
@@ -83,21 +84,25 @@ See [docs/catalog.md](docs/catalog.md) for Domain, Cluster, risk, dependency, an
 
 An explicit request to search or retrieve from a declared public research
 database authorizes the matching bounded read and requested download. Ordinary
-public access uses reviewed HTTPS hosts, rate and response-size limits, and
-`GET` or `HEAD`; it does not require a second acknowledgement.
+public access uses reviewed HTTPS hosts, `GET` or `HEAD`, per-invocation pacing,
+and response-size limits; it does not require a second acknowledgement.
+Provider pacing is enforced within one invocation, while the agent host must
+coordinate concurrent workers that share a provider or source address.
 
 The shared executor is anonymous-only: it does not read contact, API-key, token,
 or paid-credential variables. A user-supplied host adapter may manage identity
 separately after disclosing that boundary. Paid or metered providers are absent
 from the active catalog.
 
-Separate confirmation is reserved for sending sensitive, controlled, patient,
-proprietary, or unpublished material; starting a remote compute job; expanding
-into bulk work that the user did not request; or accepting provider-specific
-terms such as KEGG's academic-use boundary. The shared companion currently
-executes bounded `GET` and `HEAD` requests only. Conditional job providers such
-as hosted alignment and remote BLAST require a reviewed host adapter; without
-one, the Skill returns `needs-tool` instead of implying submission.
+Patient data, protected health information, controlled-access data,
+credentials, and secrets are never uploaded. Separate confirmation is reserved
+for non-prohibited sensitive material such as proprietary or unpublished data;
+starting a remote compute job; expanding into bulk work that the user did not
+request; or accepting provider-specific terms such as KEGG's academic-use
+boundary. The shared companion currently executes bounded `GET` and `HEAD`
+requests only. Conditional job providers such as hosted alignment and remote
+BLAST require a reviewed host adapter; without one, the Skill returns
+`needs-tool` instead of implying submission.
 
 For example, this command performs a live bounded UniProt retrieval and writes
 both the response and a separate provenance record:
@@ -109,12 +114,14 @@ python3 scripts/run_research_connector.py \
   --output results/P04637.json
 ```
 
-The shared companion emits `completed` only after a live response was checked;
-otherwise it emits `blocked-or-failed` and reports whether any network request
-occurred. At the Skill layer, incomplete or truncated work remains explicitly
-partial and non-completed, and an unsupported job returns `needs-tool`. Live
-provenance records the provider, redacted request URL, method, timestamps,
-responses, byte count, digest, output path, anonymous execution state, terms
+The shared companion emits `completed` only after the response and create-new
+publication contract were checked; this is not a claim that the record is
+scientifically relevant or biologically correct. Otherwise it emits
+`blocked-or-failed` and reports whether any network request occurred. At the
+Skill layer, incomplete or truncated work remains explicitly partial and
+non-completed, and an unsupported job returns `needs-tool`. Live provenance
+records the provider, redacted request URL, method, timestamps, response
+metadata, byte count, digest, output path, anonymous execution state, terms
 state, and `network_performed=true`.
 
 ### External API, data, and tool terms
@@ -150,7 +157,14 @@ The repository includes dependency-free checks for package structure and the sha
 python3 scripts/validate_skeleton.py
 python3 scripts/validate_skeleton.py --self-test
 python3 scripts/run_research_connector.py --self-test
+python3 skills/scientific-file-preflight-and-resource-planning/scripts/preflight_files.py --self-test
+python3 skills/statistical-analysis-and-multiple-testing/scripts/adjust_pvalues.py --self-test
 ```
+
+The skeleton gate also validates the 19 deterministic intake-routing cases in
+[`evals/intake-routing-cases.json`](evals/intake-routing-cases.json). Those
+fixtures test routing and first-question contracts; they are not a claim of
+model-runtime or scientific evaluation.
 
 ## License
 

@@ -3,7 +3,7 @@ name: evidence-synthesis-and-research-traceability
 description: "A user has a defined corpus or retrieval record and needs comparison, synthesis, conflict handling or research traceability. Exclude: unlogged corpus expansion; majority vote over conflicting evidence; clinical advice without governed specialist review."
 license: Apache-2.0
 metadata:
-  version: "0.4.0"
+  version: "0.4.1"
 ---
 
 # Evidence Synthesis and Research Traceability

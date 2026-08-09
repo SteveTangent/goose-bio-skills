@@ -3,7 +3,7 @@ name: proteomics-quantification-table-qc
 description: "Use for QC of an already quantified peptide-, protein-group-, or protein-abundance table and sample metadata. Check missingness, duplicates, scale, and design readiness. Exclude raw MS, identification/FDR, protein inference, normalization, imputation, modeling, and clinical use."
 license: Apache-2.0
 metadata:
-  version: "0.4.0"
+  version: "0.4.1"
 ---
 
 # Proteomics Quantification Table QC

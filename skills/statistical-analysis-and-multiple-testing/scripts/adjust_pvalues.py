@@ -10,6 +10,7 @@ import io
 import json
 import math
 import os
+import stat
 import sys
 import tempfile
 from collections import defaultdict
@@ -17,7 +18,9 @@ from pathlib import Path
 from typing import Any
 
 
-VERSION = "0.4.0"
+VERSION = "0.4.1"
+MAX_INPUT_BYTES = 16 * 1024 * 1024
+MAX_ROWS = 100_000
 
 
 class InputError(Exception):
@@ -55,6 +58,50 @@ def _delimiter(path: Path, requested: str, text: str) -> str:
         raise InputError([_issue("delimiter-not-detected")]) from exc
 
 
+def read_input(path: Path) -> str:
+    """Read one stable, regular, non-symlink input within the declared byte cap."""
+    try:
+        before = path.lstat()
+        if not stat.S_ISREG(before.st_mode):
+            raise InputError([_issue("input-not-regular-file")])
+        if before.st_size > MAX_INPUT_BYTES:
+            raise InputError([_issue("input-too-large")])
+
+        flags = os.O_RDONLY | getattr(os, "O_CLOEXEC", 0) | getattr(os, "O_NONBLOCK", 0)
+        flags |= getattr(os, "O_NOFOLLOW", 0)
+        descriptor = os.open(path, flags)
+        try:
+            opened = os.fstat(descriptor)
+            if not stat.S_ISREG(opened.st_mode):
+                raise InputError([_issue("input-not-regular-file")])
+            if (opened.st_dev, opened.st_ino) != (before.st_dev, before.st_ino):
+                raise InputError([_issue("input-changed-during-read")])
+            if opened.st_size > MAX_INPUT_BYTES:
+                raise InputError([_issue("input-too-large")])
+            with os.fdopen(descriptor, "rb", closefd=False) as handle:
+                payload = handle.read(MAX_INPUT_BYTES + 1)
+            after_open = os.fstat(descriptor)
+        finally:
+            os.close(descriptor)
+
+        after_path = path.lstat()
+        if len(payload) > MAX_INPUT_BYTES:
+            raise InputError([_issue("input-too-large")])
+        stable_fields = ("st_dev", "st_ino", "st_size", "st_mtime_ns", "st_ctime_ns")
+        if any(getattr(opened, field) != getattr(after_open, field) for field in stable_fields):
+            raise InputError([_issue("input-changed-during-read")])
+        if any(getattr(after_open, field) != getattr(after_path, field) for field in stable_fields):
+            raise InputError([_issue("input-changed-during-read")])
+        try:
+            return payload.decode("utf-8-sig")
+        except UnicodeDecodeError as exc:
+            raise InputError([_issue("input-not-utf8")]) from exc
+    except InputError:
+        raise
+    except (OSError, ValueError) as exc:
+        raise InputError([_issue("input-unreadable")]) from exc
+
+
 def parse_table(
     text: str,
     *,
@@ -62,6 +109,7 @@ def parse_table(
     id_column: str,
     p_column: str,
     family_column: str | None,
+    max_rows: int = MAX_ROWS,
 ) -> tuple[list[str], list[dict[str, str]], list[float], dict[str, list[int]]]:
     role_columns = [id_column, p_column] + ([family_column] if family_column else [])
     if len(role_columns) != len(set(role_columns)):
@@ -100,7 +148,10 @@ def parse_table(
     seen_ids: set[str] = set()
 
     try:
-        for line, raw in enumerate(reader, start=2):
+        for row_number, (line, raw) in enumerate(enumerate(reader, start=2), start=1):
+            if row_number > max_rows:
+                issues.append(_issue("too-many-rows", line=line))
+                break
             values = [value for key, value in raw.items() if key is not None]
             if raw.get(None) is not None:
                 issues.append(_issue("ragged-row", line=line))
@@ -264,10 +315,32 @@ def _safe_output_target(path: Path, root: Path | None) -> Path:
     return candidate
 
 
+def _unlink_owned(path: Path, identity: tuple[int, int]) -> bool:
+    """Unlink only the exact inode created by this invocation."""
+    try:
+        current = path.lstat()
+    except FileNotFoundError:
+        return True
+    if (current.st_dev, current.st_ino) != identity:
+        return False
+    path.unlink()
+    return True
+
+
+def _fsync_directory(path: Path) -> None:
+    directory_fd = os.open(path, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
+    try:
+        os.fsync(directory_fd)
+    finally:
+        os.close(directory_fd)
+
+
 def write_new(path: Path, text: str, *, root: Path | None = None) -> Path:
     target = _safe_output_target(path, root)
     fd, temporary_name = tempfile.mkstemp(prefix=f".{target.name}.tmp-", dir=target.parent)
     temporary = Path(temporary_name)
+    temporary_identity = os.fstat(fd)
+    owned_inode = (temporary_identity.st_dev, temporary_identity.st_ino)
     published = False
     try:
         with os.fdopen(fd, "w", encoding="utf-8", newline="") as handle:
@@ -277,22 +350,15 @@ def write_new(path: Path, text: str, *, root: Path | None = None) -> Path:
             os.fsync(handle.fileno())
         os.link(temporary, target)
         published = True
-        directory_fd = os.open(target.parent, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
-        try:
-            os.fsync(directory_fd)
-        finally:
-            os.close(directory_fd)
+        _fsync_directory(target.parent)
+        if not _unlink_owned(temporary, owned_inode):
+            raise OSError("temporary output identity changed before cleanup")
+        _fsync_directory(target.parent)
     except BaseException:
-        temporary.unlink(missing_ok=True)
         if published:
-            target.unlink(missing_ok=True)
+            _unlink_owned(target, owned_inode)
+        _unlink_owned(temporary, owned_inode)
         raise
-    temporary.unlink()
-    directory_fd = os.open(target.parent, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
-    try:
-        os.fsync(directory_fd)
-    finally:
-        os.close(directory_fd)
     return target
 
 
@@ -336,7 +402,79 @@ def self_test() -> None:
     if float(boundary_row["p_adjusted"]) <= 0.05 or boundary_row["decision"] != "not-rejected":
         raise RuntimeError("serialized alpha boundary contradicts its decision")
 
-    print(json.dumps({"status": "pass", "version": VERSION, "checks": 4}, sort_keys=True))
+    with tempfile.TemporaryDirectory(prefix="adjust-pvalues-selftest-") as temporary_name:
+        test_root = Path(temporary_name)
+        regular_input = test_root / "input.tsv"
+        regular_input.write_text("record_id\tp_value\nA\t0.01\n", encoding="utf-8")
+        if read_input(regular_input) != "record_id\tp_value\nA\t0.01\n":
+            raise RuntimeError("regular input self-test differs")
+
+        linked_input = test_root / "linked.tsv"
+        linked_input.symlink_to(regular_input)
+        try:
+            read_input(linked_input)
+        except InputError as exc:
+            if [item["code"] for item in exc.issues] != ["input-not-regular-file"]:
+                raise RuntimeError("symlink input self-test result differs")
+        else:
+            raise AssertionError("symlink input was accepted")
+
+        oversized_input = test_root / "oversized.tsv"
+        with oversized_input.open("wb") as handle:
+            handle.truncate(MAX_INPUT_BYTES + 1)
+        try:
+            read_input(oversized_input)
+        except InputError as exc:
+            if [item["code"] for item in exc.issues] != ["input-too-large"]:
+                raise RuntimeError("oversized input self-test result differs")
+        else:
+            raise AssertionError("oversized input was accepted")
+
+        try:
+            parse_table(
+                "record_id\tp_value\nA\t0.01\nB\t0.02\nC\t0.03\n",
+                delimiter="\t",
+                id_column="record_id",
+                p_column="p_value",
+                family_column=None,
+                max_rows=2,
+            )
+        except InputError as exc:
+            if [item["code"] for item in exc.issues] != ["too-many-rows"]:
+                raise RuntimeError("row-limit self-test result differs")
+        else:
+            raise AssertionError("row limit was not enforced")
+
+        output = test_root / "race.tsv"
+        replacement = test_root / "replacement.tsv"
+        replacement.write_text("replacement\n", encoding="utf-8")
+        real_fsync = os.fsync
+        fsync_calls = 0
+
+        def fail_publish_fsync(descriptor: int) -> None:
+            nonlocal fsync_calls
+            fsync_calls += 1
+            if fsync_calls == 2:
+                os.replace(replacement, output)
+                raise OSError("injected directory fsync failure")
+            real_fsync(descriptor)
+
+        os.fsync = fail_publish_fsync
+        try:
+            try:
+                write_new(output, "owned\n", root=test_root)
+            except OSError:
+                pass
+            else:
+                raise AssertionError("injected publication failure did not fail")
+        finally:
+            os.fsync = real_fsync
+        if output.read_text(encoding="utf-8") != "replacement\n":
+            raise RuntimeError("rollback removed a concurrently replaced output")
+        if list(test_root.glob(f".{output.name}.tmp-*")):
+            raise RuntimeError("owned temporary output was not cleaned")
+
+    print(json.dumps({"status": "pass", "version": VERSION, "checks": 9}, sort_keys=True))
 
 
 def parser() -> argparse.ArgumentParser:
@@ -367,7 +505,7 @@ def main(argv: list[str] | None = None) -> int:
     if os.path.abspath(args.output) == os.path.abspath(args.validation_output):
         parser().error("--output and --validation-output must be different paths")
     try:
-        text = args.input.read_text(encoding="utf-8-sig")
+        text = read_input(args.input)
         delimiter = _delimiter(args.input, args.delimiter, text)
         rendered, summary = process(
             text,

@@ -1,14 +1,14 @@
 {
   "schema_version": "0.2.0",
   "name": "molecule-standardization-and-descriptors",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D10",
   "cluster_id": "C28",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-09",
+  "updated_at": "2026-08-10",
   "last_freshness_check": "2026-08-08",
   "review_cadence": "quarterly",
   "status": "active",
@@ -40,25 +40,25 @@
     "decision_sequence": [
       {
         "decision_id": "fragment-policy",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "Salts or mixtures are present or possible and the parent-fragment policy is absent or ambiguous.",
         "question": "Which parent-fragment policy should handle salts and mixtures?",
         "recommended_answer": "Preserve the original and select a declared parent without silently discarding components."
       },
       {
         "decision_id": "charge-policy",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "The charge or protonation policy for the requested standardization is absent or ambiguous.",
         "question": "Which charge or protonation policy should standardization use?",
         "recommended_answer": "Freeze one policy matched to the downstream use and record every change."
       },
       {
         "decision_id": "tautomer-policy",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "The tautomer policy for the requested standardization is absent or ambiguous.",
         "question": "Which tautomer policy should standardization use?",
         "recommended_answer": "Use one versioned deterministic policy and retain the original representation."
       },
       {
         "decision_id": "stereochemistry-policy",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "Specified or unspecified stereochemistry is present and its preservation policy is absent or ambiguous.",
         "question": "How should specified and unspecified stereochemistry be preserved?",
         "recommended_answer": "Preserve specified stereochemistry and keep unspecified centers explicitly unknown."
       }
@@ -91,8 +91,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.3.0",
-    "boundary": "Restore package version 0.3.0 and its matching registry entry."
+    "previous_version": "0.4.0",
+    "boundary": "Restore package version 0.4.0 and its matching registry entry."
   },
   "network_mode": "none",
   "local_adapters": [

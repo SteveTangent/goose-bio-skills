@@ -3,7 +3,7 @@ name: scientific-file-preflight-and-resource-planning
 description: "Use for a bounded, read-only preflight of explicitly named local scientific files before a workflow starts. Estimate container clues, index presence, and conservative resource floors. Exclude full validation, recursion, decompression, repair, conversion, execution, and biological interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.4.0"
+  version: "0.4.1"
 ---
 
 # Scientific File Preflight and Resource Planning
@@ -26,8 +26,12 @@ Require:
 - a new JSON output path in an existing directory.
 
 An explicit request authorizes these bounded reads and the new report. If the
-operation class is missing, ask one question and recommend naming the actual
-downstream operation; do not ask for a second execution confirmation.
+operation class is missing, ask one question with a recommendation, then wait;
+do not ask for a second execution confirmation.
+
+Decision order:
+
+1. **operation-class.** Which downstream operation should this preflight plan for? Recommended: Name the actual next operation so the report can apply the correct resource-planning floor.
 
 ## Run
 

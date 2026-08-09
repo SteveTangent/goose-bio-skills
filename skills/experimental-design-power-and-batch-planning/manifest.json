@@ -1,14 +1,14 @@
 {
   "schema_version": "0.2.0",
   "name": "experimental-design-power-and-batch-planning",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D12",
   "cluster_id": "C34",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-09",
+  "updated_at": "2026-08-10",
   "last_freshness_check": "2026-08-08",
   "review_cadence": "quarterly",
   "status": "active",
@@ -40,13 +40,13 @@
     "decision_sequence": [
       {
         "decision_id": "design-primary-contrast",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "The primary prospective contrast or estimand is absent or ambiguous.",
         "question": "What is the primary prospective contrast?",
         "recommended_answer": "Choose one primary estimand before allocating samples."
       },
       {
         "decision_id": "minimum-meaningful-effect",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "A power or precision calculation is requested and the minimum scientifically meaningful effect is absent or ambiguous.",
         "question": "What minimum effect would be scientifically meaningful?",
         "recommended_answer": "Use a plausible domain-informed effect and show sensitivity rather than a single optimistic value."
       }
@@ -79,8 +79,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.3.0",
-    "boundary": "Restore package version 0.3.0 and its matching registry entry."
+    "previous_version": "0.4.0",
+    "boundary": "Restore package version 0.4.0 and its matching registry entry."
   },
   "network_mode": "none",
   "local_adapters": [

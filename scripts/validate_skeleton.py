@@ -7,6 +7,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import os
 import re
 import shlex
 import subprocess
@@ -18,8 +19,8 @@ from urllib.parse import urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
-VALIDATOR_VERSION = "0.7.0"
-PUBLIC_PACKAGE_VERSION = "0.4.0"
+VALIDATOR_VERSION = "0.8.0"
+PUBLIC_PACKAGE_VERSION = "0.4.1"
 MANIFEST_SCHEMA_VERSION = "0.2.0"
 REGISTRY_SCHEMA_VERSION = "0.5.0"
 PROVIDER_CATALOG_SCHEMA_VERSION = "0.2.0"
@@ -40,6 +41,64 @@ DECISION_FIELDS = {
     "applies_when",
     "question",
     "recommended_answer",
+}
+INTAKE_EVAL_SCHEMA_VERSION = "0.1.0"
+INTAKE_EVAL_FIELDS = {
+    "schema_version",
+    "evidence_kind",
+    "assurance_note",
+    "cases",
+}
+INTAKE_CASE_FIELDS = {
+    "id",
+    "prompt",
+    "expected_skill",
+    "forbidden_skills",
+    "expected_action",
+    "expected_question_count_this_turn",
+    "expected_first_decision_id",
+}
+CRITICAL_INTAKE_CASES = {
+    "raw-count-de-routes-away-from-pvalue-helper": (
+        "count-based-differential-expression",
+        0,
+        None,
+    ),
+    "pvalues-fully-specified-local": (
+        "statistical-analysis-and-multiple-testing",
+        0,
+        None,
+    ),
+    "remote-blast-prohibited-patient-data": (
+        "sequence-similarity-and-homology-search",
+        0,
+        None,
+    ),
+    "remote-blast-sensitive-authorization": (
+        "sequence-similarity-and-homology-search",
+        1,
+        "remote-data-authorization",
+    ),
+    "remote-blast-sensitive-confirmation-resolves-on-follow-up": (
+        "sequence-similarity-and-homology-search",
+        0,
+        None,
+    ),
+    "remote-blast-explicit-nonsensitive-no-repeat": (
+        "sequence-similarity-and-homology-search",
+        0,
+        None,
+    ),
+    "vcf-missing-reference-first": (
+        "vcf-normalization-qc-and-query",
+        1,
+        "vcf-reference",
+    ),
+    "vcf-fully-specified-no-repeat": (
+        "vcf-normalization-qc-and-query",
+        0,
+        None,
+    ),
 }
 
 RELEASE_STAGES = {"preview", "stable"}
@@ -116,11 +175,14 @@ PROVIDER_EXECUTION_MODES = {
 EXTERNAL_SERVICE_BOUNDARY_CONTRACT = {
     "public_access": "explicit-request-authorizes-bounded-read-download",
     "confirmation": "sensitive-upload-remote-job-bulk-or-paid",
-    "config_access": "shared-companion-reads-no-user-config",
+    "config_access": "shared-companion-reads-no-provider-config-or-credentials",
     "credential_policy": "shared-companion-anonymous-only",
     "standalone_fallback": "needs-tool-dry-run-or-partial",
     "call_claim": "only-after-checked-live-response",
 }
+GENERIC_APPLIES_WHEN = (
+    "this Skill is correctly routed and this decision affects the requested result or execution contract"
+)
 LEGAL_NOTICE_PREFIXES = (
     "LICENSE",
     "NOTICE",
@@ -131,6 +193,7 @@ LEGAL_NOTICE_PREFIXES = (
     "THIRD-PARTY-NOTICES",
 )
 CODE_SUFFIXES = {".py", ".r", ".sh", ".bash", ".zsh", ".pl", ".rb", ".js", ".ts"}
+SOURCE_SCAN_EXCLUDED_DIRS = {".git", "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
 SEMVER = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$")
 SHA256 = re.compile(r"^[a-f0-9]{64}$")
 PREVIEW_POSITIVE_CLAIMS = (
@@ -164,11 +227,27 @@ def valid_date(value: object) -> bool:
     return True
 
 
+class DuplicateJSONKeyError(ValueError):
+    """A JSON object contains an ambiguous repeated member name."""
+
+
+def json_loads_no_duplicates(text: str) -> object:
+    def pairs_hook(pairs: list[tuple[str, object]]) -> dict[str, object]:
+        result: dict[str, object] = {}
+        for key, value in pairs:
+            if key in result:
+                raise DuplicateJSONKeyError(f"duplicate JSON key: {key}")
+            result[key] = value
+        return result
+
+    return json.loads(text, object_pairs_hook=pairs_hook)
+
+
 def load_json(relative_path: str) -> object:
     path = ROOT / relative_path
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+        return json_loads_no_duplicates(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError, DuplicateJSONKeyError) as exc:
         ERRORS.append(f"{relative_path}: invalid or unreadable JSON: {exc}")
         return {}
 
@@ -459,6 +538,17 @@ def validate_manifest_intake(manifest: dict[str, object], label: str) -> None:
         if not isinstance(decision_id, str) or not decision_id:
             continue
         require(decision_id not in seen_ids, f"{label}: duplicate decision_id")
+
+        applies_when = decision.get("applies_when")
+        require(
+            nonempty_string(applies_when),
+            f"{label}: applies_when must be a non-empty string",
+        )
+        if isinstance(applies_when, str):
+            require(
+                applies_when.strip() != GENERIC_APPLIES_WHEN,
+                f"{label}: applies_when must name a concrete unresolved condition",
+            )
 
         question = decision.get("question")
         require(isinstance(question, str) and question.endswith("?"), f"{label}: decision question must end in ?")
@@ -775,6 +865,116 @@ def validate_dependency_references(
             )
 
 
+def validate_intake_routing_fixture(
+    fixture: object,
+    manifests: dict[str, dict[str, object]],
+    label: str,
+) -> None:
+    require(isinstance(fixture, dict), f"{label}: expected an object")
+    if not isinstance(fixture, dict):
+        return
+    require(set(fixture) == INTAKE_EVAL_FIELDS, f"{label}: fields do not match contract")
+    require(
+        fixture.get("schema_version") == INTAKE_EVAL_SCHEMA_VERSION,
+        f"{label}: wrong schema version",
+    )
+    require(
+        fixture.get("evidence_kind") == "deterministic-contract-fixture",
+        f"{label}: wrong evidence kind",
+    )
+    assurance_note = fixture.get("assurance_note")
+    require(
+        nonempty_string(assurance_note)
+        and "not model-runtime evidence" in assurance_note
+        and "not be reported as evaluated assurance" in assurance_note,
+        f"{label}: assurance boundary is incomplete",
+    )
+    cases = fixture.get("cases")
+    require(isinstance(cases, list) and bool(cases), f"{label}: cases must be non-empty")
+    if not isinstance(cases, list):
+        return
+
+    seen_ids: set[str] = set()
+    by_id: dict[str, dict[str, object]] = {}
+    for case in cases:
+        require(isinstance(case, dict), f"{label}: every case must be an object")
+        if not isinstance(case, dict):
+            continue
+        require(set(case) == INTAKE_CASE_FIELDS, f"{label}: case fields do not match contract")
+        case_id = case.get("id")
+        require(
+            isinstance(case_id, str) and bool(re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", case_id)),
+            f"{label}: invalid case ID",
+        )
+        if not isinstance(case_id, str) or not case_id:
+            continue
+        require(case_id not in seen_ids, f"{label}: duplicate case ID {case_id}")
+        seen_ids.add(case_id)
+        by_id[case_id] = case
+        require(nonempty_string(case.get("prompt")), f"{label}/{case_id}: prompt must be non-empty")
+        require(
+            nonempty_string(case.get("expected_action")),
+            f"{label}/{case_id}: expected_action must be non-empty",
+        )
+        expected_skill = case.get("expected_skill")
+        require(
+            expected_skill is None or expected_skill in manifests,
+            f"{label}/{case_id}: expected_skill is unknown",
+        )
+        forbidden = case.get("forbidden_skills")
+        require(
+            isinstance(forbidden, list)
+            and all(isinstance(item, str) and item in manifests for item in forbidden),
+            f"{label}/{case_id}: forbidden_skills contains an unknown package",
+        )
+        if isinstance(forbidden, list):
+            require(len(forbidden) == len(set(forbidden)), f"{label}/{case_id}: duplicate forbidden skill")
+            require(expected_skill not in forbidden, f"{label}/{case_id}: expected skill is forbidden")
+
+        question_count = case.get("expected_question_count_this_turn")
+        first_decision = case.get("expected_first_decision_id")
+        require(question_count in {0, 1}, f"{label}/{case_id}: question count must be 0 or 1")
+        if question_count == 0:
+            require(first_decision is None, f"{label}/{case_id}: zero-question case names a decision")
+        elif question_count == 1:
+            require(
+                isinstance(expected_skill, str) and nonempty_string(first_decision),
+                f"{label}/{case_id}: one-question case needs a Skill decision",
+            )
+            if isinstance(expected_skill, str) and expected_skill in manifests:
+                intake = manifests[expected_skill].get("intake_contract")
+                decisions = intake.get("decision_sequence") if isinstance(intake, dict) else None
+                decision_ids = {
+                    item.get("decision_id")
+                    for item in decisions
+                    if isinstance(item, dict)
+                } if isinstance(decisions, list) else set()
+                require(
+                    first_decision in decision_ids,
+                    f"{label}/{case_id}: first decision is absent from the Skill manifest",
+                )
+
+    require(len(cases) == 19, f"{label}: expected 19 canonical cases")
+    for case_id, expected in CRITICAL_INTAKE_CASES.items():
+        case = by_id.get(case_id)
+        require(case is not None, f"{label}: missing critical case {case_id}")
+        if case is None:
+            continue
+        observed = (
+            case.get("expected_skill"),
+            case.get("expected_question_count_this_turn"),
+            case.get("expected_first_decision_id"),
+        )
+        require(observed == expected, f"{label}/{case_id}: critical oracle differs")
+
+
+def validate_intake_routing_cases(
+    manifests: dict[str, dict[str, object]],
+) -> None:
+    fixture = load_json("evals/intake-routing-cases.json")
+    validate_intake_routing_fixture(fixture, manifests, "intake routing fixture")
+
+
 def validate_template() -> None:
     template_path = ROOT / "templates/skill/SKILL.md.tmpl"
     template = template_path.read_text(encoding="utf-8")
@@ -824,10 +1024,19 @@ def validate_release_version() -> None:
     validate_apache_license(ROOT / "LICENSE", "repository")
 
 
-def run_connector_self_test() -> None:
-    script = ROOT / "scripts/run_research_connector.py"
-    require(script.is_file(), "connector runtime: shared executor is missing")
-    if not script.is_file():
+def run_connector_self_test(root: Path = ROOT) -> None:
+    script = root / "scripts/run_research_connector.py"
+    safe_script = (
+        script.is_file()
+        and not script.is_symlink()
+        and not script.parent.is_symlink()
+        and script.resolve().is_relative_to(root.resolve())
+    )
+    require(
+        safe_script,
+        "connector runtime: shared executor must be a regular in-repository file",
+    )
+    if not safe_script:
         return
     try:
         completed = subprocess.run(
@@ -847,8 +1056,8 @@ def run_connector_self_test() -> None:
     if completed.returncode != 0 or not lines:
         return
     try:
-        result = json.loads(lines[-1])
-    except json.JSONDecodeError:
+        result = json_loads_no_duplicates(lines[-1])
+    except (json.JSONDecodeError, DuplicateJSONKeyError):
         require(False, "connector runtime: self-test final output is not JSON")
         return
     require(isinstance(result, dict), "connector runtime: self-test result must be an object")
@@ -860,14 +1069,25 @@ def run_connector_self_test() -> None:
     require(result.get("paid_use_authorized") is False, "connector runtime: self-test authorized paid use")
 
 
-def package_has_scripts(package: Path) -> bool:
-    scripts = package / "scripts"
-    return scripts.is_dir() and any(
-        path.is_file()
-        and path.suffix.lower() in CODE_SUFFIXES
-        and not any(part.startswith(".") for part in path.relative_to(scripts).parts)
-        for path in scripts.rglob("*")
-    )
+def package_code_files(package: Path) -> list[Path]:
+    result: list[Path] = []
+    for path in package.rglob("*"):
+        if not path.is_file() or path.is_symlink():
+            continue
+        relative = path.relative_to(package)
+        if any(part.startswith(".") for part in relative.parts):
+            continue
+        recognized_suffix = path.suffix.lower() in CODE_SUFFIXES
+        in_scripts_directory = bool(relative.parts) and relative.parts[0] == "scripts"
+        if recognized_suffix or in_scripts_directory:
+            result.append(path)
+    return sorted(result)
+
+
+def package_symlinks(package: Path) -> list[Path]:
+    if package.is_symlink():
+        return [package]
+    return sorted(path for path in package.rglob("*") if path.is_symlink())
 
 
 def parse_script_self_test_output(stdout: str, expected_version: object, label: str) -> None:
@@ -876,8 +1096,8 @@ def parse_script_self_test_output(stdout: str, expected_version: object, label: 
     if not lines:
         return
     try:
-        result = json.loads(lines[-1])
-    except json.JSONDecodeError:
+        result = json_loads_no_duplicates(lines[-1])
+    except (json.JSONDecodeError, DuplicateJSONKeyError):
         require(False, f"{label}: self-test final output line is not JSON")
         return
     require(isinstance(result, dict), f"{label}: self-test result must be an object")
@@ -890,9 +1110,17 @@ def parse_script_self_test_output(stdout: str, expected_version: object, label: 
     )
 
 
-def run_script_self_test(package: Path, manifest: dict[str, object], label: str) -> None:
+def run_script_self_test(
+    package: Path,
+    manifest: dict[str, object],
+    label: str,
+    code_files: list[Path],
+) -> None:
     verification = manifest.get("script_verification")
-    if not isinstance(verification, dict) or not package_has_scripts(package):
+    if not isinstance(verification, dict) or not code_files:
+        return
+    require(len(code_files) == 1, f"{label}: current manifest schema supports exactly one code artifact")
+    if len(code_files) != 1:
         return
     raw_command = verification.get("self_test_command")
     if not isinstance(raw_command, str):
@@ -932,8 +1160,18 @@ def run_script_self_test(package: Path, manifest: dict[str, object], label: str)
     ):
         return
     script = package / relative_script
-    require(script.is_file(), f"{label}: self-test script is missing")
-    if not script.is_file():
+    expected_script = code_files[0]
+    require(
+        script == expected_script,
+        f"{label}: self-test command must exactly cover the package code artifact",
+    )
+    require(
+        script.is_file()
+        and not script.is_symlink()
+        and script.resolve().is_relative_to(package.resolve()),
+        f"{label}: self-test script must be a regular in-package file",
+    )
+    if script != expected_script or not script.is_file() or script.is_symlink():
         return
     try:
         completed = subprocess.run(
@@ -1142,15 +1380,49 @@ def validate_installable_boundary() -> int:
 
     package_names: set[str] = set()
     package_manifests: dict[str, dict[str, object]] = {}
-    for package in sorted(path for path in (ROOT / "skills").iterdir() if path.is_dir()):
+    for package in sorted(
+        path
+        for path in (ROOT / "skills").iterdir()
+        if path.is_dir() or path.is_symlink()
+    ):
         name = package.name
         package_names.add(name)
-        for artifact in package.rglob("*"):
+        symlinks = package_symlinks(package)
+        for artifact in symlinks:
+            relative = artifact.relative_to(package) if artifact != package else Path(".")
+            require(
+                False,
+                f"skills/{name}: symlinks are forbidden: {relative}",
+            )
+        if symlinks:
+            continue
+        artifacts = list(package.rglob("*"))
+        for artifact in artifacts:
             relative = artifact.relative_to(package)
             require(
                 allowed_package_relative(relative),
                 f"skills/{name}: hidden or cache package entry is forbidden: {relative}",
             )
+        code_files = package_code_files(package)
+        code_layout_ok = True
+        if len(code_files) > 1:
+            require(
+                False,
+                f"skills/{name}: current manifest schema supports at most one code artifact",
+            )
+            code_layout_ok = False
+        for code_file in code_files:
+            relative_code = code_file.relative_to(package)
+            if (
+                not relative_code.parts
+                or relative_code.parts[0] != "scripts"
+                or relative_code.suffix.lower() != ".py"
+            ):
+                require(
+                    False,
+                    f"skills/{name}: current manifest schema supports one Python artifact under scripts/",
+                )
+                code_layout_ok = False
         for relative in ("LICENSE", "SKILL.md", "manifest.json", "agents/interface.yaml"):
             require((package / relative).is_file(), f"skills/{name}: missing {relative}")
         if not (package / "SKILL.md").is_file() or not (package / "manifest.json").is_file():
@@ -1175,10 +1447,11 @@ def validate_installable_boundary() -> int:
             manifest,
             f"skills/{name} manifest",
             package=package,
-            has_scripts=package_has_scripts(package),
+            has_scripts=bool(code_files),
             provider_ids=provider_ids,
         )
-        run_script_self_test(package, manifest, f"skills/{name}")
+        if code_layout_ok:
+            run_script_self_test(package, manifest, f"skills/{name}", code_files)
         validate_external_service_boundary(package, manifest, f"skills/{name}")
         validate_preview_claims(package, manifest, f"skills/{name}")
 
@@ -1209,40 +1482,73 @@ def validate_installable_boundary() -> int:
             require(entry.get("package_digest") == package_digest(package), f"skills/{name}: registry package_digest mismatch")
 
     validate_dependency_references(package_manifests)
+    validate_intake_routing_cases(package_manifests)
     require(package_names == set(registry_entries), "registry and complete Skill package names must match exactly")
     return len(package_names)
 
 
-def validate_source_cleanliness() -> None:
-    secret = re.compile(r"\bgh[pousr]_[A-Za-z0-9]{20,}\b")
+def validate_source_cleanliness(root: Path | None = None) -> None:
+    scan_root = ROOT if root is None else root
+    secret_patterns = (
+        ("GitHub token", re.compile(r"\bgh[pousr]_[A-Za-z0-9]{20,}\b")),
+        ("OpenAI API key", re.compile(r"\bsk-(?:(?:proj|svcacct)-)?[A-Za-z0-9_-]{20,}\b")),
+        ("AWS access key", re.compile(r"\b(?:AKIA|ASIA)[A-Z0-9]{16}\b")),
+        (
+            "PEM private key",
+            re.compile(r"-----BEGIN (?:RSA |EC |DSA |OPENSSH |ENCRYPTED )?PRIVATE KEY-----"),
+        ),
+    )
     local_markers = ("/" + "Users/", "/" + "home/")
     obsolete_license_phrases = (
         "No outbound project " + "license has been selected",
         "does not yet declare an outbound " + "project license",
         "The repository is private during the " + "research phase",
     )
-    text_suffixes = {".md", ".json", ".yaml", ".yml", ".py", ".tmpl", ".txt"}
-    for path in ROOT.rglob("*"):
-        relative = path.relative_to(ROOT)
-        if path.is_symlink() and relative.parts and relative.parts[0] == "skills":
-            require(False, f"{relative}: symlinks are not allowed in installable packages")
+    paths: list[Path] = []
+    for current, directories, filenames in os.walk(scan_root, topdown=True, followlinks=False):
+        current_path = Path(current)
+        retained: list[str] = []
+        for directory in directories:
+            candidate = current_path / directory
+            if directory in SOURCE_SCAN_EXCLUDED_DIRS:
+                continue
+            if candidate.is_symlink():
+                paths.append(candidate)
+            else:
+                retained.append(directory)
+        directories[:] = retained
+        paths.extend(
+            current_path / filename
+            for filename in filenames
+            if filename not in SOURCE_SCAN_EXCLUDED_DIRS
+        )
+
+    for path in sorted(paths):
+        relative = path.relative_to(scan_root)
+        if path.is_symlink():
+            require(False, f"{relative}: repository symlinks are not allowed")
             continue
-        if not path.is_file() or any(part.startswith(".") for part in relative.parts):
+        if not path.is_file():
             continue
-        if path.suffix not in text_suffixes and path.name != "SKILL.md.tmpl":
+        try:
+            text = path.read_text(encoding="utf-8", errors="replace")
+        except OSError as exc:
+            require(False, f"{relative}: source-clean scan could not read file: {exc}")
             continue
-        text = path.read_text(encoding="utf-8", errors="replace")
-        require(not secret.search(text), f"{relative}: possible GitHub secret")
+        for name, pattern in secret_patterns:
+            require(not pattern.search(text), f"{relative}: possible {name}")
         require(not any(marker in text for marker in local_markers), f"{relative}: local absolute path")
         require(
             not any(phrase in text for phrase in obsolete_license_phrases),
             f"{relative}: obsolete outbound-license wording",
         )
 
-    for path in python_sources(ROOT):
-        relative = path.relative_to(ROOT)
-        if any(part.startswith(".") or part == "__pycache__" for part in relative.parts):
-            continue
+    for path in sorted(
+        path
+        for path in paths
+        if path.is_file() and not path.is_symlink() and path.suffix.lower() == ".py"
+    ):
+        relative = path.relative_to(scan_root)
         validate_spdx_header(path, relative.as_posix())
 
 
@@ -1255,7 +1561,11 @@ def captured_errors(action: object) -> list[str]:
 
 
 def run_self_test() -> int:
-    template = json.loads((ROOT / "templates/skill/manifest.json").read_text(encoding="utf-8"))
+    loaded_template = load_json("templates/skill/manifest.json")
+    if not isinstance(loaded_template, dict):
+        require(False, "self-test: template manifest could not be loaded")
+        return 1
+    template = loaded_template
     template.update(
         {
             "name": "example-skill",
@@ -1267,6 +1577,46 @@ def run_self_test() -> int:
         }
     )
     checks: list[str] = []
+
+    try:
+        json_loads_no_duplicates('{"outer":{"value":1,"value":2}}')
+    except DuplicateJSONKeyError:
+        pass
+    else:
+        require(False, "self-test: duplicate nested JSON key accepted")
+    checks.append("duplicate-json-keys-rejected")
+
+    intake_fixture = copy.deepcopy(template)
+    intake_fixture["intake_contract"]["decision_sequence"] = [
+        {
+            "decision_id": "example-scope",
+            "applies_when": "The requested comparison scope is absent or ambiguous.",
+            "question": "Which comparison scope should be used?",
+            "recommended_answer": "Use the smallest scope that answers the stated question.",
+        }
+    ]
+    require(
+        not captured_errors(
+            lambda: validate_manifest_intake(intake_fixture, "specific-applies-when")
+        ),
+        "self-test: specific applies_when rejected",
+    )
+    for invalid_value in (None, "", GENERIC_APPLIES_WHEN):
+        invalid_intake = copy.deepcopy(intake_fixture)
+        invalid_intake["intake_contract"]["decision_sequence"][0]["applies_when"] = (
+            invalid_value
+        )
+        require(
+            bool(
+                captured_errors(
+                    lambda fixture=invalid_intake: validate_manifest_intake(
+                        fixture, "invalid-applies-when"
+                    )
+                )
+            ),
+            "self-test: null, empty, or generic applies_when accepted",
+        )
+    checks.append("specific-applies-when-enforced")
 
     known_dependencies = {
         "alpha-skill": {"depends_on": ["beta-skill"]},
@@ -1542,6 +1892,153 @@ def run_self_test() -> int:
     require(not captured_errors(lambda: validate_manifest_policy(script, "self-tested-script", has_scripts=True)), "self-test: valid script rejected")
     checks.append("self-tested-script-accepted")
 
+    with tempfile.TemporaryDirectory(prefix="bio02-script-boundary-selftest-") as temp_name:
+        test_root = Path(temp_name)
+        symlink_package = test_root / "symlink-package"
+        (symlink_package / "scripts").mkdir(parents=True)
+        marker = test_root / "must-not-execute"
+        outside = test_root / "outside.py"
+        outside.write_text(
+            "# SPDX-License-Identifier: Apache-2.0\n"
+            "from pathlib import Path\n"
+            f"Path({str(marker)!r}).write_text('executed', encoding='utf-8')\n"
+            f"print('{{\"status\":\"pass\",\"version\":\"{PUBLIC_PACKAGE_VERSION}\"}}')\n",
+            encoding="utf-8",
+        )
+        linked_script = symlink_package / "scripts/selftest.py"
+        linked_script.symlink_to(outside)
+        symlink_manifest = {
+            "version": PUBLIC_PACKAGE_VERSION,
+            "script_verification": {
+                "self_test_command": "python3 scripts/selftest.py --self-test"
+            },
+        }
+        symlink_errors = captured_errors(
+            lambda: run_script_self_test(
+                symlink_package,
+                symlink_manifest,
+                "symlink-script",
+                [linked_script],
+            )
+        )
+        require(bool(package_symlinks(symlink_package)), "self-test: package symlink was not discovered")
+        require(bool(symlink_errors), "self-test: symlink self-test script was accepted")
+        require(not marker.exists(), "self-test: symlink self-test script was executed")
+
+        multi_package = test_root / "multi-package"
+        (multi_package / "scripts").mkdir(parents=True)
+        checked = multi_package / "scripts/checked.py"
+        unchecked = multi_package / "scripts/unchecked.py"
+        checked.write_text(
+            "# SPDX-License-Identifier: Apache-2.0\n"
+            f"print('{{\"status\":\"pass\",\"version\":\"{PUBLIC_PACKAGE_VERSION}\"}}')\n",
+            encoding="utf-8",
+        )
+        unchecked.write_text(
+            "# SPDX-License-Identifier: Apache-2.0\nraise RuntimeError('must not be ignored')\n",
+            encoding="utf-8",
+        )
+        multi_manifest = {
+            "version": PUBLIC_PACKAGE_VERSION,
+            "script_verification": {
+                "self_test_command": "python3 scripts/checked.py --self-test"
+            },
+        }
+        require(
+            bool(
+                captured_errors(
+                    lambda: run_script_self_test(
+                        multi_package,
+                        multi_manifest,
+                        "multiple-code-artifacts",
+                        [checked, unchecked],
+                    )
+                )
+            ),
+            "self-test: multiple code artifacts were accepted",
+        )
+        mismatched_manifest = copy.deepcopy(multi_manifest)
+        mismatched_manifest["script_verification"]["self_test_command"] = (
+            "python3 scripts/other.py --self-test"
+        )
+        require(
+            bool(
+                captured_errors(
+                    lambda: run_script_self_test(
+                        multi_package,
+                        mismatched_manifest,
+                        "uncovered-code-artifact",
+                        [checked],
+                    )
+                )
+            ),
+            "self-test: command that did not cover the code artifact was accepted",
+        )
+
+        extensionless_package = test_root / "extensionless-package"
+        (extensionless_package / "scripts").mkdir(parents=True)
+        extensionless = extensionless_package / "scripts/runner"
+        extensionless.write_text(
+            "#!/usr/bin/env python3\n"
+            "# SPDX-License-Identifier: Apache-2.0\n"
+            f"print('{{\"status\":\"pass\",\"version\":\"{PUBLIC_PACKAGE_VERSION}\"}}')\n",
+            encoding="utf-8",
+        )
+        extensionless.chmod(0o600)
+        extensionless_code = package_code_files(extensionless_package)
+        require(
+            extensionless_code == [extensionless],
+            "self-test: non-executable extensionless script escaped code discovery",
+        )
+        extensionless_manifest = {
+            "version": PUBLIC_PACKAGE_VERSION,
+            "script_verification": {
+                "self_test_command": "python3 scripts/runner --self-test"
+            },
+        }
+        require(
+            bool(
+                captured_errors(
+                    lambda: run_script_self_test(
+                        extensionless_package,
+                        extensionless_manifest,
+                        "unsupported-extensionless-code",
+                        extensionless_code,
+                    )
+                )
+            ),
+            "self-test: executable extensionless code layout was accepted",
+        )
+    checks.append("script-file-boundary-enforced")
+
+    with tempfile.TemporaryDirectory(prefix="bio02-source-clean-selftest-") as temp_name:
+        source_root = Path(temp_name)
+        (source_root / ".git").mkdir()
+        (source_root / ".git/ignored").write_text(
+            "ghp_" + "Z" * 24,
+            encoding="utf-8",
+        )
+        (source_root / ".env").write_text(
+            "OPENAI_KEY=" + "sk-" + "A" * 24 + "\n",
+            encoding="utf-8",
+        )
+        (source_root / "UPPER.MD").write_text(
+            "AWS_KEY=" + "AKIA" + "B" * 16 + "\n",
+            encoding="utf-8",
+        )
+        (source_root / "extensionless").write_text(
+            "-----BEGIN " + "PRIVATE KEY-----\n",
+            encoding="utf-8",
+        )
+        source_errors = captured_errors(
+            lambda: validate_source_cleanliness(source_root)
+        )
+        require(
+            len(source_errors) == 3,
+            "self-test: hidden, uppercase, or extensionless secret scan differs",
+        )
+    checks.append("hidden-and-extensionless-secrets-rejected")
+
     require(
         not captured_errors(
             lambda: parse_script_self_test_output(
@@ -1567,15 +2064,19 @@ def run_self_test() -> int:
     checks.append("script-version-match-enforced")
 
     live_script_package = ROOT / "skills/statistical-analysis-and-multiple-testing"
-    live_script_manifest = json.loads(
-        (live_script_package / "manifest.json").read_text(encoding="utf-8")
+    live_script_manifest = load_json(
+        "skills/statistical-analysis-and-multiple-testing/manifest.json"
     )
+    require(isinstance(live_script_manifest, dict), "self-test: live script manifest is invalid")
+    if not isinstance(live_script_manifest, dict):
+        return 1
     require(
         not captured_errors(
             lambda: run_script_self_test(
                 live_script_package,
                 live_script_manifest,
                 "live-statistical-helper",
+                package_code_files(live_script_package),
             )
         ),
         "self-test: live bundled-script self-test failed",
@@ -1607,6 +2108,27 @@ def run_self_test() -> int:
 
     provider_ids = validate_connector_catalog()
     require(bool(provider_ids), "self-test: connector catalog was empty")
+    with tempfile.TemporaryDirectory(prefix="bio02-connector-boundary-selftest-") as temp_name:
+        test_root = Path(temp_name) / "repository"
+        outside = Path(temp_name) / "outside"
+        outside.mkdir()
+        marker = Path(temp_name) / "must-not-execute"
+        external_script = outside / "run_research_connector.py"
+        external_script.write_text(
+            "# SPDX-License-Identifier: Apache-2.0\n"
+            "from pathlib import Path\n"
+            f"Path({str(marker)!r}).write_text('executed', encoding='utf-8')\n"
+            f"print('{{\"status\":\"passed\",\"version\":\"{PUBLIC_PACKAGE_VERSION}\"}}')\n",
+            encoding="utf-8",
+        )
+        test_root.mkdir()
+        (test_root / "scripts").symlink_to(outside, target_is_directory=True)
+        require(
+            bool(captured_errors(lambda: run_connector_self_test(test_root))),
+            "self-test: symlinked shared connector was accepted",
+        )
+        require(not marker.exists(), "self-test: symlinked shared connector was executed")
+    checks.append("connector-runtime-boundary-enforced")
     require(
         not captured_errors(run_connector_self_test),
         "self-test: shared connector runtime self-test failed",
@@ -1640,6 +2162,46 @@ def run_self_test() -> int:
     )
     checks.append("connector-catalog-and-references-checked")
     checks.append("connector-runtime-self-test-passed")
+
+    intake_manifests: dict[str, dict[str, object]] = {}
+    for manifest_path in sorted((ROOT / "skills").glob("*/manifest.json")):
+        decoded = json_loads_no_duplicates(manifest_path.read_text(encoding="utf-8"))
+        if isinstance(decoded, dict) and isinstance(decoded.get("name"), str):
+            intake_manifests[decoded["name"]] = decoded
+    intake_fixture = json_loads_no_duplicates(
+        (ROOT / "evals/intake-routing-cases.json").read_text(encoding="utf-8")
+    )
+    require(
+        not captured_errors(
+            lambda: validate_intake_routing_fixture(
+                intake_fixture,
+                intake_manifests,
+                "self-test intake fixture",
+            )
+        ),
+        "self-test: valid intake routing fixture rejected",
+    )
+    invalid_intake_fixture = copy.deepcopy(intake_fixture)
+    if isinstance(invalid_intake_fixture, dict):
+        invalid_cases = invalid_intake_fixture.get("cases")
+        if isinstance(invalid_cases, list):
+            for case in invalid_cases:
+                if isinstance(case, dict) and case.get("id") == "vcf-missing-reference-first":
+                    case["expected_first_decision_id"] = "not-a-real-decision"
+                    break
+    require(
+        bool(
+            captured_errors(
+                lambda: validate_intake_routing_fixture(
+                    invalid_intake_fixture,
+                    intake_manifests,
+                    "self-test invalid intake fixture",
+                )
+            )
+        ),
+        "self-test: invalid intake routing oracle accepted",
+    )
+    checks.append("intake-routing-fixture-enforced")
 
     preview_disclaimer = "This preview is not scientifically validated."
     positive_claim = "This preview is scientifically validated."

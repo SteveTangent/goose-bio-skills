@@ -1,14 +1,14 @@
 {
   "schema_version": "0.2.0",
   "name": "count-based-differential-expression",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D04",
   "cluster_id": "C12",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-09",
+  "updated_at": "2026-08-10",
   "last_freshness_check": "2026-08-08",
   "review_cadence": "quarterly",
   "status": "active",
@@ -40,15 +40,9 @@
     "decision_sequence": [
       {
         "decision_id": "primary-contrast",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "The primary group or covariate contrast is absent or ambiguous.",
         "question": "What is the primary differential-expression contrast?",
         "recommended_answer": "Declare one estimable contrast before fitting the model."
-      },
-      {
-        "decision_id": "design-estimability",
-        "applies_when": "a count-model contrast is requested and estimability governs whether model fitting may proceed",
-        "question": "Is the primary contrast separable from batch and the declared covariates?",
-        "recommended_answer": "Verify design rank from metadata; block the run if the contrast is completely confounded."
       }
     ]
   },
@@ -82,8 +76,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.3.0",
-    "boundary": "Restore package version 0.3.0 and its matching registry entry."
+    "previous_version": "0.4.0",
+    "boundary": "Restore package version 0.4.0 and its matching registry entry."
   },
   "network_mode": "none",
   "local_adapters": [

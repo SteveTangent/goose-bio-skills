@@ -3,7 +3,7 @@ name: biological-database-record-retrieval-and-identifier-resolution
 description: "Retrieve bounded public gene, transcript, protein, or nucleotide records from UniProt, Ensembl, or NCBI. Preserve provider provenance and mapping ambiguity. Exclude syntax checks, literature, homology, structures, chemistry, bulk mapping, and clinical use."
 license: Apache-2.0
 metadata:
-  version: "0.4.0"
+  version: "0.4.1"
 ---
 
 # Biological Database Record Retrieval and Identifier Resolution

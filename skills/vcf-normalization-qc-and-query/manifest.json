@@ -1,14 +1,14 @@
 {
   "schema_version": "0.2.0",
   "name": "vcf-normalization-qc-and-query",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D03",
   "cluster_id": "C10",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-09",
+  "updated_at": "2026-08-10",
   "last_freshness_check": "2026-08-08",
   "review_cadence": "quarterly",
   "status": "active",
@@ -39,14 +39,20 @@
     "side_effect_confirmation": "only-when-not-already-authorized-for-current-action-and-scope",
     "decision_sequence": [
       {
+        "decision_id": "vcf-reference",
+        "applies_when": "The exact reference FASTA identity or build is absent, ambiguous, or inconsistent with the VCF header.",
+        "question": "Which exact reference FASTA and build should govern this VCF operation?",
+        "recommended_answer": "Require a compatible immutable reference release or digest and stop on contig or REF incompatibility."
+      },
+      {
         "decision_id": "multiallelic-decomposition",
-        "applies_when": "a VCF transformation is requested and multiallelic records are present or may be transformed",
+        "applies_when": "Multiallelic records are present or may be transformed and the decomposition policy is absent or ambiguous.",
         "question": "Should multiallelic records be decomposed?",
         "recommended_answer": "Decompose only when the downstream contract requires it and preserve a mapping to original records."
       },
       {
         "decision_id": "vcf-traceability",
-        "applies_when": "a VCF operation may transform, filter or reinterpret records or fields",
+        "applies_when": "The operation may transform, filter, or reinterpret records and the fields that must remain traceable are absent or ambiguous.",
         "question": "Which original VCF fields must remain traceable after transformation?",
         "recommended_answer": "Retain identifiers, alleles, genotype semantics and declared annotations in an explicit transformation log."
       }
@@ -81,8 +87,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.3.0",
-    "boundary": "Restore package version 0.3.0 and its matching registry entry."
+    "previous_version": "0.4.0",
+    "boundary": "Restore package version 0.4.0 and its matching registry entry."
   },
   "network_mode": "none",
   "local_adapters": [

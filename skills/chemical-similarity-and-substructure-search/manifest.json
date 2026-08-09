@@ -1,14 +1,14 @@
 {
   "schema_version": "0.2.0",
   "name": "chemical-similarity-and-substructure-search",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D10",
   "cluster_id": "C28",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-09",
+  "updated_at": "2026-08-10",
   "last_freshness_check": "2026-08-08",
   "review_cadence": "quarterly",
   "status": "active",
@@ -40,25 +40,25 @@
     "decision_sequence": [
       {
         "decision_id": "search-mode",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "Similarity versus exact substructure retrieval is absent or ambiguous.",
         "question": "Is the requested retrieval based on similarity or an exact substructure query?",
         "recommended_answer": "Choose one search semantics before selecting a representation."
       },
       {
         "decision_id": "fingerprint-representation",
-        "applies_when": "similarity search is selected",
+        "applies_when": "Similarity search is selected and the fingerprint representation is absent or ambiguous.",
         "question": "Which fingerprint representation should encode similarity?",
         "recommended_answer": "Use a domain-matched versioned fingerprint."
       },
       {
         "decision_id": "similarity-metric",
-        "applies_when": "similarity search is selected",
+        "applies_when": "Similarity search is selected and the metric is absent or incompatible with the selected fingerprint.",
         "question": "Which similarity metric should score the selected fingerprint?",
         "recommended_answer": "Use a metric compatible with the fingerprint and retrieval objective."
       },
       {
         "decision_id": "similarity-threshold",
-        "applies_when": "similarity search is selected",
+        "applies_when": "Similarity search is selected and the calibrated threshold is absent or ambiguous.",
         "question": "Which calibrated threshold should define a reported similarity match?",
         "recommended_answer": "Use a fixture-calibrated threshold and never present it as biological equivalence."
       }
@@ -94,8 +94,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.3.0",
-    "boundary": "Restore package version 0.3.0 and its matching registry entry."
+    "previous_version": "0.4.0",
+    "boundary": "Restore package version 0.4.0 and its matching registry entry."
   },
   "network_mode": "optional",
   "local_adapters": [

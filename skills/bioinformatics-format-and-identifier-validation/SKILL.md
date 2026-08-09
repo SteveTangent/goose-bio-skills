@@ -3,7 +3,7 @@ name: bioinformatics-format-and-identifier-validation
 description: "Structurally validate declared FASTA/FASTQ/GenBank, SAM/BAM/CRAM, VCF/BCF, NCBI accession.version, or UniProt public identifier syntax, with an optional exact-accession existence check. Exclude record retrieval, cross-namespace mapping, conversion, repair, interpretation, and dedicated object formats."
 license: Apache-2.0
 metadata:
-  version: "0.4.0"
+  version: "0.4.1"
 ---
 
 # Bioinformatics Format and Identifier Validation
@@ -25,10 +25,6 @@ identifier namespaces, plus an optional exact-accession existence check.
 
 Inspect safe facts first. Ask one recommended question only when a
 result-changing choice remains, then wait; otherwise continue authorized work.
-
-Decision order:
-
-1. **invalid-record-handling.** Report invalid records or create a separate repair? Recommended: report first; repair only after authorization.
 
 ## Public network execution
 

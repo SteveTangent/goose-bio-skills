@@ -52,10 +52,13 @@ licensed use, or non-default host.
 
 - `public_access`: `explicit-request-authorizes-bounded-read-download`
 - `confirmation`: `sensitive-upload-remote-job-bulk-or-paid`
-- `config_access`: `shared-companion-reads-no-user-config`
+- `config_access`: `shared-companion-reads-no-provider-config-or-credentials`
 - `credential_policy`: `shared-companion-anonymous-only`
 - `standalone_fallback`: `needs-tool-dry-run-or-partial`
 - `call_claim`: `only-after-checked-live-response`
+
+Network transport follows the agent host's proxy and CA trust policy; the
+shared companion does not read provider configuration or credentials.
 
 Use the declared default public provider directly for the requested bounded
 read or download. If a confirmation condition applies, disclose the exact

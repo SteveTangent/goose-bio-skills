@@ -3,7 +3,7 @@ name: count-based-differential-expression
 description: "A user has integer-like counts plus sample metadata and needs a group or covariate differential-expression analysis. Exclude: FASTQ-to-count processing; pathway enrichment; assuming two software adapters are numerically identical."
 license: Apache-2.0
 metadata:
-  version: "0.4.0"
+  version: "0.4.1"
 ---
 
 # Count-based Differential Expression
@@ -30,7 +30,6 @@ safe local work; seek permission for new material side effects.
 Decision order:
 
 1. **primary-contrast.** What is the primary differential-expression contrast? Recommended: Declare one estimable contrast before fitting the model.
-2. **design-estimability.** Is the primary contrast separable from batch and the declared covariates? Recommended: Verify design rank from metadata; block the run if the contrast is completely confounded.
 
 ## Workflow
 

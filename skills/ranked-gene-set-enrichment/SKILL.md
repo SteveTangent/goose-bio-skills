@@ -3,7 +3,7 @@ name: ranked-gene-set-enrichment
 description: "A user has a complete ranked gene list and requests cutoff-free gene-set enrichment. Exclude selected-list ORA, silent duplicate collapsing, causal claims, per-sample pathway scoring, or phenotype permutation without a separate matrix-and-label contract."
 license: Apache-2.0
 metadata:
-  version: "0.4.0"
+  version: "0.4.1"
 ---
 
 # Ranked Gene-set Enrichment
@@ -34,12 +34,12 @@ Decision order:
 
 ## Public network execution
 
-Prefer a versioned local collection. An explicit refresh authorizes bounded
-public Enrichr library metadata reads; submitting a ranked list is a separate
-remote job. Confirm sensitive rankings, remote jobs not already requested, or
-unrequested bulk. On failure, use the pinned collection or return
-`needs-tool`/partial. Record input and collection digests, provider, parameters,
-hashes, and network or job status.
+Prefer versioned local data. Explicit refresh permits bounded Enrichr metadata
+reads. No reviewed ranked-list submission adapter exists, so return
+`needs-tool` without asking to upload or implying a job. Never send patient,
+PHI, controlled data, credentials, or secrets. On failure use pinned data or a
+non-completed status. Record input/collection digests, provider, parameters,
+hashes, and network status.
 
 ## Workflow
 

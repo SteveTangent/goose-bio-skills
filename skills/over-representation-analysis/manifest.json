@@ -1,14 +1,14 @@
 {
   "schema_version": "0.2.0",
   "name": "over-representation-analysis",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D11",
   "cluster_id": "C31",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-09",
+  "updated_at": "2026-08-10",
   "last_freshness_check": "2026-08-08",
   "review_cadence": "quarterly",
   "status": "active",
@@ -40,7 +40,7 @@
     "decision_sequence": [
       {
         "decision_id": "ora-universe",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "The measured or statistically tested feature universe is absent, incomplete, or ambiguous.",
         "question": "Which features were actually eligible to enter the selected set?",
         "recommended_answer": "Use measured or statistically tested features as the universe, not the whole genome by default."
       }
@@ -77,8 +77,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.3.0",
-    "boundary": "Restore package version 0.3.0 and its matching registry entry."
+    "previous_version": "0.4.0",
+    "boundary": "Restore package version 0.4.0 and its matching registry entry."
   },
   "network_mode": "optional",
   "local_adapters": [

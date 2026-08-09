@@ -1,14 +1,14 @@
 {
   "schema_version": "0.2.0",
   "name": "sequence-io-and-transformation",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D02",
   "cluster_id": "C04",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-09",
+  "updated_at": "2026-08-10",
   "last_freshness_check": "2026-08-08",
   "review_cadence": "quarterly",
   "status": "active",
@@ -40,19 +40,19 @@
     "decision_sequence": [
       {
         "decision_id": "sequence-alphabet",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "The sequence alphabet is absent or ambiguous after bounded inspection.",
         "question": "Which sequence alphabet should govern parsing?",
         "recommended_answer": "Use the declared alphabet; infer only when the input is unambiguous and report the inference."
       },
       {
         "decision_id": "translation-code",
-        "applies_when": "translation is requested",
+        "applies_when": "Translation is requested and the genetic code is absent or ambiguous.",
         "question": "Which genetic code should translation use?",
         "recommended_answer": "Use the explicitly declared organism-appropriate code rather than the universal code by assumption."
       },
       {
         "decision_id": "metadata-preservation",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "The requested transformation may lose record metadata and the preservation policy is absent or ambiguous.",
         "question": "Which record metadata must the transformed output preserve?",
         "recommended_answer": "Preserve identifiers, ordering and quality values whenever the target format supports them."
       }
@@ -84,8 +84,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.3.0",
-    "boundary": "Restore package version 0.3.0 and its matching registry entry."
+    "previous_version": "0.4.0",
+    "boundary": "Restore package version 0.4.0 and its matching registry entry."
   },
   "network_mode": "none",
   "local_adapters": [

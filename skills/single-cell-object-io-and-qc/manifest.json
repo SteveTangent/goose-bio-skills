@@ -1,14 +1,14 @@
 {
   "schema_version": "0.2.0",
   "name": "single-cell-object-io-and-qc",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D05",
   "cluster_id": "C14",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-09",
+  "updated_at": "2026-08-10",
   "last_freshness_check": "2026-08-08",
   "review_cadence": "quarterly",
   "status": "active",
@@ -40,7 +40,7 @@
     "decision_sequence": [
       {
         "decision_id": "authoritative-count-source",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "More than one assay or layer could contain counts and the authoritative count source is absent or ambiguous.",
         "question": "Which assay or layer is the authoritative count source for QC?",
         "recommended_answer": "Inspect all candidates and never copy the current matrix into a counts slot by default."
       }
@@ -75,8 +75,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.3.0",
-    "boundary": "Restore package version 0.3.0 and its matching registry entry."
+    "previous_version": "0.4.0",
+    "boundary": "Restore package version 0.4.0 and its matching registry entry."
   },
   "network_mode": "none",
   "local_adapters": [

@@ -1,14 +1,14 @@
 {
   "schema_version": "0.2.0",
   "name": "ranked-gene-set-enrichment",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D11",
   "cluster_id": "C31",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-09",
+  "updated_at": "2026-08-10",
   "last_freshness_check": "2026-08-08",
   "review_cadence": "quarterly",
   "status": "active",
@@ -40,19 +40,19 @@
     "decision_sequence": [
       {
         "decision_id": "ranked-duplicate-policy",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "Duplicate identifiers are present and the collapse policy is absent or ambiguous.",
         "question": "How should duplicate identifiers be collapsed?",
         "recommended_answer": "Use one deterministic rule declared before enrichment."
       },
       {
         "decision_id": "ranked-tie-policy",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "Tied ranking statistics are present and the tie policy is absent or ambiguous.",
         "question": "How should tied ranking statistics be ordered?",
         "recommended_answer": "Use a deterministic tie policy and report tie prevalence."
       },
       {
         "decision_id": "ranked-permutation-policy",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "The gene-set permutation count or random seed is absent or ambiguous.",
         "question": "Which gene-set permutation count and random seed should the preranked run use?",
         "recommended_answer": "Use gene-set permutations with a recorded seed; phenotype permutation requires a separate expression-matrix and sample-label contract."
       }
@@ -89,8 +89,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.3.0",
-    "boundary": "Restore package version 0.3.0 and its matching registry entry."
+    "previous_version": "0.4.0",
+    "boundary": "Restore package version 0.4.0 and its matching registry entry."
   },
   "network_mode": "optional",
   "local_adapters": [

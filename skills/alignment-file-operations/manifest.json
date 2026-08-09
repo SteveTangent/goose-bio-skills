@@ -1,14 +1,14 @@
 {
   "schema_version": "0.2.0",
   "name": "alignment-file-operations",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D02",
   "cluster_id": "C05",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-09",
+  "updated_at": "2026-08-10",
   "last_freshness_check": "2026-08-08",
   "review_cadence": "quarterly",
   "status": "active",
@@ -40,13 +40,13 @@
     "decision_sequence": [
       {
         "decision_id": "alignment-reference",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "The exact reference identity is absent, ambiguous, or inconsistent with the alignment header or requested CRAM or coordinate operation.",
         "question": "Which exact reference identity governs this alignment file?",
         "recommended_answer": "Require the reference digest or immutable release, especially for CRAM."
       },
       {
         "decision_id": "alignment-sort-order",
-        "applies_when": "the requested operation requires a declared or changed sort order",
+        "applies_when": "The requested operation has an unresolved downstream sort-order requirement.",
         "question": "Which sort order does the requested operation require?",
         "recommended_answer": "Use coordinate order for indexed region queries and name order only for operations that require read pairing."
       }
@@ -79,8 +79,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.3.0",
-    "boundary": "Restore package version 0.3.0 and its matching registry entry."
+    "previous_version": "0.4.0",
+    "boundary": "Restore package version 0.4.0 and its matching registry entry."
   },
   "network_mode": "none",
   "local_adapters": [

@@ -2,7 +2,7 @@
 
 This reference defines the operating boundary for
 `biological-database-record-retrieval-and-identifier-resolution` version
-`0.4.0`. Interfaces were reviewed on 2026-08-09; this preview does not claim that
+`0.4.1`. Interfaces were reviewed on 2026-08-09; this preview does not claim that
 the exact Skill was runtime-evaluated.
 
 ## Scientific contract
@@ -57,10 +57,13 @@ and asynchronous or bulk ID-mapping jobs are outside this Skill.
 
 - `public_access`: `explicit-request-authorizes-bounded-read-download`
 - `confirmation`: `sensitive-upload-remote-job-bulk-or-paid`
-- `config_access`: `shared-companion-reads-no-user-config`
+- `config_access`: `shared-companion-reads-no-provider-config-or-credentials`
 - `credential_policy`: `shared-companion-anonymous-only`
 - `standalone_fallback`: `needs-tool-dry-run-or-partial`
 - `call_claim`: `only-after-checked-live-response`
+
+Network transport follows the agent host's proxy and CA trust policy; the
+shared companion does not read provider configuration or credentials.
 
 Use the declared default public provider directly for the requested bounded
 read. If a confirmation condition would change the request into a sensitive,
@@ -74,7 +77,7 @@ never claim a call.
 
 - Mode: `not-performed`
 - Reason: This instruction-only preview did not execute exact-package routing, provider selection, live retrieval, pagination, response normalization, or scientific benchmarking.
-- Relevant versions: UniProt REST rolling / release 2026_02, Ensembl REST 15.12, NCBI E-utilities rolling, Bio 02 shared public connector 0.4.0 contract.
+- Relevant versions: UniProt REST rolling / release 2026_02, Ensembl REST 15.12, NCBI E-utilities rolling, Bio 02 shared public connector 0.4.1 contract.
 - Unverified boundaries:
   - Exact-package provider selection, pagination, rate limiting, release capture, and identifier normalization have not been runtime-evaluated.
   - One-to-many, deprecated, replaced, malformed, rate-limited, and oversized live responses remain unverified for this exact package.

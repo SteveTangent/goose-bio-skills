@@ -1,14 +1,14 @@
 {
   "schema_version": "0.2.0",
   "name": "protein-structure-retrieval-and-comparison",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D09",
   "cluster_id": "C25",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-09",
+  "updated_at": "2026-08-10",
   "last_freshness_check": "2026-08-08",
   "review_cadence": "quarterly",
   "status": "active",
@@ -40,19 +40,19 @@
     "decision_sequence": [
       {
         "decision_id": "structure-assembly",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "More than one assembly or model is available and the intended biological assembly is absent or ambiguous.",
         "question": "Which biological assembly should be compared?",
         "recommended_answer": "Prefer the relevant experimental biological assembly when available and report predicted alternatives separately."
       },
       {
         "decision_id": "structure-chain",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "More than one chain or mapping is available and the target chain is absent or ambiguous.",
         "question": "Which chain should be compared?",
         "recommended_answer": "Resolve one exact chain mapping rather than assuming chain labels are equivalent across entries."
       },
       {
         "decision_id": "structure-range",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "Coverage or residue mapping differs between structures and the comparison range is absent or ambiguous.",
         "question": "Which residue range should be compared?",
         "recommended_answer": "Use the shared resolved region and report missing or unmapped residues."
       }
@@ -86,8 +86,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.3.0",
-    "boundary": "Restore package version 0.3.0 and its matching registry entry."
+    "previous_version": "0.4.0",
+    "boundary": "Restore package version 0.4.0 and its matching registry entry."
   },
   "network_mode": "optional",
   "local_adapters": [

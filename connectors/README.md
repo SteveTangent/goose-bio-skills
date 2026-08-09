@@ -16,6 +16,9 @@ entry fixes:
 
 The shared standard-library executor is
 `../scripts/run_research_connector.py`.
+It follows the agent host's proxy and CA trust policy for transport, while
+reading no provider configuration or provider credentials itself. Host runtimes
+should disclose a non-default proxy or CA boundary before use.
 
 ## Current execution boundary
 
@@ -73,7 +76,10 @@ python3 scripts/run_research_connector.py \
 ```
 
 Cursor pagination remains provider-specific and is not guessed by the shared
-executor.
+executor. Between paginated requests, provider-declared pacing is enforced only
+within one executor invocation; retry backoff is handled separately. The agent
+host must aggregate rate limits across concurrent processes, workers, and other
+traffic sharing the same source address.
 
 ## Safety and provenance
 
@@ -85,9 +91,10 @@ The executor:
 - caps pagination at 20 pages, timeout at 120 seconds, retries at four, and total
   bytes at the lower of the CLI request and provider limit;
 - retries only transient network failures and HTTP `429/5xx` responses;
-- treats only HTTP `200` or `204` as a completed response, rejects asynchronous
-  `202` and partial `206`, and verifies a declared response length before
-  publication;
+- treats only HTTP `200` for `GET`, or `200`/`204` for `HEAD`, as an acceptable
+  response status; rejects asynchronous `202`, partial `206`, empty `GET`
+  bodies, HTML responses, and explicit JSON/XML error envelopes; and verifies a
+  declared response length before publication;
 - creates new files only and never overwrites an existing payload or provenance
   file;
 - publishes payload and provenance through same-directory temporary files and
@@ -99,6 +106,11 @@ The executor:
   response and both output files are published. A failed event reports whether a
   network attempt began, so it can be `true` without a success artifact.
 
+Here `completed` means checked retrieval and atomic publication under this
+transport contract. It does not mean the record is scientifically relevant,
+biologically correct, current enough for the research question, or semantically
+validated by a domain expert.
+
 Large datasets, bulk raw reads, whole database snapshots, paid APIs, arbitrary
 URLs, private studies, controlled data, and remote write/job submission are
 outside this layer.
@@ -109,8 +121,9 @@ outside this layer.
 python3 scripts/run_research_connector.py --self-test
 ```
 
-The self-test makes no network request. It covers the catalog policy, UniProt
-allowlist, real redirect-handler rejection, NCBI History and PubChem asynchronous
-path rejection, paid/job boundaries, KEGG terms gate, anonymous-only behavior,
-HTTP `202`, short bodies, retries, byte limits, temporary-file cleanup, and
-atomic create-new publication with existing-file preservation.
+The self-test makes no network request. It covers the catalog policy, URL and
+redirect rejection, credential-query encoding variants, NCBI History, PubChem
+asynchronous paths, excluded Enrichr paths, paid/job boundaries, KEGG terms,
+anonymous-only behavior, invalid statuses, empty/HTML/error payloads, retries,
+single-invocation pacing, byte limits, temporary-file cleanup, and atomic
+create-new publication with existing-file preservation.

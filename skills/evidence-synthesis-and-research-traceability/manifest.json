@@ -1,14 +1,14 @@
 {
   "schema_version": "0.2.0",
   "name": "evidence-synthesis-and-research-traceability",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D13",
   "cluster_id": "C37",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-09",
+  "updated_at": "2026-08-10",
   "last_freshness_check": "2026-08-08",
   "review_cadence": "quarterly",
   "status": "active",
@@ -41,13 +41,13 @@
     "decision_sequence": [
       {
         "decision_id": "evidence-hierarchy",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "The evidence hierarchy for resolving conflicting source types is absent or ambiguous.",
         "question": "Which evidence hierarchy should govern conflicts in this corpus?",
         "recommended_answer": "Define the hierarchy before synthesis and keep community signals separate from scientific evidence."
       },
       {
         "decision_id": "claim-criteria",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "The support, contradiction, and uncertainty criteria for material claims are absent or ambiguous.",
         "question": "Which criteria determine whether a source supports a material claim?",
         "recommended_answer": "Predeclare claim inclusion, contradiction and uncertainty criteria before mapping sources."
       }
@@ -82,8 +82,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.3.0",
-    "boundary": "Restore package version 0.3.0 and its matching registry entry."
+    "previous_version": "0.4.0",
+    "boundary": "Restore package version 0.4.0 and its matching registry entry."
   },
   "network_mode": "optional",
   "local_adapters": [

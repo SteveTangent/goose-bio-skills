@@ -3,7 +3,7 @@ name: over-representation-analysis
 description: "A user has a selected gene list plus an appropriate measured or tested universe and requests categorical enrichment. Exclude: ranked-list enrichment; using the whole genome as an unexamined default universe; causal pathway claims."
 license: Apache-2.0
 metadata:
-  version: "0.4.0"
+  version: "0.4.1"
 ---
 
 # Over-representation Analysis
@@ -33,11 +33,11 @@ Decision order:
 
 ## Public network execution
 
-Prefer a versioned local collection. An explicit refresh authorizes bounded
-public reads from `quickgo` or Enrichr library metadata; `kegg-rest` also
-requires its academic-terms acknowledgement. Enrichr gene-list submission is a
-separate upload. Confirm sensitive lists, remote jobs, or unrequested bulk.
-Record collection release, input digests, provider, hashes, and network status.
+Prefer versioned local data. Explicit refresh permits bounded QuickGO or
+Enrichr metadata reads; KEGG also needs its terms acknowledgement. No reviewed
+list-submission adapter exists, so return `needs-tool` without asking to upload
+or implying a job. Never send patient, PHI, controlled data, credentials, or
+secrets. Record releases, digests, provider, hashes, and network status.
 
 ## Workflow
 

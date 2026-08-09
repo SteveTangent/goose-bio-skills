@@ -1,14 +1,14 @@
 {
   "schema_version": "0.2.0",
   "name": "biomedical-literature-and-public-study-search",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D13",
   "cluster_id": "C37",
   "risk_tier": "R3",
   "owner": "project-owner",
-  "updated_at": "2026-08-09",
+  "updated_at": "2026-08-10",
   "last_freshness_check": "2026-08-08",
   "review_cadence": "quarterly",
   "status": "active",
@@ -40,7 +40,7 @@
     "decision_sequence": [
       {
         "decision_id": "retrieval-objective",
-        "applies_when": "this Skill is correctly routed and this decision affects the requested result or execution contract",
+        "applies_when": "Recall-first screening versus a precision-bounded answer is absent or ambiguous and changes the search scope.",
         "question": "Should this search prioritize recall for screening or precision for a bounded quick answer?",
         "recommended_answer": "Start with reproducible recall, then apply explicit screening criteria."
       }
@@ -75,8 +75,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.3.0",
-    "boundary": "Restore package version 0.3.0 and its matching registry entry."
+    "previous_version": "0.4.0",
+    "boundary": "Restore package version 0.4.0 and its matching registry entry."
   },
   "network_mode": "required",
   "local_adapters": [],

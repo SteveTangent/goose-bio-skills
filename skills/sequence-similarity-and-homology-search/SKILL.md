@@ -1,9 +1,9 @@
 ---
 name: sequence-similarity-and-homology-search
-description: "A user needs candidate homologs or similar sequences from a fixed, question-appropriate complete or curated database, or a disclosed remote adapter. Exclude: building or downloading a complete reference database; multiple sequence alignment; claiming function from percent identity alone."
+description: "A user needs candidate homologs or similar sequences from a fixed suitable local database or a disclosed remote adapter. Exclude: building a reference database; multiple alignment; claiming function from identity alone."
 license: Apache-2.0
 metadata:
-  version: "0.4.0"
+  version: "0.4.1"
 ---
 
 # Sequence Similarity and Homology Search
@@ -12,45 +12,50 @@ metadata:
 
 ## Owns
 
-Run or plan a reproducible query-to-database similarity search and qualify what the hits do and do not support. Exclusions are declared in the trigger above.
+Run or plan a reproducible similarity search and qualify what its hits support.
 
 ## Inputs
 
 - validated query sequences
-- question-appropriate complete or curated target database with release and digest
-- search sensitivity and resource constraints
+- local: suitable database release and digest; remote: reviewed provider and database name
+- sensitivity and resource limits
+- for remote upload: data class, provider, database, and one-job scope
 
 ## Intake
 
-Inspect safe facts first. Ask one recommended question only when a
-result-changing choice remains, then wait; otherwise continue authorized work.
+Inspect safe facts first. Ask one unresolved question with a recommendation,
+then wait; otherwise continue authorized work. Patient, PHI, and
+controlled-access data are a terminal remote-upload block.
 
 Decision order:
 
-1. **database-mode.** Which fixed complete or curated database is appropriate for this research question? Recommended: Use a question-appropriate database fixed by release and digest; reserve a micro database for installation smoke only.
+1. **remote-data-authorization.** May the disclosed query be uploaded to NCBI Remote BLAST against the named database for this one job? Recommended: prefer local; authorize only the disclosed non-controlled scope.
+2. **database-mode.** Which target database should this search use? Recommended: fix local data by release/digest; name the remote database.
 
 ## Public network execution
 
-Prefer a pinned local database. An explicit remote-BLAST request naming query,
-database, and scope authorizes `ncbi-blast-remote`; otherwise disclose the
-sequence upload and ask once. Always confirm sensitive sequences. Record query
-digest, database, parameters, RID, provider status, result hash, and network
-use. Failure or truncation remains `needs-tool` or partial.
+Prefer a pinned local database. An exact current request authorizes one
+disclosed, non-sensitive job without repeat confirmation; other allowed
+sensitive data requires one scoped confirmation. Never upload patient, PHI,
+controlled data, credentials, or secrets. Without a reviewed adapter return
+`needs-tool`. Record query digest, database, parameters, RID, status, result
+hash, and network use.
 
 ## Workflow
 
-1. Validate query alphabet and target database identity.
-2. Choose a search strategy from sequence type and sensitivity needs.
-3. Run a pinned local search or submit the explicitly authorized bounded remote job.
-4. Filter and report hits using coverage and statistical evidence, not identity alone.
+1. Validate the query and classify upload sensitivity without copying raw data into provenance.
+2. Fix local database release/digest; for remote work record its name, available version, and access time.
+3. Choose local execution or resolve exact remote authorization.
+4. Run locally or use the authorized adapter; otherwise return `needs-tool` or `dry-run`.
+5. Filter and report hits using coverage and statistical evidence, not identity alone.
 
 ## Output contract
 
 Return `completed`, `dry-run`, `needs-tool`, or `invalid-input`. `completed` includes:
 
-- ranked hit table with identity, query and target coverage and statistics
-- database, version and parameter record
-- homology and annotation caveats
+- ranked hits with identity, coverage, and statistics
+- database/version and parameters
+- homology caveats
 
 Record versions and limitations; never fabricate execution.
 
@@ -61,10 +66,8 @@ does not prove function or database completeness.
 
 ## Guardrails
 
-- Record query molecule type, engine and version, database release or digest, masking, E-value, coverage, hit cap, and all non-default parameters
+- Record molecule type, engine/version, database, masking, E-value, coverage, hit cap, and non-defaults
 - Use a micro database only for installation smoke, never for research interpretation
 - Write only to a user-approved new output location; never mutate inputs or overwrite a path
-- Partial output is never `completed`; use the truthful non-completed status
-- Record skipped complex-tool execution as unverified, never as passed
-- Keep credentials, private paths, patient and controlled data out of artifacts
+- Never mark partial or skipped execution `completed`
 - Require researcher review for biological interpretation; no clinical authority
