@@ -1,9 +1,9 @@
 ---
 name: bioinformatics-format-and-identifier-validation
-description: "Structurally validate declared FASTA/FASTQ/GenBank, SAM/BAM/CRAM, VCF/BCF, NCBI accession.version, or UniProt public identifiers. Exclude: conversion or repair; VCF normalization or genotype QC; scientific interpretation; resource-only preflight; single-cell, molecule, and structure objects."
+description: "Structurally validate declared FASTA/FASTQ/GenBank, SAM/BAM/CRAM, VCF/BCF, NCBI accession.version, or UniProt public identifier syntax, with an optional exact-accession existence check. Exclude record retrieval, cross-namespace mapping, conversion, repair, interpretation, and dedicated object formats."
 license: Apache-2.0
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # Bioinformatics Format and Identifier Validation
@@ -12,7 +12,8 @@ metadata:
 
 ## Owns
 
-Return non-mutating structural findings for the declared supported formats and identifier namespaces.
+Return non-mutating structural findings for the declared supported formats and
+identifier namespaces, plus an optional exact-accession existence check.
 
 ## Inputs
 
@@ -31,8 +32,10 @@ Decision order:
 
 ## Public network execution
 
-An explicit public-accession request authorizes a bounded anonymous lookup with
-`ncbi-eutils` or `uniprot-rest`; send identifiers, not local file contents.
+An explicit exact-accession existence check authorizes a bounded anonymous
+lookup with `ncbi-eutils` or `uniprot-rest`; send identifiers, not local file
+contents. Route record fields, searches, and cross-namespace mappings to
+`biological-database-record-retrieval-and-identifier-resolution`.
 Confirm only sensitive data, non-default hosts, or unrequested bulk. On failure,
 return `needs-tool` or a non-completed partial result. Record provider, access
 time, response status, returned identifiers, and network use.
@@ -41,7 +44,7 @@ time, response status, returned identifiers, and network use.
 
 1. Inventory inputs and inspect only bounded content.
 2. Validate container, syntax and format-specific invariants.
-3. Resolve identifier namespace and reference context locally or through the bounded public lookup above without guessing.
+3. Validate namespace and version syntax; when requested, check exact-accession existence through the bounded public lookup without retrieving unrelated records.
 4. Report exact failures, uncertainty and a non-destructive next step.
 
 ## Output contract

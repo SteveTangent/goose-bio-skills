@@ -9,7 +9,8 @@ that the tools were installed or runtime-tested in this preview.
 - Declare the exact format or namespace before validation
 - Distinguish structural validity from semantic correctness and database existence
 - Use accession.version when a specific sequence version matters
-- Do not present a regular-expression match as authoritative identifier resolution
+- Do not present a regular-expression match as proof that an accession exists
+- Route record retrieval and cross-namespace mapping to the biological-database record Skill
 
 ## Optional adapters
 
@@ -28,15 +29,15 @@ dependencies. Record the exact local version and command before execution.
 | Biopython Bio.SeqIO | Biopython 1.87 | [bounded parsing of declared FASTA, FASTQ, and GenBank sequence formats](https://biopython.org/docs/1.87/api/Bio.SeqIO.html) | 2026-08-08 |
 | GA4GH/hts-specs | rolling specifications; no unified release tag | [SAM/BAM/CRAM and VCF/BCF specifications](https://github.com/samtools/hts-specs) | 2026-08-08 |
 | NCBI sequence identifiers | rolling namespace documentation | [accession.version identifier semantics](https://www.ncbi.nlm.nih.gov/genbank/sequenceids/) | 2026-08-08 |
-| UniProt REST | rolling API; access-date bound | [entry retrieval and search](https://www.uniprot.org/help/programmatic_access) | 2026-08-09 |
+| UniProt REST | rolling API; access-date bound | [exact public accession lookup](https://www.uniprot.org/help/programmatic_access) | 2026-08-09 |
 
 ## Network and data boundary
 
-Local syntax and structure checks are offline. Live identifier resolution uses
-NCBI E-utilities for NCBI accession.version records and UniProt REST for public
-entry retrieval or search. Asynchronous UniProt ID-mapping submission is outside
-this read-only adapter. Record the authority, identifier version, and resolution
-time.
+Local syntax and structure checks are offline. An optional existence check uses
+NCBI E-utilities for one exact NCBI accession.version or UniProt REST for one
+exact public accession. Record retrieval, search, cross-namespace mapping, and
+asynchronous UniProt ID-mapping belong elsewhere. Record the authority,
+identifier version, and lookup time.
 
 The user's explicit validation request authorizes the targeted public read and
 bounded response above. Anonymous access requires no provider configuration or

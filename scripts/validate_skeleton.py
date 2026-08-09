@@ -18,8 +18,8 @@ from urllib.parse import urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
-VALIDATOR_VERSION = "0.6.0"
-PUBLIC_PACKAGE_VERSION = "0.3.0"
+VALIDATOR_VERSION = "0.7.0"
+PUBLIC_PACKAGE_VERSION = "0.4.0"
 MANIFEST_SCHEMA_VERSION = "0.2.0"
 REGISTRY_SCHEMA_VERSION = "0.5.0"
 PROVIDER_CATALOG_SCHEMA_VERSION = "0.2.0"
@@ -756,6 +756,25 @@ def validate_manifest_policy(
     validate_rollback(manifest, label)
 
 
+def validate_dependency_references(
+    manifests: dict[str, dict[str, object]],
+) -> None:
+    """Require each declared dependency to identify a different current package."""
+    package_names = set(manifests)
+    for name in sorted(manifests):
+        dependencies = manifests[name].get("depends_on")
+        if not isinstance(dependencies, list):
+            continue
+        for dependency in dependencies:
+            if not isinstance(dependency, str):
+                continue
+            require(dependency != name, f"skills/{name}: cannot depend on itself")
+            require(
+                dependency in package_names,
+                f"skills/{name}: depends_on references unknown package {dependency}",
+            )
+
+
 def validate_template() -> None:
     template_path = ROOT / "templates/skill/SKILL.md.tmpl"
     template = template_path.read_text(encoding="utf-8")
@@ -1122,6 +1141,7 @@ def validate_installable_boundary() -> int:
                 require(bool(external_services), f"registry: networked package has no external service for {name}")
 
     package_names: set[str] = set()
+    package_manifests: dict[str, dict[str, object]] = {}
     for package in sorted(path for path in (ROOT / "skills").iterdir() if path.is_dir()):
         name = package.name
         package_names.add(name)
@@ -1139,6 +1159,7 @@ def validate_installable_boundary() -> int:
         manifest = load_json(f"skills/{name}/manifest.json")
         if not isinstance(manifest, dict):
             continue
+        package_manifests[name] = manifest
         validate_frontmatter(
             frontmatter,
             expected_name=name,
@@ -1187,6 +1208,7 @@ def validate_installable_boundary() -> int:
                 require(entry.get("previous_version") == rollback.get("previous_version"), f"skills/{name}: registry previous_version mismatch")
             require(entry.get("package_digest") == package_digest(package), f"skills/{name}: registry package_digest mismatch")
 
+    validate_dependency_references(package_manifests)
     require(package_names == set(registry_entries), "registry and complete Skill package names must match exactly")
     return len(package_names)
 
@@ -1245,6 +1267,38 @@ def run_self_test() -> int:
         }
     )
     checks: list[str] = []
+
+    known_dependencies = {
+        "alpha-skill": {"depends_on": ["beta-skill"]},
+        "beta-skill": {"depends_on": []},
+    }
+    require(
+        not captured_errors(
+            lambda: validate_dependency_references(known_dependencies)
+        ),
+        "self-test: known dependency rejected",
+    )
+    unknown_dependency = copy.deepcopy(known_dependencies)
+    unknown_dependency["alpha-skill"]["depends_on"] = ["missing-skill"]
+    require(
+        bool(
+            captured_errors(
+                lambda: validate_dependency_references(unknown_dependency)
+            )
+        ),
+        "self-test: unknown dependency accepted",
+    )
+    self_dependency = copy.deepcopy(known_dependencies)
+    self_dependency["alpha-skill"]["depends_on"] = ["alpha-skill"]
+    require(
+        bool(
+            captured_errors(
+                lambda: validate_dependency_references(self_dependency)
+            )
+        ),
+        "self-test: self dependency accepted",
+    )
+    checks.append("dependency-references-checked")
 
     require(not captured_errors(lambda: validate_manifest_policy(template, "preview-reviewed")), "self-test: preview+reviewed rejected")
     checks.append("preview-reviewed-accepted")

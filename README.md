@@ -2,11 +2,11 @@
 
 Research-first bioinformatics skills for AI agents.
 
-Bio 02 Skills is a focused collection of 20 Agent Skills for common bioinformatics and biostatistics tasks. Each Skill owns one job, declares the inputs and outputs it expects, routes away from neighboring tasks, and records the tool, database, network, and interpretation boundaries that matter to a researcher.
+Bio 02 Skills is a focused collection of 23 Agent Skills for common bioinformatics and biostatistics tasks. Each Skill owns one job, declares the inputs and outputs it expects, routes away from neighboring tasks, and records the tool, database, network, and interpretation boundaries that matter to a researcher.
 
 | Current version | Packages | Release status | External services |
 | --- | ---: | --- | --- |
-| `0.3.0` | 20 | `preview + reviewed` | Bounded public read/download; anonymous-first |
+| `0.4.0` | 23 | `preview + reviewed` | Bounded public read/download; anonymous-first |
 
 ## Why Bio 02 Skills
 
@@ -65,11 +65,12 @@ Search public studies on human liver fibrosis and return a traceable result set.
 
 | Research area | Skills |
 | --- | --- |
-| Data and workflow foundations | `bioinformatics-format-and-identifier-validation`<br>`environment-and-provenance-capture` |
+| Data and workflow foundations | `bioinformatics-format-and-identifier-validation`<br>`scientific-file-preflight-and-resource-planning`<br>`biological-database-record-retrieval-and-identifier-resolution`<br>`environment-and-provenance-capture` |
 | Sequence, reads, genomes, and evolution | `sequence-io-and-transformation`<br>`sequence-similarity-and-homology-search`<br>`pairwise-and-multiple-sequence-alignment`<br>`alignment-file-operations`<br>`genomic-interval-operations` |
 | Variant and cohort genomics | `vcf-normalization-qc-and-query` |
 | Bulk transcriptomics | `count-based-differential-expression` |
 | Single-cell analysis | `single-cell-object-io-and-qc`<br>`single-cell-core-analysis` |
+| Proteomics | `proteomics-quantification-table-qc` |
 | Protein structure | `protein-structure-retrieval-and-comparison` |
 | Cheminformatics | `molecule-standardization-and-descriptors`<br>`chemical-similarity-and-substructure-search` |
 | Functional interpretation | `over-representation-analysis`<br>`ranked-gene-set-enrichment` |
@@ -113,8 +114,8 @@ otherwise it emits `blocked-or-failed` and reports whether any network request
 occurred. At the Skill layer, incomplete or truncated work remains explicitly
 partial and non-completed, and an unsupported job returns `needs-tool`. Live
 provenance records the provider, redacted request URL, method, timestamps,
-responses, byte count, digest, output path, optional identity use, terms state,
-and `network_performed=true`.
+responses, byte count, digest, output path, anonymous execution state, terms
+state, and `network_performed=true`.
 
 ### External API, data, and tool terms
 
@@ -137,7 +138,7 @@ skills/<slug>/
 
 ## Current release boundary
 
-All 20 packages are `preview + reviewed`. Their instructions, interfaces, package structure, declared versions, and safety boundaries have been reviewed, but many external-tool paths have not been executed end to end. A package states those unverified boundaries in its manifest.
+All 23 packages are `preview + reviewed`. Their instructions, interfaces, package structure, declared versions, and safety boundaries have been reviewed, but many external-tool paths have not been executed end to end. A package states those unverified boundaries in its manifest.
 
 Use the collection for supervised research work. Verify inputs, tool availability, QC, and biological interpretation for each project. The collection does not claim universal scientific correctness, clinical authority, or superiority over another workflow.
 

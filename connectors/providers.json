@@ -5,6 +5,7 @@
   "provider_ids": [
     "ncbi-eutils",
     "uniprot-rest",
+    "ensembl-rest",
     "europe-pmc",
     "ebi-biostudies",
     "rcsb-pdb",
@@ -78,6 +79,38 @@
         "max_response_bytes": 33554432
       },
       "official_docs": "https://www.uniprot.org/help/programmatic_access"
+    },
+    "ensembl-rest": {
+      "display_name": "Ensembl REST API",
+      "purpose": "Retrieve public Ensembl gene, transcript, protein, sequence, and cross-reference records.",
+      "would_send": [
+        "public stable identifiers",
+        "species or taxon",
+        "selected fields",
+        "format parameters"
+      ],
+      "credential_fields": [],
+      "billing": {
+        "mode": "public-free",
+        "requires_separate_paid_authorization": false,
+        "summary": "The reviewed lookup, cross-reference, and sequence GET paths use anonymous public access; POST batches are outside this executor."
+      },
+      "allowed_hosts": [
+        "rest.ensembl.org"
+      ],
+      "execution": {
+        "execution_mode": "direct-read",
+        "allowed_url_prefixes": [
+          "https://rest.ensembl.org/archive/id/",
+          "https://rest.ensembl.org/lookup/id/",
+          "https://rest.ensembl.org/xrefs/id/",
+          "https://rest.ensembl.org/xrefs/symbol/",
+          "https://rest.ensembl.org/sequence/id/"
+        ],
+        "rate_limit_per_second": 3,
+        "max_response_bytes": 16777216
+      },
+      "official_docs": "https://rest.ensembl.org/documentation/info/rest"
     },
     "europe-pmc": {
       "display_name": "Europe PMC",

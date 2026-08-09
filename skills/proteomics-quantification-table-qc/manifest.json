@@ -1,0 +1,109 @@
+{
+  "schema_version": "0.2.0",
+  "name": "proteomics-quantification-table-qc",
+  "version": "0.4.0",
+  "maturity_tier": "production",
+  "context_budget_tier": "production",
+  "domain_id": "D08",
+  "cluster_id": "C22",
+  "risk_tier": "R2",
+  "owner": "project-owner",
+  "updated_at": "2026-08-09",
+  "last_freshness_check": "2026-08-09",
+  "review_cadence": "quarterly",
+  "status": "active",
+  "lifecycle_stage": "production",
+  "distribution_status": "installable",
+  "release_stage": "preview",
+  "assurance_level": "reviewed",
+  "assurance": {
+    "runtime_evaluation": "not-performed",
+    "scientific_benchmark": "not-performed",
+    "human_expert_review": "not-performed",
+    "better_than_baseline_claim": false,
+    "clinical_use": "prohibited",
+    "unverified_boundaries": [
+      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "Scientific benchmark performance has not been established.",
+      "Human-expert review has not been performed.",
+      "Large quantification tables, vendor-specific exports, and complex quantitative objects have not been runtime-evaluated.",
+      "Bioconductor, QFeatures, and MSstats execution was skipped; no normalization, imputation, or statistical model was run.",
+      "Raw-MS processing, identification/FDR, protein inference, and differential-abundance behavior are outside this package."
+    ]
+  },
+  "intake_contract_version": "1.3.0",
+  "intake_contract": {
+    "facts_before_questions": true,
+    "question_policy": "one-unresolved-load-bearing-decision-at-a-time-with-recommendation",
+    "wait_after_each_question": true,
+    "explicit_safe_local_execution": "proceed-without-repeat-confirmation",
+    "side_effect_confirmation": "only-when-not-already-authorized-for-current-action-and-scope",
+    "decision_sequence": [
+      {
+        "decision_id": "feature-boundary",
+        "applies_when": "The row-level entity is absent, mixed, or ambiguous.",
+        "question": "Does each row represent a peptide, protein group, or protein?",
+        "recommended_answer": "Use one declared peptide- or protein-level boundary and route PSM or mixed-level inputs elsewhere."
+      },
+      {
+        "decision_id": "missing-zero-semantics",
+        "applies_when": "Blank, missing, zero, negative, or censored-value semantics are undocumented.",
+        "question": "What do blank, zero, negative, and censored values mean in this export?",
+        "recommended_answer": "Preserve and document the producer's semantics before any recoding, normalization, or imputation decision."
+      },
+      {
+        "decision_id": "sample-design",
+        "applies_when": "Sample columns, join keys, conditions, replicates, batches, or the intended contrast are unresolved.",
+        "question": "Which fields define the sample join, conditions, biological replicates, batches, and intended contrast?",
+        "recommended_answer": "Freeze a one-to-one sample join and verify replication and confounding before downstream modeling."
+      }
+    ]
+  },
+  "script_verification": {
+    "bundled_scripts": false,
+    "implementation_origin": "none",
+    "self_test_status": "not-applicable",
+    "self_test_command": null,
+    "runtime_versions": []
+  },
+  "runtime_verification": {
+    "mode": "skipped-complex-tool",
+    "status": "skipped",
+    "reason": "The package is instruction-only. Large-table execution and optional R/Bioconductor quantitative-proteomics adapters require complex tooling and were deliberately not run.",
+    "tool_versions": [
+      "Bioconductor 3.23 with R 4.6 reference interface",
+      "QFeatures 1.22.0",
+      "MSstats 4.20.0 downstream modeling interface"
+    ],
+    "unverified_boundaries": [
+      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "Scientific benchmark performance has not been established.",
+      "Human-expert review has not been performed.",
+      "Large quantification tables, vendor-specific exports, and complex quantitative objects have not been runtime-evaluated.",
+      "Bioconductor, QFeatures, and MSstats execution was skipped; no normalization, imputation, or statistical model was run.",
+      "Raw-MS processing, identification/FDR, protein inference, and differential-abundance behavior are outside this package."
+    ]
+  },
+  "legal_notices": {
+    "required": true,
+    "files": [
+      "LICENSE"
+    ]
+  },
+  "rollback": {
+    "previous_version": null,
+    "boundary": "For a first release, remove this package and its matching registry entry."
+  },
+  "network_mode": "none",
+  "local_adapters": [
+    "QFeatures 1.22.0",
+    "MSstats 4.20.0"
+  ],
+  "external_services": [],
+  "depends_on": [
+    "scientific-file-preflight-and-resource-planning"
+  ],
+  "target_platforms": [
+    "agent-skills"
+  ]
+}

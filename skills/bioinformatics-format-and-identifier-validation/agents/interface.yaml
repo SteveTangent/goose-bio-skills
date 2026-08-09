@@ -1,7 +1,7 @@
 interface:
   display_name: "Bioinformatics Format and Identifier Validation"
-  short_description: "Return non-mutating structural findings for declared sequence, HTS, variant, or NCBI accession.version inputs supported by the reviewed interfaces."
-  default_prompt: "Validate these declared FASTA records and NCBI accession.version identifiers without changing them."
+  short_description: "Check supported bioinformatics structures and identifier syntax, with optional exact-accession existence checks."
+  default_prompt: "Validate these declared FASTA records and NCBI accession.version identifiers without changing them; check only exact accession existence when requested."
 compatibility:
   canonical_format: "agent-skills"
   adapter_targets:

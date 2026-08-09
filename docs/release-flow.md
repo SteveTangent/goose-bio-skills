@@ -2,6 +2,8 @@
 
 `registry.json` is the versioned index of installable packages, not a roadmap. A planned Skill appears in neither `skills/` nor the registry.
 
+Version `0.4.0` admits 23 exact packages across 11 Domains and 15 Clusters under the same atomic package-and-registry boundary.
+
 ## Flow
 
 ```mermaid
@@ -45,7 +47,7 @@ Public-service declarations are package metadata. The shared companion does not
 accept identity or credential values. Any separate host adapter that uses them
 must disclose its own boundary and never bundle secrets in a package or registry.
 
-The v0.3.0 executable catalog contains reviewed public-free and
+The v0.4.0 executable catalog contains reviewed public-free and
 terms-restricted providers only. A user's explicit search or retrieval request
 authorizes the matching bounded `GET` or `HEAD` and requested download without a
 second acknowledgement. The shared companion at
@@ -65,13 +67,13 @@ host adapter; when none is available, the package returns `needs-tool` and must
 not imply that a job was submitted.
 
 Execution claims follow evidence. The shared companion emits `completed` only
-when a live response was checked and an atomic payload/provenance pair was
+when a live response was checked and a create-new, checked payload/provenance pair was
 published with `network_performed=true`; otherwise it emits
 `blocked-or-failed`, reports whether network access began, and leaves no success
 artifact. At the Skill layer, incomplete or truncated work is partial and
 non-completed, while an unsupported job is `needs-tool`. Provenance records the
 provider, redacted request, method, response metadata, timestamps, pagination,
-bytes, digest, output, optional identity use, and terms state.
+bytes, digest, output, anonymous execution state, and terms state.
 
 ## Evaluation and stability
 

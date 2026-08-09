@@ -1,0 +1,97 @@
+{
+  "schema_version": "0.2.0",
+  "name": "biological-database-record-retrieval-and-identifier-resolution",
+  "version": "0.4.0",
+  "maturity_tier": "production",
+  "context_budget_tier": "production",
+  "domain_id": "D01",
+  "cluster_id": "C01",
+  "risk_tier": "R2",
+  "owner": "project-owner",
+  "updated_at": "2026-08-09",
+  "last_freshness_check": "2026-08-09",
+  "review_cadence": "quarterly",
+  "status": "active",
+  "lifecycle_stage": "production",
+  "distribution_status": "installable",
+  "release_stage": "preview",
+  "assurance_level": "reviewed",
+  "assurance": {
+    "runtime_evaluation": "not-performed",
+    "scientific_benchmark": "not-performed",
+    "human_expert_review": "not-performed",
+    "better_than_baseline_claim": false,
+    "clinical_use": "prohibited",
+    "unverified_boundaries": [
+      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "Scientific benchmark performance has not been established.",
+      "Human-expert review has not been performed.",
+      "Exact-package provider selection, pagination, rate limiting, release capture, and identifier normalization have not been runtime-evaluated.",
+      "One-to-many, deprecated, replaced, malformed, rate-limited, and oversized live responses remain unverified for this exact package.",
+      "Asynchronous and bulk ID mapping, full-database downloads, uploads, and private or controlled records are outside this preview."
+    ]
+  },
+  "intake_contract_version": "1.3.0",
+  "intake_contract": {
+    "facts_before_questions": true,
+    "question_policy": "one-unresolved-load-bearing-decision-at-a-time-with-recommendation",
+    "wait_after_each_question": true,
+    "explicit_safe_local_execution": "proceed-without-repeat-confirmation",
+    "side_effect_confirmation": "only-when-not-already-authorized-for-current-action-and-scope",
+    "decision_sequence": [
+      {
+        "decision_id": "taxon-boundary",
+        "applies_when": "An unqualified gene symbol or cross-reference is ambiguous across organisms.",
+        "question": "Which organism or taxon should constrain this identifier resolution?",
+        "recommended_answer": "Use a user-declared organism or taxon and do not infer one from popularity."
+      }
+    ]
+  },
+  "script_verification": {
+    "bundled_scripts": false,
+    "implementation_origin": "none",
+    "self_test_status": "not-applicable",
+    "self_test_command": null,
+    "runtime_versions": []
+  },
+  "runtime_verification": {
+    "mode": "not-performed",
+    "status": "not-performed",
+    "reason": "This is an instruction-only package. Exact-package provider selection, live retrieval, pagination, response normalization, and routing were not executed; asynchronous and bulk paths are excluded.",
+    "tool_versions": [
+      "UniProt REST rolling API; UniProt release 2026_02 checked 2026-08-09",
+      "Ensembl REST API 15.12 checked 2026-08-09",
+      "NCBI E-utilities rolling API checked 2026-08-09",
+      "Bio 02 shared public connector 0.4.0 contract"
+    ],
+    "unverified_boundaries": [
+      "Exact-package provider selection, pagination, rate limiting, release capture, and identifier normalization have not been runtime-evaluated.",
+      "One-to-many, deprecated, replaced, malformed, rate-limited, and oversized live responses remain unverified for this exact package.",
+      "Asynchronous and bulk ID mapping, full-database downloads, uploads, and private or controlled records are outside this preview."
+    ]
+  },
+  "legal_notices": {
+    "required": true,
+    "files": [
+      "LICENSE",
+      "THIRD_PARTY_NOTICES.md"
+    ]
+  },
+  "rollback": {
+    "previous_version": null,
+    "boundary": "For a first release, remove this package and its matching registry entry."
+  },
+  "network_mode": "required",
+  "local_adapters": [
+    "Bio 02 shared public connector 0.4.0"
+  ],
+  "external_services": [
+    "uniprot-rest",
+    "ensembl-rest",
+    "ncbi-eutils"
+  ],
+  "depends_on": [],
+  "target_platforms": [
+    "agent-skills"
+  ]
+}

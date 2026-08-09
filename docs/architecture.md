@@ -2,7 +2,7 @@
 
 ## Research-first system
 
-The repository contains 20 independently installable, one-job bioinformatics Skills. Research questions, current evidence, official tool interfaces, scientific assumptions, and failure boundaries are reviewed before a package is admitted.
+The repository contains 23 independently installable, one-job bioinformatics Skills across 11 Domains and 15 Clusters. Research questions, current evidence, official tool interfaces, scientific assumptions, and failure boundaries are reviewed before a package is admitted.
 
 ```mermaid
 flowchart LR
@@ -51,7 +51,7 @@ Ask no question when facts already resolve the choice. Ask exactly one question 
 
 ## Public connector contract
 
-The v0.3.0 public connector contract has four execution boundaries:
+The v0.4.0 public connector contract has four execution boundaries:
 
 1. **Bounded public access.** A user's explicit search or retrieval request authorizes the matching allowlisted public `GET` or `HEAD` and requested download. The shared companion enforces reviewed HTTPS hosts and path prefixes, rate limits, timeouts, retry limits, page and byte caps, redirect checks, and non-overwriting output publication.
 2. **Anonymous-only companion.** The shared companion does not read contact, API-key, token, or paid-credential variables. A host may provide a separate authenticated adapter only after disclosing that adapter's data, identity, storage, and billing boundary.
@@ -66,7 +66,7 @@ reviewed adapter supplied by the agent host, and otherwise degrade to
 `needs-tool` without claiming submission.
 
 Status is evidence-backed. The shared companion emits `completed` only for a
-checked live response and an atomic payload/provenance pair with
+checked live response and a create-new, checked payload/provenance pair with
 `network_performed=true`; otherwise it emits `blocked-or-failed` and reports
 whether the network was reached. At the Skill layer, incomplete or truncated
 retrieval stays partial and non-completed, and unsupported jobs return

@@ -1,7 +1,7 @@
 {
   "schema_version": "0.2.0",
   "name": "count-based-differential-expression",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D04",
@@ -82,8 +82,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.2.1",
-    "boundary": "Restore package version 0.2.1 and its matching registry entry."
+    "previous_version": "0.3.0",
+    "boundary": "Restore package version 0.3.0 and its matching registry entry."
   },
   "network_mode": "none",
   "local_adapters": [

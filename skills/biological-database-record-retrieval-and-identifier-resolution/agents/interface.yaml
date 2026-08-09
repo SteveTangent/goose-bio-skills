@@ -1,0 +1,20 @@
+interface:
+  display_name: "Biological Database Record Retrieval and Identifier Resolution"
+  short_description: "Retrieve bounded public gene, transcript, protein, or nucleotide records with exact provider provenance."
+  default_prompt: "Retrieve these public UniProt, Ensembl, or NCBI records, preserve versions and one-to-many mappings, and report exact provider provenance."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

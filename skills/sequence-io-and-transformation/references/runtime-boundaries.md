@@ -26,7 +26,10 @@ dependencies. Record the exact local version and command before execution.
 
 ## Network and data boundary
 
-Local file transformations are offline and need no database. Accession retrieval or hosted conversion uploads require explicit authorization and versioned retrieval metadata.
+Local file transformations are offline and need no database. Route accession
+retrieval to `biological-database-record-retrieval-and-identifier-resolution`.
+Hosted conversion uploads require explicit authorization and versioned service
+metadata.
 
 Before any network call, disclose the provider, query or data fields sent,
 credential requirement, rate or access constraint, and local output location.

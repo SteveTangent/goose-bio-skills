@@ -21,7 +21,7 @@ The shared standard-library executor is
 
 | Access | Services | Behavior |
 |---|---|---|
-| Direct public read | NCBI EInfo/ESearch/ESummary/EFetch without History state, UniProt REST, Europe PMC, BioStudies, RCSB PDB, AlphaFold DB, synchronous PubChem PUG REST, ChEMBL, anonymous Crossref, QuickGO, public Enrichr GET paths | Execute bounded `GET` or `HEAD` without a key |
+| Direct public read | NCBI EInfo/ESearch/ESummary/EFetch without History state, UniProt REST, Ensembl REST, Europe PMC, BioStudies, RCSB PDB, AlphaFold DB, synchronous PubChem PUG REST, ChEMBL, anonymous Crossref, QuickGO, public Enrichr GET paths | Execute bounded `GET` or `HEAD` without a key |
 | Terms-restricted read | KEGG REST | Requires `--acknowledge-terms`; academic-use terms still apply |
 | Conditional remote job | EMBL-EBI Job Dispatcher, NCBI Remote BLAST | Not implemented by this read-only executor; it never uploads a sequence or claims a job was submitted |
 | Commercial or paid | None | Paid and metered services are excluded from the executable catalog |

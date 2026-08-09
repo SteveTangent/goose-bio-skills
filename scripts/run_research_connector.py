@@ -24,7 +24,7 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PATH = ROOT / "connectors" / "providers.json"
-VERSION = "0.3.0"
+VERSION = "0.4.0"
 CATALOG_SCHEMA_VERSION = "0.2.0"
 DEFAULT_MAX_BYTES = 32 * 1024 * 1024
 HARD_MAX_BYTES = 128 * 1024 * 1024
@@ -57,6 +57,28 @@ SECRET_QUERY_KEYS = {
     "username",
     "xapikey",
 }
+SECRET_QUERY_FRAGMENTS = (
+    "token",
+    "secret",
+    "password",
+    "passwd",
+    "credential",
+    "email",
+    "mailto",
+    "contact",
+    "username",
+    "authorization",
+    "bearer",
+)
+SECRET_KEY_FAMILY = {
+    "key",
+    "apikey",
+    "accesskey",
+    "authkey",
+    "clientkey",
+    "privatekey",
+    "xapikey",
+}
 PAGE_PARAMETER = re.compile(r"^[A-Za-z][A-Za-z0-9_.-]{0,63}$")
 PUBCHEM_ASYNC_PATH = re.compile(
     r"^/rest/pug/compound/(?:substructure|superstructure|similarity_2d|similarity_3d|identity|formula)(?:/|$)",
@@ -76,6 +98,7 @@ class Policy:
 EXPECTED_PROVIDER_IDS = (
     "ncbi-eutils",
     "uniprot-rest",
+    "ensembl-rest",
     "europe-pmc",
     "ebi-biostudies",
     "rcsb-pdb",
@@ -252,11 +275,20 @@ def normalized_query_key(key: str) -> str:
     return re.sub(r"[-_.\s]+", "", key.strip().lower())
 
 
+def is_sensitive_query_key(key: str) -> bool:
+    normalized = normalized_query_key(key)
+    return (
+        normalized in SECRET_QUERY_KEYS
+        or normalized in SECRET_KEY_FAMILY
+        or any(fragment in normalized for fragment in SECRET_QUERY_FRAGMENTS)
+    )
+
+
 def sensitive_query_pairs(url: str) -> frozenset[tuple[str, str]]:
     return frozenset(
         (normalized_query_key(key), value)
         for key, value in parse_qsl(urlsplit(url).query, keep_blank_values=True)
-        if normalized_query_key(key) in SECRET_QUERY_KEYS
+        if is_sensitive_query_key(key)
     )
 
 
@@ -307,7 +339,7 @@ def validate_url(
 def redact_url(url: str) -> str:
     parsed = urlsplit(url)
     redacted = [
-        (key, "<redacted>" if normalized_query_key(key) in SECRET_QUERY_KEYS else value)
+        (key, "<redacted>" if is_sensitive_query_key(key) else value)
         for key, value in parse_qsl(parsed.query, keep_blank_values=True)
     ]
     return urlunsplit((parsed.scheme, parsed.netloc, parsed.path, urlencode(redacted), ""))
@@ -330,7 +362,10 @@ class ReviewedRedirectHandler(HTTPRedirectHandler):
             target,
             self.policy,
         )
-        return super().redirect_request(req, fp, code, msg, headers, target)
+        redirected = super().redirect_request(req, fp, code, msg, headers, target)
+        if redirected is not None:
+            redirected.method = req.get_method()
+        return redirected
 
 
 def retry_delay(error: HTTPError | None, attempt: int) -> float:
@@ -530,7 +565,7 @@ def publish_outputs(
             unlink_if_owned(provenance_path, provenance_temp)
         if output_temp is not None and output_published:
             unlink_if_owned(output, output_temp)
-        raise ConnectorError(f"could not atomically publish output: {exc}") from exc
+        raise ConnectorError(f"could not publish create-new output pair: {exc}") from exc
     finally:
         unlink_temp(output_temp)
         unlink_temp(provenance_temp)
@@ -672,6 +707,29 @@ def self_test(catalog: dict[str, object]) -> int:
     validate_url("uniprot-rest", "https://rest.uniprot.org/uniprotkb/P04637.json", uniprot)
     checks += 1
 
+    ensembl = policy_for("ensembl-rest", catalog, False)
+    validate_url(
+        "ensembl-rest",
+        "https://rest.ensembl.org/lookup/id/ENSG00000141510?content-type=application/json",
+        ensembl,
+    )
+    validate_url(
+        "ensembl-rest",
+        "https://rest.ensembl.org/archive/id/ENSG00000141510?content-type=application/json",
+        ensembl,
+    )
+    try:
+        validate_url(
+            "ensembl-rest",
+            "https://rest.ensembl.org/overlap/id/ENSG00000141510",
+            ensembl,
+        )
+    except ConnectorError:
+        pass
+    else:
+        raise ConnectorError("Ensembl path allowlist self-test failed")
+    checks += 1
+
     for secret_key in (
         "password",
         "client_secret",
@@ -683,6 +741,12 @@ def self_test(catalog: dict[str, object]) -> int:
         "x-api-key",
         "xApiKey",
         "contactEmail",
+        "api_token",
+        "api-token",
+        "bearer_token",
+        "secret_key",
+        "contact",
+        "user_email",
     ):
         try:
             validate_url(
@@ -751,6 +815,18 @@ def self_test(catalog: dict[str, object]) -> int:
     )
     if allowed_redirect is None or allowed_redirect.full_url != "https://rest.uniprot.org/uniprotkb/Q9Y6K9.json":
         raise ConnectorError("reviewed redirect self-test failed")
+    if allowed_redirect.get_method() != "GET":
+        raise ConnectorError("GET redirect method changed")
+    head_redirect = redirect_handler.redirect_request(
+        Request("https://rest.uniprot.org/uniprotkb/P04637.json", method="HEAD"),
+        None,
+        302,
+        "Found",
+        Message(),
+        "/uniprotkb/Q9Y6K9.json",
+    )
+    if head_redirect is None or head_redirect.get_method() != "HEAD":
+        raise ConnectorError("HEAD redirect method changed")
     checks += 1
 
     ncbi = policy_for("ncbi-eutils", catalog, False)
@@ -1099,7 +1175,7 @@ def validate_args(args: argparse.Namespace) -> None:
     if args.pages > 1:
         if not args.page_param or not PAGE_PARAMETER.fullmatch(args.page_param):
             raise ConnectorError("multi-page mode requires a valid --page-param")
-        if normalized_query_key(args.page_param) in SECRET_QUERY_KEYS:
+        if is_sensitive_query_key(args.page_param):
             raise ConnectorError("credential fields cannot be pagination parameters")
     elif args.page_param:
         raise ConnectorError("--page-param is only valid when --pages is greater than one")
