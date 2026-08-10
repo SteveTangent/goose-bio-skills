@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Any
 
 
-VERSION = "0.5.0"
+VERSION = "0.6.0"
 DEFAULT_PROBE_BYTES = 64 * 1024
 MAX_PROBE_BYTES = 1024 * 1024
 MIB = 1024 * 1024

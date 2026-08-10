@@ -1,7 +1,7 @@
 {
   "schema_version": "0.2.0",
   "name": "evidence-synthesis-and-research-traceability",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D13",
@@ -82,8 +82,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.4.1",
-    "boundary": "Restore package version 0.4.1 and its matching registry entry."
+    "previous_version": "0.5.0",
+    "boundary": "Restore package version 0.5.0 and its matching registry entry."
   },
   "network_mode": "optional",
   "local_adapters": [

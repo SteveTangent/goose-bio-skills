@@ -282,9 +282,107 @@
       "expected_skill": null,
       "forbidden_skills": [
         "raw-read-quality-reporting",
+        "raw-read-trimming-and-filtering",
         "sequence-io-and-transformation"
       ],
       "expected_action": "route-away-and-refuse-overwrite",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "raw-trimming-fully-specified-small-local",
+      "prompt": "For sample_R1.fastq.gz and sample_R2.fastq.gz, trim the declared Illumina adapter sequences with Cutadapt 5.2, require a 30-base minimum length, keep mates synchronized, and write new files plus a retention report under results/trimmed-sample; proceed locally without overwriting anything.",
+      "expected_skill": "raw-read-trimming-and-filtering",
+      "forbidden_skills": [
+        "raw-read-quality-reporting",
+        "sequence-io-and-transformation"
+      ],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "raw-trimming-missing-adapter-first",
+      "prompt": "Trim this explicitly paired small local FASTQ sample and write new synchronized outputs, but the adapter identity and orientation are not documented.",
+      "expected_skill": "raw-read-trimming-and-filtering",
+      "forbidden_skills": [],
+      "expected_action": "ask-with-recommendation-then-wait",
+      "expected_question_count_this_turn": 1,
+      "expected_first_decision_id": "adapter-policy"
+    },
+    {
+      "id": "raw-demultiplexing-routes-away",
+      "prompt": "Demultiplex this barcoded sequencing run, infer every sample barcode, and then trim the resulting reads.",
+      "expected_skill": null,
+      "forbidden_skills": [
+        "raw-read-trimming-and-filtering",
+        "raw-read-quality-reporting"
+      ],
+      "expected_action": "route-away",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "gff-qc-fully-specified-local",
+      "prompt": "Check genes.gff3 as GFF3 against reference.fa.fai for structural records, identifiers, parents, CDS phase, containment, coordinates, and exact contigs, then write a new report to reports/gff-qc.json without repair.",
+      "expected_skill": "gff-gtf-gene-model-qc",
+      "forbidden_skills": [
+        "genomic-interval-operations",
+        "bioinformatics-format-and-identifier-validation"
+      ],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "gff-qc-missing-dialect-first",
+      "prompt": "Structurally audit annotation.txt against reference.fa.fai, but its ninth-column dialect is not declared and may be GFF3 or GTF.",
+      "expected_skill": "gff-gtf-gene-model-qc",
+      "forbidden_skills": [],
+      "expected_action": "ask-with-recommendation-then-wait",
+      "expected_question_count_this_turn": 1,
+      "expected_first_decision_id": "annotation-dialect"
+    },
+    {
+      "id": "gff-interval-overlap-routes-away",
+      "prompt": "Intersect all exon intervals from this valid GTF with peaks.bed and return the overlap counts; do not perform gene-model QC.",
+      "expected_skill": "genomic-interval-operations",
+      "forbidden_skills": [
+        "gff-gtf-gene-model-qc"
+      ],
+      "expected_action": "route-to-genomic-interval-operations",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "fcs-metadata-fully-specified-local",
+      "prompt": "Inspect sample.fcs metadata only and write a new report to reports/sample-fcs-metadata.json with its FCS version, dataset, event and channel counts, PnN/PnS/PnE/PnG/PnR fields, time, and spillover declaration; do not compensate, gate, or export events.",
+      "expected_skill": "fcs-file-io-and-metadata-qc",
+      "forbidden_skills": [
+        "single-cell-object-io-and-qc"
+      ],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "fcs-multiple-datasets-asks-scope",
+      "prompt": "Inspect this local FCS file, which contains several datasets, but I have not specified which datasets should govern the report.",
+      "expected_skill": "fcs-file-io-and-metadata-qc",
+      "forbidden_skills": [],
+      "expected_action": "ask-with-recommendation-then-wait",
+      "expected_question_count_this_turn": 1,
+      "expected_first_decision_id": "fcs-dataset-scope"
+    },
+    {
+      "id": "fcs-gating-analysis-routes-away",
+      "prompt": "Compensate this FCS file, transform the fluorescence channels, discover cell populations, and define clinical diagnostic gates.",
+      "expected_skill": null,
+      "forbidden_skills": [
+        "fcs-file-io-and-metadata-qc",
+        "single-cell-core-analysis"
+      ],
+      "expected_action": "route-away-and-block-clinical-use",
       "expected_question_count_this_turn": 0,
       "expected_first_decision_id": null
     }

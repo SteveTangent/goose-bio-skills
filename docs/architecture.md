@@ -2,7 +2,7 @@
 
 ## Research-first system
 
-The repository contains 26 independently installable, one-job bioinformatics Skills across 11 Domains and 15 Clusters. Research questions, current evidence, official tool interfaces, scientific assumptions, and failure boundaries are reviewed before a package is admitted.
+The repository contains 29 independently installable, one-job bioinformatics Skills across 11 Domains and 17 Clusters. Research questions, current evidence, official tool interfaces, scientific assumptions, and failure boundaries are reviewed before a package is admitted.
 
 ```mermaid
 flowchart LR
@@ -54,7 +54,7 @@ Ask no question when facts already resolve the choice. Ask exactly one question 
 
 ## Public connector contract
 
-The v0.5.0 public connector contract has four execution boundaries:
+The v0.6.0 public connector contract has four execution boundaries:
 
 1. **Bounded public access.** A user's explicit search or retrieval request authorizes the matching allowlisted public `GET` or `HEAD` and requested download. The shared companion enforces reviewed HTTPS hosts and path prefixes, timeouts, retry limits, page and byte caps, redirect checks, non-overwriting output publication, and pacing between paginated requests within one invocation; retry backoff is separate. The agent host must aggregate rate limits across concurrent processes and other traffic sharing the same source address.
 2. **Anonymous-only companion.** The shared companion reads no provider configuration, contact identity, API key, token, or paid credential. Transport follows the agent host's proxy and CA trust policy; a non-default proxy or CA boundary should be disclosed. A host may provide a separate authenticated adapter only after disclosing that adapter's data, identity, storage, and billing boundary.

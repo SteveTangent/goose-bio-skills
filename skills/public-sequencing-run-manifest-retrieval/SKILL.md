@@ -3,7 +3,7 @@ name: public-sequencing-run-manifest-retrieval
 description: "Retrieve a bounded public sequencing run/file manifest for exact INSDC study, experiment, sample, BioProject, BioSample, or run accessions; narrow over-limit exact-accession requests before execution. Return linked IDs, layout, platform, file URLs, bytes, and MD5. Exclude discovery, read downloads, QC, conversion, alignment, and bulk harvesting."
 license: Apache-2.0
 metadata:
-  version: "0.5.0"
+  version: "0.6.0"
 ---
 
 # Public Sequencing Run Manifest Retrieval

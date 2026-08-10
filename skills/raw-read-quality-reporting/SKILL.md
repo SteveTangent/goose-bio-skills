@@ -3,7 +3,7 @@ name: raw-read-quality-reporting
 description: "Use to generate or interpret read-quality reports for a small, user-provided local FASTQ set or existing FastQC reports. FastQC is primary; MultiQC may only aggregate existing reports. Exclude read download, trimming, alignment, large or batch QC, contamination classification, and experimental pass/fail decisions."
 license: Apache-2.0
 metadata:
-  version: "0.5.0"
+  version: "0.6.0"
 ---
 
 # Raw Read Quality Reporting

@@ -2,11 +2,11 @@
 
 Research-first bioinformatics skills for AI agents.
 
-Bio 02 Skills is a focused collection of 26 Agent Skills for common bioinformatics and biostatistics tasks. Each Skill owns one job, declares the inputs and outputs it expects, routes away from neighboring tasks, and records the tool, database, network, and interpretation boundaries that matter to a researcher.
+Bio 02 Skills is a focused collection of 29 Agent Skills for common bioinformatics and biostatistics tasks. Each Skill owns one job, declares the inputs and outputs it expects, routes away from neighboring tasks, and records the tool, database, network, and interpretation boundaries that matter to a researcher.
 
 | Current version | Packages | Release status | External services |
 | --- | ---: | --- | --- |
-| `0.5.0` | 26 | `preview + reviewed` | Bounded public read/download; anonymous-first |
+| `0.6.0` | 29 | `preview + reviewed` | Bounded public read/download; anonymous-first |
 
 ## Why Bio 02 Skills
 
@@ -66,6 +66,12 @@ Retrieve a bounded ENA run/file manifest for SRR390728 without downloading reads
 Resolve the name Escherichia coli to NCBI TaxIds and preserve ambiguous matches.
 
 Review these local FastQC reports and summarize read-quality warnings without trimming reads.
+
+Trim the declared adapters from this small paired FASTQ set with the approved filter policy and write new synchronized outputs.
+
+Check this GTF for structural and gene-model consistency without rewriting it.
+
+Inspect this local FCS file's datasets and channel metadata without compensation or gating.
 ```
 
 ## Skill catalog
@@ -73,11 +79,11 @@ Review these local FastQC reports and summarize read-quality warnings without tr
 | Research area | Skills |
 | --- | --- |
 | Data and workflow foundations | `bioinformatics-format-and-identifier-validation`<br>`scientific-file-preflight-and-resource-planning`<br>`biological-database-record-retrieval-and-identifier-resolution`<br>`taxonomy-name-and-taxid-resolution`<br>`public-sequencing-run-manifest-retrieval`<br>`environment-and-provenance-capture` |
-| Sequence, reads, genomes, and evolution | `sequence-io-and-transformation`<br>`sequence-similarity-and-homology-search`<br>`pairwise-and-multiple-sequence-alignment`<br>`raw-read-quality-reporting`<br>`alignment-file-operations`<br>`genomic-interval-operations` |
+| Sequence, reads, genomes, and evolution | `sequence-io-and-transformation`<br>`sequence-similarity-and-homology-search`<br>`pairwise-and-multiple-sequence-alignment`<br>`raw-read-quality-reporting`<br>`raw-read-trimming-and-filtering`<br>`alignment-file-operations`<br>`genomic-interval-operations`<br>`gff-gtf-gene-model-qc` |
 | Variant and cohort genomics | `vcf-normalization-qc-and-query` |
 | Bulk transcriptomics | `count-based-differential-expression` |
 | Single-cell analysis | `single-cell-object-io-and-qc`<br>`single-cell-core-analysis` |
-| Proteomics | `proteomics-quantification-table-qc` |
+| Proteomics and cytometry | `proteomics-quantification-table-qc`<br>`fcs-file-io-and-metadata-qc` |
 | Protein structure | `protein-structure-retrieval-and-comparison` |
 | Cheminformatics | `molecule-standardization-and-descriptors`<br>`chemical-similarity-and-substructure-search` |
 | Functional interpretation | `over-representation-analysis`<br>`ranked-gene-set-enrichment` |
@@ -151,7 +157,7 @@ skills/<slug>/
 
 ## Current release boundary
 
-All 26 packages are `preview + reviewed`. Their instructions, interfaces, package structure, declared versions, and safety boundaries have been reviewed, but many external-tool paths have not been executed end to end. A package states those unverified boundaries in its manifest.
+All 29 packages are `preview + reviewed`. Their instructions, interfaces, package structure, declared versions, and safety boundaries have been reviewed, but many external-tool paths have not been executed end to end. A package states those unverified boundaries in its manifest.
 
 Use the collection for supervised research work. Verify inputs, tool availability, QC, and biological interpretation for each project. The collection does not claim universal scientific correctness, clinical authority, or superiority over another workflow.
 
@@ -165,9 +171,10 @@ python3 scripts/validate_skeleton.py --self-test
 python3 scripts/run_research_connector.py --self-test
 python3 skills/scientific-file-preflight-and-resource-planning/scripts/preflight_files.py --self-test
 python3 skills/statistical-analysis-and-multiple-testing/scripts/adjust_pvalues.py --self-test
+python3 skills/gff-gtf-gene-model-qc/scripts/check_gene_models.py --self-test
 ```
 
-The skeleton gate also validates the 28 deterministic intake-routing cases in
+The skeleton gate also validates the 37 deterministic intake-routing cases in
 [`evals/intake-routing-cases.json`](evals/intake-routing-cases.json). Those
 fixtures test routing and first-question contracts; they are not a claim of
 model-runtime or scientific evaluation.

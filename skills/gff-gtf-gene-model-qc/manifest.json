@@ -1,0 +1,98 @@
+{
+  "schema_version": "0.2.0",
+  "name": "gff-gtf-gene-model-qc",
+  "version": "0.6.0",
+  "maturity_tier": "production",
+  "context_budget_tier": "production",
+  "domain_id": "D02",
+  "cluster_id": "C07",
+  "risk_tier": "R2",
+  "owner": "project-owner",
+  "updated_at": "2026-08-10",
+  "last_freshness_check": "2026-08-10",
+  "review_cadence": "quarterly",
+  "status": "active",
+  "lifecycle_stage": "production",
+  "distribution_status": "installable",
+  "release_stage": "preview",
+  "assurance_level": "reviewed",
+  "assurance": {
+    "runtime_evaluation": "not-performed",
+    "scientific_benchmark": "not-performed",
+    "human_expert_review": "not-performed",
+    "better_than_baseline_claim": false,
+    "clinical_use": "prohibited",
+    "unverified_boundaries": [
+      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "Scientific benchmark performance and human-expert review have not been established.",
+      "Representative full-size reference annotations and unusual producer-specific GFF3/GTF dialects were not runtime-evaluated.",
+      "Cross-segment CDS frame continuity, translation reconstruction, and biological gene-model completeness are outside the checker contract.",
+      "Windows create-exclusive publication and symlink semantics have not been verified."
+    ]
+  },
+  "intake_contract_version": "1.3.0",
+  "intake_contract": {
+    "facts_before_questions": true,
+    "question_policy": "one-unresolved-load-bearing-decision-at-a-time-with-recommendation",
+    "wait_after_each_question": true,
+    "explicit_safe_local_execution": "proceed-without-repeat-confirmation",
+    "side_effect_confirmation": "only-when-not-already-authorized-for-current-action-and-scope",
+    "decision_sequence": [
+      {
+        "decision_id": "annotation-dialect",
+        "applies_when": "The annotation dialect is absent, mixed, or ambiguous and changes ninth-column parsing.",
+        "question": "Is the annotation's ninth column declared as GFF3 or GTF syntax?",
+        "recommended_answer": "Use the producer's declared format and stop on mixed syntax rather than inferring from the filename."
+      },
+      {
+        "decision_id": "contig-dictionary",
+        "applies_when": "The exact assembly .fai or contig-size dictionary is absent or ambiguous.",
+        "question": "Which exact reference .fai or contig-size table governs these coordinates?",
+        "recommended_answer": "Use the dictionary generated from the same reference release as the annotation."
+      }
+    ]
+  },
+  "script_verification": {
+    "bundled_scripts": true,
+    "implementation_origin": "original-rewrite-after-private-evaluation",
+    "self_test_status": "passed",
+    "self_test_command": "python3 scripts/check_gene_models.py --self-test",
+    "runtime_versions": [
+      "Python 3.12.8 self-test; compatible syntax requires Python >=3.10"
+    ]
+  },
+  "runtime_verification": {
+    "mode": "not-performed",
+    "status": "not-performed",
+    "reason": "Preview admission ran only the bundled deterministic helper self-test; agent/model runtime, representative producer dialects, large annotations, and scientific benchmark execution were not performed.",
+    "tool_versions": [],
+    "unverified_boundaries": [
+      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "Scientific benchmark performance and human-expert review have not been established.",
+      "Representative full-size reference annotations and unusual producer-specific GFF3/GTF dialects were not runtime-evaluated.",
+      "Cross-segment CDS frame continuity, translation reconstruction, and biological gene-model completeness are outside the checker contract.",
+      "Windows create-exclusive publication and symlink semantics have not been verified."
+    ]
+  },
+  "legal_notices": {
+    "required": true,
+    "files": [
+      "LICENSE"
+    ]
+  },
+  "rollback": {
+    "previous_version": null,
+    "boundary": "Remove this first-release package and its matching registry entry."
+  },
+  "network_mode": "none",
+  "local_adapters": [
+    "Python 3.10+ standard library"
+  ],
+  "external_services": [],
+  "depends_on": [
+    "scientific-file-preflight-and-resource-planning"
+  ],
+  "target_platforms": [
+    "agent-skills"
+  ]
+}

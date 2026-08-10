@@ -3,7 +3,7 @@ name: genomic-interval-operations
 description: "A user needs same-build interval overlap, merge, subtraction, nearest-feature or coordinate-convention operations. Exclude: cross-build lift-over or chain-file mapping; variant normalization; assuming coordinate conventions or tool parity without evidence."
 license: Apache-2.0
 metadata:
-  version: "0.5.0"
+  version: "0.6.0"
 ---
 
 # Genomic Interval Operations

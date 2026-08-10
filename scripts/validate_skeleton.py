@@ -19,8 +19,8 @@ from urllib.parse import urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
-VALIDATOR_VERSION = "0.9.0"
-PUBLIC_PACKAGE_VERSION = "0.5.0"
+VALIDATOR_VERSION = "1.0.0"
+PUBLIC_PACKAGE_VERSION = "0.6.0"
 MANIFEST_SCHEMA_VERSION = "0.2.0"
 REGISTRY_SCHEMA_VERSION = "0.5.0"
 PROVIDER_CATALOG_SCHEMA_VERSION = "0.2.0"
@@ -140,6 +140,51 @@ CRITICAL_INTAKE_CASES = {
         None,
     ),
     "raw-read-trimming-routes-away": (
+        None,
+        0,
+        None,
+    ),
+    "raw-trimming-fully-specified-small-local": (
+        "raw-read-trimming-and-filtering",
+        0,
+        None,
+    ),
+    "raw-trimming-missing-adapter-first": (
+        "raw-read-trimming-and-filtering",
+        1,
+        "adapter-policy",
+    ),
+    "raw-demultiplexing-routes-away": (
+        None,
+        0,
+        None,
+    ),
+    "gff-qc-fully-specified-local": (
+        "gff-gtf-gene-model-qc",
+        0,
+        None,
+    ),
+    "gff-qc-missing-dialect-first": (
+        "gff-gtf-gene-model-qc",
+        1,
+        "annotation-dialect",
+    ),
+    "gff-interval-overlap-routes-away": (
+        "genomic-interval-operations",
+        0,
+        None,
+    ),
+    "fcs-metadata-fully-specified-local": (
+        "fcs-file-io-and-metadata-qc",
+        0,
+        None,
+    ),
+    "fcs-multiple-datasets-asks-scope": (
+        "fcs-file-io-and-metadata-qc",
+        1,
+        "fcs-dataset-scope",
+    ),
+    "fcs-gating-analysis-routes-away": (
         None,
         0,
         None,
@@ -999,7 +1044,7 @@ def validate_intake_routing_fixture(
                     f"{label}/{case_id}: first decision is absent from the Skill manifest",
                 )
 
-    require(len(cases) == 28, f"{label}: expected 28 canonical cases")
+    require(len(cases) == 37, f"{label}: expected 37 canonical cases")
     for case_id, expected in CRITICAL_INTAKE_CASES.items():
         case = by_id.get(case_id)
         require(case is not None, f"{label}: missing critical case {case_id}")
