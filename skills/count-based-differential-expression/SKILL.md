@@ -3,7 +3,7 @@ name: count-based-differential-expression
 description: "A user has integer-like counts plus sample metadata and needs a group or covariate differential-expression analysis. Exclude: FASTQ-to-count processing; pathway enrichment; assuming two software adapters are numerically identical."
 license: Apache-2.0
 metadata:
-  version: "0.4.1"
+  version: "0.5.0"
 ---
 
 # Count-based Differential Expression

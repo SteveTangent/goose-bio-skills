@@ -3,7 +3,7 @@ name: pairwise-and-multiple-sequence-alignment
 description: "A user needs global, local or multiple alignment of an existing sequence set. Exclude: database similarity search; tree inference; asserting positional homology without qualification."
 license: Apache-2.0
 metadata:
-  version: "0.4.1"
+  version: "0.5.0"
 ---
 
 # Pairwise and Multiple Sequence Alignment

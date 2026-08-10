@@ -1,0 +1,20 @@
+interface:
+  display_name: "Raw Read Quality Reporting"
+  short_description: "Generate or interpret assay-aware FastQC reports for a few local read files."
+  default_prompt: "Review these local FASTQ files or FastQC reports, explain module findings in the library context, and do not download, trim, align, or equate FastQC flags with experimental success."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

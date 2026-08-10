@@ -24,7 +24,7 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PATH = ROOT / "connectors" / "providers.json"
-VERSION = "0.4.1"
+VERSION = "0.5.0"
 CATALOG_SCHEMA_VERSION = "0.2.0"
 DEFAULT_MAX_BYTES = 32 * 1024 * 1024
 HARD_MAX_BYTES = 128 * 1024 * 1024
@@ -104,6 +104,7 @@ EXPECTED_PROVIDER_IDS = (
     "ensembl-rest",
     "europe-pmc",
     "ebi-biostudies",
+    "ena-portal-api",
     "rcsb-pdb",
     "alphafold-db",
     "pubchem-pug-rest",
@@ -265,11 +266,12 @@ def validate_read_only_semantics(provider_id: str, url: str) -> None:
         for key, value in query:
             history_write = (
                 key == "webenv"
-                or (key == "usehistory" and value not in {"", "0", "false", "n", "no"})
+                or key == "query_key"
+                or key == "usehistory"
                 or (key == "cmd" and value == "neighbor_history")
             )
             if history_write:
-                raise ConnectorError("NCBI History-server writes are outside direct-read mode")
+                raise ConnectorError("NCBI History-server state is outside direct-read mode")
     elif provider_id == "pubchem-pug-rest":
         if PUBCHEM_ASYNC_PATH.match(path) or re.search(r"/(?:listkey|cachekey)(?:/|$)", path):
             raise ConnectorError("PubChem asynchronous and stored-result paths require a job adapter")
@@ -281,6 +283,81 @@ def validate_read_only_semantics(provider_id: str, url: str) -> None:
     elif provider_id == "enrichr":
         if re.search(r"/(?:api/)?addlist/?$", path):
             raise ConnectorError("Enrichr list submission is outside direct-read mode")
+    elif provider_id == "ena-portal-api":
+        values: dict[str, list[str]] = {}
+        for key, value in query:
+            values.setdefault(key, []).append(value)
+        accession = values.get("accession", [])
+        result = values.get("result", [])
+        response_format = values.get("format", [])
+        fields = values.get("fields", [])
+        allowed_fields = {
+            "run_accession",
+            "study_accession",
+            "sample_accession",
+            "experiment_accession",
+            "instrument_platform",
+            "instrument_model",
+            "library_layout",
+            "library_strategy",
+            "library_source",
+            "library_selection",
+            "fastq_file_role",
+            "fastq_ftp",
+            "fastq_md5",
+            "fastq_bytes",
+            "submitted_file_role",
+            "submitted_ftp",
+            "submitted_md5",
+            "submitted_bytes",
+            "sra_file_role",
+            "sra_ftp",
+            "sra_md5",
+            "sra_bytes",
+        }
+        accession_pattern = re.compile(
+            r"^(?:[SED]R[PRXS][0-9]+|PRJ(?:NA|EB|DB)[0-9]+|SAM(?:N|EA|D)[0-9]+)$",
+            re.IGNORECASE,
+        )
+        if len(accession) != 1 or not accession_pattern.fullmatch(accession[0]):
+            raise ConnectorError("ENA file reports require one explicit public INSDC accession")
+        if result != ["read_run"]:
+            raise ConnectorError("ENA file reports are limited to the read_run result")
+        if response_format != ["tsv"]:
+            raise ConnectorError("ENA file reports require TSV output")
+        if len(fields) != 1:
+            raise ConnectorError("ENA file reports require one explicit field list")
+        requested_field_list = [item.strip() for item in fields[0].split(",") if item.strip()]
+        requested_fields = set(requested_field_list)
+        common_fields = {
+            "run_accession",
+            "study_accession",
+            "sample_accession",
+            "experiment_accession",
+            "library_layout",
+            "instrument_platform",
+            "instrument_model",
+        }
+        representation_groups = (
+            {"fastq_file_role", "fastq_ftp", "fastq_md5", "fastq_bytes"},
+            {"submitted_file_role", "submitted_ftp", "submitted_md5", "submitted_bytes"},
+            {"sra_file_role", "sra_ftp", "sra_md5", "sra_bytes"},
+        )
+        if (
+            not requested_fields
+            or len(requested_field_list) != len(requested_fields)
+            or not requested_fields.issubset(allowed_fields)
+            or not common_fields.issubset(requested_fields)
+            or sum(group.issubset(requested_fields) for group in representation_groups) != 1
+            or any(
+                requested_fields.intersection(group)
+                and requested_fields.intersection(group) != group
+                for group in representation_groups
+            )
+        ):
+            raise ConnectorError("ENA file report fields exceed the reviewed run-manifest boundary")
+        if any(key not in {"accession", "result", "fields", "format"} for key in values):
+            raise ConnectorError("ENA file report parameters exceed the reviewed boundary")
 
 
 def normalized_query_key(key: str) -> str:
@@ -776,6 +853,30 @@ def self_test(catalog: dict[str, object]) -> int:
     validate_url("uniprot-rest", "https://rest.uniprot.org/uniprotkb/P04637.json", uniprot)
     checks += 1
 
+    ena = policy_for("ena-portal-api", catalog, False)
+    validate_url(
+        "ena-portal-api",
+        "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRR390728&result=read_run&fields=run_accession,study_accession,sample_accession,experiment_accession,library_layout,instrument_platform,instrument_model,fastq_file_role,fastq_ftp,fastq_md5,fastq_bytes&format=tsv",
+        ena,
+    )
+    for disallowed_ena_url in (
+        "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRR390728&result=analysis&fields=run_accession&format=tsv",
+        "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRR390728&result=read_run&fields=run_accession,private_field&format=tsv",
+        "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRR390728&result=read_run&fields=run_accession,study_accession,sample_accession,experiment_accession,library_layout,instrument_platform,instrument_model,fastq_ftp,fastq_md5,fastq_bytes&format=tsv",
+        "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRR390728&result=read_run&fields=run_accession,run_accession,study_accession,sample_accession,experiment_accession,library_layout,instrument_platform,instrument_model,fastq_file_role,fastq_ftp,fastq_md5,fastq_bytes&format=tsv",
+        "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=not-an-accession&result=read_run&fields=run_accession&format=tsv",
+        "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SAMNA123&result=read_run&fields=run_accession&format=tsv",
+        "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJZZ123&result=read_run&fields=run_accession&format=tsv",
+        "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRR390728&result=read_run&fields=run_accession&format=json",
+    ):
+        try:
+            validate_url("ena-portal-api", disallowed_ena_url, ena)
+        except ConnectorError:
+            pass
+        else:
+            raise ConnectorError("ENA run-manifest boundary self-test failed")
+    checks += 1
+
     ensembl = policy_for("ensembl-rest", catalog, False)
     validate_url(
         "ensembl-rest",
@@ -970,8 +1071,10 @@ def self_test(catalog: dict[str, object]) -> int:
     for remote_state_url in (
         "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/epost.fcgi?db=protein&id=1,2",
         "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=p53&usehistory=y",
+        "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=p53&usehistory=n",
         "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=p53;usehistory=y",
         "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=p53%3Busehistory=y",
+        "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&query_key=1",
         "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=p53&WebEnv=history",
         "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=pubmed&db=pmc&id=1&cmd=neighbor_history",
     ):

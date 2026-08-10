@@ -1,13 +1,14 @@
 {
   "schema_version": "0.2.0",
   "mode": "live-public-read-only",
-  "freshness_checked_at": "2026-08-09",
+  "freshness_checked_at": "2026-08-10",
   "provider_ids": [
     "ncbi-eutils",
     "uniprot-rest",
     "ensembl-rest",
     "europe-pmc",
     "ebi-biostudies",
+    "ena-portal-api",
     "rcsb-pdb",
     "alphafold-db",
     "pubchem-pug-rest",
@@ -22,12 +23,13 @@
   "providers": {
     "ncbi-eutils": {
       "display_name": "NCBI E-utilities",
-      "purpose": "Search public biomedical literature and study metadata or resolve NCBI accession.version identifiers.",
+      "purpose": "Search public biomedical literature and study metadata, resolve NCBI accession.version identifiers, or retrieve bounded public NCBI Taxonomy records.",
       "would_send": [
         "query terms",
         "database name",
         "date and field filters",
         "public accession identifiers",
+        "public taxonomy names or TaxIds",
         "pagination parameters"
       ],
       "credential_fields": [],
@@ -168,6 +170,34 @@
         "max_response_bytes": 33554432
       },
       "official_docs": "https://www.ebi.ac.uk/biostudies/help#API"
+    },
+    "ena-portal-api": {
+      "display_name": "ENA Portal API",
+      "purpose": "Retrieve bounded public sequencing run and file metadata by explicit INSDC study, sample, experiment, or run accession.",
+      "would_send": [
+        "public INSDC accessions",
+        "read-run result type",
+        "selected manifest fields",
+        "response format"
+      ],
+      "credential_fields": [],
+      "billing": {
+        "mode": "public-free",
+        "requires_separate_paid_authorization": false,
+        "summary": "The reviewed ENA file-report path uses anonymous public access; private Webin reports, submissions, and raw-read transfer are excluded."
+      },
+      "allowed_hosts": [
+        "www.ebi.ac.uk"
+      ],
+      "execution": {
+        "execution_mode": "direct-read",
+        "allowed_url_prefixes": [
+          "https://www.ebi.ac.uk/ena/portal/api/filereport"
+        ],
+        "rate_limit_per_second": 2,
+        "max_response_bytes": 16777216
+      },
+      "official_docs": "https://ena-docs.readthedocs.io/en/latest/retrieval/programmatic-access/file-reports.html"
     },
     "rcsb-pdb": {
       "display_name": "RCSB PDB Data API",

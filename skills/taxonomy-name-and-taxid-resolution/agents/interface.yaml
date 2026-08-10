@@ -1,0 +1,20 @@
+interface:
+  display_name: "Taxonomy Name and TaxId Resolution"
+  short_description: "Resolve small NCBI Taxonomy name or TaxId sets with provenance."
+  default_prompt: "Resolve these public names or TaxIds through NCBI Taxonomy; preserve ambiguity and report names, classes, ranks, lineages, merged IDs, and provenance."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

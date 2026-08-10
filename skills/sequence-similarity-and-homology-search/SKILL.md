@@ -3,7 +3,7 @@ name: sequence-similarity-and-homology-search
 description: "A user needs candidate homologs or similar sequences from a fixed suitable local database or a disclosed remote adapter. Exclude: building a reference database; multiple alignment; claiming function from identity alone."
 license: Apache-2.0
 metadata:
-  version: "0.4.1"
+  version: "0.5.0"
 ---
 
 # Sequence Similarity and Homology Search

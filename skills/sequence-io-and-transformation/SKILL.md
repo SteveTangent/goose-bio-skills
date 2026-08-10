@@ -1,9 +1,9 @@
 ---
 name: sequence-io-and-transformation
-description: "A user requests deterministic sequence conversion or transformation after validation-only preflight. Exclude: validation-only inspection without transformation; database similarity search; pairwise or multiple sequence alignment; functional annotation from sequence alone."
+description: "A user requests deterministic sequence conversion or transformation after validation-only preflight. Exclude: validation-only inspection without transformation; raw-read trimming or filtering; database similarity search; pairwise or multiple sequence alignment; functional annotation from sequence alone."
 license: Apache-2.0
 metadata:
-  version: "0.4.1"
+  version: "0.5.0"
 ---
 
 # Sequence I/O and Transformation
@@ -60,6 +60,7 @@ disclose provider, purpose, data sent, and credentials; no silent fallback.
 
 - Declare input and output formats, alphabet, quality encoding, genetic code, frame, and identifier policy when applicable
 - Report metadata or quality information lost by a conversion
+- Route raw-read trimming, filtering, and adapter removal away from this Skill
 - Write only to a user-approved new output location; never mutate inputs or overwrite a path
 - Partial output is never `completed`; use the truthful non-completed status
 - Record skipped complex-tool execution as unverified, never as passed

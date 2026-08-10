@@ -192,6 +192,101 @@
       "expected_action": "safe-local-execution-or-needs-tool",
       "expected_question_count_this_turn": 0,
       "expected_first_decision_id": null
+    },
+    {
+      "id": "run-manifest-exact-accession-no-question",
+      "prompt": "Retrieve the bounded public ENA run/file manifest for SRR390728 with layout, platform, FASTQ URLs, byte counts, and MD5 values; do not download reads.",
+      "expected_skill": "public-sequencing-run-manifest-retrieval",
+      "forbidden_skills": [
+        "biomedical-literature-and-public-study-search",
+        "raw-read-quality-reporting"
+      ],
+      "expected_action": "bounded-public-read",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "run-manifest-unbounded-scope-asks-once",
+      "prompt": "Retrieve file manifests for these six exact public run accessions, but do not download reads.",
+      "expected_skill": "public-sequencing-run-manifest-retrieval",
+      "forbidden_skills": [],
+      "expected_action": "ask-with-recommendation-then-wait",
+      "expected_question_count_this_turn": 1,
+      "expected_first_decision_id": "manifest-scope"
+    },
+    {
+      "id": "run-study-discovery-routes-away",
+      "prompt": "Search broadly for public studies about drought-tolerant rice and tell me which sequencing projects exist.",
+      "expected_skill": "biomedical-literature-and-public-study-search",
+      "forbidden_skills": [
+        "public-sequencing-run-manifest-retrieval"
+      ],
+      "expected_action": "route-to-public-study-search",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "taxonomy-taxids-no-question",
+      "prompt": "Resolve NCBI TaxIds 9606 and 74465, preserving current names, ranks, lineages, and any secondary-to-current TaxId mapping.",
+      "expected_skill": "taxonomy-name-and-taxid-resolution",
+      "forbidden_skills": [
+        "biological-database-record-retrieval-and-identifier-resolution"
+      ],
+      "expected_action": "bounded-public-read",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "taxonomy-ambiguous-name-asks-once",
+      "prompt": "Resolve the taxon name 'robin' to one NCBI TaxId; several exact-name candidates remain and I gave no rank or lineage context.",
+      "expected_skill": "taxonomy-name-and-taxid-resolution",
+      "forbidden_skills": [],
+      "expected_action": "ask-with-recommendation-then-wait",
+      "expected_question_count_this_turn": 1,
+      "expected_first_decision_id": "ambiguous-name-match"
+    },
+    {
+      "id": "taxonomy-gene-mapping-routes-away",
+      "prompt": "Map human TP53 to its Entrez Gene and Ensembl gene identifiers.",
+      "expected_skill": "biological-database-record-retrieval-and-identifier-resolution",
+      "forbidden_skills": [
+        "taxonomy-name-and-taxid-resolution"
+      ],
+      "expected_action": "route-to-biological-record-resolution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "raw-read-qc-existing-reports-no-question",
+      "prompt": "Interpret these explicitly named FastQC reports for stranded poly(A) RNA-seq prepared as 150-bp paired-end reads on an Illumina NovaSeq 6000; use that declared expected library profile, compare mates and samples, and write a new report without trimming or downloading reads.",
+      "expected_skill": "raw-read-quality-reporting",
+      "forbidden_skills": [
+        "bioinformatics-format-and-identifier-validation"
+      ],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "raw-read-qc-missing-library-context",
+      "prompt": "Explain whether the warnings in these FastQC reports are concerning; the assay, library preparation, platform, and expected read profile are not provided.",
+      "expected_skill": "raw-read-quality-reporting",
+      "forbidden_skills": [],
+      "expected_action": "ask-with-recommendation-then-wait",
+      "expected_question_count_this_turn": 1,
+      "expected_first_decision_id": "library-context"
+    },
+    {
+      "id": "raw-read-trimming-routes-away",
+      "prompt": "Trim adapters and low-quality bases from all FASTQ files in this directory, then overwrite the originals.",
+      "expected_skill": null,
+      "forbidden_skills": [
+        "raw-read-quality-reporting",
+        "sequence-io-and-transformation"
+      ],
+      "expected_action": "route-away-and-refuse-overwrite",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
     }
   ]
 }

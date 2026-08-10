@@ -19,8 +19,8 @@ from urllib.parse import urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
-VALIDATOR_VERSION = "0.8.0"
-PUBLIC_PACKAGE_VERSION = "0.4.1"
+VALIDATOR_VERSION = "0.9.0"
+PUBLIC_PACKAGE_VERSION = "0.5.0"
 MANIFEST_SCHEMA_VERSION = "0.2.0"
 REGISTRY_SCHEMA_VERSION = "0.5.0"
 PROVIDER_CATALOG_SCHEMA_VERSION = "0.2.0"
@@ -96,6 +96,51 @@ CRITICAL_INTAKE_CASES = {
     ),
     "vcf-fully-specified-no-repeat": (
         "vcf-normalization-qc-and-query",
+        0,
+        None,
+    ),
+    "run-manifest-exact-accession-no-question": (
+        "public-sequencing-run-manifest-retrieval",
+        0,
+        None,
+    ),
+    "run-manifest-unbounded-scope-asks-once": (
+        "public-sequencing-run-manifest-retrieval",
+        1,
+        "manifest-scope",
+    ),
+    "taxonomy-taxids-no-question": (
+        "taxonomy-name-and-taxid-resolution",
+        0,
+        None,
+    ),
+    "taxonomy-ambiguous-name-asks-once": (
+        "taxonomy-name-and-taxid-resolution",
+        1,
+        "ambiguous-name-match",
+    ),
+    "raw-read-qc-existing-reports-no-question": (
+        "raw-read-quality-reporting",
+        0,
+        None,
+    ),
+    "raw-read-qc-missing-library-context": (
+        "raw-read-quality-reporting",
+        1,
+        "library-context",
+    ),
+    "run-study-discovery-routes-away": (
+        "biomedical-literature-and-public-study-search",
+        0,
+        None,
+    ),
+    "taxonomy-gene-mapping-routes-away": (
+        "biological-database-record-retrieval-and-identifier-resolution",
+        0,
+        None,
+    ),
+    "raw-read-trimming-routes-away": (
+        None,
         0,
         None,
     ),
@@ -954,7 +999,7 @@ def validate_intake_routing_fixture(
                     f"{label}/{case_id}: first decision is absent from the Skill manifest",
                 )
 
-    require(len(cases) == 19, f"{label}: expected 19 canonical cases")
+    require(len(cases) == 28, f"{label}: expected 28 canonical cases")
     for case_id, expected in CRITICAL_INTAKE_CASES.items():
         case = by_id.get(case_id)
         require(case is not None, f"{label}: missing critical case {case_id}")

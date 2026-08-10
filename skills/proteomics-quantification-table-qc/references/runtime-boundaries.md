@@ -1,7 +1,7 @@
 # Runtime and scientific boundaries
 
 This reference defines the operating boundary for
-`proteomics-quantification-table-qc` version `0.4.1`.
+`proteomics-quantification-table-qc` version `0.5.0`.
 
 ## Scientific contract
 

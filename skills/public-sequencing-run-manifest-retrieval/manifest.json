@@ -1,0 +1,93 @@
+{
+  "schema_version": "0.2.0",
+  "name": "public-sequencing-run-manifest-retrieval",
+  "version": "0.5.0",
+  "maturity_tier": "production",
+  "context_budget_tier": "production",
+  "domain_id": "D01",
+  "cluster_id": "C01",
+  "risk_tier": "R2",
+  "owner": "project-owner",
+  "updated_at": "2026-08-10",
+  "last_freshness_check": "2026-08-10",
+  "review_cadence": "quarterly",
+  "status": "active",
+  "lifecycle_stage": "production",
+  "distribution_status": "installable",
+  "release_stage": "preview",
+  "assurance_level": "reviewed",
+  "assurance": {
+    "runtime_evaluation": "not-performed",
+    "scientific_benchmark": "not-performed",
+    "human_expert_review": "not-performed",
+    "better_than_baseline_claim": false,
+    "clinical_use": "prohibited",
+    "unverified_boundaries": [
+      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "Scientific benchmark performance has not been established.",
+      "Human-expert review has not been performed.",
+      "Exact-package accession validation, connector routing, TSV header parsing, and semicolon-delimited file-field alignment have not been runtime-evaluated.",
+      "Large study or BioProject expansion, withdrawn or suppressed accessions, empty file fields, rate limiting, and oversized responses remain unverified.",
+      "Reads download, local integrity recomputation, study discovery, QC, and bulk harvesting are outside this preview."
+    ]
+  },
+  "intake_contract_version": "1.3.0",
+  "intake_contract": {
+    "facts_before_questions": true,
+    "question_policy": "one-unresolved-load-bearing-decision-at-a-time-with-recommendation",
+    "wait_after_each_question": true,
+    "explicit_safe_local_execution": "proceed-without-repeat-confirmation",
+    "side_effect_confirmation": "only-when-not-already-authorized-for-current-action-and-scope",
+    "decision_sequence": [
+      {
+        "decision_id": "manifest-scope",
+        "applies_when": "The request contains more than five accessions, a wildcard or search expression, or a bounded file report exceeds 100 runs or the response budget.",
+        "question": "Which exact accessions should bound this manifest?",
+        "recommended_answer": "Provide at most five run, experiment, or sample accessions expected to yield no more than 100 runs; avoid project-wide bulk retrieval."
+      }
+    ]
+  },
+  "script_verification": {
+    "bundled_scripts": false,
+    "implementation_origin": "none",
+    "self_test_status": "not-applicable",
+    "self_test_command": null,
+    "runtime_versions": []
+  },
+  "runtime_verification": {
+    "mode": "skipped-complex-tool",
+    "status": "skipped",
+    "reason": "Exact-package multi-accession routing, large project expansion, read downloads, and batch retrieval were not run; downloads and bulk paths are excluded rather than treated as passed.",
+    "tool_versions": [
+      "ENA Portal API rolling filereport and returnFields interfaces checked 2026-08-10",
+      "NCBI SRA public metadata model checked 2026-08-10",
+      "Bio 02 shared public connector 0.5.0 contract"
+    ],
+    "unverified_boundaries": [
+      "Exact-package accession validation, connector routing, TSV header parsing, and semicolon-delimited file-field alignment have not been runtime-evaluated.",
+      "Large study or BioProject expansion, withdrawn or suppressed accessions, empty file fields, rate limiting, and oversized responses remain unverified.",
+      "Reads download, local integrity recomputation, study discovery, QC, and bulk harvesting are outside this preview."
+    ]
+  },
+  "legal_notices": {
+    "required": true,
+    "files": [
+      "LICENSE"
+    ]
+  },
+  "rollback": {
+    "previous_version": null,
+    "boundary": "Remove this new package and its matching registry entry; no earlier package version exists."
+  },
+  "network_mode": "required",
+  "local_adapters": [
+    "Bio 02 shared public connector 0.5.0"
+  ],
+  "external_services": [
+    "ena-portal-api"
+  ],
+  "depends_on": [],
+  "target_platforms": [
+    "agent-skills"
+  ]
+}

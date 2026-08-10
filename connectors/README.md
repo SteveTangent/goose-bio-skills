@@ -24,14 +24,14 @@ should disclose a non-default proxy or CA boundary before use.
 
 | Access | Services | Behavior |
 |---|---|---|
-| Direct public read | NCBI EInfo/ESearch/ESummary/EFetch without History state, UniProt REST, Ensembl REST, Europe PMC, BioStudies, RCSB PDB, AlphaFold DB, synchronous PubChem PUG REST, ChEMBL, anonymous Crossref, QuickGO, public Enrichr GET paths | Execute bounded `GET` or `HEAD` without a key |
+| Direct public read | NCBI EInfo/ESearch/ESummary/EFetch without History state, UniProt REST, Ensembl REST, Europe PMC, BioStudies, ENA public run file reports, RCSB PDB, AlphaFold DB, synchronous PubChem PUG REST, ChEMBL, anonymous Crossref, QuickGO, public Enrichr GET paths | Execute bounded `GET` or `HEAD` without a key |
 | Terms-restricted read | KEGG REST | Requires `--acknowledge-terms`; academic-use terms still apply |
 | Conditional remote job | EMBL-EBI Job Dispatcher, NCBI Remote BLAST | Not implemented by this read-only executor; it never uploads a sequence or claims a job was submitted |
 | Commercial or paid | None | Paid and metered services are excluded from the executable catalog |
 
 Enrichr gene-list submission is a write/upload action and is not covered by its
 public GET boundary. Similarly, UniProt ID-mapping submission is not covered by
-the read-only executor. NCBI EPost, ESearch History writes, and PubChem queued,
+the read-only executor. NCBI EPost and History-state parameters, and PubChem queued,
 ListKey, or CacheKey operations are also excluded because a `GET` can create
 remote state on those paths.
 
@@ -54,6 +54,20 @@ python3 scripts/run_research_connector.py \
   --url 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=BRCA1&retmode=json&retmax=20' \
   --output brca1-pubmed.json
 ```
+
+Retrieve a small public ENA run/file manifest without downloading reads:
+
+```text
+python3 scripts/run_research_connector.py \
+  --provider ena-portal-api \
+  --url 'https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRR390728&result=read_run&fields=run_accession,study_accession,sample_accession,experiment_accession,library_layout,instrument_platform,instrument_model,fastq_file_role,fastq_ftp,fastq_md5,fastq_bytes&format=tsv' \
+  --max-bytes 1048576 \
+  --output SRR390728-run-manifest.tsv
+```
+
+The reviewed ENA path accepts one public INSDC accession, `read_run`, and an
+explicit allowlisted field set. It returns file locations and checksums but does
+not transfer the referenced read files.
 
 The shared executor is deliberately anonymous-only. It does not read NCBI,
 Crossref, or other contact, API-key, token, or paid-credential environment

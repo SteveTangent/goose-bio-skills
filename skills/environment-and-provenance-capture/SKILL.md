@@ -3,7 +3,7 @@ name: environment-and-provenance-capture
 description: "A user needs to record, compare or verify the environment and provenance of a biological computation. Exclude: installing or upgrading software; running a scheduler or workflow engine; uploading manifests without explicit authorization; pipeline design or workflow authoring."
 license: Apache-2.0
 metadata:
-  version: "0.4.1"
+  version: "0.5.0"
 ---
 
 # Environment and Provenance Capture

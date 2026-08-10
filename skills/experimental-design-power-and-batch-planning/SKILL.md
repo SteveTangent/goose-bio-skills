@@ -3,7 +3,7 @@ name: experimental-design-power-and-batch-planning
 description: "A user needs sample-size, allocation, blocking, randomization or confounding review for a biological study. Exclude: claiming analysis can repair complete confounding; physical wet-lab execution or instrument operation; using a generic formula where assay-specific distribution is load-bearing."
 license: Apache-2.0
 metadata:
-  version: "0.4.1"
+  version: "0.5.0"
 ---
 
 # Experimental Design, Power and Batch Planning

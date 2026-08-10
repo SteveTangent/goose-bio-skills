@@ -2,11 +2,11 @@
 
 Research-first bioinformatics skills for AI agents.
 
-Bio 02 Skills is a focused collection of 23 Agent Skills for common bioinformatics and biostatistics tasks. Each Skill owns one job, declares the inputs and outputs it expects, routes away from neighboring tasks, and records the tool, database, network, and interpretation boundaries that matter to a researcher.
+Bio 02 Skills is a focused collection of 26 Agent Skills for common bioinformatics and biostatistics tasks. Each Skill owns one job, declares the inputs and outputs it expects, routes away from neighboring tasks, and records the tool, database, network, and interpretation boundaries that matter to a researcher.
 
 | Current version | Packages | Release status | External services |
 | --- | ---: | --- | --- |
-| `0.4.1` | 23 | `preview + reviewed` | Bounded public read/download; anonymous-first |
+| `0.5.0` | 26 | `preview + reviewed` | Bounded public read/download; anonymous-first |
 
 ## Why Bio 02 Skills
 
@@ -60,14 +60,20 @@ Inspect this single-cell object, define QC decisions, and identify what can be r
 Apply Holm correction at alpha 0.05 to these already-computed p-values as one declared family.
 
 Search public studies on human liver fibrosis and return a traceable result set.
+
+Retrieve a bounded ENA run/file manifest for SRR390728 without downloading reads.
+
+Resolve the name Escherichia coli to NCBI TaxIds and preserve ambiguous matches.
+
+Review these local FastQC reports and summarize read-quality warnings without trimming reads.
 ```
 
 ## Skill catalog
 
 | Research area | Skills |
 | --- | --- |
-| Data and workflow foundations | `bioinformatics-format-and-identifier-validation`<br>`scientific-file-preflight-and-resource-planning`<br>`biological-database-record-retrieval-and-identifier-resolution`<br>`environment-and-provenance-capture` |
-| Sequence, reads, genomes, and evolution | `sequence-io-and-transformation`<br>`sequence-similarity-and-homology-search`<br>`pairwise-and-multiple-sequence-alignment`<br>`alignment-file-operations`<br>`genomic-interval-operations` |
+| Data and workflow foundations | `bioinformatics-format-and-identifier-validation`<br>`scientific-file-preflight-and-resource-planning`<br>`biological-database-record-retrieval-and-identifier-resolution`<br>`taxonomy-name-and-taxid-resolution`<br>`public-sequencing-run-manifest-retrieval`<br>`environment-and-provenance-capture` |
+| Sequence, reads, genomes, and evolution | `sequence-io-and-transformation`<br>`sequence-similarity-and-homology-search`<br>`pairwise-and-multiple-sequence-alignment`<br>`raw-read-quality-reporting`<br>`alignment-file-operations`<br>`genomic-interval-operations` |
 | Variant and cohort genomics | `vcf-normalization-qc-and-query` |
 | Bulk transcriptomics | `count-based-differential-expression` |
 | Single-cell analysis | `single-cell-object-io-and-qc`<br>`single-cell-core-analysis` |
@@ -145,7 +151,7 @@ skills/<slug>/
 
 ## Current release boundary
 
-All 23 packages are `preview + reviewed`. Their instructions, interfaces, package structure, declared versions, and safety boundaries have been reviewed, but many external-tool paths have not been executed end to end. A package states those unverified boundaries in its manifest.
+All 26 packages are `preview + reviewed`. Their instructions, interfaces, package structure, declared versions, and safety boundaries have been reviewed, but many external-tool paths have not been executed end to end. A package states those unverified boundaries in its manifest.
 
 Use the collection for supervised research work. Verify inputs, tool availability, QC, and biological interpretation for each project. The collection does not claim universal scientific correctness, clinical authority, or superiority over another workflow.
 
@@ -161,7 +167,7 @@ python3 skills/scientific-file-preflight-and-resource-planning/scripts/preflight
 python3 skills/statistical-analysis-and-multiple-testing/scripts/adjust_pvalues.py --self-test
 ```
 
-The skeleton gate also validates the 19 deterministic intake-routing cases in
+The skeleton gate also validates the 28 deterministic intake-routing cases in
 [`evals/intake-routing-cases.json`](evals/intake-routing-cases.json). Those
 fixtures test routing and first-question contracts; they are not a claim of
 model-runtime or scientific evaluation.
