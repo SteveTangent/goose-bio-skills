@@ -1116,7 +1116,7 @@ def validate_intake_routing_cases(
         fixture,
         manifests,
         "intake routing fixture",
-        expected_count=43,
+        expected_count=53,
         required_oracles=CRITICAL_INTAKE_CASES,
     )
     research_holdout = load_json(
@@ -2333,7 +2333,7 @@ def run_self_test() -> int:
                 intake_fixture,
                 intake_manifests,
                 "self-test intake fixture",
-                expected_count=43,
+                expected_count=53,
                 required_oracles=CRITICAL_INTAKE_CASES,
             )
         ),
@@ -2354,7 +2354,7 @@ def run_self_test() -> int:
                     invalid_intake_fixture,
                     intake_manifests,
                     "self-test invalid intake fixture",
-                    expected_count=43,
+                    expected_count=53,
                     required_oracles=CRITICAL_INTAKE_CASES,
                 )
             )

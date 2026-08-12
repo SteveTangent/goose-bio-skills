@@ -7,6 +7,13 @@ future candidates reuse the generic gates and add their own scoped section.
 The current next-wave shortlist and its candidate-specific gates are recorded in
 [research-wave-r2-candidates.md](research-wave-r2-candidates.md).
 
+Wave R2 has now passed its research-branch minimum implementation gate. The
+[Wave R2 minimum-reliability record](../evals/research-wave-r2-minimal-reliability-v0.1.json)
+binds the retained small fixtures, repeat outputs, package digests, route
+observations, and independent reviews. This permits continued research use and
+review, not direct merge into the existing v0.7.0 release; any later promotion
+requires a new atomic collection version and a final-byte rerun.
+
 Every candidate remains on `research` until the applicable minimum gates for
 the target release level pass. For the current target, that level is the same
 `preview + reviewed` Beta assurance used on `main`; it is not `evaluated`,

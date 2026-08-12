@@ -1,12 +1,13 @@
 # Research Wave R2 candidates
 
-Status: planning only on `research`. These entries are not packages, are not in
-`registry.json`, and are not part of the v0.7.0 Beta.
+Status: minimum-reliability implementation passed on `research`. These entries
+are not part of the v0.7.0 Beta and are not authorized for direct `main`
+promotion; a later atomic collection release must bind their final bytes.
 
-Wave R2 should add three narrow jobs that cover different execution patterns:
-a pure-local table check, a local interval workflow, and a pinned scientific
-tool adapter. Build them in the order below for the fastest feedback; product
-priority is noted separately.
+Wave R2 adds three narrow jobs that cover different execution patterns: a
+pure-local table check, a local interval workflow, and a pinned scientific tool
+adapter. They were built in the order below for fast feedback; product priority
+is noted separately.
 
 ## 1. Amplicon feature-table and taxonomy QC
 
@@ -63,11 +64,12 @@ reproducibility claims.
 
 Candidate-specific promotion gate:
 
-- two tiny narrowPeak files plus contig sizes and a blacklist fixture;
-- exact assertions for half-open coordinates, one blacklist hit, duplicates,
-  widths, overlap, and base-coverage Jaccard (merged half-open intersection
-  length divided by merged half-open union length), with two byte-identical
-  replays;
+- two tiny peak files (one narrowPeak and one BED3) plus contig sizes and a
+  blacklist fixture;
+- exact assertions for half-open coordinates, one blacklist interval with exact
+  row-hit and merged-base overlap counts, duplicates, widths, overlap, and
+  base-coverage Jaccard (merged half-open intersection length divided by merged
+  half-open union length), with two byte-identical replays;
 - reject missing or explicitly mismatched build declarations, invalid columns,
   out-of-range coordinates, invalid peak offsets, symlink/output-boundary
   violations, and overwrite; never infer a genome build from coordinates, and
@@ -132,6 +134,25 @@ promotion:
    superiority over another repository;
 8. promotion only through a new atomic collection version with final-byte
    digests, rollback entries, release evidence, main merge, and tag.
+
+## Recorded Wave R2 minimum evidence
+
+The retained offline replay in
+[`run_wave_r2_minimal_reliability.py`](../scripts/run_wave_r2_minimal_reliability.py)
+passed twice with 67/67 checks and byte-identical outputs. It binds the three
+package digests, small input hashes, deterministic output hashes, valid and
+invalid paths, self-tests, and create-new/no-overwrite behavior. The canonical
+routing set now contains 53 cases, including positive and near-neighbor cases
+for all three candidates. A separate evaluator that was not shown the eval
+files selected the expected Skill or no-Skill boundary in 6/6 Wave R2 prompts
+with zero forbidden selections.
+
+Independent review found no open P0, P1, or accepted P2 finding in the frozen
+candidate packages. This is deliberately small synthetic release evidence:
+runtime evaluation, representative scientific benchmarking, expert review,
+generalization, clinical use, and superiority claims remain not performed.
+The exact scope and remaining evidence are recorded in
+[`research-wave-r2-minimal-reliability-v0.1.json`](../evals/research-wave-r2-minimal-reliability-v0.1.json).
 
 ## Not in this wave
 

@@ -1,0 +1,181 @@
+{
+  "schema_version": "0.1.0",
+  "record_version": "0.1.0",
+  "recorded_at": "2026-08-12",
+  "branch": "research",
+  "scope": {
+    "candidate_count": 3,
+    "candidate_packages": [
+      "amplicon-feature-table-and-taxonomy-qc",
+      "chromatin-peak-set-qc",
+      "protein-level-differential-abundance"
+    ],
+    "collection_version": "0.7.0",
+    "small_synthetic_data_only": true,
+    "offline": true,
+    "network_performed": false,
+    "minimum_reliability_pass": true,
+    "formal_scientific_evaluation": false,
+    "main_promotion_authorized": false,
+    "research_commit_authorized": true,
+    "claim": "The three Wave R2 candidates passed a retained minimum local reliability and routing check on research. This is not representative scientific evaluation or a main release."
+  },
+  "retained_replay": {
+    "command": "python3 scripts/run_wave_r2_minimal_reliability.py",
+    "runs": 2,
+    "checks_per_run": 67,
+    "statuses": [
+      "pass",
+      "pass"
+    ],
+    "repeat_events_identical": true,
+    "fixture_sha256": "c5bbd67d4302530c605ccabc9342b9843cb3babce4dccd0612ee0997a17dc22c",
+    "runner_sha256": "f189240203b6919017ae1ec4d8f7927f76a30d0e35e67ecef54326e529a6af5c",
+    "output_sha256": {
+      "amplicon-feature-table-and-taxonomy-qc": "bea0919a0b357ef77f562ca521bbf5e22566814e506885ce8cd5efc4c6a914af",
+      "chromatin-peak-set-qc": "a50203c6ed44fcfecdb42302224c8f0587720c24243a6172eb88c688ba8abc41",
+      "protein-level-differential-abundance": "1da900d6cf6a383d08163aa2e51be3b2749713bc842e8bb04946e7fa0335073b"
+    },
+    "coverage": [
+      "package digest binding",
+      "bundled self-test",
+      "small valid fixture",
+      "two byte-identical valid outputs",
+      "numeric or structural oracle",
+      "invalid input or incompatible declaration",
+      "create-new and no-overwrite",
+      "no output on rejected work"
+    ]
+  },
+  "package_bindings": {
+    "amplicon-feature-table-and-taxonomy-qc": {
+      "package_digest": "7a6b5f1523a634c31f34f004aa782609aa71840aabf93b9865ce9fc580b148f3",
+      "script_sha256": "bd35ba3e4941d2447f0bbe8a5782736dcd98b1b7dffad9b1ddda34fc66226617",
+      "self_test_checks": 19,
+      "self_test_status": "pass"
+    },
+    "chromatin-peak-set-qc": {
+      "package_digest": "26ab7ae31161ac4e5d364c9212425adaaf04ea0df0929fa00c4642ab8d7a97c2",
+      "script_sha256": "70b397440fb04ef6878b6d2ace4eff0533c63dc7f9cc7fd88af2f0546c001e18",
+      "self_test_checks": 24,
+      "self_test_status": "pass"
+    },
+    "protein-level-differential-abundance": {
+      "package_digest": "c6ffed17058b060c6fbb531abea074ae91e2b3a1f50e114572fcb94227f09441",
+      "script_sha256": "6572f7092871378c88e1966496286d7369888dc76e3dd760a924938bc6c72a9f",
+      "self_test_checks": 16,
+      "self_test_status": "pass",
+      "runtime": [
+        "R 4.4.1",
+        "limma 3.60.6"
+      ]
+    }
+  },
+  "routing": {
+    "canonical_fixture_cases": 53,
+    "canonical_fixture_sha256": "6a4c369d98c7cbb36e43db558a7ea69745310e99018c7116375f59e43cde79f0",
+    "candidate_canonical_cases": 10,
+    "independent_first_execution": {
+      "evaluator_task": "wave_r2_route_holdout",
+      "expected_selection_matches": 6,
+      "case_count": 6,
+      "forbidden_selections": 0,
+      "unnecessary_questions": 0,
+      "load_bearing_questions": 1,
+      "eval_files_withheld": true,
+      "model_build_pinned": false,
+      "future_role": "visible regression only",
+      "observations": [
+        {
+          "id": "amplicon-positive",
+          "selected_skill": "amplicon-feature-table-and-taxonomy-qc"
+        },
+        {
+          "id": "amplicon-neighbor",
+          "selected_skill": null
+        },
+        {
+          "id": "peak-positive",
+          "selected_skill": "chromatin-peak-set-qc"
+        },
+        {
+          "id": "peak-neighbor",
+          "selected_skill": null
+        },
+        {
+          "id": "protein-positive",
+          "selected_skill": "protein-level-differential-abundance"
+        },
+        {
+          "id": "protein-neighbor",
+          "selected_skill": "proteomics-quantification-table-qc"
+        }
+      ]
+    },
+    "scope_note": "The independent run is a one-time routing diagnostic, not production-model generalization evidence."
+  },
+  "repository_checks": {
+    "skeleton": {
+      "status": "pass",
+      "installable_packages": 35,
+      "source_clean": true
+    },
+    "validator_self_test": {
+      "status": "pass",
+      "checks": 23,
+      "validator": "1.1.0"
+    },
+    "connector_self_test": {
+      "status": "pass",
+      "checks": 21,
+      "network_performed": false,
+      "version": "0.7.0"
+    },
+    "skill_creator_quick_validate": {
+      "packages_checked": 3,
+      "statuses": [
+        "pass",
+        "pass",
+        "pass"
+      ]
+    },
+    "git_diff_check": "pass"
+  },
+  "control_hashes": {
+    "registry.json": "0075dcba11dc28068e2904f4689032401ef4b9cbf61b06b3f468ec5c6cb3046a",
+    "scripts/validate_skeleton.py": "0900470dfa30cf2ef97d69346261ff4cb44958f8d0d9620b503039d55095a6a7",
+    "docs/architecture.md": "81f1e19fe618d1a18bd404e7ea4a70470ad66a62b98473b617b9bc79ec06e2a8",
+    "docs/catalog.md": "f9d3f64260d97ec094e7374d1519a28853700027b85402d0ac02303b00775e59",
+    "docs/research-wave-r2-candidates.md": "ba1b4b3816eca64187ce97ec7a8c87948b476953d03e939fe95d4b52eb90806e",
+    "docs/research-skill-promotion-gates.md": "48404543f5b5e8f472e7394c54d75383d6e8c17d1db3d99b7b279477307dcf86",
+    "README.md": "b193abfc89ae5d8347f8c2fc9778654550f9fb715993b8d742eff5713638b74f",
+    "skills/README.md": "4d7aabbde8a3f0b128b098b68926301bff7f73ed35b873cc18567e22c1dc0f5a"
+  },
+  "review": {
+    "status": "passed",
+    "p0": 0,
+    "p1": 0,
+    "p2": 0,
+    "independent_reviews": [
+      "amplicon and peak package boundary review",
+      "output publication race and structured-failure re-review",
+      "protein package runtime and environment-isolation review"
+    ]
+  },
+  "remaining_evidence": [
+    "formal exact-package agent runtime evaluation",
+    "representative or large biological datasets",
+    "named external domain-method or human-expert review",
+    "scientific benchmark or baseline comparison",
+    "cross-study or cross-platform generalization",
+    "Windows publication and symlink behavior",
+    "atomic next-version release preparation and final-byte rerun"
+  ],
+  "claims_not_made": [
+    "scientific superiority",
+    "clinical validity",
+    "universal correctness",
+    "performance or availability guarantee",
+    "main Beta membership"
+  ]
+}

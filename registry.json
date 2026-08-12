@@ -37,6 +37,23 @@
     },
     {
       "manifest_schema_version": "0.2.0",
+      "name": "amplicon-feature-table-and-taxonomy-qc",
+      "version": "0.7.0",
+      "path": "skills/amplicon-feature-table-and-taxonomy-qc",
+      "domain_id": "D07",
+      "cluster_id": "C18",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "7a6b5f1523a634c31f34f004aa782609aa71840aabf93b9865ce9fc580b148f3",
+      "previous_version": null
+    },
+    {
+      "manifest_schema_version": "0.2.0",
       "name": "bioinformatics-format-and-identifier-validation",
       "version": "0.7.0",
       "path": "skills/bioinformatics-format-and-identifier-validation",
@@ -116,6 +133,23 @@
       ],
       "package_digest": "6a7ed9d129575eda441d9943d02fe9800ff91b56196ec6d41b02f2769bfcfd19",
       "previous_version": "0.6.0"
+    },
+    {
+      "manifest_schema_version": "0.2.0",
+      "name": "chromatin-peak-set-qc",
+      "version": "0.7.0",
+      "path": "skills/chromatin-peak-set-qc",
+      "domain_id": "D06",
+      "cluster_id": "C16",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "26ab7ae31161ac4e5d364c9212425adaaf04ea0df0929fa00c4642ab8d7a97c2",
+      "previous_version": null
     },
     {
       "manifest_schema_version": "0.2.0",
@@ -327,6 +361,23 @@
       "network_mode": "none",
       "external_services": [],
       "package_digest": "04d38bc2de6954a34f57585b8b815c20149e7d86d7ee251fb3029f02fb9ba7ea",
+      "previous_version": null
+    },
+    {
+      "manifest_schema_version": "0.2.0",
+      "name": "protein-level-differential-abundance",
+      "version": "0.7.0",
+      "path": "skills/protein-level-differential-abundance",
+      "domain_id": "D08",
+      "cluster_id": "C22",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "c6ffed17058b060c6fbb531abea074ae91e2b3a1f50e114572fcb94227f09441",
       "previous_version": null
     },
     {

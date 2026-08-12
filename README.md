@@ -2,12 +2,12 @@
 
 Research-first bioinformatics skills for AI agents.
 
-Bio 02 Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The verified `main` Beta contains 32 packages. Wave R1 added three narrowly scoped Skills after retained small-data checks and independent routing review.
+Bio 02 Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The verified `main` Beta contains 32 packages. The `research` branch carries three additional Wave R2 candidates for bounded small-data evaluation.
 
 | Boundary | Packages | State | External services |
 | --- | ---: | --- | --- |
 | `main` Beta `0.7.0` | 32 | `preview + reviewed` | Bounded public read/download; anonymous-first |
-| `research` | Next-wave candidates only | Not part of the Beta until promoted | Same connector boundary; exact candidate gates apply |
+| `research` Wave R2 | 3 candidates | Not part of the Beta until promoted | Local-only minimum paths; exact candidate gates apply |
 
 ## Why Bio 02 Skills
 
@@ -79,6 +79,12 @@ Profile this table's missing outcome values and run only the bounds and delta sc
 Report heavy-atom residue contacts between chains A and B in this local PDB at a fixed cutoff.
 
 Retrieve Ensembl Compara orthology assertions for these exact gene IDs from source species homo_sapiens to target species mus_musculus.
+
+Check this local amplicon feature table, metadata, and taxonomy table without filtering or diversity analysis.
+
+Audit these declared-build narrowPeak files against pinned contig sizes and a blacklist without calling peaks.
+
+Fit the declared contrast on this normalized log2 protein matrix with the pinned local limma adapter.
 ```
 
 ## Skill catalog
@@ -90,7 +96,9 @@ Retrieve Ensembl Compara orthology assertions for these exact gene IDs from sour
 | Variant and cohort genomics | `vcf-normalization-qc-and-query` |
 | Bulk transcriptomics | `count-based-differential-expression` |
 | Single-cell analysis | `single-cell-object-io-and-qc`<br>`single-cell-core-analysis` |
-| Proteomics and cytometry | `proteomics-quantification-table-qc`<br>`fcs-file-io-and-metadata-qc` |
+| Epigenomics *(research candidate)* | `chromatin-peak-set-qc` |
+| Microbiome and amplicon data *(research candidate)* | `amplicon-feature-table-and-taxonomy-qc` |
+| Proteomics and cytometry | `proteomics-quantification-table-qc`<br>`protein-level-differential-abundance` *(research candidate)*<br>`fcs-file-io-and-metadata-qc` |
 | Protein structure | `protein-structure-retrieval-and-comparison`<br>`protein-interface-contact-analysis` |
 | Cheminformatics | `molecule-standardization-and-descriptors`<br>`chemical-similarity-and-substructure-search` |
 | Functional interpretation | `over-representation-analysis`<br>`ranked-gene-set-enrichment` |
@@ -164,7 +172,7 @@ skills/<slug>/
 
 ## Current release boundary
 
-The 32-package `main` Beta is `preview + reviewed`. Wave R1 passed the same-level minimum release gates with retained small synthetic fixtures and independent routing checks; it was not promoted to `evaluated`. Every package states its remaining unverified boundaries in its manifest.
+The 32-package `main` Beta is `preview + reviewed`. The three Wave R2 packages on `research` passed their retained minimum-reliability gate and remain available only for supervised candidate evaluation until a later atomic release promotes them. Every package states its remaining unverified boundaries in its manifest.
 
 Use the collection for supervised research work. Verify inputs, tool availability, QC, and biological interpretation for each project. The collection does not claim universal scientific correctness, clinical authority, or superiority over another workflow.
 
@@ -176,12 +184,13 @@ The repository includes dependency-free checks for package structure and the sha
 python3 scripts/validate_skeleton.py
 python3 scripts/validate_skeleton.py --self-test
 python3 scripts/run_research_connector.py --self-test
+python3 scripts/run_wave_r2_minimal_reliability.py
 python3 skills/scientific-file-preflight-and-resource-planning/scripts/preflight_files.py --self-test
 python3 skills/statistical-analysis-and-multiple-testing/scripts/adjust_pvalues.py --self-test
 python3 skills/gff-gtf-gene-model-qc/scripts/check_gene_models.py --self-test
 ```
 
-The skeleton gate also validates the 43 canonical deterministic intake-routing cases in
+The skeleton gate also validates the 53 canonical deterministic intake-routing cases in
 [`evals/intake-routing-cases.json`](evals/intake-routing-cases.json). Those
 fixtures test routing and first-question contracts; they are not a claim of
 model-runtime or scientific evaluation. Six additional Wave R1 routing cases

@@ -454,6 +454,120 @@
       "expected_action": "resolve-exact-identifier-first",
       "expected_question_count_this_turn": 0,
       "expected_first_decision_id": null
+    },
+    {
+      "id": "amplicon-feature-table-specified-local",
+      "prompt": "For the declared feature-by-sample TSV, matching sample metadata, and optional taxonomy TSV, report exact joins, library sizes, zero-depth samples, sparsity, feature totals, taxonomy-rank completeness, and the declared negative control; write a new JSON report without filtering, taxonomy assignment, diversity analysis, or overwrite.",
+      "expected_skill": "amplicon-feature-table-and-taxonomy-qc",
+      "forbidden_skills": [
+        "raw-read-quality-reporting",
+        "statistical-analysis-and-multiple-testing"
+      ],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "amplicon-diversity-routes-away",
+      "prompt": "Rarefy this ASV table, calculate alpha and beta diversity, test group differences, identify contaminants, and diagnose pathogens.",
+      "expected_skill": null,
+      "forbidden_skills": [
+        "amplicon-feature-table-and-taxonomy-qc",
+        "statistical-analysis-and-multiple-testing"
+      ],
+      "expected_action": "route-away-and-block-diagnostic-claim",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "amplicon-fastq-routes-to-read-qc",
+      "prompt": "Inspect these paired FASTQ files for quality encoding, per-cycle quality, adapter evidence, and truncation before any amplicon feature table exists.",
+      "expected_skill": "raw-read-quality-reporting",
+      "forbidden_skills": [
+        "amplicon-feature-table-and-taxonomy-qc"
+      ],
+      "expected_action": "inspect-and-report-boundaries",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "chromatin-peak-qc-specified-local",
+      "prompt": "Check these two local narrowPeak files using their identical declared hg38 build, the pinned hg38 contig sizes, and the pinned blacklist; report invalid coordinates, widths, duplicates, blacklist overlaps, and merged half-open base-coverage Jaccard in a new JSON file without calling or combining peaks.",
+      "expected_skill": "chromatin-peak-set-qc",
+      "forbidden_skills": [
+        "genomic-interval-operations"
+      ],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "chromatin-peak-calling-routes-away",
+      "prompt": "Call chromatin peaks from these treatment and control BAM files, calculate FRiP, run IDR, and create a consensus peak set.",
+      "expected_skill": null,
+      "forbidden_skills": [
+        "chromatin-peak-set-qc",
+        "genomic-interval-operations"
+      ],
+      "expected_action": "route-away",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "generic-bed-intersection-routes-to-intervals",
+      "prompt": "Intersect these two declared-build BED files, merge overlaps, and report exact covered bases; this is a generic interval operation, not peak-set QC.",
+      "expected_skill": "genomic-interval-operations",
+      "forbidden_skills": [
+        "chromatin-peak-set-qc"
+      ],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "protein-differential-abundance-specified-local",
+      "prompt": "Analyze the explicitly normalized log2 protein-level matrix with its exact sample metadata, balanced batch field, and declared treatment-minus-control contrast using the pinned local limma adapter; write a new report with design, contrast, effects, statistics, raw and adjusted p-values, and tool provenance.",
+      "expected_skill": "protein-level-differential-abundance",
+      "forbidden_skills": [
+        "proteomics-quantification-table-qc",
+        "count-based-differential-expression"
+      ],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "protein-table-qc-routes-away-from-model",
+      "prompt": "Inspect this protein quantification table for row identity, sample joins, missing and zero semantics, and batch confounding, but do not fit a differential model.",
+      "expected_skill": "proteomics-quantification-table-qc",
+      "forbidden_skills": [
+        "protein-level-differential-abundance"
+      ],
+      "expected_action": "inspect-and-report-boundaries",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "protein-missingness-routes-to-sensitivity",
+      "prompt": "For this already prepared protein-level outcome column, summarize missingness and run only the prespecified complete-case and bounded delta sensitivity scenarios; do not fit a differential abundance model.",
+      "expected_skill": "missing-data-and-sensitivity-analysis",
+      "forbidden_skills": [
+        "protein-level-differential-abundance"
+      ],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "rna-counts-route-to-count-de",
+      "prompt": "Fit the prespecified treatment contrast to this integer RNA-seq gene-count matrix with exact sample metadata and report count-model differential expression with adjusted p-values.",
+      "expected_skill": "count-based-differential-expression",
+      "forbidden_skills": [
+        "protein-level-differential-abundance"
+      ],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
     }
   ]
 }

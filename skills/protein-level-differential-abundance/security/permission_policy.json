@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "reviewed_at": "2026-08-12",
+  "capabilities": {
+    "file_write": {
+      "decision": "approved",
+      "reviewer": "project-owner",
+      "scope": "Only scripts/run_limma.py may create private temporary canonical inputs and model outputs plus the user-specified new JSON report inside the current working directory; it may not replace a path, escape the working directory, mutate an input, create user directories, or use the network.",
+      "reason": "The bounded executor isolates R work in a private temporary directory and publishes one create-exclusive report only after complete validation.",
+      "expires_at": "2026-11-30",
+      "evidence": [
+        "SKILL.md",
+        "scripts/run_limma.py"
+      ],
+      "target_enforcement": {
+        "openai": "Allow only private temporary work and the explicit new local JSON report inside the working directory; remote inline execution is forbidden.",
+        "claude": "Allow only private temporary work and the explicit new local JSON report inside the working directory; remote inline execution is forbidden.",
+        "generic": "Run locally and allow only private temporary work plus the caller-approved create-new JSON report.",
+        "vscode": "Workspace trust plus explicit write approval is required for the new report path."
+      }
+    },
+    "local_subprocess": {
+      "decision": "approved",
+      "reviewer": "project-owner",
+      "scope": "scripts/run_limma.py may execute only the resolved local Rscript with --vanilla and its immutable embedded limma worker copied into a private run directory, a fixed positional argument contract, exact R 4.4.1 and limma 3.60.6 checks, no shell, no caller code, no installation, and no fallback model.",
+      "reason": "limma is the sole reviewed modeling adapter; a fixed cross-process boundary keeps model execution reproducible and fail-closed.",
+      "expires_at": "2026-11-30",
+      "evidence": [
+        "SKILL.md",
+        "scripts/run_limma.py"
+      ],
+      "target_enforcement": {
+        "openai": "Permit only the fixed local Rscript --vanilla invocation; reject shell expansion and alternate executables.",
+        "claude": "Permit only the fixed local Rscript --vanilla invocation; reject shell expansion and alternate executables.",
+        "generic": "Execute the bundled fixed adapter only after validating inputs and exact runtime versions.",
+        "vscode": "Workspace trust plus explicit local process approval is required for the fixed R invocation."
+      }
+    }
+  }
+}

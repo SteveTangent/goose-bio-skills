@@ -1,11 +1,11 @@
-# Research catalog: 32-Skill Beta
+# Research catalog: 32-Skill Beta plus 3 candidates
 
-The verified `main` Beta contains 32 independently installable `preview + reviewed` Skills across 11 Domains and 19 Clusters. [registry.json](../registry.json) is the authoritative versioned index. Future research entries are not part of the Beta until an atomic promotion.
+The verified `main` Beta contains 32 independently installable `preview + reviewed` Skills across 11 Domains and 19 Clusters. The `research` branch adds three Wave R2 candidates, for 35 branch packages across 13 Domains and 21 Clusters. [registry.json](../registry.json) is authoritative for the checked-out branch; a research entry is not a `main` promotion.
 
 ```text
-11 Domains
-  -> 19 Clusters
-    -> 32 Beta Skills
+13 Domains on research
+  -> 21 Clusters
+    -> 32 Beta Skills + 3 research candidates
 ```
 
 Every Skill uses the same lightweight interaction boundary:
@@ -58,6 +58,14 @@ Every Skill uses the same lightweight interaction boundary:
 | 31 | D09 Protein Structure & Molecular Biophysics | C27 Interfaces and dynamics | `protein-interface-contact-analysis` | `preview + reviewed` (`0.7.0`) |
 | 32 | D02 Sequence, Reads, Genomes & Evolution | C08 Comparative and evolutionary genomics | `public-orthology-retrieval-and-qc` | `preview + reviewed` (`0.7.0`) |
 
-All 32 exact packages appear under `skills/<slug>/` and in `registry.json`. Wave R1 met the [same-level minimum promotion gates](research-skill-promotion-gates.md) with retained small-data evidence. `Preview + reviewed` means a package boundary was reviewed, not that runtime, scientific validity, clinical use, or superiority over a baseline was established. `Stable` is allowed only with bounded `evaluated` assurance.
+## Wave R2 research candidates
 
-D06 epigenomics/perturbation and D07 microbiome/pathogens remain later-wave research areas. D08 now includes bounded proteomics-table and FCS metadata QC; raw-MS processing, broader proteomics workflows, metabolomics, compensation, and gating remain later-wave work.
+| Candidate | Domain | Cluster | Skill | Branch state |
+| ---: | --- | --- | --- | --- |
+| R2-1 | D07 Microbiome, Metagenomics & Pathogens | C18 Amplicon feature tables | `amplicon-feature-table-and-taxonomy-qc` | `research`; not promoted |
+| R2-2 | D06 Epigenomics, Regulation & Perturbation | C16 Chromatin interval evidence | `chromatin-peak-set-qc` | `research`; not promoted |
+| R2-3 | D08 Proteomics, Metabolomics & Cytometry | C22 Quantitative proteomics | `protein-level-differential-abundance` | `research`; not promoted |
+
+All 35 exact research-branch packages appear under `skills/<slug>/` and in `registry.json`. The first 32 form the verified v0.7.0 Beta baseline; the three Wave R2 packages remain candidates until [their promotion gates](research-skill-promotion-gates.md) pass. `Preview + reviewed` means a package boundary was reviewed, not that runtime, scientific validity, clinical use, or superiority over a baseline was established. `Stable` is allowed only with bounded `evaluated` assurance.
+
+D06 and D07 now have narrow research candidates for peak-set QC and amplicon-table QC. Raw assay processing, peak calling, diversity analysis, pathogen interpretation, raw-MS processing, broader proteomics workflows, metabolomics, compensation, and gating remain later-wave work.

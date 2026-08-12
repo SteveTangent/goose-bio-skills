@@ -2,7 +2,7 @@
 
 ## Research-first system
 
-The verified `main` Beta contains 32 independently installable, one-job bioinformatics Skills across 11 Domains and 19 Clusters. Future research candidates remain outside the Beta until their common and candidate-specific promotion gates pass.
+The verified `main` Beta contains 32 independently installable, one-job bioinformatics Skills across 11 Domains and 19 Clusters. The `research` branch adds three Wave R2 candidates, bringing the branch to 35 packages across 13 Domains and 21 Clusters. Candidates remain outside the Beta until their common and candidate-specific promotion gates pass.
 
 ```mermaid
 flowchart LR

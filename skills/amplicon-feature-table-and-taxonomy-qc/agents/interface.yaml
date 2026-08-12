@@ -1,0 +1,20 @@
+interface:
+  display_name: "Amplicon Feature-table and Taxonomy QC"
+  short_description: "Audit amplicon count tables and sample joins locally."
+  default_prompt: "Audit this local TSV amplicon feature-count table against its sample metadata and optional taxonomy, then write a new JSON report without modifying inputs or overwriting outputs."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"
