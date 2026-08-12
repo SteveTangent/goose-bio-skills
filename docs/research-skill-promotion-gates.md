@@ -4,6 +4,9 @@ Wave R1 passed the same-level `preview + reviewed` minimum gates and entered
 the v0.7.0 Beta. Its retained evidence remains below as the release baseline;
 future candidates reuse the generic gates and add their own scoped section.
 
+The current next-wave shortlist and its candidate-specific gates are recorded in
+[research-wave-r2-candidates.md](research-wave-r2-candidates.md).
+
 Every candidate remains on `research` until the applicable minimum gates for
 the target release level pass. For the current target, that level is the same
 `preview + reviewed` Beta assurance used on `main`; it is not `evaluated`,
