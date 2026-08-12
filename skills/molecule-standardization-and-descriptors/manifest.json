@@ -1,14 +1,14 @@
 {
   "schema_version": "0.2.0",
   "name": "molecule-standardization-and-descriptors",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D10",
   "cluster_id": "C28",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-10",
+  "updated_at": "2026-08-12",
   "last_freshness_check": "2026-08-08",
   "review_cadence": "quarterly",
   "status": "active",
@@ -91,8 +91,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.5.0",
-    "boundary": "Restore package version 0.5.0 and its matching registry entry."
+    "previous_version": "0.6.0",
+    "boundary": "Restore package version 0.6.0 and its matching registry entry."
   },
   "network_mode": "none",
   "local_adapters": [

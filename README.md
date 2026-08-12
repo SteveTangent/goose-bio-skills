@@ -2,12 +2,12 @@
 
 Research-first bioinformatics skills for AI agents.
 
-Bio 02 Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The verified `main` Beta contains 29 packages. The `research` branch currently carries three additional Wave R1 candidates for bounded evaluation before any promotion.
+Bio 02 Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The verified `main` Beta contains 32 packages. Wave R1 added three narrowly scoped Skills after retained small-data checks and independent routing review.
 
 | Boundary | Packages | State | External services |
 | --- | ---: | --- | --- |
-| `main` Beta `0.6.0` | 29 | `preview + reviewed` | Bounded public read/download; anonymous-first |
-| `research` Wave R1 | 3 candidates | Not promoted to `main` | Same connector boundary; exact candidate gates apply |
+| `main` Beta `0.7.0` | 32 | `preview + reviewed` | Bounded public read/download; anonymous-first |
+| `research` | Next-wave candidates only | Not part of the Beta until promoted | Same connector boundary; exact candidate gates apply |
 
 ## Why Bio 02 Skills
 
@@ -86,15 +86,15 @@ Retrieve Ensembl Compara orthology assertions for these exact gene IDs from sour
 | Research area | Skills |
 | --- | --- |
 | Data and workflow foundations | `bioinformatics-format-and-identifier-validation`<br>`scientific-file-preflight-and-resource-planning`<br>`biological-database-record-retrieval-and-identifier-resolution`<br>`taxonomy-name-and-taxid-resolution`<br>`public-sequencing-run-manifest-retrieval`<br>`environment-and-provenance-capture` |
-| Sequence, reads, genomes, and evolution | `sequence-io-and-transformation`<br>`sequence-similarity-and-homology-search`<br>`pairwise-and-multiple-sequence-alignment`<br>`raw-read-quality-reporting`<br>`raw-read-trimming-and-filtering`<br>`alignment-file-operations`<br>`genomic-interval-operations`<br>`gff-gtf-gene-model-qc`<br>`public-orthology-retrieval-and-qc` *(research candidate)* |
+| Sequence, reads, genomes, and evolution | `sequence-io-and-transformation`<br>`sequence-similarity-and-homology-search`<br>`pairwise-and-multiple-sequence-alignment`<br>`raw-read-quality-reporting`<br>`raw-read-trimming-and-filtering`<br>`alignment-file-operations`<br>`genomic-interval-operations`<br>`gff-gtf-gene-model-qc`<br>`public-orthology-retrieval-and-qc` |
 | Variant and cohort genomics | `vcf-normalization-qc-and-query` |
 | Bulk transcriptomics | `count-based-differential-expression` |
 | Single-cell analysis | `single-cell-object-io-and-qc`<br>`single-cell-core-analysis` |
 | Proteomics and cytometry | `proteomics-quantification-table-qc`<br>`fcs-file-io-and-metadata-qc` |
-| Protein structure | `protein-structure-retrieval-and-comparison`<br>`protein-interface-contact-analysis` *(research candidate)* |
+| Protein structure | `protein-structure-retrieval-and-comparison`<br>`protein-interface-contact-analysis` |
 | Cheminformatics | `molecule-standardization-and-descriptors`<br>`chemical-similarity-and-substructure-search` |
 | Functional interpretation | `over-representation-analysis`<br>`ranked-gene-set-enrichment` |
-| Study design and biostatistics | `experimental-design-power-and-batch-planning`<br>`statistical-analysis-and-multiple-testing`<br>`missing-data-and-sensitivity-analysis` *(research candidate)* |
+| Study design and biostatistics | `experimental-design-power-and-batch-planning`<br>`statistical-analysis-and-multiple-testing`<br>`missing-data-and-sensitivity-analysis` |
 | Biomedical evidence | `biomedical-literature-and-public-study-search`<br>`evidence-synthesis-and-research-traceability` |
 
 See [docs/catalog.md](docs/catalog.md) for Domain, Cluster, risk, dependency, and runtime details. [`registry.json`](registry.json) is the versioned machine-readable index.
@@ -164,7 +164,7 @@ skills/<slug>/
 
 ## Current release boundary
 
-The 29-package `main` Beta is `preview + reviewed`. On `research`, the three Wave R1 packages are installable only for supervised candidate evaluation; they have reviewed package boundaries and offline checks where applicable, but have not passed all candidate-specific promotion gates or been promoted to `main`. Every package states its unverified boundaries in its manifest.
+The 32-package `main` Beta is `preview + reviewed`. Wave R1 passed the same-level minimum release gates with retained small synthetic fixtures and independent routing checks; it was not promoted to `evaluated`. Every package states its remaining unverified boundaries in its manifest.
 
 Use the collection for supervised research work. Verify inputs, tool availability, QC, and biological interpretation for each project. The collection does not claim universal scientific correctness, clinical authority, or superiority over another workflow.
 
@@ -181,10 +181,11 @@ python3 skills/statistical-analysis-and-multiple-testing/scripts/adjust_pvalues.
 python3 skills/gff-gtf-gene-model-qc/scripts/check_gene_models.py --self-test
 ```
 
-The skeleton gate also validates the 43 deterministic intake-routing cases in
+The skeleton gate also validates the 43 canonical deterministic intake-routing cases in
 [`evals/intake-routing-cases.json`](evals/intake-routing-cases.json). Those
 fixtures test routing and first-question contracts; they are not a claim of
-model-runtime or scientific evaluation.
+model-runtime or scientific evaluation. Six additional Wave R1 routing cases
+remain as visible regressions after their first independent execution.
 
 ## License
 

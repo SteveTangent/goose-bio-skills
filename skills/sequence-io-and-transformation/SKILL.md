@@ -3,7 +3,7 @@ name: sequence-io-and-transformation
 description: "A user requests deterministic sequence conversion or transformation after validation-only preflight. Exclude: validation-only inspection without transformation; raw-read trimming or filtering; database similarity search; pairwise or multiple sequence alignment; functional annotation from sequence alone."
 license: Apache-2.0
 metadata:
-  version: "0.6.0"
+  version: "0.7.0"
 ---
 
 # Sequence I/O and Transformation

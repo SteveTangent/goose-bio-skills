@@ -1,7 +1,7 @@
 # Runtime and scientific boundaries
 
 This reference defines the operating boundary for
-`fcs-file-io-and-metadata-qc` version `0.6.0`.
+`fcs-file-io-and-metadata-qc` version `0.7.0`.
 
 ## Scientific contract
 

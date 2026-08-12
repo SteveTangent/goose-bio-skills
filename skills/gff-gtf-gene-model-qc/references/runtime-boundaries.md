@@ -1,7 +1,7 @@
 # Rule and runtime boundaries
 
 This reference defines the exact scope of `gff-gtf-gene-model-qc` version
-`0.6.0`. The bundled checker is an original, dependency-free implementation.
+`0.7.0`. The bundled checker is an original, dependency-free implementation.
 
 ## Structural rules
 

@@ -3,7 +3,7 @@ name: missing-data-and-sensitivity-analysis
 description: "Use for a bounded local CSV/TSV with one continuous outcome when the user wants descriptive missingness, complete-case means, declared outcome-bound extremes, and an explicit delta sensitivity grid, optionally by a declared group column. Exclude missingness-mechanism inference, row-level imputation, model fitting, hypothesis testing, causal claims, and clinical use."
 license: Apache-2.0
 metadata:
-  version: "0.6.0"
+  version: "0.7.0"
 ---
 
 # Bounded Missing-outcome Sensitivity

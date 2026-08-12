@@ -1,7 +1,7 @@
 # Contact and runtime boundaries
 
 This reference defines the exact scope of
-`protein-interface-contact-analysis` version `0.6.0`. The bundled helper is an
+`protein-interface-contact-analysis` version `0.7.0`. The bundled helper is an
 original, dependency-free implementation.
 
 ## Contact contract

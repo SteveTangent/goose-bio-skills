@@ -21,7 +21,7 @@
       "filename": "missing-valid.csv",
       "content": "arm,outcome\nA,10\nA,\nB,20\nB,30\n",
       "sha256": "a21bdfd1c67904441d1f66d8218d3c96ad0eb5d664072836e0a7607c7564e7f3",
-      "output_sha256": "82154237617a845e824a796e394b0de3f906590bdcc887eaa7348db03f634ae9",
+      "output_sha256": "c830b1147d72edd0e595fbe41a571fd6791808acd43e7323fe86ce3d70ce34cf",
       "expected_total_rows": 4,
       "expected_missing_rows": 1
     },
@@ -49,7 +49,7 @@
       "filename": "contacts-valid.pdb",
       "content": "ATOM      1   CA ALA A   1       0.000   0.000   0.000  1.00 20.00           C\nATOM      2   CA GLY B   2       3.000   4.000   0.000  1.00 20.00           C\nEND\n",
       "sha256": "ba172b39ab0db5ac00236037f238a893ddd938afbc7ba8bf41bc04cea34261dc",
-      "output_sha256": "ea0595496b4ea49aba63aa78bbfb26f4b064e00802f406019827adda32b5e783",
+      "output_sha256": "869f77d5e7d59b401b9be62f6b1a62371dfc2791d28e517fffecbdb25d619aa7",
       "expected_contact_count": 1,
       "expected_distance_angstrom": 5.0
     },

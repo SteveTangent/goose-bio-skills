@@ -1,7 +1,7 @@
 # Runtime and scientific boundaries
 
 This reference defines the operating boundary for
-`taxonomy-name-and-taxid-resolution` version `0.6.0`. NCBI interfaces were
+`taxonomy-name-and-taxid-resolution` version `0.7.0`. NCBI interfaces were
 reviewed on 2026-08-10; this preview does not claim that the exact Skill was
 runtime-evaluated.
 
@@ -112,7 +112,7 @@ failure, return `needs-tool` or `partial` and never claim a completed call.
 
 - Mode: `not-performed`
 - Reason: this instruction-only preview did not execute exact-package routing, literal-query construction, response normalization, ambiguity handling, or output generation.
-- Relevant versions: NCBI E-utilities rolling API and Taxonomy fields checked 2026-08-10; Bio 02 shared public connector 0.6.0 contract.
+- Relevant versions: NCBI E-utilities rolling API and Taxonomy fields checked 2026-08-10; Bio 02 shared public connector 0.7.0 contract.
 - Unverified boundaries:
   - Exact-package literal-query construction, ambiguity handling, response normalization, name-class extraction, and merged TaxId mapping have not been runtime-evaluated.
   - More-than-20 matches, deleted or unavailable TaxIds, malformed records, rate limits, provider drift, and oversized responses remain unverified for this exact package.

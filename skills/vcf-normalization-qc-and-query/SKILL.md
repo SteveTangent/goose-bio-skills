@@ -3,7 +3,7 @@ name: vcf-normalization-qc-and-query
 description: "A user needs VCF-specific reference, allele, genotype, normalization, filtering or query semantics on an existing callset. Exclude: syntax/schema-only validation without VCF-specific semantic QC or operation; variant calling; clinical classification; treating imputed dosage as a directly observed genotype."
 license: Apache-2.0
 metadata:
-  version: "0.6.0"
+  version: "0.7.0"
 ---
 
 # VCF Normalization, QC and Query

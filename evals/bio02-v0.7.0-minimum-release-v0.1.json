@@ -1,0 +1,104 @@
+{
+  "schema_version": "0.1.0",
+  "evidence_kind": "atomic-preview-reviewed-release",
+  "evaluated_at": "2026-08-12T11:21:23Z",
+  "version": "0.7.0",
+  "branch": "research",
+  "candidate_parent_commit": "33c570b587e2379c89ac6934d7c8b15756137696",
+  "scope": {
+    "package_count": 32,
+    "domain_count": 11,
+    "cluster_count": 19,
+    "release_stage": "preview",
+    "assurance_level": "reviewed",
+    "minimum_reliability_pass": true,
+    "formal_scientific_evaluation": false,
+    "scientific_benchmark": false,
+    "human_expert_review": false,
+    "generalization_evidence": false,
+    "performance_evaluation": false,
+    "better_than_baseline_claim": false,
+    "clinical_use": "prohibited"
+  },
+  "governance": {
+    "owner": "project-owner",
+    "review_cadence": "quarterly package freshness",
+    "fixture_kind": "file-backed fixture",
+    "input_files": [
+      "evals/fixtures/research-wave-r1-minimal-v0.1.json",
+      "evals/research-wave-r1-independent-routing-cases-v0.1.json"
+    ],
+    "output_contract": "One atomic v0.7.0 registry binds 32 exact preview-reviewed packages. The retained runner emits one JSON result with exact hashes and network_performed=false.",
+    "rollback_boundary": "The 29 packages previously released on main restore v0.6.0 with their matching registry entries. The three first-public Wave R1 packages are removed with their entries.",
+    "trust_report": "Independent final review verified the sealed v0.7.0 candidate bytes with no P0, P1, or P2 findings."
+  },
+  "atomic_release": {
+    "version_file_sha256": "967d9afb101346667166f2e76e81910bc190488d7d41d50ca0072e9d92f00e32",
+    "registry_sha256": "34a97c5a7788bfed01919122676d0d0ca052968a1a8dbd1b3d1cb1f2680b82cb",
+    "registry_package_count": 32,
+    "rollback_to_0_6_0_count": 29,
+    "first_public_release_count": 3,
+    "first_public_packages": [
+      "missing-data-and-sensitivity-analysis",
+      "protein-interface-contact-analysis",
+      "public-orthology-retrieval-and-qc"
+    ],
+    "wave_r1_package_digest": {
+      "missing-data-and-sensitivity-analysis": "084408ff6e86cb92974ae15a75590e3ce66e195d7821ecc3b4b3019060bdb537",
+      "protein-interface-contact-analysis": "04d38bc2de6954a34f57585b8b815c20149e7d86d7ee251fb3029f02fb9ba7ea",
+      "public-orthology-retrieval-and-qc": "1e5b814d9d95880487e626e611c5f6b12110454f3e42da95be64066fb78178e0"
+    }
+  },
+  "control_sha256": {
+    "validator": "5e0c860365345d3a3fa24b1b77ca5094d0baffbb334f59dc54dd05a5f72834b5",
+    "connector": "f914312d39afc1987be2212552c66267fa003853fcdc04309ecb5ccb3a2026e5",
+    "minimal_runner": "cc88b09fd4ca294b1410e9a863ed2b495270074f2b573e117a80e4b35f9f7dd7",
+    "retained_fixture": "1f854d24fa424bc7cfe15557152e3c0a7c5bbd8e38c2788c9794b6fa7b8fa340",
+    "routing_holdout": "b9a616e409c2ee0bc9838fe139005f6afa577d0b72dfbd1e775244cf3d65d048"
+  },
+  "documentation_sha256": {
+    "README.md": "5e86b95a57a2cab84cd99020a86791c6828225b52695cc04ca4dac2a666866e1",
+    "docs/architecture.md": "a512b53e1b17ce39931a2a7bdec1ea957a89bed122b21ce8dba8cdf6ff0243f9",
+    "docs/catalog.md": "0a01617924ed8a2db3949f7588830f707843cd781fe4e32fbe9dd648f18f2731",
+    "docs/release-flow.md": "ef6f40e3d4058a08ae53b4a9b704b7f7fe0ed08006ad5060972b4c29a24da478",
+    "docs/research-skill-promotion-gates.md": "4aae24a3b41f678c0127e89784bf95777e233e6de1fe72120ce1b5dcaa39a682"
+  },
+  "verification": {
+    "status": "passed",
+    "minimal_replay_runs": 2,
+    "minimal_replay_checks_per_run": 84,
+    "minimal_replay_byte_identical": true,
+    "network_performed": false,
+    "validator_self_test_checks": 23,
+    "installable_packages": 32,
+    "source_clean": true,
+    "canonical_routing_cases": 43,
+    "wave_r1_routing_cases": 6,
+    "connector_self_test_checks": 21,
+    "connector_self_test_network_performed": false,
+    "package_self_test_checks": {
+      "scientific-file-preflight-and-resource-planning": 11,
+      "statistical-analysis-and-multiple-testing": 9,
+      "gff-gtf-gene-model-qc": 15,
+      "missing-data-and-sensitivity-analysis": 10,
+      "protein-interface-contact-analysis": 16
+    },
+    "diff_check": "passed"
+  },
+  "review": {
+    "status": "passed",
+    "p0": 0,
+    "p1": 0,
+    "p2": 0
+  },
+  "missing_evidence": [
+    "formal exact-package agent or model runtime evaluation",
+    "named domain-method or human-expert review",
+    "representative or large research datasets",
+    "scientific benchmarking and cross-study generalization",
+    "performance and scale evaluation",
+    "complete parser, platform, and provider failure matrices",
+    "orthology multi-ID aggregate-limit execution",
+    "baseline or source-repository superiority comparison"
+  ]
+}

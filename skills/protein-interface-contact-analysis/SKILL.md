@@ -3,7 +3,7 @@ name: protein-interface-contact-analysis
 description: "Use for bounded, offline residue-contact analysis between two explicitly declared chains in one local legacy PDB file. Report the deterministic heavy-atom residue contact set and minimum atom-pair distance at an explicit fixed cutoff. Exclude mmCIF, alternate conformers, multiple models, interface-area or pocket calculations, docking, molecular dynamics, affinity estimation, and functional claims."
 license: Apache-2.0
 metadata:
-  version: "0.6.0"
+  version: "0.7.0"
 ---
 
 # Protein-interface Contact Analysis

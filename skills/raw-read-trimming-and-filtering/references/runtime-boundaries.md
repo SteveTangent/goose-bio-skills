@@ -1,7 +1,7 @@
 # Runtime and scientific boundaries
 
 This reference defines the operating boundary for
-`raw-read-trimming-and-filtering` version `0.6.0`. Interfaces were reviewed
+`raw-read-trimming-and-filtering` version `0.7.0`. Interfaces were reviewed
 from official documentation on 2026-08-10; neither tool was executed.
 
 ## Scientific contract

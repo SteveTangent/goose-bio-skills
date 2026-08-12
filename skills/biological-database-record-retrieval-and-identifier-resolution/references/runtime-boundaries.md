@@ -2,7 +2,7 @@
 
 This reference defines the operating boundary for
 `biological-database-record-retrieval-and-identifier-resolution` version
-`0.6.0`. Interfaces were reviewed on 2026-08-09; this preview does not claim that
+`0.7.0`. Interfaces were reviewed on 2026-08-09; this preview does not claim that
 the exact Skill was runtime-evaluated.
 
 ## Scientific contract
@@ -77,7 +77,7 @@ never claim a call.
 
 - Mode: `not-performed`
 - Reason: This instruction-only preview did not execute exact-package routing, provider selection, live retrieval, pagination, response normalization, or scientific benchmarking.
-- Relevant versions: UniProt REST rolling / release 2026_02, Ensembl REST 15.12, NCBI E-utilities rolling, Bio 02 shared public connector 0.6.0 contract.
+- Relevant versions: UniProt REST rolling / release 2026_02, Ensembl REST 15.12, NCBI E-utilities rolling, Bio 02 shared public connector 0.7.0 contract.
 - Unverified boundaries:
   - Exact-package provider selection, pagination, rate limiting, release capture, and identifier normalization have not been runtime-evaluated.
   - One-to-many, deprecated, replaced, malformed, rate-limited, and oversized live responses remain unverified for this exact package.

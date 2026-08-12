@@ -21,7 +21,7 @@
     {
       "manifest_schema_version": "0.2.0",
       "name": "alignment-file-operations",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/alignment-file-operations",
       "domain_id": "D02",
       "cluster_id": "C05",
@@ -32,13 +32,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "07bdbdc6909b0115dd1e43577769dec6ea605c4e011072e5c69dff792df15f32",
-      "previous_version": "0.5.0"
+      "package_digest": "6655d5b40cc5b6e08db9626967cc0822edd2f796fa93901502270baef0feeaae",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "bioinformatics-format-and-identifier-validation",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/bioinformatics-format-and-identifier-validation",
       "domain_id": "D01",
       "cluster_id": "C01",
@@ -52,13 +52,13 @@
         "ncbi-eutils",
         "uniprot-rest"
       ],
-      "package_digest": "2660cca6e79eec7c812c3936aae6423ca77f7f2e8e34a2f86f6983820ed07813",
-      "previous_version": "0.5.0"
+      "package_digest": "3f3c2ced560aa858a096cfd78a4a4b6a0a6957f7a20a0b7e656aab8eac5c2e2e",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "biological-database-record-retrieval-and-identifier-resolution",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/biological-database-record-retrieval-and-identifier-resolution",
       "domain_id": "D01",
       "cluster_id": "C01",
@@ -73,13 +73,13 @@
         "ensembl-rest",
         "ncbi-eutils"
       ],
-      "package_digest": "6903ab4ef49fed008c4046ccade1c9cb7cae379db5a0a9fd7025fca8996d1166",
-      "previous_version": "0.5.0"
+      "package_digest": "8d12443b048de49ae85f907c786e82f30d64c7a59f44affd0e404a965727b8ab",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "biomedical-literature-and-public-study-search",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/biomedical-literature-and-public-study-search",
       "domain_id": "D13",
       "cluster_id": "C37",
@@ -94,13 +94,13 @@
         "europe-pmc",
         "ebi-biostudies"
       ],
-      "package_digest": "18fd48d0f21df6601a1489e9843b2c843d6e17d0e5bb3c09d71bd12c65009dde",
-      "previous_version": "0.5.0"
+      "package_digest": "8f6a2bc9d4832ca3a19abd30ed509737cb7f9c2284401e5287d29a0c0f5bf3ed",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "chemical-similarity-and-substructure-search",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/chemical-similarity-and-substructure-search",
       "domain_id": "D10",
       "cluster_id": "C28",
@@ -114,13 +114,13 @@
         "pubchem-pug-rest",
         "chembl-rest"
       ],
-      "package_digest": "04019236d20ecf6edcf832abe8abbd1d83985d8b32a8433db72e488b4ce3be5c",
-      "previous_version": "0.5.0"
+      "package_digest": "6a7ed9d129575eda441d9943d02fe9800ff91b56196ec6d41b02f2769bfcfd19",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "count-based-differential-expression",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/count-based-differential-expression",
       "domain_id": "D04",
       "cluster_id": "C12",
@@ -131,13 +131,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "c0e4a6aecd76c11849f03d81c67d778fb653b97a4469933315d0e68c7c68b0a0",
-      "previous_version": "0.5.0"
+      "package_digest": "02f39af38d0c15a1fd9ceb71cbc64f864af650f2ebffe2346ee0f05723f8ee4c",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "environment-and-provenance-capture",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/environment-and-provenance-capture",
       "domain_id": "D01",
       "cluster_id": "C02",
@@ -148,13 +148,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "8fd771d706206ba13a7a9688c32da1ddf99e74895d809f9e0cf90cd62cf011a2",
-      "previous_version": "0.5.0"
+      "package_digest": "6fa89963696aa9771e88fdb7a2c106c870566dc3c2a43f4c3a9499978576773f",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "evidence-synthesis-and-research-traceability",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/evidence-synthesis-and-research-traceability",
       "domain_id": "D13",
       "cluster_id": "C37",
@@ -167,13 +167,13 @@
       "external_services": [
         "crossref-rest"
       ],
-      "package_digest": "a4d03f7d7e3acd82f82a6842e4c88530437a8a1ecb03ba77e9a99a65a8fa1417",
-      "previous_version": "0.5.0"
+      "package_digest": "0f12cf22d8344c00f93eb41c4978e075a581e7820558fc1e552ed53669ae580e",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "experimental-design-power-and-batch-planning",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/experimental-design-power-and-batch-planning",
       "domain_id": "D12",
       "cluster_id": "C34",
@@ -184,13 +184,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "127e3228ae2b9909f907d7b38b993524cddb6c0b60699dae95a68a31e02e6bea",
-      "previous_version": "0.5.0"
+      "package_digest": "f00014c84ff176e234c2fb1b62b345f4a35cf4cde36b392c769784d5b1117783",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "fcs-file-io-and-metadata-qc",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/fcs-file-io-and-metadata-qc",
       "domain_id": "D08",
       "cluster_id": "C24",
@@ -201,13 +201,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "f2c24957933ecb0ebbae1ff814e03225597c4d20ede5612be5c5fa52a956247a",
-      "previous_version": null
+      "package_digest": "d6ad276ce3bc371595b51b952170e479f4f882cc458f8fbe7ab820cc9bb9ce2b",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "genomic-interval-operations",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/genomic-interval-operations",
       "domain_id": "D02",
       "cluster_id": "C06",
@@ -218,13 +218,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "5bcc134af74d6c16d9cf66b3e18924ea8b5ce198d1144208642f986024dc237e",
-      "previous_version": "0.5.0"
+      "package_digest": "e20e3bd9b735a3d8d01f241f385746d6363d85ef7884f31e591f2c705550c6cd",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "gff-gtf-gene-model-qc",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/gff-gtf-gene-model-qc",
       "domain_id": "D02",
       "cluster_id": "C07",
@@ -235,13 +235,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "7d62e36cc78293cfeb5b42944c2a26e0daeff9bdd45d28f197a4a118f29421d8",
-      "previous_version": null
+      "package_digest": "0ed14ae158d66490c031ce949c33fb4281d86671c98c356e45e59a2692716fac",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "missing-data-and-sensitivity-analysis",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/missing-data-and-sensitivity-analysis",
       "domain_id": "D12",
       "cluster_id": "C35",
@@ -252,13 +252,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "a976f2bfd56e857cc1259106dd4c46e4380ca10dfcf1e21d552e08583f3f09c6",
+      "package_digest": "084408ff6e86cb92974ae15a75590e3ce66e195d7821ecc3b4b3019060bdb537",
       "previous_version": null
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "molecule-standardization-and-descriptors",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/molecule-standardization-and-descriptors",
       "domain_id": "D10",
       "cluster_id": "C28",
@@ -269,13 +269,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "f48edd01de7bbc11d2fa92f9012c8f2674bcc4e53da1f76ed1407d14d7c107ec",
-      "previous_version": "0.5.0"
+      "package_digest": "82c5853179d98baede5ce18ec6b09e85eed46e3f103b43c8115c585d6374f6ba",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "over-representation-analysis",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/over-representation-analysis",
       "domain_id": "D11",
       "cluster_id": "C31",
@@ -290,13 +290,13 @@
         "enrichr",
         "kegg-rest"
       ],
-      "package_digest": "626de8fd42b1a87dc9b5f86f861c4336ee8eaf5af4f9eb65a8ff384baca0371c",
-      "previous_version": "0.5.0"
+      "package_digest": "990b42175847df3dab5c335ee16aa03a76b98e3a891a81288bbe8c905cb5486e",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "pairwise-and-multiple-sequence-alignment",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/pairwise-and-multiple-sequence-alignment",
       "domain_id": "D02",
       "cluster_id": "C04",
@@ -309,13 +309,13 @@
       "external_services": [
         "embl-ebi-job-dispatcher"
       ],
-      "package_digest": "9963210d08eb07f8cdb54b6181006294eb9a5eb780da622c638edc6d99e534c0",
-      "previous_version": "0.5.0"
+      "package_digest": "6e3930ffe7cb59c43cc4d47d8efc9ea35d1fbf8d3102ed693a043aef5ed31e59",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "protein-interface-contact-analysis",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/protein-interface-contact-analysis",
       "domain_id": "D09",
       "cluster_id": "C27",
@@ -326,13 +326,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "bbd0fa54e98a939dd2cdeced55685a5c97964d882b56280ae10bdada280abe79",
+      "package_digest": "04d38bc2de6954a34f57585b8b815c20149e7d86d7ee251fb3029f02fb9ba7ea",
       "previous_version": null
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "protein-structure-retrieval-and-comparison",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/protein-structure-retrieval-and-comparison",
       "domain_id": "D09",
       "cluster_id": "C25",
@@ -346,13 +346,13 @@
         "rcsb-pdb",
         "alphafold-db"
       ],
-      "package_digest": "41ff7a42147608fafd4603cc7b3ea0fc007f4f38766f163291263c8fd96b673c",
-      "previous_version": "0.5.0"
+      "package_digest": "473b286dc0d7168330c54cd038ebf4b7a9e8fae70c831310c2f15d1d2e6f1223",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "proteomics-quantification-table-qc",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/proteomics-quantification-table-qc",
       "domain_id": "D08",
       "cluster_id": "C22",
@@ -363,13 +363,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "ce6fc6687a96b1e63bee11587237b34aec14deffbbbf2601e3c6493fb0812a57",
-      "previous_version": "0.5.0"
+      "package_digest": "a852e0ead52b3abed881c8125c0d4d7f70559bc5076941b3d807589da41915c6",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "public-orthology-retrieval-and-qc",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/public-orthology-retrieval-and-qc",
       "domain_id": "D02",
       "cluster_id": "C08",
@@ -382,13 +382,13 @@
       "external_services": [
         "ensembl-rest"
       ],
-      "package_digest": "3783c85516ddcd60fd44156e189d2c7b6fdf21d793cbfdbb9eca2484888f33d0",
+      "package_digest": "1e5b814d9d95880487e626e611c5f6b12110454f3e42da95be64066fb78178e0",
       "previous_version": null
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "public-sequencing-run-manifest-retrieval",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/public-sequencing-run-manifest-retrieval",
       "domain_id": "D01",
       "cluster_id": "C01",
@@ -401,13 +401,13 @@
       "external_services": [
         "ena-portal-api"
       ],
-      "package_digest": "e20b024cd4df0d9e8a4b0e40face6c4e19bffe34bc3221be7fea0c777aacf419",
-      "previous_version": "0.5.0"
+      "package_digest": "fa6484517421ee5d9f1b8a73c9450b30784cd0ee4fe1b60914c6443c235efda2",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "ranked-gene-set-enrichment",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/ranked-gene-set-enrichment",
       "domain_id": "D11",
       "cluster_id": "C31",
@@ -420,13 +420,13 @@
       "external_services": [
         "enrichr"
       ],
-      "package_digest": "22fb480056842ef734229e7d8aa495995aab728bb5349b8ac16ebdf360ad2823",
-      "previous_version": "0.5.0"
+      "package_digest": "88be379d18dbcbaa758324c74c91198eb347e95ef32723236f94a65bf62f817e",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "raw-read-quality-reporting",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/raw-read-quality-reporting",
       "domain_id": "D02",
       "cluster_id": "C05",
@@ -437,13 +437,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "a0e27e266bf9b31bdde7f12b513b638975b35481ee7291ce248ba3c0bf72e117",
-      "previous_version": "0.5.0"
+      "package_digest": "36d6cb47078d9c54e1d06198434d698d805e337f40f66287bf850e2a2139f6d0",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "raw-read-trimming-and-filtering",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/raw-read-trimming-and-filtering",
       "domain_id": "D02",
       "cluster_id": "C05",
@@ -454,13 +454,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "c87db6d0616cd278390248e40ae769b3727c772dab92b299ac5c71598566bd5b",
-      "previous_version": null
+      "package_digest": "acce7e33609b34f543cfc9e7ed1e8211ffeac6d68a494177a2c8ee7f2648b3d9",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "scientific-file-preflight-and-resource-planning",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/scientific-file-preflight-and-resource-planning",
       "domain_id": "D01",
       "cluster_id": "C01",
@@ -471,13 +471,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "d6a628c64be6b5eb5aec45c4613105b6d41c69cb5c00e415f154acd5c6b5a667",
-      "previous_version": "0.5.0"
+      "package_digest": "25f918965863fc32c4609ab67a8e7c604873b6925cbee81abde92ecc3174043b",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "sequence-io-and-transformation",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/sequence-io-and-transformation",
       "domain_id": "D02",
       "cluster_id": "C04",
@@ -488,13 +488,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "f40b091b235334c0de9e3c60a0b928e011eca6938107d7bc994a6fab8651518c",
-      "previous_version": "0.5.0"
+      "package_digest": "35f8a9d9a7a64f8a86f6963ecd944a5129013c53e1e0b465a2a4654c83dd1948",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "sequence-similarity-and-homology-search",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/sequence-similarity-and-homology-search",
       "domain_id": "D02",
       "cluster_id": "C04",
@@ -507,13 +507,13 @@
       "external_services": [
         "ncbi-blast-remote"
       ],
-      "package_digest": "11168c37fa557327be2d253e011b22d351df9d076d14e6acbe2a1215df592adb",
-      "previous_version": "0.5.0"
+      "package_digest": "039b01b93a71b8282b5122fb510171b12ad730c170eb184e632701b4faae1169",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "single-cell-core-analysis",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/single-cell-core-analysis",
       "domain_id": "D05",
       "cluster_id": "C14",
@@ -524,13 +524,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "60e2a0d2425b112c17f87d03fa0b370ccd74461a04803cbbf658c89a3e999033",
-      "previous_version": "0.5.0"
+      "package_digest": "1837d068ca499e0b112dc3f05b6d916e13433d32c2b45f427837594bce7e6b5a",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "single-cell-object-io-and-qc",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/single-cell-object-io-and-qc",
       "domain_id": "D05",
       "cluster_id": "C14",
@@ -541,13 +541,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "0dad786d280f7654e1bdc48e7c65bc961f76f17d430431f00d8651e9b702d6b3",
-      "previous_version": "0.5.0"
+      "package_digest": "4522c32bd8e460f8a4c197b42fec327d7d6a920669c76a1f2b77e536952ddef2",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "statistical-analysis-and-multiple-testing",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/statistical-analysis-and-multiple-testing",
       "domain_id": "D12",
       "cluster_id": "C35",
@@ -558,13 +558,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "b870b544ffd6cf8a3eab5056e23749a2dcc7280f8de949658362e37793d8e606",
-      "previous_version": "0.5.0"
+      "package_digest": "a5dd9e51ec19a4f0f2bae6301a487308bd7fff6a2d4e57fe20a5e7441a7a798d",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "taxonomy-name-and-taxid-resolution",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/taxonomy-name-and-taxid-resolution",
       "domain_id": "D01",
       "cluster_id": "C01",
@@ -577,13 +577,13 @@
       "external_services": [
         "ncbi-eutils"
       ],
-      "package_digest": "a3b0658dca9b5761a1cc63c7feaa14a50f6da5dfa8402b787853822fb33ca1be",
-      "previous_version": "0.5.0"
+      "package_digest": "e9f26f05213115958866dad0baf7509bc706379f4f5e961df4755c508ceb6488",
+      "previous_version": "0.6.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "vcf-normalization-qc-and-query",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "skills/vcf-normalization-qc-and-query",
       "domain_id": "D03",
       "cluster_id": "C10",
@@ -594,8 +594,8 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "7fbb7ad5ac2a4a5165b7461f20c8a6bf2857d1a368ad8eb72ee24d9085e2860c",
-      "previous_version": "0.5.0"
+      "package_digest": "cc54521a45c8a8066aed1f196c15fdd0503694db50f574083c6f4781b550436c",
+      "previous_version": "0.6.0"
     }
   ]
 }

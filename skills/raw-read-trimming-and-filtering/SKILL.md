@@ -3,7 +3,7 @@ name: raw-read-trimming-and-filtering
 description: "Use to trim declared adapters and apply an approved quality, length, or N-base filter to a small, explicitly listed local single-end or paired-end FASTQ set, producing new synchronized FASTQ files plus retention and provenance records. Exclude read download, QC interpretation, UMI handling, contamination classification, demultiplexing, deduplication, merging, alignment, broad batches, and overwrites."
 license: Apache-2.0
 metadata:
-  version: "0.6.0"
+  version: "0.7.0"
 ---
 
 # Raw Read Trimming and Filtering

@@ -3,7 +3,7 @@ name: fcs-file-io-and-metadata-qc
 description: "Use for bounded local inspection of Flow Cytometry Standard files and metadata. Check FCS structure, datasets, event and channel counts, channel labels and scaling keywords, time, and spillover declarations. Exclude compensation, transformation, gating, clustering, workspace import, rewriting, and clinical interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.6.0"
+  version: "0.7.0"
 ---
 
 # FCS File I/O and Metadata QC

@@ -1,7 +1,7 @@
 # Runtime and scientific boundaries
 
 This reference defines the boundary for `public-orthology-retrieval-and-qc`
-version `0.6.0`. Ensembl interfaces were reviewed on 2026-08-12; no live canary,
+version `0.7.0`. Ensembl interfaces were reviewed on 2026-08-12; no live canary,
 exact-package runtime evaluation, or scientific benchmark was performed.
 
 ## Scientific contract
@@ -127,7 +127,7 @@ limit, or drift, return `needs-tool` or `partial` and never claim completion.
 - Reason: no exact-package live canary, semantic condensed-response fixture,
   response normalization run, release capture, or output evaluation was run.
 - Relevant versions: Ensembl REST API 15.12 documentation and release 116
-  citation guidance checked 2026-08-12; Bio 02 shared connector 0.6.0 contract.
+  citation guidance checked 2026-08-12; Bio 02 shared connector 0.7.0 contract.
 - Unverified boundaries:
   - Live transport, current response schema, empty/error behavior, and the exact
     QC fields exposed by `format=condensed`.
