@@ -23,11 +23,11 @@
     "better_than_baseline_claim": false,
     "clinical_use": "prohibited",
     "unverified_boundaries": [
-      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "A first-run independent Wave R1 routing check covered one exact-ID Compara prompt and one local-sequence-search near neighbor for this candidate; broader agent routing and interactive behavior have not been runtime-evaluated.",
       "Scientific benchmark performance has not been established.",
       "Human-expert review has not been performed.",
-      "Exact-package identifier validation, request construction, live retrieval, response normalization, cardinality accounting, confidence-field preservation, release capture, and output generation have not been runtime-evaluated.",
-      "Empty results, missing IDs, malformed responses, provider drift, rate limits, partial failures, and oversized responses remain unverified for this exact package.",
+      "The retained offline small fixture covers one exact request, one one-to-one response, one empty result, one malformed response, deterministic payload bytes, provenance binding, and no-overwrite behavior through the shared connector; end-to-end agent normalization, cardinality accounting, confidence-field preservation, and release-context capture remain unevaluated.",
+      "One bounded anonymous homo_sapiens-to-mus_musculus live canary passed; missing or wrong-species IDs, reordered or multi-target responses, provider drift, redirects, secrets, rate limits, truncation, partial failures, oversized responses, and aggregate multi-ID limits remain unverified for this exact package.",
       "Species aliases, species outside homo_sapiens/mus_musculus/rattus_norvegicus/danio_rerio, symbols, cross-reference resolution, similarity search, de novo orthology, functional transfer, tree inference, other Compara divisions, bulk retrieval, and clinical use are outside this preview."
     ]
   },
@@ -50,15 +50,15 @@
   "runtime_verification": {
     "mode": "not-performed",
     "status": "not-performed",
-    "reason": "This instruction-only preview has a reviewed shared-connector request boundary, but no exact-package live canary or semantic response evaluation was run.",
+    "reason": "This instruction-only preview has a reviewed shared-connector request boundary. A retained offline small-synthetic runner exercised valid, empty, malformed, deterministic-payload, provenance-binding, and no-overwrite paths; one bounded anonymous live canary also passed, and a first-run independent routing pair selected the expected candidates. These diagnostics do not constitute formal exact-package agent runtime or scientific evaluation.",
     "tool_versions": [
       "Ensembl REST API 15.12 documentation checked 2026-08-12",
       "Ensembl release 116 citation guidance checked 2026-08-12",
       "Bio 02 shared public connector 0.6.0 orthology request contract"
     ],
     "unverified_boundaries": [
-      "Exact-package identifier validation, request construction, live retrieval, response normalization, cardinality accounting, confidence-field preservation, release capture, and output generation have not been runtime-evaluated.",
-      "Empty results, missing IDs, malformed responses, provider drift, rate limits, partial failures, and oversized responses remain unverified for this exact package.",
+      "The retained offline small fixture covers one exact request, one one-to-one response, one empty result, one malformed response, deterministic payload bytes, provenance binding, and no-overwrite behavior through the shared connector; end-to-end agent normalization, cardinality accounting, confidence-field preservation, and release-context capture remain unevaluated.",
+      "One bounded anonymous homo_sapiens-to-mus_musculus live canary passed; missing or wrong-species IDs, reordered or multi-target responses, provider drift, redirects, secrets, rate limits, truncation, partial failures, oversized responses, and aggregate multi-ID limits remain unverified for this exact package.",
       "Species aliases, species outside homo_sapiens/mus_musculus/rattus_norvegicus/danio_rerio, symbols, cross-reference resolution, similarity search, de novo orthology, functional transfer, tree inference, other Compara divisions, bulk retrieval, and clinical use are outside this preview."
     ]
   },

@@ -1,0 +1,193 @@
+{
+  "schema_version": "0.1.0",
+  "evidence_kind": "minimum-reliability-release-check",
+  "evaluated_at": "2026-08-12T10:58:42Z",
+  "branch": "research",
+  "candidate_base_commit": "3d7d941230f8fd89e0ba7d94ce78cb8dc3607801",
+  "scope": {
+    "target_assurance": "preview-reviewed",
+    "minimum_reliability_pass": true,
+    "same_level_beta_functional_gate_pass": true,
+    "formal_scientific_evaluation": false,
+    "scientific_benchmark": false,
+    "generalization_evidence": false,
+    "performance_evaluation": false,
+    "human_expert_review": false,
+    "better_than_baseline_claim": false,
+    "clinical_use": "prohibited",
+    "direct_main_merge_authorized": false,
+    "direct_main_merge_reason": "The existing v0.6.0 tag and release record bind 29 packages. A main merge must first prepare an atomic v0.7.0 collection and rerun these checks on the final v0.7.0 bytes."
+  },
+  "governance": {
+    "fixture_kind": "file-backed fixture",
+    "input_files": [
+      "evals/fixtures/research-wave-r1-minimal-v0.1.json",
+      "evals/research-wave-r1-independent-routing-cases-v0.1.json"
+    ],
+    "output_contract": "The offline runner emits one canonical JSON event with status, check count, exact package/script/fixture/output hashes, and explicit network_performed=false. The routing record preserves first-run observations and later serves only as a visible regression oracle.",
+    "rollback_boundary": "Remove this Wave R1 evidence delta and restore the three prior registry package digests; released v0.6.0 history is not rewritten.",
+    "trust_report": "Minimum release verification only. The final independent code and evidence review reported P0=0, P1=0, and P2=0 for these candidate bytes."
+  },
+  "retained_replay": {
+    "status": "passed",
+    "runs": 2,
+    "checks_per_run": 84,
+    "byte_stable_results": true,
+    "network_performed": false,
+    "transport_simulated_for_orthology": true,
+    "runner": {
+      "path": "scripts/run_wave_r1_minimal_reliability.py",
+      "sha256": "cc88b09fd4ca294b1410e9a863ed2b495270074f2b573e117a80e4b35f9f7dd7"
+    },
+    "fixture": {
+      "path": "evals/fixtures/research-wave-r1-minimal-v0.1.json",
+      "sha256": "386bcd5cd55061f73bb8b69bf3b20a40912144a5295748910a57e25688b3fa8d"
+    },
+    "coverage": {
+      "missing-data-and-sensitivity-analysis": [
+        "partial missingness",
+        "all-missing outcome reported not estimable",
+        "nonnumeric observed outcome rejection",
+        "repeat-byte determinism",
+        "no overwrite"
+      ],
+      "protein-interface-contact-analysis": [
+        "one exact-cutoff contact",
+        "no-contact result",
+        "malformed coordinate rejection",
+        "repeat-byte determinism",
+        "no overwrite"
+      ],
+      "public-orthology-retrieval-and-qc": [
+        "one exact request and one-to-one response",
+        "empty provider result",
+        "malformed provider response rejection",
+        "payload-byte determinism and provenance binding",
+        "no overwrite",
+        "simulated transport only"
+      ]
+    },
+    "output_sha256": {
+      "missing_data_valid": "82154237617a845e824a796e394b0de3f906590bdcc887eaa7348db03f634ae9",
+      "protein_contacts_valid": "ea0595496b4ea49aba63aa78bbfb26f4b064e00802f406019827adda32b5e783",
+      "orthology_valid_payload": "55c13b3a34e18ba0ffd67d79cc62bff71356e352587a3c5bfbbecb0e92b1bef2"
+    }
+  },
+  "independent_routing_first_execution": {
+    "status": "passed",
+    "blind_at_first_execution": true,
+    "oracle_file_created_after_observations": true,
+    "future_role": "visible-regression",
+    "case_file": "evals/research-wave-r1-independent-routing-cases-v0.1.json",
+    "case_file_sha256": "b9a616e409c2ee0bc9838fe139005f6afa577d0b72dfbd1e775244cf3d65d048",
+    "case_count": 6,
+    "expected_skill_or_route_matches": 6,
+    "action_contract_compatible": 6,
+    "exact_action_token_matches": 2,
+    "unnecessary_questions": 0,
+    "forbidden_skill_selections": 0,
+    "evaluator_boundary": "Three independent Codex subagent tasks received only their two prompts and were instructed not to inspect the repository or holdout oracle. The exact model build was not separately pinned.",
+    "observations": [
+      {
+        "id": "missing-r1-blind-positive",
+        "evaluator_task": "blind_missing_route",
+        "observed_skill": "missing-data-and-sensitivity-analysis",
+        "observed_first_action": "safe-local-execution",
+        "questions": 0,
+        "forbidden_selected": false
+      },
+      {
+        "id": "missing-r1-blind-neighbor-multiplicity",
+        "evaluator_task": "blind_missing_route",
+        "observed_skill": "statistical-analysis-and-multiple-testing",
+        "observed_first_action": "safe-local-execution",
+        "questions": 0,
+        "forbidden_selected": false
+      },
+      {
+        "id": "contacts-r1-blind-positive",
+        "evaluator_task": "blind_contacts_route",
+        "observed_skill": "protein-interface-contact-analysis",
+        "observed_first_action": "inspect-safe-facts-for-antibody-pdb",
+        "questions": 0,
+        "forbidden_selected": false
+      },
+      {
+        "id": "contacts-r1-blind-adversarial-cif",
+        "evaluator_task": "blind_contacts_route",
+        "observed_skill": null,
+        "observed_first_action": "stop-without-conversion-or-conformer-filtering",
+        "questions": 0,
+        "forbidden_selected": false
+      },
+      {
+        "id": "orthology-r1-blind-positive",
+        "evaluator_task": "blind_orthology_route",
+        "observed_skill": "public-orthology-retrieval-and-qc",
+        "observed_first_action": "validate-exact-id-and-species-contract-before-bounded-read",
+        "questions": 0,
+        "forbidden_selected": false
+      },
+      {
+        "id": "orthology-r1-blind-neighbor-sequence",
+        "evaluator_task": "blind_orthology_route",
+        "observed_skill": "sequence-similarity-and-homology-search",
+        "observed_first_action": "validate-local-query-and-pinned-proteome-release-and-hash",
+        "questions": 0,
+        "forbidden_selected": false
+      }
+    ]
+  },
+  "exact_candidate_bytes": {
+    "missing-data-and-sensitivity-analysis": "a976f2bfd56e857cc1259106dd4c46e4380ca10dfcf1e21d552e08583f3f09c6",
+    "protein-interface-contact-analysis": "bbd0fa54e98a939dd2cdeced55685a5c97964d882b56280ae10bdada280abe79",
+    "public-orthology-retrieval-and-qc": "3783c85516ddcd60fd44156e189d2c7b6fdf21d793cbfdbb9eca2484888f33d0"
+  },
+  "shared_regression": {
+    "status": "passed",
+    "installable_packages": 32,
+    "canonical_intake_cases": 43,
+    "research_holdout_cases": 6,
+    "source_clean": true,
+    "validator_version": "1.1.0",
+    "validator_self_test_checks": 23,
+    "connector_self_test_checks": 21,
+    "connector_self_test_network_performed": false,
+    "missing_data_self_test_checks": 10,
+    "protein_contact_self_test_checks": 16,
+    "diff_check": "passed"
+  },
+  "prior_live_canary": {
+    "record": "evals/research-wave-r1-bounded-smoke-v0.1.json",
+    "provider": "ensembl-rest",
+    "request_count": 1,
+    "http_status": 200,
+    "payload_bytes": 240,
+    "payload_sha256": "f6d1af78d67fc86d86a0f6e6baefdc0a1479648d7b0c53b8a0325c6bbe989ec9",
+    "scope": "historical bounded canary, not rerun by the retained offline suite and not a general availability claim"
+  },
+  "control_sha256": {
+    "validator": "07021f1b7033dc53d8c228c1ff8fe7184688a3821168841e009c6cf6211380be",
+    "registry": "e3c68548debbf57e2f54aa0110f5b67c4b7d6657dc1dc6ac75b4d3ce97418184",
+    "promotion_scope": "19fe3c816946d75aef5fdfcd7e80b5dd24183079b105e93e4427302141b3728a"
+  },
+  "review": {
+    "p0": 0,
+    "p1": 0,
+    "p2": 0,
+    "reviewer_task": "final_minimal_review",
+    "status": "passed",
+    "verdict": "Eligible for same-level preview-reviewed v0.7.0 atomic release preparation; current v0.6.0 research bytes must not be merged directly to main."
+  },
+  "missing_evidence": [
+    "final atomic v0.7.0 collection bytes and package digests",
+    "formal exact-package agent/model runtime evaluation",
+    "named domain-method or human-expert review",
+    "representative or large research datasets",
+    "scientific benchmarking and cross-study generalization",
+    "performance and scale evaluation",
+    "complete parser, platform, and provider failure matrices",
+    "orthology multi-ID aggregate-limit execution",
+    "baseline or source-repository superiority comparison"
+  ]
+}

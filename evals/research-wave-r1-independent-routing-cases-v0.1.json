@@ -1,0 +1,74 @@
+{
+  "schema_version": "0.1.0",
+  "evidence_kind": "deterministic-contract-fixture",
+  "assurance_note": "These six cases preserve the oracle used after their independent first execution. This file alone is not model-runtime evidence and must not be reported as evaluated assurance.",
+  "cases": [
+    {
+      "id": "missing-r1-blind-positive",
+      "prompt": "A small local trial.tsv uses blank cells as the only missing marker. For numeric score grouped by site, summarize missingness and complete-case means, then apply the prespecified support [10, 60] and offsets -3, 0, 3. Publish a new reports/score-sensitivity.json; do not fill individual rows or fit a model.",
+      "expected_skill": "missing-data-and-sensitivity-analysis",
+      "forbidden_skills": [
+        "statistical-analysis-and-multiple-testing"
+      ],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "missing-r1-blind-neighbor-multiplicity",
+      "prompt": "screen.tsv contains only tests that were actually computed; unavailable measurements have no row. The panel column already defines each complete hypothesis family. Apply Holm family-wise correction at alpha 0.01 and publish new results/holm.tsv and reports/holm.json; do not model absent outcomes.",
+      "expected_skill": "statistical-analysis-and-multiple-testing",
+      "forbidden_skills": [
+        "missing-data-and-sensitivity-analysis"
+      ],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "contacts-r1-blind-positive",
+      "prompt": "Using the single-model legacy file antibody.pdb, enumerate residue pairs for which any non-hydrogen atom in chain H lies within 6.0 angstrom of one in chain L. Record each minimum distance in a new reports/h-l-contacts.json and make no binding or affinity claim.",
+      "expected_skill": "protein-interface-contact-analysis",
+      "forbidden_skills": [
+        "protein-structure-retrieval-and-comparison"
+      ],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "contacts-r1-blind-adversarial-cif",
+      "prompt": "From local assembly.cif, retain alternate-location records and list atom contacts between asym IDs AA and B2 at 5 angstrom. If that exact input policy is unsupported, stop; do not convert the file or discard conformers.",
+      "expected_skill": null,
+      "forbidden_skills": [
+        "protein-interface-contact-analysis"
+      ],
+      "expected_action": "route-away-unsupported-format",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "orthology-r1-blind-positive",
+      "prompt": "For public mouse gene ENSMUSG00000017146, obtain Ensembl Compara assertions in danio_rerio and keep every target plus relation class, cardinality, confidence missingness, release context, and request provenance in a new artifact. Do not infer conserved function.",
+      "expected_skill": "public-orthology-retrieval-and-qc",
+      "forbidden_skills": [
+        "biological-database-record-retrieval-and-identifier-resolution",
+        "sequence-similarity-and-homology-search"
+      ],
+      "expected_action": "bounded-public-read",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "orthology-r1-blind-neighbor-sequence",
+      "prompt": "Use local query.faa against the pinned local zebrafish proteome recorded by release and SHA-256 in the run manifest to nominate sequence-similar homologues. No Ensembl gene ID is available, and this is not retrieval of a Compara assertion.",
+      "expected_skill": "sequence-similarity-and-homology-search",
+      "forbidden_skills": [
+        "public-orthology-retrieval-and-qc"
+      ],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    }
+  ]
+}

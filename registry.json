@@ -252,7 +252,7 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "8da79e20c7ecea371dc10b867bc4b079b2ff0bf62914540c832d31fea96dce7a",
+      "package_digest": "a976f2bfd56e857cc1259106dd4c46e4380ca10dfcf1e21d552e08583f3f09c6",
       "previous_version": null
     },
     {
@@ -326,7 +326,7 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "a74e438e831ab5f1c064ff4cb62d80dffe0d144d93fc534ea71a79358b0854c5",
+      "package_digest": "bbd0fa54e98a939dd2cdeced55685a5c97964d882b56280ae10bdada280abe79",
       "previous_version": null
     },
     {
@@ -382,7 +382,7 @@
       "external_services": [
         "ensembl-rest"
       ],
-      "package_digest": "cda0c98939f8829225af60c89568ec7b00e75a87136353684f588a11731954a4",
+      "package_digest": "3783c85516ddcd60fd44156e189d2c7b6fdf21d793cbfdbb9eca2484888f33d0",
       "previous_version": null
     },
     {

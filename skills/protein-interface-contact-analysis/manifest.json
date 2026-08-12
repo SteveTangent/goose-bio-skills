@@ -23,9 +23,10 @@
     "better_than_baseline_claim": false,
     "clinical_use": "prohibited",
     "unverified_boundaries": [
-      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "A first-run independent Wave R1 routing check covered one positive legacy-PDB prompt and one unsupported-mmCIF boundary prompt for this candidate; broader agent routing and interactive behavior have not been runtime-evaluated.",
       "Scientific benchmark performance and human-expert review have not been established.",
       "Representative deposited PDB structures and large interfaces have not been runtime-evaluated.",
+      "The retained offline fixture is deliberately small; it covers one exact-cutoff contact, one no-contact result, one malformed coordinate record, deterministic repeat output, and no-overwrite behavior, not generalization.",
       "Alternate conformers, multiple models, and mmCIF are outside the helper contract.",
       "Windows create-exclusive publication and symlink semantics have not been verified."
     ]
@@ -64,12 +65,13 @@
   "runtime_verification": {
     "mode": "not-performed",
     "status": "not-performed",
-    "reason": "Preview admission ran only the bundled deterministic helper self-test; agent/model runtime, representative deposited structures, scientific benchmarking, and expert review were not performed.",
+    "reason": "The bundled self-test and retained offline small-synthetic Wave R1 runner passed, and a first-run independent routing pair selected this candidate and routed the unsupported mmCIF request away as expected. These minimum-reliability diagnostics do not constitute formal exact-package agent runtime evaluation, representative-structure benchmarking, generalization evidence, or human-expert review.",
     "tool_versions": [],
     "unverified_boundaries": [
-      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "A first-run independent Wave R1 routing check covered one positive legacy-PDB prompt and one unsupported-mmCIF boundary prompt for this candidate; broader agent routing and interactive behavior have not been runtime-evaluated.",
       "Scientific benchmark performance and human-expert review have not been established.",
       "Representative deposited PDB structures and large interfaces have not been runtime-evaluated.",
+      "The retained offline fixture is deliberately small; it covers one exact-cutoff contact, one no-contact result, one malformed coordinate record, deterministic repeat output, and no-overwrite behavior, not generalization.",
       "Alternate conformers, multiple models, and mmCIF are outside the helper contract.",
       "Windows create-exclusive publication and symlink semantics have not been verified."
     ]

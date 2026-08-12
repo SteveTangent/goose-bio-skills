@@ -1,13 +1,18 @@
 # Research Skill promotion gates
 
-Every candidate remains on `research` until all applicable gates below pass.
-Passing these gates supports promotion review; it does not establish universal
-scientific validity or a better-than-baseline claim.
+Every candidate remains on `research` until the applicable minimum gates for
+the target release level pass. For the current target, that level is the same
+`preview + reviewed` Beta assurance used on `main`; it is not `evaluated`,
+`stable`, a universal scientific-validity claim, or a better-than-baseline
+claim.
 
 The [Wave R1 bounded smoke record](../evals/research-wave-r1-bounded-smoke-v0.1.json)
-captures a fast small-data diagnostic. It supports continued research work but
-does not close file-backed fixture, blind holdout, expert review, generalization,
-or formal-evaluation gates.
+records the initial small-data diagnostic. The
+[Wave R1 minimum-reliability record](../evals/research-wave-r1-minimal-reliability-v0.1.json)
+adds a retained offline replay (84/84 checks across the three candidates), the
+first execution of a six-case independent routing set (6/6 expected routes,
+zero forbidden selections, and zero unnecessary questions), and the prior
+single bounded orthology live canary. This is intentionally narrow evidence.
 
 ## Candidate record
 
@@ -18,35 +23,54 @@ or formal-evaluation gates.
 - every unavailable approval, benchmark, runtime path, or telemetry item listed
   as `missing evidence`
 
-## Evidence gates
+## Minimum evidence gates for `preview + reviewed`
 
-- positive, boundary, invalid-input, fail-closed, and near-neighbor fixtures
-- at least one blind routing holdout that was not used while authoring the Skill
+- positive, boundary, invalid-input, fail-closed, and near-neighbor coverage
+  proportionate to the narrow Beta contract
+- at least one independently executed positive/neighbor routing pair per
+  candidate, preserved after first execution as a visible regression fixture
 - deterministic offline self-test for every bundled script
-- exact file-backed fixture input and output hashes, with repeat runs identical
-- create-new publication, no overwrite, bounded inputs, and partial/failed work
+- retained small fixture inputs and expected outputs bound to exact hashes, with
+  repeat runs identical
+- create-new publication, no overwrite, bounded inputs, and invalid/failed work
   never reported as completed
-- tool, runtime, provider, version, and provenance closure appropriate to the job
+- tool, runtime, provider, version, and provenance boundaries recorded honestly
 
-For a networked candidate, also require an allowlisted read-only provider,
-request/page/byte/rate limits, redirect and secret rejection, an offline response
-fixture, failure cases such as rate limiting or truncation, and a successful
-bounded public canary before promotion.
+For a networked candidate, same-level Beta promotion also requires an
+allowlisted read-only provider, reviewed request/page/byte/rate bounds, redirect
+and secret rejection in the shared connector, a retained offline valid/empty/
+malformed response replay, and one successful bounded anonymous public canary.
 
 ## Trust and review gates
 
 - original implementation and source-clean/package validation pass
 - dependency, data, provider, license, copyright, attribution, and NOTICE review
-- scientific-contract, safety, trust, code, and named domain-method review
+- scientific-contract, safety, trust, and code review appropriate to the narrow
+  Beta claim
 - no open P0 or P1 findings; accepted P2 items remain explicit
 - existing routing, package, connector, and release checks do not regress
+
+## Stronger future evidence
+
+The following are valuable for later `evaluated` or `stable` promotion, but are
+not blockers for a same-level `preview + reviewed` Beta merge:
+
+- named external domain-method or human-expert review
+- large or representative datasets and cross-study generalization
+- a complete provider, platform, parser, and failure-mode matrix
+- formal exact-package agent-runtime evaluation and baseline comparison
+- claims of scientific performance, availability, or superiority
+
+Until those exist, manifests must keep runtime evaluation, scientific benchmark,
+and human-expert review as `not-performed`, retain explicit unverified
+boundaries, and keep `formal_pass=false` in evaluation evidence.
 
 ## Atomic promotion
 
 - exact package digest and matching registry entry are reviewed together
 - version, release state, assurance state, freshness, and rollback target agree
 - candidate evidence is bound to the exact bytes being promoted
-- promotion uses a reviewed pull request from `research` to `main`
+- promotion uses a reviewed change from `research` to `main`
 - without stronger exact-package evaluation and expert/generalization evidence,
   keep `preview + reviewed` and state `formal_pass=false`
 
@@ -56,10 +80,9 @@ is never rewritten.
 
 ## Wave R1 candidate-specific gates
 
-These are tracked as candidate evidence, not current pass claims. At initial
-implementation time, neither of the local candidates has a blind routing
-holdout or named domain-method review, and the network candidate also lacks its
-offline semantic response fixture and live canary.
+The status below is limited to the minimum same-level Beta checks. Each
+candidate still needs final exact-byte digest/registry binding and the final
+no-P0/P1 review before promotion.
 
 ### `missing-data-and-sensitivity-analysis`
 
@@ -67,32 +90,40 @@ offline semantic response fixture and live canary.
   optional declared grouping columns
 - report missingness and complete-case summaries without inferring MCAR, MAR,
   or MNAR from the observed pattern
-- require caller-supplied outcome bounds or a caller-supplied delta grid before
-  computing best/worst or tipping-style sensitivity results
-- reproduce exact results on normal, all-observed, partially missing, and
-  boundary fixtures; report all-missing overall or group strata as
-  `not-estimable-no-observed-values`, and reject nonnumeric outcomes, invalid
-  bounds, malformed tables, overwrite attempts, and unsupported requests for
-  imputation or general model fitting
-- receive a named statistical-method review before promotion
+- require caller-supplied outcome bounds and a caller-supplied delta grid before
+  computing bounded sensitivity scenarios
+- allow a present outcome column whose overall values or individual group values
+  are all missing, and report those summaries as
+  `not-estimable-no-observed-values`; reject a missing declared column, a table
+  with no data rows, malformed input, nonnumeric observed outcomes, invalid
+  bounds, overwrite attempts, and requests for imputation or general model
+  fitting
 
-Current gaps: blind routing holdout, representative boundary fixtures bound to
-exact hashes, and named statistical-method review.
+Minimum evidence recorded: the retained small replay covers partial missingness,
+an all-missing outcome column, nonnumeric input, deterministic output, and
+no-overwrite behavior; the independent positive/near-neighbor routing pair
+selected the expected Skills with no question. Named statistical-method review,
+representative study tables, broader boundary fixtures, and inferential models
+remain future `evaluated`/`stable` enhancements.
 
 ### `protein-interface-contact-analysis`
 
-- accept a bounded local PDB file, two explicit and distinct chain identifiers,
-  and a positive finite heavy-atom distance cutoff
+- accept a bounded local legacy PDB file, two explicit and distinct chain
+  identifiers, and a positive finite heavy-atom distance cutoff
 - return a deterministic residue-pair contact set with minimum atom distance and
   the exact parsing/cutoff policy; do not infer pockets, binding sites, buried
   surface area, affinity, function, docking, or molecular dynamics
-- reproduce exact contacts on positive, no-contact, cutoff-boundary, alternate
-  location, and repeated-run fixtures; reject malformed coordinates, missing or
-  identical chains, unsupported formats, invalid cutoffs, and overwrite attempts
-- receive a named structural-bioinformatics method review before promotion
+- reject malformed coordinates, missing or identical chains, unsupported
+  formats, invalid cutoffs, and overwrite attempts; route requests requiring
+  mmCIF or retained alternate conformers away from this helper
 
-Current gaps: blind routing holdout, representative deposited-structure
-fixture evidence, and named structural-bioinformatics method review.
+Minimum evidence recorded: the retained small replay covers one exact-cutoff
+contact, a no-contact result, malformed input, deterministic output, and
+no-overwrite behavior; the independent positive/unsupported-mmCIF routing pair
+selected or declined the Skill as expected with no question. Named
+structural-bioinformatics review, representative deposited structures, large
+interfaces, alternate conformers, and multiple-model coverage remain future
+`evaluated`/`stable` enhancements.
 
 ### `public-orthology-retrieval-and-qc`
 
@@ -103,17 +134,16 @@ fixture evidence, and named structural-bioinformatics method review.
   relationship type, cardinality, confidence fields, release context, request
   URL, response URL, bytes, and hashes without converting provider assertions
   into de novo orthology or functional-transfer claims
-- pass an offline response fixture, reordered/empty/malformed response cases,
-  wrong-species and non-gene identifier rejection, redirect/secret/rate-limit/
-  truncation fail-closed cases, and one bounded anonymous live canary
-- demonstrate at the package level that a batch of one to five IDs enforces the
-  aggregate five-request, 16 MiB accepted-response, and three-request-per-second
-  limits across the connector's individual single-ID calls
 - retain the shared connector's exact homology path, canonical species/ID,
-  query-policy, and output-safety gates; no Skill-local network bypass is permitted
-- receive a named comparative-genomics method review before promotion
+  query-policy, output-safety gates, five-request limit, 16 MiB accepted-response
+  limit, and three-request-per-second policy; no Skill-local network bypass is
+  permitted
 
-Current gaps: retained file-backed semantic fixtures, the full provider failure
-matrix, multi-ID aggregate-limit execution, blind routing holdout, and named
-comparative-genomics method review. One bounded anonymous live canary passed in
-the diagnostic smoke record; it is not a general availability claim.
+Minimum evidence recorded: the retained offline replay covers one exact request,
+one one-to-one response, one empty result, one malformed response, deterministic
+payload/provenance output, and no-overwrite behavior; the independent exact-ID/
+local-sequence-neighbor pair selected the expected Skills with no question; one
+bounded anonymous homo_sapiens-to-mus_musculus live canary passed. Named
+comparative-genomics review, end-to-end agent normalization, multi-ID aggregate-
+limit execution, reordered and multi-target payloads, the full provider failure
+matrix, and broad availability remain future `evaluated`/`stable` enhancements.

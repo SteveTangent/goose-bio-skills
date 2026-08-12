@@ -19,7 +19,7 @@ from urllib.parse import urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
-VALIDATOR_VERSION = "1.0.0"
+VALIDATOR_VERSION = "1.1.0"
 PUBLIC_PACKAGE_VERSION = "0.6.0"
 MANIFEST_SCHEMA_VERSION = "0.2.0"
 REGISTRY_SCHEMA_VERSION = "0.5.0"
@@ -201,6 +201,38 @@ CRITICAL_INTAKE_CASES = {
     ),
     "fcs-gating-analysis-routes-away": (
         None,
+        0,
+        None,
+    ),
+}
+RESEARCH_R1_HOLDOUT_ORACLES = {
+    "missing-r1-blind-positive": (
+        "missing-data-and-sensitivity-analysis",
+        0,
+        None,
+    ),
+    "missing-r1-blind-neighbor-multiplicity": (
+        "statistical-analysis-and-multiple-testing",
+        0,
+        None,
+    ),
+    "contacts-r1-blind-positive": (
+        "protein-interface-contact-analysis",
+        0,
+        None,
+    ),
+    "contacts-r1-blind-adversarial-cif": (
+        None,
+        0,
+        None,
+    ),
+    "orthology-r1-blind-positive": (
+        "public-orthology-retrieval-and-qc",
+        0,
+        None,
+    ),
+    "orthology-r1-blind-neighbor-sequence": (
+        "sequence-similarity-and-homology-search",
         0,
         None,
     ),
@@ -974,6 +1006,9 @@ def validate_intake_routing_fixture(
     fixture: object,
     manifests: dict[str, dict[str, object]],
     label: str,
+    *,
+    expected_count: int,
+    required_oracles: dict[str, tuple[str | None, int, str | None]],
 ) -> None:
     require(isinstance(fixture, dict), f"{label}: expected an object")
     if not isinstance(fixture, dict):
@@ -1059,8 +1094,8 @@ def validate_intake_routing_fixture(
                     f"{label}/{case_id}: first decision is absent from the Skill manifest",
                 )
 
-    require(len(cases) == 43, f"{label}: expected 43 canonical cases")
-    for case_id, expected in CRITICAL_INTAKE_CASES.items():
+    require(len(cases) == expected_count, f"{label}: expected {expected_count} cases")
+    for case_id, expected in required_oracles.items():
         case = by_id.get(case_id)
         require(case is not None, f"{label}: missing critical case {case_id}")
         if case is None:
@@ -1077,7 +1112,23 @@ def validate_intake_routing_cases(
     manifests: dict[str, dict[str, object]],
 ) -> None:
     fixture = load_json("evals/intake-routing-cases.json")
-    validate_intake_routing_fixture(fixture, manifests, "intake routing fixture")
+    validate_intake_routing_fixture(
+        fixture,
+        manifests,
+        "intake routing fixture",
+        expected_count=43,
+        required_oracles=CRITICAL_INTAKE_CASES,
+    )
+    research_holdout = load_json(
+        "evals/research-wave-r1-independent-routing-cases-v0.1.json"
+    )
+    validate_intake_routing_fixture(
+        research_holdout,
+        manifests,
+        "research Wave R1 independent routing fixture",
+        expected_count=6,
+        required_oracles=RESEARCH_R1_HOLDOUT_ORACLES,
+    )
 
 
 def validate_template() -> None:
@@ -2282,6 +2333,8 @@ def run_self_test() -> int:
                 intake_fixture,
                 intake_manifests,
                 "self-test intake fixture",
+                expected_count=43,
+                required_oracles=CRITICAL_INTAKE_CASES,
             )
         ),
         "self-test: valid intake routing fixture rejected",
@@ -2301,12 +2354,55 @@ def run_self_test() -> int:
                     invalid_intake_fixture,
                     intake_manifests,
                     "self-test invalid intake fixture",
+                    expected_count=43,
+                    required_oracles=CRITICAL_INTAKE_CASES,
                 )
             )
         ),
         "self-test: invalid intake routing oracle accepted",
     )
     checks.append("intake-routing-fixture-enforced")
+
+    research_holdout = json_loads_no_duplicates(
+        (ROOT / "evals/research-wave-r1-independent-routing-cases-v0.1.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    require(
+        not captured_errors(
+            lambda: validate_intake_routing_fixture(
+                research_holdout,
+                intake_manifests,
+                "self-test research Wave R1 holdout",
+                expected_count=6,
+                required_oracles=RESEARCH_R1_HOLDOUT_ORACLES,
+            )
+        ),
+        "self-test: valid research Wave R1 holdout rejected",
+    )
+    invalid_research_holdout = copy.deepcopy(research_holdout)
+    if isinstance(invalid_research_holdout, dict):
+        invalid_cases = invalid_research_holdout.get("cases")
+        if isinstance(invalid_cases, list):
+            for case in invalid_cases:
+                if isinstance(case, dict) and case.get("id") == "contacts-r1-blind-positive":
+                    case["expected_skill"] = "protein-structure-retrieval-and-comparison"
+                    break
+    require(
+        bool(
+            captured_errors(
+                lambda: validate_intake_routing_fixture(
+                    invalid_research_holdout,
+                    intake_manifests,
+                    "self-test invalid research Wave R1 holdout",
+                    expected_count=6,
+                    required_oracles=RESEARCH_R1_HOLDOUT_ORACLES,
+                )
+            )
+        ),
+        "self-test: invalid research Wave R1 holdout oracle accepted",
+    )
+    checks.append("research-wave-r1-routing-holdout-enforced")
 
     preview_disclaimer = "This preview is not scientifically validated."
     positive_claim = "This preview is scientifically validated."
