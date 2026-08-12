@@ -1,0 +1,131 @@
+{
+  "schema_version": "0.1.0",
+  "evidence_kind": "bounded-small-data-smoke",
+  "evaluated_at": "2026-08-12T10:07:02Z",
+  "branch": "research",
+  "base_commit": "fb8883766b47c6cee642b4d4d32bdd4cc64e8c7f",
+  "scope": {
+    "purpose": "Fast diagnostic evidence for deciding whether the three Wave R1 candidates merit further work.",
+    "small_data_only": true,
+    "temporary_fixtures_deleted": true,
+    "formal_pass": false,
+    "main_promotion_authorized": false,
+    "scientific_superiority_claimed": false
+  },
+  "aggregate": {
+    "status": "passed",
+    "p0": 0,
+    "p1": 0,
+    "candidate_count": 3,
+    "network_canaries": 1
+  },
+  "candidates": [
+    {
+      "name": "missing-data-and-sensitivity-analysis",
+      "package_digest": "8da79e20c7ecea371dc10b867bc4b079b2ff0bf62914540c832d31fea96dce7a",
+      "script_sha256": "d6b9815a414d27e9a6fca50ce312dbcdceec63affb649292c2c43721641f3033",
+      "status": "passed",
+      "checks": 41,
+      "coverage": [
+        "partial missingness",
+        "all-missing not-estimable result",
+        "invalid bounds",
+        "nonnumeric and non-finite outcomes",
+        "existing-output rejection",
+        "repeat-byte determinism",
+        "0600 output permissions"
+      ],
+      "fixture_sha256": {
+        "partially_missing_csv": "bba8227e2f6041f446d7d40abc6b1575856492deebd715f06bee970f9ec69f28",
+        "all_missing_csv": "9d5ad53156548e1996bf8e6a066fec56a7a435d96f1b4f02fdf54c43b4e78302",
+        "nonnumeric_csv": "41bd9e39e8694ac46d4ec90f6f52fd4416399a8226c6cdaa65e5dcb0e11289fd"
+      },
+      "output_sha256": {
+        "partial_run_1": "54b363462615c975fbbfd675e41f42dcedbe21664a6db261961f82df15d92eee",
+        "partial_run_2": "54b363462615c975fbbfd675e41f42dcedbe21664a6db261961f82df15d92eee",
+        "all_missing": "5e3f867ffb7f93f0e1e45955be7a03967113b5ccd80953f026e6629264ee1dc6"
+      }
+    },
+    {
+      "name": "protein-interface-contact-analysis",
+      "package_digest": "a74e438e831ab5f1c064ff4cb62d80dffe0d144d93fc534ea71a79358b0854c5",
+      "script_sha256": "19f5933935d1539ec13f9cd270fae3fe3c6428bcd9adb41b7ef23e2e72111c37",
+      "status": "passed",
+      "checks": 11,
+      "coverage": [
+        "one exact 5.000-angstrom contact",
+        "no contact below the boundary",
+        "invalid chain identifier",
+        "identical-chain rejection",
+        "existing-output rejection",
+        "repeat-byte determinism"
+      ],
+      "fixture_sha256": {
+        "two_chain_legacy_pdb": "99774723adafd6fedb72110a4bd7e1085fe33a0f987a4de4aa04cb4553c744bc"
+      },
+      "output_sha256": {
+        "contact_run_1": "3efd45a00b4d0e68a774c92dfff1ab9461aa85efdd1f5d2338d4cb9658ee6551",
+        "contact_run_2": "3efd45a00b4d0e68a774c92dfff1ab9461aa85efdd1f5d2338d4cb9658ee6551",
+        "no_contact": "68c84cc69e744c7865b5ea3d4c9922479ca3cb95c605ce2d5ccfb3a685518508"
+      }
+    },
+    {
+      "name": "public-orthology-retrieval-and-qc",
+      "package_digest": "cda0c98939f8829225af60c89568ec7b00e75a87136353684f588a11731954a4",
+      "connector_sha256": "6b92a9b9dfc68babd318b781d3297018d11704f50836a1b1735ad7b37d32b96d",
+      "status": "passed",
+      "offline_checks": {
+        "connector_self_test": 21,
+        "semantic_fixture_matrix": 3,
+        "valid_fixture_sha256": "fe67bb6db09f54a977b74e186f02574152bb31aaf79d932d9abc7151a5d5b5c3",
+        "empty_fixture_sha256": "eb088273ca6a96e8b3f2345237ac3dca405a0f6631be2cccba3301ca930482dc",
+        "malformed_fixture_sha256": "0bd8a16f9537e94126a87a7b5164d0ffe58769e833190d6c10eb0dc71c3d8f37",
+        "valid_classification": "completed",
+        "empty_classification": "no-ortholog-returned",
+        "malformed_classification": "invalid"
+      },
+      "live_canary": {
+        "provider": "ensembl-rest",
+        "method": "GET",
+        "request_count": 1,
+        "retries": 0,
+        "source_species": "homo_sapiens",
+        "source_id": "ENSG00000141510",
+        "target_species": "mus_musculus",
+        "target_id": "ENSMUSG00000059552",
+        "http_status": 200,
+        "payload_bytes": 240,
+        "payload_sha256": "f6d1af78d67fc86d86a0f6e6baefdc0a1479648d7b0c53b8a0325c6bbe989ec9",
+        "relationship_type": "ortholog_one2one",
+        "method_link_type": "ENSEMBL_ORTHOLOGUES",
+        "taxonomy_level": "Euarchontoglires",
+        "request_url_bytes_preserved": true,
+        "network_performed": true,
+        "paid_use_authorized": false,
+        "raw_payload_retained": false
+      }
+    }
+  ],
+  "shared_regression": {
+    "status": "passed",
+    "installable_packages": 32,
+    "intake_routing_cases": 43,
+    "source_clean": true,
+    "validator_self_test_checks": 22,
+    "connector_self_test_checks": 21,
+    "connector_self_test_network_performed": false,
+    "missing_data_self_test_checks": 10,
+    "protein_contact_self_test_checks": 16,
+    "diff_check": "passed"
+  },
+  "missing_evidence": [
+    "retained file-backed smoke fixtures",
+    "blind routing holdout",
+    "named domain-method reviews",
+    "orthology full provider failure matrix",
+    "orthology multi-ID aggregate limit execution",
+    "large-data or performance testing",
+    "scientific generalization",
+    "formal evaluation"
+  ]
+}

@@ -507,11 +507,7 @@ def redact_url(url: str) -> str:
     parsed = urlsplit(url)
     if sensitive_query_pairs(url):
         return urlunsplit((parsed.scheme, parsed.netloc, parsed.path, "redacted_sensitive_query=1", ""))
-    redacted = [
-        (key, "<redacted>" if is_sensitive_query_key(key) else value)
-        for key, value in parse_qsl(parsed.query, keep_blank_values=True)
-    ]
-    return urlunsplit((parsed.scheme, parsed.netloc, parsed.path, urlencode(redacted), ""))
+    return urlunsplit((parsed.scheme, parsed.netloc, parsed.path, parsed.query, ""))
 
 
 class ReviewedRedirectHandler(HTTPRedirectHandler):
@@ -966,6 +962,8 @@ def self_test(catalog: dict[str, object]) -> int:
         "&format=condensed&content-type=application/json"
     )
     validate_url("ensembl-rest", orthology_url, ensembl)
+    if redact_url(orthology_url) != orthology_url:
+        raise ConnectorError("safe request URL bytes changed during provenance redaction")
     orthology_args = argparse.Namespace(
         self_test=False,
         provider="ensembl-rest",

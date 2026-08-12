@@ -4,6 +4,11 @@ Every candidate remains on `research` until all applicable gates below pass.
 Passing these gates supports promotion review; it does not establish universal
 scientific validity or a better-than-baseline claim.
 
+The [Wave R1 bounded smoke record](../evals/research-wave-r1-bounded-smoke-v0.1.json)
+captures a fast small-data diagnostic. It supports continued research work but
+does not close file-backed fixture, blind holdout, expert review, generalization,
+or formal-evaluation gates.
+
 ## Candidate record
 
 - one recurring job, explicit inputs and output contract
@@ -108,6 +113,7 @@ fixture evidence, and named structural-bioinformatics method review.
   query-policy, and output-safety gates; no Skill-local network bypass is permitted
 - receive a named comparative-genomics method review before promotion
 
-Current gaps: offline semantic response fixture, provider failure matrix,
-bounded anonymous live canary, blind routing holdout, and named
-comparative-genomics method review.
+Current gaps: retained file-backed semantic fixtures, the full provider failure
+matrix, multi-ID aggregate-limit execution, blind routing holdout, and named
+comparative-genomics method review. One bounded anonymous live canary passed in
+the diagnostic smoke record; it is not a general availability claim.
