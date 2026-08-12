@@ -2,12 +2,12 @@
 
 Research-first bioinformatics skills for AI agents.
 
-Bio 02 Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The verified `main` Beta contains 32 packages. The `research` branch carries six additional Wave R2/R3 candidates for bounded small-data evaluation.
+Bio 02 Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The verified `main` Beta contains 32 packages. The `research` branch carries 12 additional Wave R2/R3/R4 candidates for bounded small-data evaluation.
 
 | Boundary | Packages | State | External services |
 | --- | ---: | --- | --- |
 | `main` Beta `0.7.0` | 32 | `preview + reviewed` | Bounded public read/download; anonymous-first |
-| `research` Waves R2/R3 | 6 candidates | Not part of the Beta until promoted | Narrow local paths; exact candidate gates apply |
+| `research` Waves R2/R3/R4 | 12 candidates | Not part of the Beta until promoted | Local/replay by default; one declared bounded NCBI read path |
 
 ## Why Bio 02 Skills
 
@@ -99,16 +99,16 @@ Align this tiny single-end short-DNA FASTQ to the exact local reference using th
 | --- | --- |
 | Data and workflow foundations | `bioinformatics-format-and-identifier-validation`<br>`scientific-file-preflight-and-resource-planning`<br>`biological-database-record-retrieval-and-identifier-resolution`<br>`taxonomy-name-and-taxid-resolution`<br>`public-sequencing-run-manifest-retrieval`<br>`environment-and-provenance-capture` |
 | Sequence, reads, genomes, and evolution | `sequence-io-and-transformation`<br>`sequence-similarity-and-homology-search`<br>`pairwise-and-multiple-sequence-alignment`<br>`phylogenetic-tree-io-and-qc` *(research candidate)*<br>`raw-read-quality-reporting`<br>`raw-read-trimming-and-filtering`<br>`read-alignment-selection-and-execution` *(research candidate)*<br>`alignment-file-operations`<br>`genomic-interval-operations`<br>`gff-gtf-gene-model-qc`<br>`public-orthology-retrieval-and-qc` |
-| Variant and cohort genomics | `vcf-normalization-qc-and-query` |
-| Bulk transcriptomics | `count-based-differential-expression` |
+| Variant and cohort genomics | `vcf-normalization-qc-and-query`<br>`human-variant-evidence-retrieval` *(research candidate)* |
+| Bulk transcriptomics | `count-based-differential-expression`<br>`bulk-rnaseq-gene-counting-from-alignment` *(research candidate)*<br>`junction-psi-and-delta-analysis` *(research candidate)* |
 | Single-cell analysis | `single-cell-object-io-and-qc`<br>`single-cell-core-analysis` |
 | Epigenomics *(research candidate)* | `chromatin-peak-set-qc` |
-| Microbiome and amplicon data *(research candidate)* | `amplicon-feature-table-and-taxonomy-qc` |
-| Proteomics, metabolomics, and cytometry | `proteomics-quantification-table-qc`<br>`protein-level-differential-abundance` *(research candidate)*<br>`untargeted-metabolomics-feature-table-qc` *(research candidate)*<br>`fcs-file-io-and-metadata-qc` |
+| Microbiome and amplicon data *(research candidate)* | `amplicon-feature-table-and-taxonomy-qc`<br>`amplicon-alpha-diversity-analysis` |
+| Proteomics, metabolomics, and cytometry | `proteomics-quantification-table-qc`<br>`protein-level-differential-abundance` *(research candidate)*<br>`untargeted-metabolomics-feature-table-qc` *(research candidate)*<br>`fcs-file-io-and-metadata-qc`<br>`flow-cytometry-compensation-application` *(research candidate)* |
 | Protein structure | `protein-structure-retrieval-and-comparison`<br>`protein-interface-contact-analysis` |
 | Cheminformatics | `molecule-standardization-and-descriptors`<br>`chemical-similarity-and-substructure-search` |
 | Functional interpretation | `over-representation-analysis`<br>`ranked-gene-set-enrichment` |
-| Study design and biostatistics | `experimental-design-power-and-batch-planning`<br>`statistical-analysis-and-multiple-testing`<br>`missing-data-and-sensitivity-analysis` |
+| Study design and biostatistics | `experimental-design-power-and-batch-planning`<br>`statistical-analysis-and-multiple-testing`<br>`missing-data-and-sensitivity-analysis`<br>`kaplan-meier-survival-analysis` *(research candidate)* |
 | Biomedical evidence | `biomedical-literature-and-public-study-search`<br>`evidence-synthesis-and-research-traceability` |
 
 See [docs/catalog.md](docs/catalog.md) for Domain, Cluster, risk, dependency, and runtime details. [`registry.json`](registry.json) is the versioned machine-readable index.
@@ -178,7 +178,7 @@ skills/<slug>/
 
 ## Current release boundary
 
-The 32-package `main` Beta is `preview + reviewed`. The six Wave R2/R3 packages on `research` passed their retained minimum-reliability gates. All six require a later atomic release before promotion, and every package states its remaining unverified boundaries in its manifest.
+The 32-package `main` Beta is `preview + reviewed`. All 12 Wave R2/R3/R4 packages on `research` passed their retained minimum-reliability gates. They require a later atomic release before promotion, and every package states its remaining unverified boundaries in its manifest.
 
 Use the collection for supervised research work. Verify inputs, tool availability, QC, and biological interpretation for each project. The collection does not claim universal scientific correctness, clinical authority, or superiority over another workflow.
 
@@ -192,16 +192,17 @@ python3 scripts/validate_skeleton.py --self-test
 python3 scripts/run_research_connector.py --self-test
 python3 scripts/run_wave_r2_minimal_reliability.py
 python3 scripts/run_wave_r3_minimal_reliability.py
+python3 scripts/run_wave_r4_minimal_reliability.py
 python3 skills/scientific-file-preflight-and-resource-planning/scripts/preflight_files.py --self-test
 python3 skills/statistical-analysis-and-multiple-testing/scripts/adjust_pvalues.py --self-test
 python3 skills/gff-gtf-gene-model-qc/scripts/check_gene_models.py --self-test
 ```
 
-The skeleton gate also validates the 62 canonical deterministic intake-routing cases in
+The skeleton gate also validates the canonical deterministic intake-routing cases in
 [`evals/intake-routing-cases.json`](evals/intake-routing-cases.json). Those
 fixtures test routing and first-question contracts; they are not a claim of
-model-runtime or scientific evaluation. Six additional Wave R1 routing cases
-and six Wave R3 cases remain as visible regressions after their first
+model-runtime or scientific evaluation. Six additional Wave R1 cases, six Wave
+R3 cases, and 12 Wave R4 cases remain as visible regressions after their first
 independent execution.
 
 ## License

@@ -9,8 +9,8 @@
     "purpose": "Replay valid, invalid, deterministic, create-new, and package-binding checks for the three Wave R2 candidates."
   },
   "amplicon_qc": {
-    "package_digest": "7a6b5f1523a634c31f34f004aa782609aa71840aabf93b9865ce9fc580b148f3",
-    "self_test_checks": 19,
+    "package_digest": "4f5b4e33cd202b89216d49f3420c008e413c42ae3671e23db1d36bea5cc69926",
+    "self_test_checks": 21,
     "arguments": {
       "metadata_sample_column": "sample_id",
       "negative_control_column": "sample_type",
@@ -47,8 +47,8 @@
     }
   },
   "peak_qc": {
-    "package_digest": "26ab7ae31161ac4e5d364c9212425adaaf04ea0df0929fa00c4642ab8d7a97c2",
-    "self_test_checks": 24,
+    "package_digest": "e92780189c353ab9227e5208b75af8356e67fe8b8a8cacd8a42e6d2da8a5aa48",
+    "self_test_checks": 27,
     "arguments": {
       "contig_build": "GRCh38-test",
       "peak_formats": [
@@ -97,8 +97,8 @@
     }
   },
   "protein_da": {
-    "package_digest": "c6ffed17058b060c6fbb531abea074ae91e2b3a1f50e114572fcb94227f09441",
-    "self_test_checks": 16,
+    "package_digest": "7e92fc70d45fd126030a3efc423c473d7983a1d1d75835cc0f207115572d4614",
+    "self_test_checks": 23,
     "arguments": {
       "protein_id_column": "protein_id",
       "sample_id_column": "sample_id",

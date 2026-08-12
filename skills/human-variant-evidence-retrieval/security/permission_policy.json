@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "reviewed_at": "2026-08-13",
+  "capabilities": {
+    "file_write": {
+      "decision": "approved",
+      "reviewer": "project-owner",
+      "scope": "During normal execution, only scripts/normalize_clinvar_vcv.py may prepare one mode-0600 same-directory temporary file, link it create-new to the user-specified JSON report, and remove the temporary name. It may not replace a path, mutate an input, create directories, use the network, or start a subprocess. With --self-test only, it may create and clean one owned system-temporary fixture directory.",
+      "reason": "The bounded helper publishes one provenance-bound normalization report through temporary-first create-new publication with rollback; replacement remains forbidden.",
+      "expires_at": "2026-11-30",
+      "evidence": [
+        "SKILL.md",
+        "scripts/normalize_clinvar_vcv.py"
+      ],
+      "target_enforcement": {
+        "openai": "Allow only the explicit new local JSON report; remote inline execution is forbidden.",
+        "claude": "Allow only the explicit new local JSON report; remote inline execution is forbidden.",
+        "generic": "Run locally and allow only the caller-approved create-new JSON report.",
+        "vscode": "Workspace trust plus explicit write approval is required for the new report path."
+      }
+    }
+  }
+}

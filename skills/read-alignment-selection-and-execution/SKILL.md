@@ -1,6 +1,6 @@
 ---
 name: read-alignment-selection-and-execution
-description: "Use to align one tiny local plain-FASTQ file of single-end short genomic DNA reads to one exact local plain-FASTA reference with an explicitly supplied, digest-pinned minimap2 2.31-r1302 executable, producing a create-new SAM and provenance report. Exclude QC, trimming, paired-end or interleaved reads, RNA/splice or long-read alignment, reference choice, sorting, indexing, BAM/CRAM operations, variant calling, quantification, batches, and overwrites."
+description: "Use to align one tiny local plain-FASTQ file of single-end short genomic DNA reads to one exact local plain-FASTA reference with an explicitly supplied minimap2 2.31-r1302 executable, producing a create-new SAM and provenance report with executable fingerprinting. Exclude QC, trimming, paired-end or interleaved reads, RNA/splice or long-read alignment, reference choice, sorting, indexing, BAM/CRAM operations, variant calling, quantification, batches, and overwrites."
 license: Apache-2.0
 metadata:
   version: "0.7.0"
@@ -8,9 +8,10 @@ metadata:
 
 # Read Alignment Selection and Execution
 
-`Preview + reviewed`; the bounded fake-adapter self-test passed. Real minimap2
-execution, agent runtime, scientific benchmarking, representative-data testing,
-and expert review were not performed.
+`Preview + reviewed`; the bounded fake-adapter self-test and one synthetic
+macOS ARM64 canary with real minimap2 2.31-r1302 passed. Formal agent runtime
+evaluation, scientific benchmarking, representative-data testing, and expert
+review were not performed.
 
 ## Owns
 
@@ -20,10 +21,11 @@ reference or another alignment strategy.
 
 ## Inputs and intake
 
-Require one plain local FASTA, one plain local FASTQ, a new SAM leaf name, a new
-JSON-report leaf name, and an absolute non-symlink minimap2 executable plus its
-expected SHA-256. All data paths must remain under the current working directory
-without symlink components.
+Require one explicit readable plain-FASTA path, one explicit readable plain-FASTQ
+path, a new SAM leaf name, a new JSON-report leaf name, and one explicit local
+minimap2 executable path. Input and executable paths may be relative, absolute,
+outside the current directory, or ordinary symlinks; the executor resolves and
+pins their final regular targets. Outputs remain under the current directory.
 
 Inspect safe facts first. Ask one unresolved question with a recommendation,
 then wait:
@@ -40,7 +42,6 @@ subprocess, private temporary work, and the two requested create-new outputs.
 python3 scripts/run_short_dna_alignment.py \
   --reference reference.fa --reads reads.fastq \
   --minimap2 /absolute/path/to/minimap2 \
-  --minimap2-sha256 EXPECTED_64_HEX_DIGEST \
   --output-sam aligned.sam --output-report aligned.provenance.json \
   --declared-single-end-short-genomic-dna
 ```
@@ -49,10 +50,10 @@ Install minimap2 separately; this package never downloads or installs it. The
 Python 3.10+ executor accepts one bounded uncompressed FASTA and FASTQ, copies
 their validated bytes into private work, and invokes only minimap2 2.31-r1302
 with fixed arguments, one thread, a fixed seed, no shell, and a clean
-environment. The caller-supplied executable digest is an operator approval
-boundary and must come from an independently reviewed source. Missing or
-incompatible tools fail closed. Processing order is declaration, executable
-binding, then input validation and execution.
+environment. It computes and records the executable SHA-256 automatically. If
+an independently obtained expected digest is available, add
+`--minimap2-sha256 EXPECTED_64_HEX_DIGEST` as a strict replay gate. Missing,
+changed, incompatible, or expected-digest-mismatched tools fail closed.
 
 ## Output contract
 
@@ -70,7 +71,7 @@ exactly one coherent primary record, and both new artifacts are published.
 
 ## Guardrails
 
-- Never install, download, use the network, mutate inputs, follow symlinks, escape the current directory, overwrite, invoke a shell, or accept caller flags.
+- Never install, download, use the network, mutate inputs, overwrite, invoke a shell, or accept caller flags; never publish outside the current directory or through a symlinked output parent.
 - Never infer a reference, assay, pairing state, orientation, or biological quality from alignment counts.
 - Exclude QC/trimming, paired-end/interleaved input, RNA/splice and long reads, multi-reference selection, sorting/indexing, BAM/CRAM operations, variant calling, quantification, and batches.
 - Treat mapped fraction as descriptive execution evidence, not assay validity, absence of contamination, or clinical evidence.

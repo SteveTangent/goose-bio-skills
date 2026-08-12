@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "reviewed_at": "2026-08-13",
+  "capabilities": {
+    "file_write": {
+      "decision": "approved",
+      "reviewer": "project-owner",
+      "scope": "Only scripts/apply_compensation.py may create the two explicit new local outputs. It may read the two explicit local inputs, but may not replace a path, mutate inputs, create directories, use the network, or start a subprocess.",
+      "reason": "The bounded helper publishes compensated events and their provenance; create-exclusive writes prevent replacement.",
+      "expires_at": "2026-11-30",
+      "evidence": [
+        "SKILL.md",
+        "scripts/apply_compensation.py"
+      ],
+      "target_enforcement": {
+        "openai": "Allow only the two caller-approved create-new local outputs; remote inline execution is forbidden.",
+        "claude": "Allow only the two caller-approved create-new local outputs; remote inline execution is forbidden.",
+        "generic": "Run locally and allow only the explicit compensated TSV and JSON report.",
+        "vscode": "Workspace trust plus explicit write approval is required for both output paths."
+      }
+    }
+  }
+}

@@ -231,9 +231,9 @@ def process(
     p_column: str,
     family_column: str | None,
     method: str,
-    alpha: float,
+    alpha: float | None,
 ) -> tuple[str, dict[str, Any]]:
-    if not math.isfinite(alpha) or not 0.0 < alpha < 1.0:
+    if alpha is not None and (not math.isfinite(alpha) or not 0.0 < alpha < 1.0):
         raise InputError([_issue("invalid-alpha", field="alpha", value=str(alpha))])
     fields, rows, p_values, families = parse_table(
         text,
@@ -250,7 +250,9 @@ def process(
 
     role_sources = {id_column, p_column} | ({family_column} if family_column else set())
     other_fields = [field for field in fields if field not in role_sources]
-    output_fields = ["record_id", "p_value", "p_adjusted", "decision"]
+    output_fields = ["record_id", "p_value", "p_adjusted"]
+    if alpha is not None:
+        output_fields.append("decision")
     if family_column:
         output_fields.append("family_id")
     output_fields.extend(other_fields)
@@ -259,21 +261,23 @@ def process(
                             delimiter=delimiter, lineterminator="\n")
     writer.writeheader()
     for row, value in zip(rows, all_adjusted, strict=True):
-        rendered_row = {
+        rendered_row: dict[str, str] = {
             "record_id": row[id_column],
             "p_value": row[p_column],
             "p_adjusted": repr(value),
-            "decision": "rejected" if value <= alpha else "not-rejected",
         }
+        if alpha is not None:
+            rendered_row["decision"] = "rejected" if value <= alpha else "not-rejected"
         if family_column:
             rendered_row["family_id"] = row[family_column]
         rendered_row.update({field: row[field] for field in other_fields})
         writer.writerow(rendered_row)
     summary = {
-        "status": "success",
+        "status": "completed",
         "analysis_performed": True,
         "method": method,
         "alpha": alpha,
+        "decision_column_included": alpha is not None,
         "records": len(rows),
         "families": len(families),
     }
@@ -327,6 +331,14 @@ def _unlink_owned(path: Path, identity: tuple[int, int]) -> bool:
     return True
 
 
+def _is_owned(path: Path, identity: tuple[int, int]) -> bool:
+    try:
+        current = path.lstat()
+    except FileNotFoundError:
+        return False
+    return (current.st_dev, current.st_ino) == identity
+
+
 def _fsync_directory(path: Path) -> None:
     directory_fd = os.open(path, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
     try:
@@ -335,29 +347,65 @@ def _fsync_directory(path: Path) -> None:
         os.close(directory_fd)
 
 
+def _rollback_owned(directory: Path, identity: tuple[int, int], paths: tuple[Path, ...]) -> None:
+    failures: list[str] = []
+    for path in paths:
+        try:
+            if not _unlink_owned(path, identity):
+                failures.append(f"{path.name}:identity-mismatch")
+        except OSError as exc:
+            failures.append(f"{path.name}:{exc.__class__.__name__}")
+    try:
+        _fsync_directory(directory)
+    except OSError as exc:
+        failures.append(f"directory:{exc.__class__.__name__}")
+    if failures:
+        raise OSError("publication rollback failed: " + ", ".join(failures))
+
+
+def _write_all(descriptor: int, payload: bytes) -> None:
+    offset = 0
+    while offset < len(payload):
+        written = os.write(descriptor, payload[offset:])
+        if written <= 0:
+            raise OSError("output write made no progress")
+        offset += written
+
+
 def write_new(path: Path, text: str, *, root: Path | None = None) -> Path:
     target = _safe_output_target(path, root)
+    payload = text.encode("utf-8")
     fd, temporary_name = tempfile.mkstemp(prefix=f".{target.name}.tmp-", dir=target.parent)
     temporary = Path(temporary_name)
     temporary_identity = os.fstat(fd)
     owned_inode = (temporary_identity.st_dev, temporary_identity.st_ino)
     published = False
+    descriptor = fd
     try:
-        with os.fdopen(fd, "w", encoding="utf-8", newline="") as handle:
-            os.fchmod(handle.fileno(), 0o600)
-            handle.write(text)
-            handle.flush()
-            os.fsync(handle.fileno())
+        os.fchmod(descriptor, 0o600)
+        _write_all(descriptor, payload)
+        os.fsync(descriptor)
+        try:
+            os.close(descriptor)
+        finally:
+            descriptor = -1
         os.link(temporary, target)
         published = True
-        _fsync_directory(target.parent)
+        if not _is_owned(target, owned_inode):
+            raise OSError("published output identity differs from staged data")
         if not _unlink_owned(temporary, owned_inode):
             raise OSError("temporary output identity changed before cleanup")
         _fsync_directory(target.parent)
-    except BaseException:
-        if published:
-            _unlink_owned(target, owned_inode)
-        _unlink_owned(temporary, owned_inode)
+        if not _is_owned(target, owned_inode):
+            raise OSError("published output identity changed before completion")
+    except BaseException as original:
+        if descriptor >= 0:
+            os.close(descriptor)
+        paths = (target, temporary) if published else (temporary,)
+        try:
+            _rollback_owned(target.parent, owned_inode, paths)
+        except OSError as rollback_error:
+            raise rollback_error from original
         raise
     return target
 
@@ -374,6 +422,21 @@ def self_test() -> None:
         raise RuntimeError("Holm self-test decisions differ")
     if summary["records"] != 4 or summary["families"] != 1:
         raise RuntimeError("Holm self-test summary differs")
+    if summary["status"] != "completed" or not summary["decision_column_included"]:
+        raise RuntimeError("completed status or decision-column summary differs")
+
+    adjusted_only, adjusted_summary = process(
+        holm_text,
+        delimiter="\t",
+        id_column="record_id",
+        p_column="p_value",
+        family_column=None,
+        method="holm",
+        alpha=None,
+    )
+    adjusted_rows = list(csv.DictReader(io.StringIO(adjusted_only), delimiter="\t"))
+    if "decision" in adjusted_rows[0] or adjusted_summary["alpha"] is not None or adjusted_summary["decision_column_included"]:
+        raise RuntimeError("adjustment-only mode unexpectedly emitted decisions")
 
     grouped = "record_id,family_id,p_value\nA,F1,0.01\nB,F1,0.04\nC,F2,0.01\nD,F2,0.04\n\n"
     rendered, _ = process(grouped, delimiter=",", id_column="record_id", p_column="p_value",
@@ -474,7 +537,55 @@ def self_test() -> None:
         if list(test_root.glob(f".{output.name}.tmp-*")):
             raise RuntimeError("owned temporary output was not cleaned")
 
-    print(json.dumps({"status": "pass", "version": VERSION, "checks": 9}, sort_keys=True))
+        zero_output = test_root / "zero-write.tsv"
+        real_write = os.write
+        os.write = lambda _descriptor, _payload: 0
+        try:
+            try:
+                write_new(zero_output, "owned\n", root=test_root)
+            except OSError:
+                pass
+            else:
+                raise AssertionError("zero-byte output write did not fail")
+        finally:
+            os.write = real_write
+        if zero_output.exists() or list(test_root.glob(f".{zero_output.name}.tmp-*")):
+            raise RuntimeError("zero-byte output write left publication artifacts")
+
+        final_race = test_root / "final-race.tsv"
+        real_unlink = os.unlink
+        final_replaced = False
+
+        def replace_final_during_cleanup(path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+                                         *args: Any, **kwargs: Any) -> None:
+            nonlocal final_replaced
+            if not final_replaced and Path(path).name.startswith(f".{final_race.name}.tmp-"):
+                final_replaced = True
+                real_unlink(final_race)
+                competitor = os.open(final_race, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+                try:
+                    _write_all(competitor, b"competitor\n")
+                    os.fsync(competitor)
+                finally:
+                    os.close(competitor)
+            real_unlink(path, *args, **kwargs)
+
+        os.unlink = replace_final_during_cleanup
+        try:
+            try:
+                write_new(final_race, "owned\n", root=test_root)
+            except OSError:
+                pass
+            else:
+                raise AssertionError("final-inode replacement was reported as success")
+        finally:
+            os.unlink = real_unlink
+        if final_race.read_bytes() != b"competitor\n":
+            raise RuntimeError("rollback removed a competing final output")
+        if list(test_root.glob(f".{final_race.name}.tmp-*")):
+            raise RuntimeError("final-inode race left an owned temporary output")
+
+    print(json.dumps({"status": "pass", "version": VERSION, "checks": 12}, sort_keys=True))
 
 
 def parser() -> argparse.ArgumentParser:
@@ -498,11 +609,11 @@ def main(argv: list[str] | None = None) -> int:
     if args.self_test:
         self_test()
         return 0
-    missing = [name for name in ("input", "output", "validation_output", "method", "alpha")
+    missing = [name for name in ("input", "output", "method")
                if getattr(args, name) is None]
     if missing:
         parser().error("required for execution: " + ", ".join(f"--{name}" for name in missing))
-    if os.path.abspath(args.output) == os.path.abspath(args.validation_output):
+    if args.validation_output is not None and os.path.abspath(args.output) == os.path.abspath(args.validation_output):
         parser().error("--output and --validation-output must be different paths")
     try:
         text = read_input(args.input)
@@ -523,17 +634,18 @@ def main(argv: list[str] | None = None) -> int:
     except InputError as exc:
         report = {"status": "invalid-input", "analysis_performed": False,
                   "reason_code": "invalid-input", "issues": exc.issues}
-        try:
-            write_new(args.validation_output, json.dumps(report, sort_keys=True) + "\n")
-        except (OSError, UnicodeError) as write_exc:
-            print(json.dumps({"status": "error", "analysis_performed": False,
-                              "reason_code": "validation-output-error", "error": str(write_exc)},
-                             sort_keys=True), file=sys.stderr)
-            return 3
-        print(json.dumps(report, sort_keys=True))
+        if args.validation_output is not None:
+            try:
+                write_new(args.validation_output, json.dumps(report, sort_keys=True) + "\n")
+            except (OSError, UnicodeError) as write_exc:
+                print(json.dumps({"status": "io-error", "analysis_performed": False,
+                                  "reason_code": "validation-output-error", "error": str(write_exc)},
+                                 sort_keys=True), file=sys.stderr)
+                return 3
+        print(json.dumps(report, sort_keys=True), file=sys.stderr)
         return 2
     except (OSError, UnicodeError) as exc:
-        print(json.dumps({"status": "error", "analysis_performed": False,
+        print(json.dumps({"status": "io-error", "analysis_performed": False,
                           "reason_code": "io-error", "error": str(exc)}, sort_keys=True), file=sys.stderr)
         return 3
 

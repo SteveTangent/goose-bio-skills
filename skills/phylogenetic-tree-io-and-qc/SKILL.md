@@ -54,8 +54,9 @@ The deterministic create-new JSON report binds the input fingerprint to tip,
 internal-node, depth, unary-node, bifurcation, polytomy, branch-length, and
 internal-label summaries. Numeric internal labels are reported descriptively
 without assuming that they encode support or inferring their meaning. Optional comparison
-records only an exact matched tip-set result; mismatch fails closed and creates
-no report.
+records either an exact match or a `tip-set-mismatch` diagnostic with the
+missing and extra labels. A mismatch is a QC finding, so it still creates the
+requested report; malformed or unsafe inputs do not.
 
 Read [the exact Newick and runtime contract](references/newick-contract.md).
 

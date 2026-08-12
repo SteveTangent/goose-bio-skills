@@ -1,6 +1,6 @@
 {
   "schema_version": "0.5.0",
-  "updated_at": "2026-08-12",
+  "updated_at": "2026-08-13",
   "policy": "installable-packages-only",
   "lifecycle_axes": {
     "release_stage": [
@@ -37,6 +37,23 @@
     },
     {
       "manifest_schema_version": "0.2.0",
+      "name": "amplicon-alpha-diversity-analysis",
+      "version": "0.7.0",
+      "path": "skills/amplicon-alpha-diversity-analysis",
+      "domain_id": "D07",
+      "cluster_id": "C20",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "a3204d52d190936b168c8ac8b46552329532ff56da7ac84000f686371555e34d",
+      "previous_version": null
+    },
+    {
+      "manifest_schema_version": "0.2.0",
       "name": "amplicon-feature-table-and-taxonomy-qc",
       "version": "0.7.0",
       "path": "skills/amplicon-feature-table-and-taxonomy-qc",
@@ -49,7 +66,7 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "7a6b5f1523a634c31f34f004aa782609aa71840aabf93b9865ce9fc580b148f3",
+      "package_digest": "4f5b4e33cd202b89216d49f3420c008e413c42ae3671e23db1d36bea5cc69926",
       "previous_version": null
     },
     {
@@ -116,6 +133,23 @@
     },
     {
       "manifest_schema_version": "0.2.0",
+      "name": "bulk-rnaseq-gene-counting-from-alignment",
+      "version": "0.7.0",
+      "path": "skills/bulk-rnaseq-gene-counting-from-alignment",
+      "domain_id": "D04",
+      "cluster_id": "C12",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "73f87e17c0f69d46103b33ebff489d1c083f19f720a079e78b88fbfb46b9f4ae",
+      "previous_version": null
+    },
+    {
+      "manifest_schema_version": "0.2.0",
       "name": "chemical-similarity-and-substructure-search",
       "version": "0.7.0",
       "path": "skills/chemical-similarity-and-substructure-search",
@@ -148,7 +182,7 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "26ab7ae31161ac4e5d364c9212425adaaf04ea0df0929fa00c4642ab8d7a97c2",
+      "package_digest": "e92780189c353ab9227e5208b75af8356e67fe8b8a8cacd8a42e6d2da8a5aa48",
       "previous_version": null
     },
     {
@@ -240,6 +274,23 @@
     },
     {
       "manifest_schema_version": "0.2.0",
+      "name": "flow-cytometry-compensation-application",
+      "version": "0.7.0",
+      "path": "skills/flow-cytometry-compensation-application",
+      "domain_id": "D08",
+      "cluster_id": "C24",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "1362af8187200ec2df84494ef977ad575f40f463e44924a1363931aa77452b13",
+      "previous_version": null
+    },
+    {
+      "manifest_schema_version": "0.2.0",
       "name": "genomic-interval-operations",
       "version": "0.7.0",
       "path": "skills/genomic-interval-operations",
@@ -269,8 +320,61 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "0ed14ae158d66490c031ce949c33fb4281d86671c98c356e45e59a2692716fac",
+      "package_digest": "9825f7893045b77a55f6f33d2dc241b2646f8b65c24b682e6c1d6baa987171ef",
       "previous_version": "0.6.0"
+    },
+    {
+      "manifest_schema_version": "0.2.0",
+      "name": "human-variant-evidence-retrieval",
+      "version": "0.7.0",
+      "path": "skills/human-variant-evidence-retrieval",
+      "domain_id": "D13",
+      "cluster_id": "C38",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "optional",
+      "external_services": [
+        "ncbi-eutils"
+      ],
+      "package_digest": "aab31b1635999f9e6fa62277fb50c2863ec06275259588d01c1f51b947424af4",
+      "previous_version": null
+    },
+    {
+      "manifest_schema_version": "0.2.0",
+      "name": "junction-psi-and-delta-analysis",
+      "version": "0.7.0",
+      "path": "skills/junction-psi-and-delta-analysis",
+      "domain_id": "D04",
+      "cluster_id": "C13",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "a6acdd4bbdb45c2e129fe374f42361d2b7686bab1b34dafd1193b676c2ae0a67",
+      "previous_version": null
+    },
+    {
+      "manifest_schema_version": "0.2.0",
+      "name": "kaplan-meier-survival-analysis",
+      "version": "0.7.0",
+      "path": "skills/kaplan-meier-survival-analysis",
+      "domain_id": "D12",
+      "cluster_id": "C36",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "8d5e13de0fad5db3151455c473c01b377778c739879ecbd088db017893bc9a9a",
+      "previous_version": null
     },
     {
       "manifest_schema_version": "0.2.0",
@@ -286,7 +390,7 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "084408ff6e86cb92974ae15a75590e3ce66e195d7821ecc3b4b3019060bdb537",
+      "package_digest": "27314d39519fe77c725366ee12e6749275edc84751eb0141dbb930007c077f28",
       "previous_version": null
     },
     {
@@ -360,7 +464,7 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "c25931fcad517c4bc51c15ec979d28d3135e5e9dd75afcc78caf8f4d7e97a558",
+      "package_digest": "e86bba28bd0b78a867ff4effaa4b284b9080c9e84d0ac2c9df56813658e9b972",
       "previous_version": null
     },
     {
@@ -377,7 +481,7 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "04d38bc2de6954a34f57585b8b815c20149e7d86d7ee251fb3029f02fb9ba7ea",
+      "package_digest": "9fd95fa1711edf3758628edf7afae280d7002da7becb8d585c88cdf2fa8f53db",
       "previous_version": null
     },
     {
@@ -394,7 +498,7 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "c6ffed17058b060c6fbb531abea074ae91e2b3a1f50e114572fcb94227f09441",
+      "package_digest": "7e92fc70d45fd126030a3efc423c473d7983a1d1d75835cc0f207115572d4614",
       "previous_version": null
     },
     {
@@ -539,7 +643,7 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "98c2d35e1d530ca7963057a49325ab49a6e1c68089953d9557b3f5a5a3b22409",
+      "package_digest": "fff008f1bc808fba69529a218cf8c3b75876e83335215924837ca3964b7affe1",
       "previous_version": null
     },
     {
@@ -556,7 +660,7 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "25f918965863fc32c4609ab67a8e7c604873b6925cbee81abde92ecc3174043b",
+      "package_digest": "5666ecba6567ea4dd3e006191a9085bd8d2e070bd29a6ff458d555ac78bfbd83",
       "previous_version": "0.6.0"
     },
     {
@@ -643,7 +747,7 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "a5dd9e51ec19a4f0f2bae6301a487308bd7fff6a2d4e57fe20a5e7441a7a798d",
+      "package_digest": "0327df051aba22b9454894921f46eaffae69bc22adfb26e763fecadac006a91d",
       "previous_version": "0.6.0"
     },
     {
@@ -679,7 +783,7 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "941e56aa5eb8caa6513c2db8eeb78bfc4c37f86be010147d3d76242ce0cde464",
+      "package_digest": "5097b0648501c9cb15a37d4fc73263c57be0e05d9d03f8ed0871d3c94c7b9c90",
       "previous_version": null
     },
     {

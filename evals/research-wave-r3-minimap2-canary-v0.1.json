@@ -1,0 +1,127 @@
+{
+  "schema_version": "0.1.0",
+  "record_version": "0.1.0",
+  "evidence_kind": "bounded-real-tool-synthetic-canary",
+  "recorded_at": "2026-08-13",
+  "canary_completed_at_utc": "2026-08-12T18:17:43Z",
+  "branch": "research",
+  "package_binding": {
+    "name": "read-alignment-selection-and-execution",
+    "version": "0.7.0",
+    "package_digest": "fff008f1bc808fba69529a218cf8c3b75876e83335215924837ca3964b7affe1",
+    "script_sha256": "538d6b90c99a31b02b8ef9489c7a37616089f66de76f417582e94775fc7ed84b"
+  },
+  "scope": {
+    "status": "pass",
+    "formal_pass": false,
+    "small_synthetic_data_only": true,
+    "exact_executor_used": true,
+    "real_minimap2_used": true,
+    "alignment_runtime_network_performed": false,
+    "formal_agent_runtime_evaluation": false,
+    "scientific_benchmark": false,
+    "representative_biological_data": false,
+    "human_expert_review": false,
+    "assurance_change_authorized": false,
+    "claim": "One synthetic macOS ARM64 canary verified the current executor's ordinary symlink-resolved input and executable paths, automatic executable fingerprinting, optional strict digest gate, deterministic publication, and no-overwrite behavior."
+  },
+  "source_and_tool": {
+    "source_repository": "lh3/minimap2",
+    "source_tag": "v2.31",
+    "source_commit": "3c28777e7e2dcc90f825de1b9f17a89cca7d4452",
+    "source_retrieval_network_performed": true,
+    "worktree_clean_after_build": true,
+    "build_command": [
+      "make",
+      "-j4",
+      "aarch64=1"
+    ],
+    "operating_system": "Darwin",
+    "architecture": "arm64",
+    "reported_version": "2.31-r1302",
+    "binary_sha256": "9d313963270dedea3cfef007bd34f4aec579782fce797eaaa88a85962468deda",
+    "binary_sha256_scope": "local-build-artifact"
+  },
+  "inputs": {
+    "reference": {
+      "records": 1,
+      "bases": 600,
+      "sha256": "e174db77e3db6ded78e72775484dfb573d448e5c761c7a225e08cc2a587e01f6"
+    },
+    "reads": {
+      "records": 3,
+      "bases": 240,
+      "bases_per_record": 80,
+      "sha256": "e732748e2ae20dd101f3d57072d67a4af61637c02d5aaffa05f336b9bd788b3f"
+    }
+  },
+  "repeatability": {
+    "runs": 2,
+    "separate_work_directories": true,
+    "same_output_leaf_names": true,
+    "sam_byte_identical": true,
+    "report_byte_identical": true,
+    "sam_sha256": "6dc321feda76e06c7b39c37c7814849437d334655faae7459c0d8f49aac59fac",
+    "report_sha256": "bf36830efa0df50b5d76281b089f9c522c806fb278e73e766efdeeecafb28c7d"
+  },
+  "output_oracle": {
+    "primary_records": 3,
+    "mapped_primary_reads": 2,
+    "unmapped_primary_reads": 1,
+    "records": [
+      {
+        "fixture_role": "forward-mapped",
+        "flag": 0,
+        "one_based_position": 174,
+        "cigar": "80M"
+      },
+      {
+        "fixture_role": "reverse-mapped",
+        "flag": 16,
+        "one_based_position": 334,
+        "cigar": "80M",
+        "reverse_complement_and_reversed_quality_reconciled": true
+      },
+      {
+        "fixture_role": "unmapped",
+        "flag": 4,
+        "coherent_unmapped_record": true
+      }
+    ]
+  },
+  "no_overwrite": {
+    "both_outputs_existing": "pass",
+    "existing_report_only": "pass",
+    "existing_sam_only": "pass",
+    "failure_exit_code": 2,
+    "failure_code": "output-exists",
+    "preexisting_bytes_unchanged": true,
+    "counterpart_output_not_created": true
+  },
+  "user_path_canary": {
+    "input_parent_and_leaf_symlinks_outside_working_directory": "pass",
+    "executable_symlink_outside_working_directory": "pass",
+    "automatic_executable_sha256": "pass",
+    "optional_expected_digest_gate": "pass"
+  },
+  "review": {
+    "executor_defect_found": false,
+    "historical_fake_adapter_self_test_preserved": true
+  },
+  "remaining_evidence": [
+    "formal exact-package agent runtime evaluation",
+    "representative genomes and real sequencing reads",
+    "mapping-accuracy or scientific baseline benchmark",
+    "performance and scale evaluation",
+    "other operating systems and architectures",
+    "named external domain-method or human-expert review"
+  ],
+  "claims_not_made": [
+    "evaluated assurance",
+    "representative scientific validity",
+    "mapping accuracy or superiority",
+    "cross-platform correctness",
+    "clinical validity",
+    "main Beta membership"
+  ]
+}

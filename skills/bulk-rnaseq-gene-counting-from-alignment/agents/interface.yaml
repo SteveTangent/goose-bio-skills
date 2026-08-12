@@ -1,0 +1,20 @@
+interface:
+  display_name: "Bulk RNA-seq Gene Counting"
+  short_description: "Count single-end SAM records against exact GTF gene exons."
+  default_prompt: "Use $bulk-rnaseq-gene-counting-from-alignment to count this small single-end SAM against the exact GTF and publish a new JSON report with gene counts, assignment categories, and provenance."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

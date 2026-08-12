@@ -416,6 +416,14 @@ def _unlink_owned(path: Path, identity: tuple[int, int]) -> bool:
     return True
 
 
+def _is_owned(path: Path, identity: tuple[int, int]) -> bool:
+    try:
+        current = path.lstat()
+    except FileNotFoundError:
+        return False
+    return (current.st_dev, current.st_ino) == identity
+
+
 def _fsync_directory(path: Path) -> None:
     descriptor = os.open(path, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
     try:
@@ -424,8 +432,34 @@ def _fsync_directory(path: Path) -> None:
         os.close(descriptor)
 
 
+def _rollback_owned(directory: Path, identity: tuple[int, int], paths: tuple[Path, ...]) -> None:
+    failures: list[str] = []
+    for path in paths:
+        try:
+            if not _unlink_owned(path, identity):
+                failures.append(f"{path.name}:identity-mismatch")
+        except OSError as exc:
+            failures.append(f"{path.name}:{exc.__class__.__name__}")
+    try:
+        _fsync_directory(directory)
+    except OSError as exc:
+        failures.append(f"directory:{exc.__class__.__name__}")
+    if failures:
+        raise OSError("publication rollback failed: " + ", ".join(failures))
+
+
+def _write_all(descriptor: int, payload: bytes) -> None:
+    offset = 0
+    while offset < len(payload):
+        written = os.write(descriptor, payload[offset:])
+        if written <= 0:
+            raise OSError("output write made no progress")
+        offset += written
+
+
 def write_new(path: Path, text: str, *, root: Path | None = None) -> Path:
     target = _safe_output_target(path, root)
+    payload = text.encode("utf-8")
     descriptor, temporary_name = tempfile.mkstemp(prefix=f".{target.name}.tmp-",
                                                    dir=target.parent)
     temporary = Path(temporary_name)
@@ -433,21 +467,30 @@ def write_new(path: Path, text: str, *, root: Path | None = None) -> Path:
     identity = (temporary_stat.st_dev, temporary_stat.st_ino)
     published = False
     try:
-        with os.fdopen(descriptor, "w", encoding="utf-8", newline="") as handle:
-            os.fchmod(handle.fileno(), 0o600)
-            handle.write(text)
-            handle.flush()
-            os.fsync(handle.fileno())
+        os.fchmod(descriptor, 0o600)
+        _write_all(descriptor, payload)
+        os.fsync(descriptor)
+        try:
+            os.close(descriptor)
+        finally:
+            descriptor = -1
         os.link(temporary, target)
         published = True
-        _fsync_directory(target.parent)
+        if not _is_owned(target, identity):
+            raise OSError("published output identity differs from staged data")
         if not _unlink_owned(temporary, identity):
             raise OSError("temporary output identity changed before cleanup")
         _fsync_directory(target.parent)
-    except BaseException:
-        if published:
-            _unlink_owned(target, identity)
-        _unlink_owned(temporary, identity)
+        if not _is_owned(target, identity):
+            raise OSError("published output identity changed before completion")
+    except BaseException as original:
+        if descriptor >= 0:
+            os.close(descriptor)
+        paths = (target, temporary) if published else (temporary,)
+        try:
+            _rollback_owned(target.parent, identity, paths)
+        except OSError as rollback_error:
+            raise rollback_error from original
         raise
     return target
 
@@ -575,7 +618,55 @@ def self_test() -> None:
         else:
             raise AssertionError("parent traversal output was accepted")
 
-    print(json.dumps({"checks": 10, "status": "pass", "version": VERSION}, sort_keys=True))
+        zero_output = test_root / "zero-write.json"
+        real_write = os.write
+        os.write = lambda _descriptor, _payload: 0
+        try:
+            try:
+                write_new(zero_output, "{}\n", root=test_root)
+            except OSError:
+                pass
+            else:
+                raise AssertionError("zero-byte output write did not fail")
+        finally:
+            os.write = real_write
+        if zero_output.exists() or list(test_root.glob(f".{zero_output.name}.tmp-*")):
+            raise RuntimeError("zero-byte output write left publication artifacts")
+
+        final_race = test_root / "final-race.json"
+        real_unlink = os.unlink
+        final_replaced = False
+
+        def replace_final_during_cleanup(path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+                                         *args: Any, **kwargs: Any) -> None:
+            nonlocal final_replaced
+            if not final_replaced and Path(path).name.startswith(f".{final_race.name}.tmp-"):
+                final_replaced = True
+                real_unlink(final_race)
+                competitor = os.open(final_race, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+                try:
+                    _write_all(competitor, b"competitor\n")
+                    os.fsync(competitor)
+                finally:
+                    os.close(competitor)
+            real_unlink(path, *args, **kwargs)
+
+        os.unlink = replace_final_during_cleanup
+        try:
+            try:
+                write_new(final_race, "{}\n", root=test_root)
+            except OSError:
+                pass
+            else:
+                raise AssertionError("final-inode replacement was reported as success")
+        finally:
+            os.unlink = real_unlink
+        if final_race.read_bytes() != b"competitor\n":
+            raise RuntimeError("rollback removed a competing final output")
+        if list(test_root.glob(f".{final_race.name}.tmp-*")):
+            raise RuntimeError("final-inode race left an owned temporary output")
+
+    print(json.dumps({"checks": 12, "status": "pass", "version": VERSION}, sort_keys=True))
 
 
 def parser() -> argparse.ArgumentParser:

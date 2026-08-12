@@ -676,6 +676,258 @@
       "expected_action": "route-away",
       "expected_question_count_this_turn": 0,
       "expected_first_decision_id": null
+    },
+    {
+      "id": "bulk-gene-counting-specified-local",
+      "prompt": "Count primary single-end SAM records against gene_id exon unions in this exact GTF using unstranded mode and MAPQ 20, then create a gene-count report with unique, ambiguous, no-feature, low-MAPQ and unmapped reconciliation. Do not align reads, normalize counts or fit differential expression.",
+      "expected_skill": "bulk-rnaseq-gene-counting-from-alignment",
+      "forbidden_skills": ["read-alignment-selection-and-execution", "count-based-differential-expression"],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "bulk-existing-counts-route-to-de",
+      "prompt": "The integer gene-count matrix is already complete. Fit the declared treated-versus-control count model and adjust p-values; do not recount the SAM files.",
+      "expected_skill": "count-based-differential-expression",
+      "forbidden_skills": ["bulk-rnaseq-gene-counting-from-alignment"],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "bulk-paired-fragment-counting-routes-away",
+      "prompt": "Count paired-end fragments from this coordinate-sorted BAM, infer strandedness, allocate multimappers probabilistically and quantify transcripts.",
+      "expected_skill": null,
+      "forbidden_skills": ["bulk-rnaseq-gene-counting-from-alignment", "alignment-file-operations"],
+      "expected_action": "route-away",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "junction-psi-specified-local",
+      "prompt": "For this prepared inclusion/exclusion junction-count TSV and declared case/control sample groups, calculate per-sample PSI at minimum coverage 10 and the case-minus-control mean PSI delta. Mark low-coverage pairs not estimable and do not perform significance testing.",
+      "expected_skill": "junction-psi-and-delta-analysis",
+      "forbidden_skills": ["count-based-differential-expression"],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "junction-discovery-from-bam-routes-away",
+      "prompt": "Discover splice junctions from these BAM files, reconstruct isoforms and test differential splicing genome-wide.",
+      "expected_skill": null,
+      "forbidden_skills": ["junction-psi-and-delta-analysis", "alignment-file-operations"],
+      "expected_action": "route-away",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "junction-gene-counts-route-to-de",
+      "prompt": "These rows are gene-level integer counts, not inclusion and exclusion junction pairs. Fit the declared RNA-seq differential expression contrast.",
+      "expected_skill": "count-based-differential-expression",
+      "forbidden_skills": ["junction-psi-and-delta-analysis"],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "amplicon-alpha-diversity-specified-local",
+      "prompt": "For this exact nonnegative feature-by-sample amplicon count TSV, report observed features, natural-log Shannon and Simpson diversity per sample, preserving the zero-depth sample as not estimable. Do not rarefy or normalize.",
+      "expected_skill": "amplicon-alpha-diversity-analysis",
+      "forbidden_skills": ["amplicon-feature-table-and-taxonomy-qc"],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "amplicon-taxonomy-qc-routes-away-from-diversity",
+      "prompt": "Check sample joins, library sizes, taxonomy-rank completeness and declared negative controls in this amplicon feature table; do not calculate diversity.",
+      "expected_skill": "amplicon-feature-table-and-taxonomy-qc",
+      "forbidden_skills": ["amplicon-alpha-diversity-analysis"],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "amplicon-beta-differential-routes-away",
+      "prompt": "Rarefy this microbiome table, calculate beta diversity, test differential abundance and identify pathogens.",
+      "expected_skill": null,
+      "forbidden_skills": ["amplicon-alpha-diversity-analysis", "amplicon-feature-table-and-taxonomy-qc"],
+      "expected_action": "route-away-and-block-pathogen-claim",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "flow-compensation-specified-local",
+      "prompt": "Apply this exact source-row by observed-column spillover matrix to the matching channels in my already extracted local event TSV and create compensated events plus provenance. Do not estimate compensation, transform, gate or label cells.",
+      "expected_skill": "flow-cytometry-compensation-application",
+      "forbidden_skills": ["fcs-file-io-and-metadata-qc"],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "flow-fcs-metadata-routes-away-from-compensation",
+      "prompt": "Inspect this FCS file's header, TEXT metadata, channel names and acquisition facts without applying a compensation matrix.",
+      "expected_skill": "fcs-file-io-and-metadata-qc",
+      "forbidden_skills": ["flow-cytometry-compensation-application"],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "flow-estimate-matrix-and-gate-routes-away",
+      "prompt": "Estimate a compensation matrix from single-stain controls, transform the events, discover gates and assign cell types.",
+      "expected_skill": null,
+      "forbidden_skills": ["flow-cytometry-compensation-application", "fcs-file-io-and-metadata-qc"],
+      "expected_action": "route-away",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "kaplan-meier-specified-local",
+      "prompt": "From this exact local subject_id, time and event table with one declared stratum, compute Kaplan-Meier steps, at-risk, event and censor counts, and median survival. Do not fit Cox regression or make a clinical prediction.",
+      "expected_skill": "kaplan-meier-survival-analysis",
+      "forbidden_skills": ["statistical-analysis-and-multiple-testing"],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "survival-cox-competing-risks-routes-away",
+      "prompt": "Fit an adjusted Cox model with time-varying covariates, competing risks and clinical risk prediction from this cohort.",
+      "expected_skill": null,
+      "forbidden_skills": ["kaplan-meier-survival-analysis"],
+      "expected_action": "route-away-and-block-clinical-claim",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "survival-existing-pvalues-route-to-adjustment",
+      "prompt": "The survival models are already complete and this table contains their raw p-values in declared families. Apply Holm correction only.",
+      "expected_skill": "statistical-analysis-and-multiple-testing",
+      "forbidden_skills": ["kaplan-meier-survival-analysis"],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "clinvar-exact-id-evidence-retrieval",
+      "prompt": "Retrieve bounded public ClinVar evidence for exact VCV000013961 and Variation ID 12345, preserving provider classifications, review status, conditions, dates and provenance. Do not resolve conflicts or apply ACMG criteria.",
+      "expected_skill": "human-variant-evidence-retrieval",
+      "forbidden_skills": ["biomedical-literature-and-public-study-search", "evidence-synthesis-and-research-traceability"],
+      "expected_action": "bounded-public-read-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "clinvar-free-text-clinical-classification-routes-away",
+      "prompt": "Find whatever variant explains this patient's symptoms, classify it under ACMG, recommend treatment and resolve all conflicting ClinVar submissions.",
+      "expected_skill": null,
+      "forbidden_skills": ["human-variant-evidence-retrieval", "biomedical-literature-and-public-study-search"],
+      "expected_action": "block-clinical-classification-and-route-away",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "clinvar-literature-search-routes-away",
+      "prompt": "Search PubMed for publications discussing a gene and disease; no exact ClinVar Variation ID or VCV accession is available.",
+      "expected_skill": "biomedical-literature-and-public-study-search",
+      "forbidden_skills": ["human-variant-evidence-retrieval"],
+      "expected_action": "bounded-public-read",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "sequence-transform-local-positive",
+      "prompt": "Read this local FASTA, reverse-complement the nucleotide records, preserve identifiers and create a new FASTA without searching a database or aligning sequences.",
+      "expected_skill": "sequence-io-and-transformation",
+      "forbidden_skills": ["sequence-similarity-and-homology-search", "pairwise-and-multiple-sequence-alignment"],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "provenance-capture-positive",
+      "prompt": "Capture the current completed local run's command, working directory, tool versions, input hashes, environment facts and output hashes in a new provenance record; do not rerun the analysis.",
+      "expected_skill": "environment-and-provenance-capture",
+      "forbidden_skills": ["scientific-file-preflight-and-resource-planning"],
+      "expected_action": "capture-local-provenance",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "experimental-design-positive",
+      "prompt": "Plan sample allocation, power assumptions and batch blocking before data collection for a two-group experiment; do not analyze observed outcomes.",
+      "expected_skill": "experimental-design-power-and-batch-planning",
+      "forbidden_skills": ["statistical-analysis-and-multiple-testing"],
+      "expected_action": "plan-and-record-assumptions",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "ora-positive",
+      "prompt": "Run over-representation analysis for this declared hit list against the explicit tested-gene universe and fixed gene sets, then adjust the resulting set p-values. The input is not a ranked list.",
+      "expected_skill": "over-representation-analysis",
+      "forbidden_skills": ["ranked-gene-set-enrichment"],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "ranked-enrichment-positive",
+      "prompt": "Run ranked gene-set enrichment on this complete signed ranked gene list with the declared gene-set collection; do not threshold it into a hit list.",
+      "expected_skill": "ranked-gene-set-enrichment",
+      "forbidden_skills": ["over-representation-analysis"],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "single-cell-object-qc-positive",
+      "prompt": "Open this existing single-cell object, verify matrix/metadata joins and basic object QC, and create a new QC report without running normalization, clustering or markers.",
+      "expected_skill": "single-cell-object-io-and-qc",
+      "forbidden_skills": ["single-cell-core-analysis"],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "single-cell-core-positive",
+      "prompt": "The single-cell object QC is complete. Run the declared normalization, dimensionality reduction, neighborhood graph, clustering and marker summary as one core analysis; do not re-interpret cell types.",
+      "expected_skill": "single-cell-core-analysis",
+      "forbidden_skills": ["single-cell-object-io-and-qc"],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "chemical-search-positive",
+      "prompt": "Search the declared local structure collection for compounds similar to this already standardized query and report exact search settings and provenance; do not re-standardize it.",
+      "expected_skill": "chemical-similarity-and-substructure-search",
+      "forbidden_skills": ["molecule-standardization-and-descriptors"],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "protein-structure-retrieval-positive",
+      "prompt": "Retrieve the exact public PDB entry 1CRN and compare its declared chains with provenance; do not infer an interface, docking pose or binding affinity.",
+      "expected_skill": "protein-structure-retrieval-and-comparison",
+      "forbidden_skills": ["protein-interface-contact-analysis"],
+      "expected_action": "bounded-public-read-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "evidence-synthesis-positive",
+      "prompt": "Synthesize this already retrieved, fixed set of studies into an evidence table with claim-to-source traceability and uncertainty; do not search for additional literature.",
+      "expected_skill": "evidence-synthesis-and-research-traceability",
+      "forbidden_skills": ["biomedical-literature-and-public-study-search"],
+      "expected_action": "synthesize-local-evidence",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
     }
   ]
 }

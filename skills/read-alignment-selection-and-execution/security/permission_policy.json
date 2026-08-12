@@ -5,7 +5,7 @@
     "file_write": {
       "decision": "approved",
       "reviewer": "project-owner",
-      "scope": "Only scripts/run_short_dna_alignment.py may create private temporary input copies and alignment artifacts plus the caller-specified new SAM and JSON leaf files in the current working directory; it may not replace a path, escape the working directory, mutate an input, create user directories, or use the network.",
+      "scope": "Only scripts/run_short_dna_alignment.py may read the caller's explicit local FASTA, FASTQ, and minimap2 paths after resolving and pinning final regular targets; create private temporary copies and alignment artifacts; and create the caller-specified new SAM and JSON leaf files in the current working directory. It may not replace an output, publish outside the working directory, mutate an input, create user directories, or use the network.",
       "reason": "Private staging isolates the fixed adapter, and create-exclusive atomic publication prevents overwriting either requested artifact.",
       "expires_at": "2026-11-30",
       "evidence": [
@@ -22,17 +22,17 @@
     "local_subprocess": {
       "decision": "approved",
       "reviewer": "project-owner",
-      "scope": "scripts/run_short_dna_alignment.py may execute only the caller-supplied absolute non-symlink executable after its SHA-256 matches, require exact minimap2 2.31-r1302, and use a fixed short-genomic-DNA argv, one thread, fixed seed, private cwd, clean environment, no stdin, no shell, no caller flags, no installation, and no fallback aligner.",
-      "reason": "Digest and version pinning plus a fixed argv makes minimap2 the sole bounded adapter and preserves fail-closed execution.",
+      "scope": "scripts/run_short_dna_alignment.py may resolve an explicit local minimap2 path, including an ordinary symlink, to a stable executable regular target; compute and record its SHA-256; optionally require a caller-supplied expected SHA-256; require exact minimap2 2.31-r1302; and use a fixed short-genomic-DNA argv, one thread, fixed seed, private cwd, clean environment, no stdin, no shell, no caller flags, no installation, and no fallback aligner.",
+      "reason": "Stable target pinning, automatic fingerprinting, optional expected-digest replay, exact version checking, and a fixed argv make minimap2 the sole bounded adapter and preserve fail-closed execution without forcing callers to precompute a digest.",
       "expires_at": "2026-11-30",
       "evidence": [
         "SKILL.md",
         "scripts/run_short_dna_alignment.py"
       ],
       "target_enforcement": {
-        "openai": "Permit only the digest-pinned fixed minimap2 invocation; reject shell expansion, caller flags, alternate tools, and version drift.",
-        "claude": "Permit only the digest-pinned fixed minimap2 invocation; reject shell expansion, caller flags, alternate tools, and version drift.",
-        "generic": "Execute only the fixed adapter after input, executable digest, and exact version validation.",
+        "openai": "Permit only the resolved, fingerprinted fixed minimap2 invocation; enforce an expected digest when supplied and reject shell expansion, caller flags, alternate tools, and version drift.",
+        "claude": "Permit only the resolved, fingerprinted fixed minimap2 invocation; enforce an expected digest when supplied and reject shell expansion, caller flags, alternate tools, and version drift.",
+        "generic": "Execute only the fixed adapter after stable input and executable binding, automatic fingerprinting, any supplied expected-digest check, and exact version validation.",
         "vscode": "Workspace trust plus explicit local-process approval is required for the fixed minimap2 invocation."
       }
     }

@@ -1,0 +1,20 @@
+interface:
+  display_name: "Human Variant Evidence Retrieval"
+  short_description: "Preserve bounded public ClinVar assertions and provenance."
+  default_prompt: "Retrieve public ClinVar VCV evidence for up to five exact Variation IDs or VCV accessions, then normalize VCV and SCV identities, classifications, review status, conditions, dates, submitters, missing results, conflicts, and provenance without resolving or clinically interpreting them."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

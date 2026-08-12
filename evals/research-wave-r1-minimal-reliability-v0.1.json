@@ -16,7 +16,7 @@
     "better_than_baseline_claim": false,
     "clinical_use": "prohibited",
     "direct_main_merge_authorized": false,
-    "direct_main_merge_reason": "The existing v0.6.0 tag and release record bind 29 packages. A main merge must first prepare an atomic v0.7.0 collection and rerun these checks on the final v0.7.0 bytes."
+    "direct_main_merge_reason": "These research candidates are not part of the current main Beta. Promotion requires a later atomic collection release and final-byte rerun."
   },
   "governance": {
     "fixture_kind": "file-backed fixture",
@@ -26,7 +26,7 @@
     ],
     "output_contract": "The offline runner emits one canonical JSON event with status, check count, exact package/script/fixture/output hashes, and explicit network_performed=false. The routing record preserves first-run observations and later serves only as a visible regression oracle.",
     "rollback_boundary": "Remove this Wave R1 evidence delta and restore the three prior registry package digests; released v0.6.0 history is not rewritten.",
-    "trust_report": "Minimum release verification only. The final independent code and evidence review reported P0=0, P1=0, and P2=0 for these candidate bytes."
+    "trust_report": "Minimum release verification only. Final independent seal review reported P0=0, P1=0, and one accepted non-blocking P2 for the documented local-directory concurrency and exceptional temporary-file cleanup boundary."
   },
   "retained_replay": {
     "status": "passed",
@@ -41,7 +41,7 @@
     },
     "fixture": {
       "path": "evals/fixtures/research-wave-r1-minimal-v0.1.json",
-      "sha256": "386bcd5cd55061f73bb8b69bf3b20a40912144a5295748910a57e25688b3fa8d"
+      "sha256": "1f854d24fa424bc7cfe15557152e3c0a7c5bbd8e38c2788c9794b6fa7b8fa340"
     },
     "coverage": {
       "missing-data-and-sensitivity-analysis": [
@@ -68,8 +68,8 @@
       ]
     },
     "output_sha256": {
-      "missing_data_valid": "82154237617a845e824a796e394b0de3f906590bdcc887eaa7348db03f634ae9",
-      "protein_contacts_valid": "ea0595496b4ea49aba63aa78bbfb26f4b064e00802f406019827adda32b5e783",
+      "missing_data_valid": "c830b1147d72edd0e595fbe41a571fd6791808acd43e7323fe86ce3d70ce34cf",
+      "protein_contacts_valid": "869f77d5e7d59b401b9be62f6b1a62371dfc279d28e517fffecbdb25d619aa7",
       "orthology_valid_payload": "55c13b3a34e18ba0ffd67d79cc62bff71356e352587a3c5bfbbecb0e92b1bef2"
     }
   },
@@ -139,22 +139,23 @@
     ]
   },
   "exact_candidate_bytes": {
-    "missing-data-and-sensitivity-analysis": "a976f2bfd56e857cc1259106dd4c46e4380ca10dfcf1e21d552e08583f3f09c6",
-    "protein-interface-contact-analysis": "bbd0fa54e98a939dd2cdeced55685a5c97964d882b56280ae10bdada280abe79",
-    "public-orthology-retrieval-and-qc": "3783c85516ddcd60fd44156e189d2c7b6fdf21d793cbfdbb9eca2484888f33d0"
+    "missing-data-and-sensitivity-analysis": "27314d39519fe77c725366ee12e6749275edc84751eb0141dbb930007c077f28",
+    "protein-interface-contact-analysis": "9fd95fa1711edf3758628edf7afae280d7002da7becb8d585c88cdf2fa8f53db",
+    "public-orthology-retrieval-and-qc": "1e5b814d9d95880487e626e611c5f6b12110454f3e42da95be64066fb78178e0"
   },
   "shared_regression": {
     "status": "passed",
-    "installable_packages": 32,
-    "canonical_intake_cases": 43,
+    "installable_packages": 44,
+    "canonical_intake_cases": 90,
     "research_holdout_cases": 6,
     "source_clean": true,
     "validator_version": "1.1.0",
-    "validator_self_test_checks": 23,
+    "validator_self_test_checks": 25,
     "connector_self_test_checks": 21,
     "connector_self_test_network_performed": false,
-    "missing_data_self_test_checks": 10,
-    "protein_contact_self_test_checks": 16,
+    "connector_sha256": "060f3bf2c16fe89f574ff113c1293d86ea495b73d56189d43c7c5722b9f44232",
+    "missing_data_self_test_checks": 12,
+    "protein_contact_self_test_checks": 21,
     "diff_check": "passed"
   },
   "prior_live_canary": {
@@ -167,17 +168,17 @@
     "scope": "historical bounded canary, not rerun by the retained offline suite and not a general availability claim"
   },
   "control_sha256": {
-    "validator": "07021f1b7033dc53d8c228c1ff8fe7184688a3821168841e009c6cf6211380be",
-    "registry": "e3c68548debbf57e2f54aa0110f5b67c4b7d6657dc1dc6ac75b4d3ce97418184",
-    "promotion_scope": "19fe3c816946d75aef5fdfcd7e80b5dd24183079b105e93e4427302141b3728a"
+    "validator": "311b4376d96b76c82cd2c1b34db7e101701b05988db9c043fdaddd577b6adb68",
+    "registry": "99125d160a5ee682be25ff95383916f219f8c29b00860a9764e09eecfa9dec69",
+    "promotion_scope": "66ee5d916f6c7e4c5a45fcc8709ec1d31065fdcd63b0165973362b6e83300776"
   },
   "review": {
     "p0": 0,
     "p1": 0,
-    "p2": 0,
-    "reviewer_task": "final_minimal_review",
+    "p2": 1,
+    "reviewer_task": "final_wave_r4_seal_review",
     "status": "passed",
-    "verdict": "Eligible for same-level preview-reviewed v0.7.0 atomic release preparation; current v0.6.0 research bytes must not be merged directly to main."
+    "verdict": "Accepted for research-branch seal with one documented, non-blocking local-directory concurrency and exceptional temporary-file cleanup P2; this does not authorize main promotion."
   },
   "missing_evidence": [
     "final atomic v0.7.0 collection bytes and package digests",

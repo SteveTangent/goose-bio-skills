@@ -12,9 +12,10 @@ import platform
 import stat
 import sys
 import tempfile
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 
 
 VERSION = "0.7.0"
@@ -419,18 +420,48 @@ def fsync_directory(path: Path) -> None:
         os.close(descriptor)
 
 
-def unlink_if_owned(target: Path, temporary: Path) -> None:
+def _is_owned(path: Path, identity: tuple[int, int]) -> bool:
     try:
-        target_state = os.lstat(target)
-        temporary_state = os.lstat(temporary)
-        if (
-            stat.S_ISREG(target_state.st_mode)
-            and (target_state.st_dev, target_state.st_ino)
-            == (temporary_state.st_dev, temporary_state.st_ino)
-        ):
-            target.unlink()
+        current = os.lstat(path)
     except FileNotFoundError:
-        pass
+        return False
+    return (current.st_dev, current.st_ino) == identity
+
+
+def _unlink_owned(path: Path, identity: tuple[int, int]) -> bool:
+    try:
+        current = os.lstat(path)
+    except FileNotFoundError:
+        return True
+    if (current.st_dev, current.st_ino) != identity:
+        return False
+    os.unlink(path)
+    return True
+
+
+def _rollback_owned(parent: Path, identity: tuple[int, int], paths: tuple[Path, ...]) -> None:
+    failures: list[str] = []
+    for path in paths:
+        try:
+            if not _unlink_owned(path, identity):
+                failures.append(f"{path.name}:identity-mismatch")
+        except OSError as exc:
+            failures.append(f"{path.name}:{exc.__class__.__name__}")
+    try:
+        fsync_directory(parent)
+    except OSError as exc:
+        failures.append(f"directory:{exc.__class__.__name__}")
+    if failures:
+        raise OSError("publication rollback failed: " + ", ".join(failures))
+
+
+def _write_all(descriptor: int, payload: bytes) -> None:
+    offset = 0
+    while offset < len(payload):
+        written = os.write(descriptor, payload[offset:])
+        if written <= 0:
+            raise OSError("output write made no progress")
+        offset += written
 
 
 def write_new_json(raw_path: str, report: dict[str, Any]) -> Path:
@@ -452,25 +483,56 @@ def write_new_json(raw_path: str, report: dict[str, Any]) -> Path:
     payload = (json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
     descriptor, temporary_name = tempfile.mkstemp(prefix=f".{target.name}.tmp-", dir=parent)
     temporary = Path(temporary_name)
+    identity: tuple[int, int] | None = None
     published = False
     try:
-        with os.fdopen(descriptor, "wb") as handle:
-            os.fchmod(handle.fileno(), 0o600)
-            handle.write(payload)
-            handle.flush()
-            os.fsync(handle.fileno())
+        try:
+            opened = os.fstat(descriptor)
+        except OSError:
+            opened = os.lstat(temporary)
+        identity = (opened.st_dev, opened.st_ino)
+        os.fchmod(descriptor, 0o600)
+        _write_all(descriptor, payload)
+        os.fsync(descriptor)
+        try:
+            os.close(descriptor)
+        finally:
+            descriptor = -1
         try:
             os.link(temporary, target)
         except FileExistsError as exc:
             raise PreflightError("output-exists", "output already exists; overwrite is forbidden", path=str(target)) from exc
         published = True
+        if not _is_owned(target, identity):
+            raise OSError("published output identity differs from staged data")
+        if not _unlink_owned(temporary, identity):
+            raise OSError("temporary output identity changed after publication")
         fsync_directory(parent)
-    except BaseException:
-        if published:
-            unlink_if_owned(target, temporary)
+        if not _is_owned(target, identity):
+            raise OSError("published output identity changed before completion")
+    except BaseException as original:
+        close_error: OSError | None = None
+        if identity is None and descriptor >= 0:
+            try:
+                opened = os.fstat(descriptor)
+                identity = (opened.st_dev, opened.st_ino)
+            except OSError:
+                pass
+        if descriptor >= 0:
+            try:
+                os.close(descriptor)
+            except OSError as exc:
+                close_error = exc
+        if identity is None:
+            raise OSError("publication rollback failed: temporary identity unavailable") from original
+        paths = (target, temporary) if published else (temporary,)
+        try:
+            _rollback_owned(parent, identity, paths)
+        except OSError as rollback_error:
+            raise rollback_error from original
+        if close_error is not None:
+            raise close_error from original
         raise
-    finally:
-        temporary.unlink(missing_ok=True)
     return target
 
 
@@ -482,6 +544,26 @@ def expect_error(code: str, action: Any) -> None:
             raise AssertionError(f"expected {code}, got {exc.code}") from exc
     else:
         raise AssertionError(f"expected {code}")
+
+
+def expect_os_error(fragment: str, action: Any) -> None:
+    try:
+        action()
+    except OSError as exc:
+        if fragment not in str(exc):
+            raise AssertionError(f"expected OSError containing {fragment!r}, got {exc!r}") from exc
+    else:
+        raise AssertionError(f"expected OSError containing {fragment!r}")
+
+
+@contextmanager
+def patched_os(name: str, replacement: Any) -> Iterator[None]:
+    original = getattr(os, name)
+    setattr(os, name, replacement)
+    try:
+        yield
+    finally:
+        setattr(os, name, original)
 
 
 def self_test() -> None:
@@ -577,18 +659,62 @@ def self_test() -> None:
         if output.read_bytes() != original:
             raise AssertionError("existing output changed")
 
+        zero_output = root / "zero.json"
+        with patched_os("write", lambda _descriptor, _payload: 0):
+            expect_os_error("no progress", lambda: write_new_json(str(zero_output), report))
+        if zero_output.exists() or list(root.glob(".zero.json.tmp-*")):
+            raise AssertionError("zero-write publication left output state")
+
+        original_write = os.write
+
+        def short_write(descriptor: int, payload: bytes) -> int:
+            return original_write(descriptor, payload[:max(1, len(payload) // 3)])
+
+        short_output = root / "short.json"
+        with patched_os("write", short_write):
+            write_new_json(str(short_output), report)
+        if short_output.read_bytes() != original:
+            raise AssertionError("short writes truncated the output")
+
+        final_output = root / "final-identity.json"
+        original_unlink = os.unlink
+        swapped = False
+
+        def replace_final_during_cleanup(path: str | os.PathLike[str]) -> None:
+            nonlocal swapped
+            if not swapped and os.path.basename(os.fspath(path)).startswith(".final-identity.json.tmp-"):
+                swapped = True
+                original_unlink(final_output)
+                replacement = os.open(final_output, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+                try:
+                    _write_all(replacement, b"competitor\n")
+                    os.fsync(replacement)
+                finally:
+                    os.close(replacement)
+            original_unlink(path)
+
+        with patched_os("unlink", replace_final_during_cleanup):
+            expect_os_error("publication rollback failed", lambda: write_new_json(str(final_output), report))
+        if final_output.read_bytes() != b"competitor\n":
+            raise AssertionError("rollback removed a replacement output")
+        if list(root.glob(".final-identity.json.tmp-*")):
+            raise AssertionError("final identity check left a temporary output")
+        final_output.unlink()
+
         owned_temp = root / "owned.tmp"
         owned_target = root / "owned.json"
         replacement = root / "replacement.json"
         owned_temp.write_bytes(b"owned")
         os.link(owned_temp, owned_target)
+        owned_state = os.lstat(owned_temp)
+        owned_identity = (owned_state.st_dev, owned_state.st_ino)
         replacement.write_bytes(b"concurrent-replacement")
         os.replace(replacement, owned_target)
-        unlink_if_owned(owned_target, owned_temp)
+        _unlink_owned(owned_target, owned_identity)
         if owned_target.read_bytes() != b"concurrent-replacement":
             raise AssertionError("cleanup removed a replacement it did not own")
 
-    print(json.dumps({"checks": 11, "status": "pass", "version": VERSION}, sort_keys=True))
+    print(json.dumps({"checks": 14, "status": "pass", "version": VERSION}, sort_keys=True))
 
 
 def nonnegative_int(value: str) -> int:
@@ -629,14 +755,29 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         self_test()
         return 0
-    if not args.input or args.operation is None or args.output is None:
+    if args.operation is None:
+        print(
+            json.dumps(
+                {
+                    "status": "needs-decision",
+                    "error": {
+                        "code": "missing-operation-class",
+                        "message": "--operation is required to choose the resource-planning floor",
+                    },
+                },
+                sort_keys=True,
+            ),
+            file=sys.stderr,
+        )
+        return 2
+    if not args.input or args.output is None:
         print(
             json.dumps(
                 {
                     "status": "invalid-input",
                     "error": {
                         "code": "missing-required-argument",
-                        "message": "--input, --operation, and --output are required",
+                        "message": "--input and --output are required",
                     },
                 },
                 sort_keys=True,

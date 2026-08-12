@@ -41,8 +41,8 @@ bootstrap value, posterior probability, or another convention. Values outside
 Hash the exact tip set as SHA-256 over a compact UTF-8 JSON array of sorted
 parsed labels. `--compare-tree` validates both trees and requires those exact
 sets to match. Case, quoting result, whitespace inside quoted labels, and
-underscores remain significant; mismatch returns `tip-set-mismatch` and writes
-no report.
+underscores remain significant; mismatch is recorded as `tip-set-mismatch`
+with exact missing and extra labels in the create-new report.
 
 ## Safety, scale, and exclusions
 

@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1.0",
   "record_version": "0.1.0",
-  "recorded_at": "2026-08-12",
+  "recorded_at": "2026-08-13",
   "branch": "research",
   "scope": {
     "candidate_count": 3,
@@ -12,13 +12,13 @@
     ],
     "collection_version": "0.7.0",
     "small_synthetic_data_only": true,
-    "offline": true,
-    "network_performed": false,
+    "retained_replay_offline": true,
+    "source_retrieval_network_performed_for_later_canary": true,
     "minimum_reliability_pass": true,
     "formal_scientific_evaluation": false,
     "main_promotion_authorized": false,
     "research_commit_authorized": true,
-    "claim": "The three Wave R3 candidates passed retained minimum local reliability and routing checks on research. This is not representative scientific evaluation or a main release."
+    "claim": "The three Wave R3 candidates passed retained minimum local reliability and routing checks on research. A later synthetic macOS ARM64 canary also passed with real minimap2; neither record is representative scientific evaluation or a main release."
   },
   "retained_replay": {
     "command": "python3 scripts/run_wave_r3_minimal_reliability.py",
@@ -29,10 +29,10 @@
       "pass"
     ],
     "repeat_events_identical": true,
-    "fixture_sha256": "9b6dc664c16855c249110fd4ac408c7bd85f92321c79c47b12b7c355d5564540",
+    "fixture_sha256": "63346cf869d9bf133b8ec8f8ad1328c9a394d0669b5c00ccb41104d869317a51",
     "runner_sha256": "45cbe25a5b9b6bc91812a39c7ebe87cd3eff0358b7ce82f45f61463edf389bba",
     "output_sha256": {
-      "phylogenetic-tree-io-and-qc": "69ab567fdb23ef5a83cffbc27828b593a80e2e12485bb80c5ae9fa2c0395c5d0",
+      "phylogenetic-tree-io-and-qc": "3440ccbd8f9c9550f461e15cb87c13253e2ababe9e9121a31c7dba6e8b87bc11",
       "untargeted-metabolomics-feature-table-qc": "d1233dc66d9c66aedd287eb0a01653ec5a1f2b7be2bad7b69b470456ae7d33ef"
     },
     "coverage": [
@@ -48,28 +48,34 @@
   },
   "package_bindings": {
     "phylogenetic-tree-io-and-qc": {
-      "package_digest": "c25931fcad517c4bc51c15ec979d28d3135e5e9dd75afcc78caf8f4d7e97a558",
-      "script_sha256": "66a2eff08357e2b16e4a4a133d6bec5d811ee985d15d6cae063ee29039610a43",
-      "self_test_checks": 26,
+      "package_digest": "e86bba28bd0b78a867ff4effaa4b284b9080c9e84d0ac2c9df56813658e9b972",
+      "script_sha256": "fae2e0862da0b618f99348513bd69e1298a356460cfa7d289843333d646ec151",
+      "self_test_checks": 30,
       "self_test_status": "pass"
     },
     "read-alignment-selection-and-execution": {
-      "package_digest": "98c2d35e1d530ca7963057a49325ab49a6e1c68089953d9557b3f5a5a3b22409",
-      "script_sha256": "a9984e8438d49afeecf075b234ab02837a17e0d6c46a7af636a62244e550f87a",
-      "self_test_checks": 23,
+      "package_digest": "fff008f1bc808fba69529a218cf8c3b75876e83335215924837ca3964b7affe1",
+      "script_sha256": "538d6b90c99a31b02b8ef9489c7a37616089f66de76f417582e94775fc7ed84b",
+      "self_test_checks": 46,
       "self_test_status": "pass",
-      "real_minimap2_runtime": "not-evaluated"
+      "real_minimap2_runtime_in_retained_offline_replay": "not-evaluated",
+      "synthetic_real_tool_canary": {
+        "status": "pass",
+        "formal_pass": false,
+        "evidence": "evals/research-wave-r3-minimap2-canary-v0.1.json",
+        "evidence_sha256": "a7ad8cc2b2527cc6cf9eb20acc65c14ff8402b49a49f0af6760354c3f2f4bbd8"
+      }
     },
     "untargeted-metabolomics-feature-table-qc": {
-      "package_digest": "941e56aa5eb8caa6513c2db8eeb78bfc4c37f86be010147d3d76242ce0cde464",
-      "script_sha256": "3536abef094a5a0890ecf533a220776920150d60e5f81a980c6eb1f3f8df4960",
-      "self_test_checks": 37,
+      "package_digest": "5097b0648501c9cb15a37d4fc73263c57be0e05d9d03f8ed0871d3c94c7b9c90",
+      "script_sha256": "db75eeaac6c0326c3e3599b1faeb881f37991dd3c420548b73b8e022e704f02f",
+      "self_test_checks": 41,
       "self_test_status": "pass"
     }
   },
   "routing": {
-    "canonical_fixture_cases": 62,
-    "canonical_fixture_sha256": "441173ac2b8cdca2200097cd4f20236332604b1f0fc75633a58f65fff29ccd37",
+    "canonical_fixture_cases": 90,
+    "canonical_fixture_sha256": "e5a68d5524354679aad4c3ed91ac043310292763759f7eb900efc95b17f6300d",
     "candidate_canonical_cases": 9,
     "independent_first_execution": {
       "evaluator_task": "wave_r3_route_holdout",
@@ -113,19 +119,20 @@
   "repository_checks": {
     "skeleton": {
       "status": "pass",
-      "installable_packages": 38,
+      "installable_packages": 44,
       "source_clean": true
     },
     "validator_self_test": {
       "status": "pass",
-      "checks": 24,
+      "checks": 25,
       "validator": "1.1.0"
     },
     "connector_self_test": {
       "status": "pass",
       "checks": 21,
       "network_performed": false,
-      "version": "0.7.0"
+      "version": "0.7.0",
+      "script_sha256": "060f3bf2c16fe89f574ff113c1293d86ea495b73d56189d43c7c5722b9f44232"
     },
     "prior_wave_regression": {
       "wave_r1_checks": 84,
@@ -145,35 +152,36 @@
     },
     "codegraph": {
       "status": "rebuilt-and-current",
-      "indexed_files": 56,
-      "nodes": 886,
-      "edges": 3765
+      "indexed_files": 69,
+      "nodes": 1342,
+      "edges": 5673
     },
     "git_diff_check": "pass"
   },
   "control_hashes": {
-    "registry.json": "77a9677d66490b88c2cb337c388a3a2b5bb50e89470841b867247273b0881e99",
-    "scripts/validate_skeleton.py": "c283162045f31b9c6fccd6999ffd669e401ec5519b3b178ca8c5de9f7d688809",
-    "docs/architecture.md": "252b18ca80c6db4f002e4b870e8ce5fcb477bf5491a2110a617e477429cae262",
-    "docs/catalog.md": "a0abb68205da695050d598579b0610bd7180622682f89a17dcd6dc37ccc89e40",
-    "docs/research-wave-r3-candidates.md": "270e83c8e44e8d212dbc785e905a2e3f61f93739acb723353a114d052645b70d",
-    "docs/research-skill-promotion-gates.md": "01e8d50190630fd28c3c25e68e77bcf7267e00e8c48997c73b486c0803fe766b",
-    "README.md": "e2a65fd347709b74bbdd4ca72d9b95de2bce1c74839ed3e35dffb646809796ec",
-    "skills/README.md": "832a3f6a95ab0d5a179a32a1036f783c7fed60df82691f13dd7f4adf54751b5b"
+    "registry.json": "99125d160a5ee682be25ff95383916f219f8c29b00860a9764e09eecfa9dec69",
+    "scripts/validate_skeleton.py": "311b4376d96b76c82cd2c1b34db7e101701b05988db9c043fdaddd577b6adb68",
+    "docs/architecture.md": "8a05486b42e7d93a623bf91543c4fbb8a477b97968970741196b36d2cd7eb903",
+    "docs/catalog.md": "6746152e900dee67df0f5bd1e90d834d086767185be09f59cd21b09f2934e778",
+    "docs/research-wave-r3-candidates.md": "ae4f0716f08243a5876acdf1b38ef3fb2f60711246b877371c5eb5ae87fe66c3",
+    "docs/research-skill-promotion-gates.md": "66ee5d916f6c7e4c5a45fcc8709ec1d31065fdcd63b0165973362b6e83300776",
+    "README.md": "d7440d9d294514fc1948dd1a18ddaf9539622f1746435afcbe5784dde3f3d95c",
+    "skills/README.md": "830dbbff07ef9235cff924cd8503deaa92a13556eabf18a979fde90e74fa352f"
   },
   "review": {
     "status": "passed",
     "p0": 0,
     "p1": 0,
-    "p2": 0,
+    "p2": 1,
     "independent_reviews": [
       "tree and metabolomics numeric, path, contract, and package review",
       "read-alignment subprocess, SAM reconciliation, publication, and performance review",
-      "independent six-case routing judgment"
+      "final-byte real-minimap2 and atomic publication replay",
+      "independent six-case routing judgment",
+      "final cross-wave publisher seal review"
     ]
   },
   "remaining_evidence": [
-    "real minimap2 execution on retained exact fixtures",
     "formal exact-package agent runtime evaluation",
     "representative or large biological datasets",
     "named external domain-method or human-expert review",

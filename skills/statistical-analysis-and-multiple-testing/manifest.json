@@ -51,7 +51,7 @@
       },
       {
         "decision_id": "alpha",
-        "applies_when": "Alpha is absent or ambiguous.",
+        "applies_when": "Reject/not-reject decisions are requested and alpha is absent or ambiguous.",
         "question": "What preregistered or protocol-specified alpha should be used?",
         "recommended_answer": "Supply the protocol value explicitly; use 0.05 only when that is the declared choice."
       }

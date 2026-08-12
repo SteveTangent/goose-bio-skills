@@ -430,14 +430,23 @@ def build_report(tree_path: str | Path, compare_path: str | Path | None = None, 
         if primary_tips != other_tips:
             missing = sorted(set(primary_tips) - set(other_tips))
             extra = sorted(set(other_tips) - set(primary_tips))
-            detail = f"exact tip sets differ ({len(missing)} missing, {len(extra)} extra)"
-            raise ContractError("tip-set-mismatch", detail)
-        comparison = {
-            "status": "exact-tip-set-match",
-            "comparison_input": other_input,
-            "comparison_tip_count": other_summary["tip_count"],
-            "tip_label_set_sha256": other_summary["tip_label_set_sha256"],
-        }
+            comparison = {
+                "status": "tip-set-mismatch",
+                "comparison_input": other_input,
+                "comparison_tip_count": other_summary["tip_count"],
+                "tip_label_set_sha256": other_summary["tip_label_set_sha256"],
+                "missing_tip_labels": missing,
+                "extra_tip_labels": extra,
+            }
+        else:
+            comparison = {
+                "status": "exact-tip-set-match",
+                "comparison_input": other_input,
+                "comparison_tip_count": other_summary["tip_count"],
+                "tip_label_set_sha256": other_summary["tip_label_set_sha256"],
+                "missing_tip_labels": [],
+                "extra_tip_labels": [],
+            }
     return {
         "schema_version": "0.1.0",
         "tool": "qc_newick_tree.py",
@@ -499,6 +508,15 @@ def unlink_owned_at(name: str, directory_fd: int, identity: tuple[int, int]) -> 
     return True
 
 
+def write_all(descriptor: int, payload: bytes) -> None:
+    offset = 0
+    while offset < len(payload):
+        written = os.write(descriptor, payload[offset:])
+        if written <= 0:
+            raise OSError("output write made no progress")
+        offset += written
+
+
 def write_new_json(
     raw_path: str | Path,
     report: dict[str, Any],
@@ -513,15 +531,19 @@ def write_new_json(
     flags |= getattr(os, "O_NOFOLLOW", 0)
     descriptor = -1
     identity: tuple[int, int] | None = None
+    temporary_created = False
+    temporary_present = False
     published = False
+    original_error: BaseException | None = None
+    cleanup_failures: list[str] = []
     try:
         descriptor = os.open(temporary_name, flags, 0o600, dir_fd=directory_fd)
+        temporary_created = True
         opened = os.fstat(descriptor)
         identity = (opened.st_dev, opened.st_ino)
-        with os.fdopen(descriptor, "wb", closefd=False) as handle:
-            handle.write(payload)
-            handle.flush()
-            os.fsync(handle.fileno())
+        temporary_present = True
+        write_all(descriptor, payload)
+        os.fsync(descriptor)
         os.close(descriptor)
         descriptor = -1
         if before_publish is not None:
@@ -531,19 +553,66 @@ def write_new_json(
         except FileExistsError as exc:
             raise ContractError("output-exists", "output appeared; overwrite is forbidden", path=str(target)) from exc
         published = True
-        try:
-            unlink_owned_at(temporary_name, directory_fd, identity)
-            os.fsync(directory_fd)
-        except OSError:
-            pass
-    except BaseException:
-        if descriptor >= 0:
-            os.close(descriptor)
-        if identity is not None and not published:
-            unlink_owned_at(temporary_name, directory_fd, identity)
-        raise
+        published_state = os.stat(
+            target_name, dir_fd=directory_fd, follow_symlinks=False
+        )
+        if (published_state.st_dev, published_state.st_ino) != identity:
+            raise OSError("published output identity differs from staged data")
+        if not unlink_owned_at(temporary_name, directory_fd, identity):
+            raise OSError("staged output identity changed before cleanup")
+        temporary_present = False
+        os.fsync(directory_fd)
+        final_state = os.stat(
+            target_name, dir_fd=directory_fd, follow_symlinks=False
+        )
+        if (final_state.st_dev, final_state.st_ino) != identity:
+            raise OSError("published output identity changed before completion")
+    except BaseException as exc:
+        original_error = exc
     finally:
+        if descriptor >= 0:
+            try:
+                os.close(descriptor)
+            except OSError as exc:
+                cleanup_failures.append(f"descriptor:{exc.__class__.__name__}")
+        if original_error is not None:
+            if temporary_created and identity is None:
+                cleanup_failures.append("staged:identity-unavailable")
+            if published and identity is not None:
+                try:
+                    if not unlink_owned_at(target_name, directory_fd, identity):
+                        cleanup_failures.append("published:identity-changed")
+                except OSError as exc:
+                    cleanup_failures.append(f"published:{exc.__class__.__name__}")
+            if temporary_present and identity is not None:
+                try:
+                    if not unlink_owned_at(temporary_name, directory_fd, identity):
+                        cleanup_failures.append("staged:identity-changed")
+                except OSError as exc:
+                    cleanup_failures.append(f"staged:{exc.__class__.__name__}")
+            if temporary_created:
+                try:
+                    os.fsync(directory_fd)
+                except OSError as exc:
+                    cleanup_failures.append(f"directory:{exc.__class__.__name__}")
         os.close(directory_fd)
+    if cleanup_failures:
+        raise ContractError(
+            "publication-rollback-failed",
+            "output publication failed and owned files could not all be rolled back: "
+            + ", ".join(cleanup_failures),
+            status="io-error",
+            path=str(target),
+        ) from original_error
+    if original_error is not None:
+        if isinstance(original_error, ContractError):
+            raise original_error
+        raise ContractError(
+            "publication-failed",
+            str(original_error),
+            status="io-error",
+            path=str(target),
+        ) from original_error
     return target
 
 
@@ -620,13 +689,13 @@ def self_test() -> None:
         mismatch.write_text("(A:1,B:1,X:1,D:1);", encoding="utf-8")
         mismatch_output = root / "mismatch-report.json"
 
-        def mismatch_run() -> None:
-            safe_output_target(mismatch_output, root=root)
-            mismatch_report = build_report(tree, mismatch, root=root)
-            write_new_json(mismatch_output, mismatch_report, root=root)
-
-        expect_error("tip-set-mismatch", mismatch_run)
-        require_test(not mismatch_output.exists(), "tip mismatch created output")
+        safe_output_target(mismatch_output, root=root)
+        mismatch_report = build_report(tree, mismatch, root=root)
+        write_new_json(mismatch_output, mismatch_report, root=root)
+        mismatch_comparison = mismatch_report["tip_set_comparison"]
+        require_test(mismatch_comparison["status"] == "tip-set-mismatch", "tip mismatch status differs")
+        require_test(mismatch_comparison["missing_tip_labels"] == ["A one", "C"] and mismatch_comparison["extra_tip_labels"] == ["A", "X"], "tip mismatch details differ")
+        require_test(mismatch_output.is_file(), "tip mismatch diagnostic report was not created")
         checks += 2
 
         input_link = root / "input-link.nwk"
@@ -666,6 +735,51 @@ def self_test() -> None:
             held_parent.rename(swap_parent)
         checks += 2
 
+        fsync_output = root / "post-link-fsync.json"
+        real_fsync = os.fsync
+        failed_directory_fsync = False
+
+        def fail_first_directory_fsync(descriptor: int) -> None:
+            nonlocal failed_directory_fsync
+            if stat.S_ISDIR(os.fstat(descriptor).st_mode) and not failed_directory_fsync:
+                failed_directory_fsync = True
+                raise OSError("injected post-link directory fsync failure")
+            real_fsync(descriptor)
+
+        os.fsync = fail_first_directory_fsync
+        try:
+            expect_error(
+                "publication-failed",
+                lambda: write_new_json(fsync_output, report, root=root),
+            )
+        finally:
+            os.fsync = real_fsync
+        require_test(failed_directory_fsync and not fsync_output.exists(), "directory fsync failure was not rolled back")
+        require_test(not list(root.glob(f".{fsync_output.name}.tmp-*")), "directory fsync rollback left a staged file")
+        checks += 2
+
+        cleanup_output = root / "cleanup-failure.json"
+        real_unlink = os.unlink
+
+        def fail_staged_unlink(path: str | bytes, *args: Any, **kwargs: Any) -> None:
+            if os.fspath(path).startswith(f".{cleanup_output.name}.tmp-"):
+                raise PermissionError("injected staged cleanup failure")
+            real_unlink(path, *args, **kwargs)
+
+        os.unlink = fail_staged_unlink
+        try:
+            expect_error(
+                "publication-rollback-failed",
+                lambda: write_new_json(cleanup_output, report, root=root),
+            )
+        finally:
+            os.unlink = real_unlink
+        require_test(not cleanup_output.exists(), "cleanup failure left the final output")
+        staged_leftovers = list(root.glob(f".{cleanup_output.name}.tmp-*"))
+        require_test(len(staged_leftovers) == 1, "cleanup failure was not reported with its owned staged file")
+        staged_leftovers[0].unlink()
+        checks += 2
+
     print(json.dumps({"checks": checks, "status": "pass", "version": VERSION}, sort_keys=True))
 
 
@@ -694,7 +808,7 @@ def main(argv: list[str] | None = None) -> int:
         output = write_new_json(args.output, report)
     except ContractError as exc:
         print(json.dumps({"error": exc.as_dict(), "status": exc.status}, sort_keys=True), file=sys.stderr)
-        return 2
+        return 3 if exc.status == "io-error" else 2
     print(json.dumps({"output": str(output), "status": "completed"}, sort_keys=True))
     return 0
 

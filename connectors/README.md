@@ -123,7 +123,10 @@ The executor:
 Here `completed` means checked retrieval and atomic publication under this
 transport contract. It does not mean the record is scientifically relevant,
 biologically correct, current enough for the research question, or semantically
-validated by a domain expert.
+validated by a domain expert. The create-new and rollback checks cover ordinary
+output races and observed identity replacement; they do not provide lock-free
+isolation from a malicious process that already has write access to the output
+directory and can replace a name between adjacent filesystem system calls.
 
 Large datasets, bulk raw reads, whole database snapshots, paid APIs, arbitrary
 URLs, private studies, controlled data, and remote write/job submission are

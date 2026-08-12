@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1.0",
   "record_version": "0.1.0",
-  "recorded_at": "2026-08-12",
+  "recorded_at": "2026-08-13",
   "branch": "research",
   "scope": {
     "candidate_count": 3,
@@ -29,7 +29,7 @@
       "pass"
     ],
     "repeat_events_identical": true,
-    "fixture_sha256": "c5bbd67d4302530c605ccabc9342b9843cb3babce4dccd0612ee0997a17dc22c",
+    "fixture_sha256": "86191d99230a7fd6ce06f5f897f00e037da67117b31e82f59702c3f832a3c85a",
     "runner_sha256": "f189240203b6919017ae1ec4d8f7927f76a30d0e35e67ecef54326e529a6af5c",
     "output_sha256": {
       "amplicon-feature-table-and-taxonomy-qc": "bea0919a0b357ef77f562ca521bbf5e22566814e506885ce8cd5efc4c6a914af",
@@ -49,21 +49,21 @@
   },
   "package_bindings": {
     "amplicon-feature-table-and-taxonomy-qc": {
-      "package_digest": "7a6b5f1523a634c31f34f004aa782609aa71840aabf93b9865ce9fc580b148f3",
-      "script_sha256": "bd35ba3e4941d2447f0bbe8a5782736dcd98b1b7dffad9b1ddda34fc66226617",
-      "self_test_checks": 19,
+      "package_digest": "4f5b4e33cd202b89216d49f3420c008e413c42ae3671e23db1d36bea5cc69926",
+      "script_sha256": "ad57da6e1090fd2aa0a2c5f703b3aba84fa0d24d4733ff9062892437ae844bf2",
+      "self_test_checks": 21,
       "self_test_status": "pass"
     },
     "chromatin-peak-set-qc": {
-      "package_digest": "26ab7ae31161ac4e5d364c9212425adaaf04ea0df0929fa00c4642ab8d7a97c2",
-      "script_sha256": "70b397440fb04ef6878b6d2ace4eff0533c63dc7f9cc7fd88af2f0546c001e18",
-      "self_test_checks": 24,
+      "package_digest": "e92780189c353ab9227e5208b75af8356e67fe8b8a8cacd8a42e6d2da8a5aa48",
+      "script_sha256": "99f1313630ace193c93ed777956e3bdfebec9e9b394b9fb45834106c9efdd68f",
+      "self_test_checks": 27,
       "self_test_status": "pass"
     },
     "protein-level-differential-abundance": {
-      "package_digest": "c6ffed17058b060c6fbb531abea074ae91e2b3a1f50e114572fcb94227f09441",
-      "script_sha256": "6572f7092871378c88e1966496286d7369888dc76e3dd760a924938bc6c72a9f",
-      "self_test_checks": 16,
+      "package_digest": "7e92fc70d45fd126030a3efc423c473d7983a1d1d75835cc0f207115572d4614",
+      "script_sha256": "262e5306fcf87a0e74eb9562b031da513fc10121231b0f6ebb2ff0868268835e",
+      "self_test_checks": 23,
       "self_test_status": "pass",
       "runtime": [
         "R 4.4.1",
@@ -72,8 +72,8 @@
     }
   },
   "routing": {
-    "canonical_fixture_cases": 53,
-    "canonical_fixture_sha256": "6a4c369d98c7cbb36e43db558a7ea69745310e99018c7116375f59e43cde79f0",
+    "canonical_fixture_cases": 90,
+    "canonical_fixture_sha256": "e5a68d5524354679aad4c3ed91ac043310292763759f7eb900efc95b17f6300d",
     "candidate_canonical_cases": 10,
     "independent_first_execution": {
       "evaluator_task": "wave_r2_route_holdout",
@@ -117,19 +117,20 @@
   "repository_checks": {
     "skeleton": {
       "status": "pass",
-      "installable_packages": 35,
+      "installable_packages": 44,
       "source_clean": true
     },
     "validator_self_test": {
       "status": "pass",
-      "checks": 23,
+      "checks": 25,
       "validator": "1.1.0"
     },
     "connector_self_test": {
       "status": "pass",
       "checks": 21,
       "network_performed": false,
-      "version": "0.7.0"
+      "version": "0.7.0",
+      "script_sha256": "060f3bf2c16fe89f574ff113c1293d86ea495b73d56189d43c7c5722b9f44232"
     },
     "skill_creator_quick_validate": {
       "packages_checked": 3,
@@ -142,24 +143,26 @@
     "git_diff_check": "pass"
   },
   "control_hashes": {
-    "registry.json": "0075dcba11dc28068e2904f4689032401ef4b9cbf61b06b3f468ec5c6cb3046a",
-    "scripts/validate_skeleton.py": "0900470dfa30cf2ef97d69346261ff4cb44958f8d0d9620b503039d55095a6a7",
-    "docs/architecture.md": "81f1e19fe618d1a18bd404e7ea4a70470ad66a62b98473b617b9bc79ec06e2a8",
-    "docs/catalog.md": "f9d3f64260d97ec094e7374d1519a28853700027b85402d0ac02303b00775e59",
+    "registry.json": "99125d160a5ee682be25ff95383916f219f8c29b00860a9764e09eecfa9dec69",
+    "scripts/validate_skeleton.py": "311b4376d96b76c82cd2c1b34db7e101701b05988db9c043fdaddd577b6adb68",
+    "docs/architecture.md": "8a05486b42e7d93a623bf91543c4fbb8a477b97968970741196b36d2cd7eb903",
+    "docs/catalog.md": "6746152e900dee67df0f5bd1e90d834d086767185be09f59cd21b09f2934e778",
     "docs/research-wave-r2-candidates.md": "ba1b4b3816eca64187ce97ec7a8c87948b476953d03e939fe95d4b52eb90806e",
-    "docs/research-skill-promotion-gates.md": "48404543f5b5e8f472e7394c54d75383d6e8c17d1db3d99b7b279477307dcf86",
-    "README.md": "b193abfc89ae5d8347f8c2fc9778654550f9fb715993b8d742eff5713638b74f",
-    "skills/README.md": "4d7aabbde8a3f0b128b098b68926301bff7f73ed35b873cc18567e22c1dc0f5a"
+    "docs/research-skill-promotion-gates.md": "66ee5d916f6c7e4c5a45fcc8709ec1d31065fdcd63b0165973362b6e83300776",
+    "README.md": "d7440d9d294514fc1948dd1a18ddaf9539622f1746435afcbe5784dde3f3d95c",
+    "skills/README.md": "830dbbff07ef9235cff924cd8503deaa92a13556eabf18a979fde90e74fa352f"
   },
   "review": {
     "status": "passed",
     "p0": 0,
     "p1": 0,
-    "p2": 0,
+    "p2": 1,
     "independent_reviews": [
       "amplicon and peak package boundary review",
       "output publication race and structured-failure re-review",
-      "protein package runtime and environment-isolation review"
+      "final-byte atomic publication fault-injection replay",
+      "protein package runtime and environment-isolation review",
+      "final cross-wave publisher seal review"
     ]
   },
   "remaining_evidence": [

@@ -645,6 +645,15 @@ def unlink_owned_at(name: str, directory_fd: int, identity: tuple[int, int]) -> 
     return True
 
 
+def write_all(descriptor: int, payload: bytes) -> None:
+    offset = 0
+    while offset < len(payload):
+        written = os.write(descriptor, payload[offset:])
+        if written <= 0:
+            raise OSError("output write made no progress")
+        offset += written
+
+
 def write_new_json(
     raw_path: str | Path,
     report: dict[str, Any],
@@ -661,15 +670,19 @@ def write_new_json(
     flags |= getattr(os, "O_NOFOLLOW", 0)
     descriptor = -1
     identity: tuple[int, int] | None = None
+    temporary_created = False
+    temporary_present = False
     published = False
+    original_error: BaseException | None = None
+    cleanup_failures: list[str] = []
     try:
         descriptor = os.open(temporary_name, flags, 0o600, dir_fd=directory_fd)
+        temporary_created = True
         opened = os.fstat(descriptor)
         identity = (opened.st_dev, opened.st_ino)
-        with os.fdopen(descriptor, "wb", closefd=False) as handle:
-            handle.write(payload)
-            handle.flush()
-            os.fsync(handle.fileno())
+        temporary_present = True
+        write_all(descriptor, payload)
+        os.fsync(descriptor)
         os.close(descriptor)
         descriptor = -1
         if before_publish is not None:
@@ -685,21 +698,66 @@ def write_new_json(
         except FileExistsError as exc:
             raise ContractError("output-exists", "output appeared; overwrite is forbidden", path=str(target)) from exc
         published = True
-        # The hard link is the commit point. Post-commit cleanup is best-effort:
-        # returning an error after publication would misreport a valid artifact.
-        try:
-            unlink_owned_at(temporary_name, directory_fd, identity)
-            os.fsync(directory_fd)
-        except OSError:
-            pass
-    except BaseException:
-        if descriptor >= 0:
-            os.close(descriptor)
-        if identity is not None and not published:
-            unlink_owned_at(temporary_name, directory_fd, identity)
-        raise
+        published_state = os.stat(
+            target_name, dir_fd=directory_fd, follow_symlinks=False
+        )
+        if (published_state.st_dev, published_state.st_ino) != identity:
+            raise OSError("published output identity differs from staged data")
+        if not unlink_owned_at(temporary_name, directory_fd, identity):
+            raise OSError("staged output identity changed before cleanup")
+        temporary_present = False
+        os.fsync(directory_fd)
+        final_state = os.stat(
+            target_name, dir_fd=directory_fd, follow_symlinks=False
+        )
+        if (final_state.st_dev, final_state.st_ino) != identity:
+            raise OSError("published output identity changed before completion")
+    except BaseException as exc:
+        original_error = exc
     finally:
+        if descriptor >= 0:
+            try:
+                os.close(descriptor)
+            except OSError as exc:
+                cleanup_failures.append(f"descriptor:{exc.__class__.__name__}")
+        if original_error is not None:
+            if temporary_created and identity is None:
+                cleanup_failures.append("staged:identity-unavailable")
+            if published and identity is not None:
+                try:
+                    if not unlink_owned_at(target_name, directory_fd, identity):
+                        cleanup_failures.append("published:identity-changed")
+                except OSError as exc:
+                    cleanup_failures.append(f"published:{exc.__class__.__name__}")
+            if temporary_present and identity is not None:
+                try:
+                    if not unlink_owned_at(temporary_name, directory_fd, identity):
+                        cleanup_failures.append("staged:identity-changed")
+                except OSError as exc:
+                    cleanup_failures.append(f"staged:{exc.__class__.__name__}")
+            if temporary_created:
+                try:
+                    os.fsync(directory_fd)
+                except OSError as exc:
+                    cleanup_failures.append(f"directory:{exc.__class__.__name__}")
         os.close(directory_fd)
+    if cleanup_failures:
+        raise ContractError(
+            "publication-rollback-failed",
+            "output publication failed and owned files could not all be rolled back: "
+            + ", ".join(cleanup_failures),
+            status="io-error",
+            path=str(target),
+        ) from original_error
+    if original_error is not None:
+        if isinstance(original_error, ContractError):
+            raise original_error
+        raise ContractError(
+            "publication-failed",
+            str(original_error),
+            status="io-error",
+            path=str(target),
+        ) from original_error
     return target
 
 
@@ -818,19 +876,48 @@ def self_test() -> None:
 
         fsync_output = root / "fsync-report.json"
         real_fsync = os.fsync
+        failed_directory_fsync = False
 
         def fail_directory_fsync(descriptor: int) -> None:
-            if stat.S_ISDIR(os.fstat(descriptor).st_mode):
+            nonlocal failed_directory_fsync
+            if stat.S_ISDIR(os.fstat(descriptor).st_mode) and not failed_directory_fsync:
+                failed_directory_fsync = True
                 raise OSError("injected directory fsync failure")
             real_fsync(descriptor)
 
         os.fsync = fail_directory_fsync
         try:
-            write_new_json(fsync_output, report, root=root)
+            expect_error(
+                "publication-failed",
+                lambda: write_new_json(fsync_output, report, root=root),
+            )
         finally:
             os.fsync = real_fsync
-        require_test(fsync_output.is_file(), "post-commit fsync publication differs")
-        checks += 1
+        require_test(failed_directory_fsync and not fsync_output.exists(), "post-link fsync failure was not rolled back")
+        require_test(not list(root.glob(f".{fsync_output.name}.tmp-*")), "post-link fsync rollback left a staged file")
+        checks += 2
+
+        cleanup_output = root / "cleanup-failure.json"
+        real_unlink = os.unlink
+
+        def fail_staged_unlink(path: str | bytes, *args: Any, **kwargs: Any) -> None:
+            if os.fspath(path).startswith(f".{cleanup_output.name}.tmp-"):
+                raise PermissionError("injected staged cleanup failure")
+            real_unlink(path, *args, **kwargs)
+
+        os.unlink = fail_staged_unlink
+        try:
+            expect_error(
+                "publication-rollback-failed",
+                lambda: write_new_json(cleanup_output, report, root=root),
+            )
+        finally:
+            os.unlink = real_unlink
+        require_test(not cleanup_output.exists(), "cleanup failure left the final output")
+        staged_leftovers = list(root.glob(f".{cleanup_output.name}.tmp-*"))
+        require_test(len(staged_leftovers) == 1, "cleanup failure did not expose its staged file")
+        staged_leftovers[0].unlink()
+        checks += 2
 
         expect_error("build-mismatch", lambda: build_report(str(contigs), "GRCh38-test", [str(first), str(second)], ["narrowPeak", "bed"], ["GRCh38-test", "hg19"]))
         expect_error("invalid-peak-count", lambda: build_report(str(contigs), "GRCh38-test", [str(second)] * 5, ["bed"] * 5, ["GRCh38-test"] * 5))
@@ -939,7 +1026,7 @@ def main(argv: list[str] | None = None) -> int:
             json.dumps({"error": exc.as_dict(), "status": exc.status}, sort_keys=True),
             file=sys.stderr,
         )
-        return 2
+        return 3 if exc.status == "io-error" else 2
     print(json.dumps({"output": str(output), "status": "completed"}, sort_keys=True))
     return 0
 

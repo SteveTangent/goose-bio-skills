@@ -8,6 +8,10 @@ The Wave R3 shortlist and its candidate-specific gates are recorded in
 [research-wave-r3-candidates.md](research-wave-r3-candidates.md). Wave R2's
 completed research package and evidence remain recorded in
 [research-wave-r2-candidates.md](research-wave-r2-candidates.md).
+Wave R4's six one-job candidates and their exact small-data gates are recorded
+in [research-wave-r4-candidates.md](research-wave-r4-candidates.md).
+The assessed, not-yet-implemented Wave R5 shortlist is recorded in
+[research-wave-r5-candidates.md](research-wave-r5-candidates.md).
 
 Wave R2 has now passed its research-branch minimum implementation gate. The
 [Wave R2 minimum-reliability record](../evals/research-wave-r2-minimal-reliability-v0.1.json)
@@ -18,10 +22,27 @@ requires a new atomic collection version and a final-byte rerun.
 
 Wave R3 has also passed its research-branch minimum implementation gate. The
 [Wave R3 minimum-reliability record](../evals/research-wave-r3-minimal-reliability-v0.1.json)
-binds its three exact packages, 60/60 retained checks run twice, 62 canonical
-routes, six independent holdout routes, and independent P0/P1/P2=0 reviews.
-Real minimap2 execution remains explicitly unverified. As with Wave R2, this
-permits supervised research use but not direct promotion into v0.7.0.
+binds its three exact packages, 60/60 retained checks run twice, the then-current 62 canonical
+routes, six independent holdout routes, and its then-current package reviews.
+A later bounded synthetic macOS ARM64 canary ran the exact alignment executor
+twice with real minimap2 2.31-r1302 and passed deterministic output and
+no-overwrite checks. That narrow integration evidence is not formal agent
+runtime evaluation, representative scientific validation, or a reason to
+change assurance. As with Wave R2, this permits supervised research use but not
+direct promotion into v0.7.0.
+
+Wave R4 has passed its research-branch minimum gate. Its retained runner passed
+twice with 192/192 checks across six final packages, and a 12-prompt independent
+contract-routing diagnostic produced six intended selections and six correct
+no-Skill boundaries with no forbidden selection or unnecessary question. This
+remains small-data `preview + reviewed` evidence, not formal scientific or
+model-runtime evaluation, and does not authorize direct promotion into v0.7.0.
+Its exact-ID network boundary also has one retained bounded anonymous
+[ClinVar canary](../evals/research-wave-r4-clinvar-canary-v0.1.json); that
+point-in-time provider check does not establish availability or clinical validity.
+The final cross-wave publisher seal review closed all P0/P1 findings and retained
+one accepted, non-blocking P2 for the explicitly documented low-level local-directory
+concurrency and exceptional temporary-file cleanup boundary.
 
 Every candidate remains on `research` until the applicable minimum gates for
 the target release level pass. For the current target, that level is the same
@@ -58,6 +79,16 @@ single bounded orthology live canary. This is intentionally narrow evidence.
 - create-new publication, no overwrite, bounded inputs, and invalid/failed work
   never reported as completed
 - tool, runtime, provider, version, and provenance boundaries recorded honestly
+
+Create-new publication is tested against ordinary pre-existing targets,
+partial writes, cleanup failures, and observed file-identity replacement. It
+does not claim lock-free security against a malicious process that already has
+write access to the same directory and can replace a name between one identity
+check and the immediately following unlink system call; callers needing that
+threat model must provide directory isolation or external locking. An
+exceptional failure before a newly created temporary file's identity can be
+captured may also leave that randomly named, mode-0600 temporary file for
+manual cleanup; it must never be treated as a completed result.
 
 For a networked candidate, same-level Beta promotion also requires an
 allowlisted read-only provider, reviewed request/page/byte/rate bounds, redirect

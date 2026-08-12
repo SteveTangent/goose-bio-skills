@@ -480,6 +480,50 @@ def fsync_directory(path: Path) -> None:
         os.close(descriptor)
 
 
+def _is_owned(path: Path, identity: tuple[int, int]) -> bool:
+    try:
+        current = os.lstat(path)
+    except FileNotFoundError:
+        return False
+    return (current.st_dev, current.st_ino) == identity
+
+
+def _unlink_owned(path: Path, identity: tuple[int, int]) -> bool:
+    try:
+        current = os.lstat(path)
+    except FileNotFoundError:
+        return True
+    if (current.st_dev, current.st_ino) != identity:
+        return False
+    os.unlink(path)
+    return True
+
+
+def _rollback_owned(parent: Path, identity: tuple[int, int], paths: tuple[Path, ...]) -> None:
+    failures: list[str] = []
+    for path in paths:
+        try:
+            if not _unlink_owned(path, identity):
+                failures.append(f"{path.name}:identity-mismatch")
+        except OSError as exc:
+            failures.append(f"{path.name}:{exc.__class__.__name__}")
+    try:
+        fsync_directory(parent)
+    except OSError as exc:
+        failures.append(f"directory:{exc.__class__.__name__}")
+    if failures:
+        raise OSError("publication rollback failed: " + ", ".join(failures))
+
+
+def _write_all(descriptor: int, payload: bytes) -> None:
+    offset = 0
+    while offset < len(payload):
+        written = os.write(descriptor, payload[offset:])
+        if written <= 0:
+            raise OSError("output write made no progress")
+        offset += written
+
+
 def safe_output_target(raw_path: str | Path, root: Path | None = None) -> Path:
     raw_text = os.fspath(raw_path)
     if not raw_text or "\x00" in raw_text:
@@ -548,34 +592,56 @@ def write_new_json(
     ).encode("utf-8")
     descriptor, temporary_name = tempfile.mkstemp(prefix=f".{target.name}.tmp-", dir=target.parent)
     temporary = Path(temporary_name)
+    identity: tuple[int, int] | None = None
     published = False
     try:
-        with os.fdopen(descriptor, "wb") as handle:
-            os.fchmod(handle.fileno(), 0o600)
-            handle.write(payload)
-            handle.flush()
-            os.fsync(handle.fileno())
+        try:
+            opened = os.fstat(descriptor)
+        except OSError:
+            opened = os.lstat(temporary)
+        identity = (opened.st_dev, opened.st_ino)
+        os.fchmod(descriptor, 0o600)
+        _write_all(descriptor, payload)
+        os.fsync(descriptor)
+        try:
+            os.close(descriptor)
+        finally:
+            descriptor = -1
         try:
             os.link(temporary, target)
         except FileExistsError as exc:
             raise ContractError("output-exists", "output appeared; overwrite is forbidden", path=str(target)) from exc
         published = True
+        if not _is_owned(target, identity):
+            raise OSError("published output identity differs from staged data")
+        if not _unlink_owned(temporary, identity):
+            raise OSError("temporary output identity changed after publication")
         fsync_directory(target.parent)
-    except BaseException:
-        if published:
+        if not _is_owned(target, identity):
+            raise OSError("published output identity changed before completion")
+    except BaseException as original:
+        close_error: OSError | None = None
+        if identity is None and descriptor >= 0:
             try:
-                target_state = os.lstat(target)
-                temporary_state = os.lstat(temporary)
-                if (target_state.st_dev, target_state.st_ino) == (
-                    temporary_state.st_dev,
-                    temporary_state.st_ino,
-                ):
-                    target.unlink()
-            except FileNotFoundError:
+                opened = os.fstat(descriptor)
+                identity = (opened.st_dev, opened.st_ino)
+            except OSError:
                 pass
+        if descriptor >= 0:
+            try:
+                os.close(descriptor)
+            except OSError as exc:
+                close_error = exc
+        if identity is None:
+            raise OSError("publication rollback failed: temporary identity unavailable") from original
+        paths = (target, temporary) if published else (temporary,)
+        try:
+            _rollback_owned(target.parent, identity, paths)
+        except OSError as rollback_error:
+            raise rollback_error from original
+        if close_error is not None:
+            raise close_error from original
         raise
-    finally:
-        temporary.unlink(missing_ok=True)
     return target
 
 
@@ -607,6 +673,26 @@ def expect_error(code: str, action: Any) -> None:
             raise RuntimeError(f"expected {code}, got {exc.code}") from exc
     else:
         raise RuntimeError(f"expected {code}")
+
+
+def expect_os_error(fragment: str, action: Any) -> None:
+    try:
+        action()
+    except OSError as exc:
+        if fragment not in str(exc):
+            raise RuntimeError(f"expected OSError containing {fragment!r}, got {exc!r}") from exc
+    else:
+        raise RuntimeError(f"expected OSError containing {fragment!r}")
+
+
+@contextmanager
+def patched_os(name: str, replacement: Any) -> Iterator[None]:
+    original = getattr(os, name)
+    setattr(os, name, replacement)
+    try:
+        yield
+    finally:
+        setattr(os, name, original)
 
 
 def require_test(condition: bool, message: str) -> None:
@@ -649,6 +735,51 @@ def self_test() -> None:
         require_test(output.read_bytes() == second_output.read_bytes(), "JSON bytes are not deterministic")
         expect_error("output-exists", lambda: write_new_json(output, report, root=root))
         checks += 3
+
+        zero_output = root / "zero.json"
+        with patched_os("write", lambda _descriptor, _payload: 0):
+            expect_os_error("no progress", lambda: write_new_json(zero_output, report, root=root))
+        require_test(not zero_output.exists(), "zero-write publication left a final output")
+        require_test(not list(root.glob(".zero.json.tmp-*")), "zero-write publication left a temporary output")
+        checks += 2
+
+        original_write = os.write
+
+        def short_write(descriptor: int, payload: bytes) -> int:
+            return original_write(descriptor, payload[:max(1, len(payload) // 3)])
+
+        short_output = root / "short.json"
+        with patched_os("write", short_write):
+            write_new_json(short_output, report, root=root)
+        require_test(short_output.read_bytes() == output.read_bytes(), "short writes truncated the output")
+        checks += 1
+
+        final_output = root / "final-identity.json"
+        original_unlink = os.unlink
+        swapped = False
+
+        def replace_final_during_cleanup(path: str | os.PathLike[str]) -> None:
+            nonlocal swapped
+            if not swapped and os.path.basename(os.fspath(path)).startswith(".final-identity.json.tmp-"):
+                swapped = True
+                original_unlink(final_output)
+                replacement = os.open(final_output, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+                try:
+                    _write_all(replacement, b"competitor\n")
+                    os.fsync(replacement)
+                finally:
+                    os.close(replacement)
+            original_unlink(path)
+
+        with patched_os("unlink", replace_final_during_cleanup):
+            expect_os_error(
+                "publication rollback failed",
+                lambda: write_new_json(final_output, report, root=root),
+            )
+        require_test(final_output.read_bytes() == b"competitor\n", "rollback removed a replacement output")
+        require_test(not list(root.glob(".final-identity.json.tmp-*")), "final identity check left a temporary output")
+        final_output.unlink()
+        checks += 2
 
         expect_error(
             "parent-traversal",

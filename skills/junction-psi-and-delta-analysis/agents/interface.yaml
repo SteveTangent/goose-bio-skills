@@ -1,0 +1,20 @@
+interface:
+  display_name: "Junction PSI and Delta Analysis"
+  short_description: "Compute PSI and declared group deltas from prepared counts."
+  default_prompt: "Compute per-sample PSI and a declared two-group delta from this prepared inclusion/exclusion junction-count TSV using the stated minimum coverage, then write a new JSON report without statistical inference."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

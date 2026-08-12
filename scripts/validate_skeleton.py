@@ -269,6 +269,44 @@ RESEARCH_R3_HOLDOUT_ORACLES = {
         None,
     ),
 }
+RESEARCH_R4_HOLDOUT_ORACLES = {
+    "bulk-r4-blind-positive": (
+        "bulk-rnaseq-gene-counting-from-alignment",
+        0,
+        None,
+    ),
+    "bulk-r4-blind-neighbor-paired": (None, 0, None),
+    "junction-r4-blind-positive": (
+        "junction-psi-and-delta-analysis",
+        0,
+        None,
+    ),
+    "junction-r4-blind-neighbor-discovery": (None, 0, None),
+    "alpha-r4-blind-positive": (
+        "amplicon-alpha-diversity-analysis",
+        0,
+        None,
+    ),
+    "alpha-r4-blind-neighbor-beta": (None, 0, None),
+    "flow-r4-blind-positive": (
+        "flow-cytometry-compensation-application",
+        0,
+        None,
+    ),
+    "flow-r4-blind-neighbor-gating": (None, 0, None),
+    "km-r4-blind-positive": (
+        "kaplan-meier-survival-analysis",
+        0,
+        None,
+    ),
+    "km-r4-blind-neighbor-cox": (None, 0, None),
+    "clinvar-r4-blind-positive": (
+        "human-variant-evidence-retrieval",
+        0,
+        None,
+    ),
+    "clinvar-r4-blind-neighbor-clinical": (None, 0, None),
+}
 
 RELEASE_STAGES = {"preview", "stable"}
 ASSURANCE_LEVELS = {"reviewed", "evaluated"}
@@ -1148,7 +1186,7 @@ def validate_intake_routing_cases(
         fixture,
         manifests,
         "intake routing fixture",
-        expected_count=62,
+        expected_count=90,
         required_oracles=CRITICAL_INTAKE_CASES,
     )
     research_holdout = load_json(
@@ -1170,6 +1208,16 @@ def validate_intake_routing_cases(
         "research Wave R3 independent routing fixture",
         expected_count=6,
         required_oracles=RESEARCH_R3_HOLDOUT_ORACLES,
+    )
+    research_r4_holdout = load_json(
+        "evals/research-wave-r4-independent-routing-cases-v0.1.json"
+    )
+    validate_intake_routing_fixture(
+        research_r4_holdout,
+        manifests,
+        "research Wave R4 independent routing fixture",
+        expected_count=12,
+        required_oracles=RESEARCH_R4_HOLDOUT_ORACLES,
     )
 
 
@@ -2375,7 +2423,7 @@ def run_self_test() -> int:
                 intake_fixture,
                 intake_manifests,
                 "self-test intake fixture",
-                expected_count=62,
+                expected_count=90,
                 required_oracles=CRITICAL_INTAKE_CASES,
             )
         ),
@@ -2396,7 +2444,7 @@ def run_self_test() -> int:
                     invalid_intake_fixture,
                     intake_manifests,
                     "self-test invalid intake fixture",
-                    expected_count=62,
+                    expected_count=90,
                     required_oracles=CRITICAL_INTAKE_CASES,
                 )
             )
@@ -2486,6 +2534,47 @@ def run_self_test() -> int:
         "self-test: invalid research Wave R3 holdout oracle accepted",
     )
     checks.append("research-wave-r3-routing-holdout-enforced")
+
+    research_r4_holdout = json_loads_no_duplicates(
+        (ROOT / "evals/research-wave-r4-independent-routing-cases-v0.1.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    require(
+        not captured_errors(
+            lambda: validate_intake_routing_fixture(
+                research_r4_holdout,
+                intake_manifests,
+                "self-test research Wave R4 holdout",
+                expected_count=12,
+                required_oracles=RESEARCH_R4_HOLDOUT_ORACLES,
+            )
+        ),
+        "self-test: valid research Wave R4 holdout rejected",
+    )
+    invalid_research_r4_holdout = copy.deepcopy(research_r4_holdout)
+    if isinstance(invalid_research_r4_holdout, dict):
+        invalid_cases = invalid_research_r4_holdout.get("cases")
+        if isinstance(invalid_cases, list):
+            for case in invalid_cases:
+                if isinstance(case, dict) and case.get("id") == "flow-r4-blind-positive":
+                    case["expected_skill"] = "fcs-file-io-and-metadata-qc"
+                    break
+    require(
+        bool(
+            captured_errors(
+                lambda: validate_intake_routing_fixture(
+                    invalid_research_r4_holdout,
+                    intake_manifests,
+                    "self-test invalid research Wave R4 holdout",
+                    expected_count=12,
+                    required_oracles=RESEARCH_R4_HOLDOUT_ORACLES,
+                )
+            )
+        ),
+        "self-test: invalid research Wave R4 holdout oracle accepted",
+    )
+    checks.append("research-wave-r4-routing-holdout-enforced")
 
     preview_disclaimer = "This preview is not scientifically validated."
     positive_claim = "This preview is scientifically validated."

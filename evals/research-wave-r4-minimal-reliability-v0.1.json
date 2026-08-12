@@ -1,0 +1,213 @@
+{
+  "schema_version": "0.1.0",
+  "record_version": "0.1.0",
+  "recorded_at": "2026-08-13",
+  "branch": "research",
+  "scope": {
+    "candidate_count": 6,
+    "collection_version": "0.7.0",
+    "small_synthetic_data_only": true,
+    "offline_replay": true,
+    "network_performed": false,
+    "separate_public_canary_network_performed": true,
+    "synthetic_clinvar_provenance": true,
+    "minimum_reliability_pass": true,
+    "formal_scientific_evaluation": false,
+    "main_promotion_authorized": false,
+    "research_commit_authorized": true,
+    "claim": "The six Wave R4 candidates passed retained small-data reliability and contract-routing checks on research. This is not representative scientific evaluation, model-generalization evidence, clinical validation, or a main release."
+  },
+  "retained_replay": {
+    "command": "python3 scripts/run_wave_r4_minimal_reliability.py",
+    "runs": 2,
+    "checks_per_run": 192,
+    "statuses": ["pass", "pass"],
+    "repeat_events_identical": true,
+    "runner_sha256": "a5223aec5a09369a8404dbc609b893a720b46629474d4fa6259b04e22e073e50",
+    "fixture_sha256": "3072aa79e1b7d1251410eb4b71e8195fd187291d747db923a8a3b0ccd5cabdc2",
+    "coverage": [
+      "six package self-tests",
+      "exact package digests and input hashes",
+      "bounded valid semantics",
+      "two-run byte determinism",
+      "one invalid or unsupported boundary per package",
+      "create-new and no-overwrite behavior",
+      "offline synthetic ClinVar provenance binding"
+    ],
+    "output_sha256": {
+      "bulk-rnaseq-gene-counting-from-alignment": "0fadbf828d2500d170cfced471c85a307508d9400d9eeac94bcfdaf2d359d76f",
+      "junction-psi-and-delta-analysis": "f61a51cfa92e3dce2d537c499a856eaac2ab993e42f440434b1726a9cabdb172",
+      "amplicon-alpha-diversity-analysis": "c26c66da94f610061d269ed4c6cd689fd96fa73aaf8127f75b6c825b1143e621",
+      "flow-cytometry-compensation-application.events": "2ca4ac1929693934c16c87326baefc20a50bcba0e4f277dc356f4a7f7c33a025",
+      "flow-cytometry-compensation-application.report": "0343cb2867bc8008445d4149a228288066e0faa0e1b38d9ac50b9eb2afb9333c",
+      "kaplan-meier-survival-analysis": "01b85a614449ce3d5c42cfc337c5faf4e3874771bda608c24e1d3e278b9d476b",
+      "human-variant-evidence-retrieval": "c5b0011a130ee6be53569abd961850a53faafb7c9e8535fac4cbdd5537319573"
+    }
+  },
+  "package_bindings": {
+    "bulk-rnaseq-gene-counting-from-alignment": "73f87e17c0f69d46103b33ebff489d1c083f19f720a079e78b88fbfb46b9f4ae",
+    "junction-psi-and-delta-analysis": "a6acdd4bbdb45c2e129fe374f42361d2b7686bab1b34dafd1193b676c2ae0a67",
+    "amplicon-alpha-diversity-analysis": "a3204d52d190936b168c8ac8b46552329532ff56da7ac84000f686371555e34d",
+    "flow-cytometry-compensation-application": "1362af8187200ec2df84494ef977ad575f40f463e44924a1363931aa77452b13",
+    "kaplan-meier-survival-analysis": "8d5e13de0fad5db3151455c473c01b377778c739879ecbd088db017893bc9a9a",
+    "human-variant-evidence-retrieval": "aab31b1635999f9e6fa62277fb50c2863ec06275259588d01c1f51b947424af4"
+  },
+  "public_canary": {
+    "status": "pass",
+    "formal_pass": false,
+    "evidence": "evals/research-wave-r4-clinvar-canary-v0.1.json",
+    "evidence_sha256": "8108d1ca70a71738490decf22c8a6d9ca2a175945e1df6a7b0b4dbadb48716a5",
+    "provider_id": "ncbi-eutils",
+    "network_performed": true,
+    "point_in_time_binding": true,
+    "current_exact_bytes": false,
+    "clinical_assertions": 87,
+    "rcv_accessions": 17
+  },
+  "independent_routing": {
+    "evaluator_task": "blind_r4_routes",
+    "case_file": "evals/research-wave-r4-independent-routing-cases-v0.1.json",
+    "case_file_sha256": "fb3d89570a9f9ac0f4f76230ff86e21b7347a04612c4d10c7828ea455bd9e05b",
+    "first_execution_blind_to_oracles": true,
+    "eval_files_withheld": true,
+    "model_build_pinned": false,
+    "cases": 12,
+    "intended_skill_selections": 6,
+    "correct_no_skill_boundaries": 6,
+    "forbidden_selections": 0,
+    "questions": 0,
+    "observations": [
+      {
+        "id": "bulk-r4-blind-positive",
+        "selected_skill": "bulk-rnaseq-gene-counting-from-alignment",
+        "question_needed": false,
+        "forbidden_selected": false
+      },
+      {
+        "id": "bulk-r4-blind-neighbor-paired",
+        "selected_skill": null,
+        "question_needed": false,
+        "forbidden_selected": false
+      },
+      {
+        "id": "junction-r4-blind-positive",
+        "selected_skill": "junction-psi-and-delta-analysis",
+        "question_needed": false,
+        "forbidden_selected": false
+      },
+      {
+        "id": "junction-r4-blind-neighbor-discovery",
+        "selected_skill": null,
+        "question_needed": false,
+        "forbidden_selected": false
+      },
+      {
+        "id": "alpha-r4-blind-positive",
+        "selected_skill": "amplicon-alpha-diversity-analysis",
+        "question_needed": false,
+        "forbidden_selected": false
+      },
+      {
+        "id": "alpha-r4-blind-neighbor-beta",
+        "selected_skill": null,
+        "question_needed": false,
+        "forbidden_selected": false
+      },
+      {
+        "id": "flow-r4-blind-positive",
+        "selected_skill": "flow-cytometry-compensation-application",
+        "question_needed": false,
+        "forbidden_selected": false
+      },
+      {
+        "id": "flow-r4-blind-neighbor-gating",
+        "selected_skill": null,
+        "question_needed": false,
+        "forbidden_selected": false
+      },
+      {
+        "id": "km-r4-blind-positive",
+        "selected_skill": "kaplan-meier-survival-analysis",
+        "question_needed": false,
+        "forbidden_selected": false
+      },
+      {
+        "id": "km-r4-blind-neighbor-cox",
+        "selected_skill": null,
+        "question_needed": false,
+        "forbidden_selected": false
+      },
+      {
+        "id": "clinvar-r4-blind-positive",
+        "selected_skill": "human-variant-evidence-retrieval",
+        "question_needed": false,
+        "forbidden_selected": false
+      },
+      {
+        "id": "clinvar-r4-blind-neighbor-clinical",
+        "selected_skill": null,
+        "question_needed": false,
+        "forbidden_selected": false
+      }
+    ],
+    "scope_note": "Independent contract-routing judgment over 12 hand-authored prompts; not evidence of model or production-router generalization."
+  },
+  "repository_regression": {
+    "installable_packages": 44,
+    "domains": 13,
+    "clusters": 26,
+    "canonical_routing_cases": 90,
+    "source_clean": true,
+    "wave_r1_checks": 84,
+    "wave_r2_checks": 67,
+    "wave_r3_checks": 60,
+    "connector_checks": 21,
+    "connector_sha256": "060f3bf2c16fe89f574ff113c1293d86ea495b73d56189d43c7c5722b9f44232",
+    "validator_self_test": "pass",
+    "git_diff_check": "pass"
+  },
+  "control_hashes": {
+    "evals/intake-routing-cases.json": "e5a68d5524354679aad4c3ed91ac043310292763759f7eb900efc95b17f6300d",
+    "scripts/validate_skeleton.py": "311b4376d96b76c82cd2c1b34db7e101701b05988db9c043fdaddd577b6adb68",
+    "registry.json": "99125d160a5ee682be25ff95383916f219f8c29b00860a9764e09eecfa9dec69",
+    "connectors/providers.json": "e30f59cb3f4673105e94839e5bb4e50f47252bb8e7226a1310a687a75f944cce",
+    "README.md": "d7440d9d294514fc1948dd1a18ddaf9539622f1746435afcbe5784dde3f3d95c",
+    "docs/architecture.md": "8a05486b42e7d93a623bf91543c4fbb8a477b97968970741196b36d2cd7eb903",
+    "docs/catalog.md": "6746152e900dee67df0f5bd1e90d834d086767185be09f59cd21b09f2934e778",
+    "docs/research-skill-promotion-gates.md": "66ee5d916f6c7e4c5a45fcc8709ec1d31065fdcd63b0165973362b6e83300776",
+    "docs/research-wave-r4-candidates.md": "42b034d7baeec388dba2c0b22bd811d0bb043b118795a7897de2e0027bd1d1a5",
+    "skills/README.md": "830dbbff07ef9235cff924cd8503deaa92a13556eabf18a979fde90e74fa352f"
+  },
+  "review": {
+    "status": "passed",
+    "p0": 0,
+    "p1": 0,
+    "p2": 1,
+    "notes": [
+      "Flow publication, numeric, identifier, and matrix-conditioning findings were fixed and retested.",
+      "ClinVar XML/provenance validation and atomic publication findings were fixed and retested.",
+      "One bounded anonymous ClinVar final-byte canary was retained as a sanitized hash and semantic oracle record.",
+      "The ClinVar live canary is a point-in-time binding; current publication-hardening bytes are covered by retained offline replay rather than another live request.",
+      "Kaplan-Meier now uses exact Decimal time ordering so distinct large follow-up times do not collapse.",
+      "Bulk counting explicitly limits itself to positional assignment and requires upstream full SAM validity.",
+      "All six package publishers now fail closed on tested zero writes, cleanup, directory-sync, observed identity replacement, and rollback faults.",
+      "Accepted P2: lock-free isolation from a malicious same-directory writer between adjacent filesystem calls is outside scope, and a pre-identity fstat failure may leave a random mode-0600 temporary file."
+    ]
+  },
+  "remaining_evidence": [
+    "formal exact-package agent or model runtime evaluation",
+    "representative and large biological datasets",
+    "named external domain-method or human-expert review",
+    "scientific benchmark or baseline comparison",
+    "cross-platform and scale evaluation",
+    "clinical validity, diagnosis, treatment, or patient-level prediction"
+  ],
+  "claims_not_made": [
+    "evaluated or stable assurance",
+    "representative scientific validity",
+    "model or router generalization",
+    "superiority over another workflow",
+    "clinical authority",
+    "main Beta membership"
+  ]
+}

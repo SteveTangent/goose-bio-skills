@@ -1,7 +1,7 @@
 {
   "schema_version": "0.2.0",
   "mode": "live-public-read-only",
-  "freshness_checked_at": "2026-08-12",
+  "freshness_checked_at": "2026-08-13",
   "provider_ids": [
     "ncbi-eutils",
     "uniprot-rest",
@@ -23,13 +23,14 @@
   "providers": {
     "ncbi-eutils": {
       "display_name": "NCBI E-utilities",
-      "purpose": "Search public biomedical literature and study metadata, resolve NCBI accession.version identifiers, or retrieve bounded public NCBI Taxonomy records.",
+      "purpose": "Search public biomedical literature and study metadata, resolve NCBI accession.version identifiers, retrieve bounded public NCBI Taxonomy records, or fetch exact public ClinVar VCV records by declared Variation ID or VCV accession.",
       "would_send": [
         "query terms",
         "database name",
         "date and field filters",
         "public accession identifiers",
         "public taxonomy names or TaxIds",
+        "declared public ClinVar Variation IDs or VCV accessions",
         "pagination parameters"
       ],
       "credential_fields": [],

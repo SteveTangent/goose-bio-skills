@@ -19,7 +19,7 @@ import sys
 import tempfile
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 
 
 VERSION = "0.7.0"
@@ -882,6 +882,43 @@ def _unlink_owned_at(name: str, directory_fd: int, identity: tuple[int, int]) ->
     return True
 
 
+def _is_owned_at(name: str, directory_fd: int, identity: tuple[int, int]) -> bool:
+    try:
+        current = os.stat(name, dir_fd=directory_fd, follow_symlinks=False)
+    except FileNotFoundError:
+        return False
+    return (current.st_dev, current.st_ino) == identity
+
+
+def _rollback_owned_at(
+    directory_fd: int,
+    identity: tuple[int, int],
+    names: tuple[str, ...],
+) -> None:
+    failures: list[str] = []
+    for name in names:
+        try:
+            if not _unlink_owned_at(name, directory_fd, identity):
+                failures.append(f"{name}:identity-mismatch")
+        except OSError as exc:
+            failures.append(f"{name}:{exc.__class__.__name__}")
+    try:
+        os.fsync(directory_fd)
+    except OSError as exc:
+        failures.append(f"directory:{exc.__class__.__name__}")
+    if failures:
+        raise OSError("publication rollback failed: " + ", ".join(failures))
+
+
+def _write_all(descriptor: int, payload: bytes) -> None:
+    offset = 0
+    while offset < len(payload):
+        written = os.write(descriptor, payload[offset:])
+        if written <= 0:
+            raise OSError("output write made no progress")
+        offset += written
+
+
 def write_new(path: Path, rendered: str, root: Path | None = None) -> Path:
     target = _safe_output_target(path, root)
     directory_fd, target_name = _open_output_parent(target, root)
@@ -902,12 +939,12 @@ def write_new(path: Path, rendered: str, root: Path | None = None) -> Path:
         temporary_stat = os.fstat(descriptor)
         identity = (temporary_stat.st_dev, temporary_stat.st_ino)
         payload = rendered.encode("utf-8")
-        offset = 0
-        while offset < len(payload):
-            offset += os.write(descriptor, payload[offset:])
+        _write_all(descriptor, payload)
         os.fsync(descriptor)
-        os.close(descriptor)
-        descriptor = -1
+        try:
+            os.close(descriptor)
+        finally:
+            descriptor = -1
         try:
             os.link(
                 temporary_name,
@@ -919,17 +956,22 @@ def write_new(path: Path, rendered: str, root: Path | None = None) -> Path:
         except FileExistsError as exc:
             raise fail("invalid-input", "output-exists", "output path already exists") from exc
         published = True
-        os.fsync(directory_fd)
-        if identity is None or not _unlink_owned_at(temporary_name, directory_fd, identity):
+        if not _is_owned_at(target_name, directory_fd, identity):
+            raise OSError("published output identity differs from staged data")
+        if not _unlink_owned_at(temporary_name, directory_fd, identity):
             raise OSError("temporary output identity changed")
         os.fsync(directory_fd)
-    except BaseException:
+        if not _is_owned_at(target_name, directory_fd, identity):
+            raise OSError("published output identity changed before completion")
+    except BaseException as original:
         if descriptor >= 0:
             os.close(descriptor)
         if identity is not None:
-            if published:
-                _unlink_owned_at(target_name, directory_fd, identity)
-            _unlink_owned_at(temporary_name, directory_fd, identity)
+            names = (target_name, temporary_name) if published else (temporary_name,)
+            try:
+                _rollback_owned_at(directory_fd, identity, names)
+            except OSError as rollback_error:
+                raise rollback_error from original
         raise
     finally:
         os.close(directory_fd)
@@ -967,6 +1009,12 @@ def temporary_working_directory(path: Path) -> Any:
 def self_test() -> None:
     checks = 0
 
+    def check(condition: bool, message: str) -> None:
+        nonlocal checks
+        if not condition:
+            raise RuntimeError(message)
+        checks += 1
+
     def expect(code: str, operation: Any) -> None:
         nonlocal checks
         try:
@@ -977,6 +1025,28 @@ def self_test() -> None:
         else:
             raise AssertionError(f"boundary {code} was accepted")
         checks += 1
+
+    def expect_os_error(fragment: str, operation: Any) -> None:
+        nonlocal checks
+        try:
+            operation()
+        except OSError as exc:
+            if fragment not in str(exc):
+                raise RuntimeError(
+                    f"expected OSError containing {fragment!r}, received {exc!r}"
+                ) from exc
+        else:
+            raise AssertionError(f"I/O failure {fragment!r} was accepted")
+        checks += 1
+
+    @contextmanager
+    def patched_os(name: str, replacement: Any) -> Iterator[None]:
+        original = getattr(os, name)
+        setattr(os, name, replacement)
+        try:
+            yield
+        finally:
+            setattr(os, name, original)
 
     with tempfile.TemporaryDirectory(prefix="protein-limma-selftest-") as temporary_name, \
             temporary_working_directory(Path(temporary_name)):
@@ -1060,6 +1130,62 @@ def self_test() -> None:
         expect("output-exists", lambda: write_new(output, "replacement\n", root))
         if output.read_text(encoding="utf-8") != first_rendered:
             raise RuntimeError("existing output was changed")
+
+        zero_output = root / "zero.json"
+        with patched_os("write", lambda _descriptor, _payload: 0):
+            expect_os_error(
+                "no progress",
+                lambda: write_new(zero_output, first_rendered, root),
+            )
+        check(not zero_output.exists(), "zero-write publication left a final output")
+        check(not list(root.glob(".zero.json.tmp-*")), "zero-write publication left a temporary output")
+
+        original_write = os.write
+
+        def short_write(descriptor: int, payload: bytes) -> int:
+            return original_write(descriptor, payload[:max(1, len(payload) // 3)])
+
+        short_output = root / "short.json"
+        with patched_os("write", short_write):
+            write_new(short_output, first_rendered, root)
+        check(short_output.read_text(encoding="utf-8") == first_rendered, "short writes truncated output")
+
+        final_identity_output = root / "final-identity.json"
+        original_unlink = os.unlink
+        final_identity_swapped = False
+
+        def replace_final_during_cleanup(path: str, *args: Any, **kwargs: Any) -> None:
+            nonlocal final_identity_swapped
+            if not final_identity_swapped and path.startswith(".final-identity.json.tmp-"):
+                final_identity_swapped = True
+                original_unlink(final_identity_output.name, dir_fd=kwargs["dir_fd"])
+                replacement = os.open(
+                    final_identity_output.name,
+                    os.O_WRONLY | os.O_CREAT | os.O_EXCL,
+                    0o600,
+                    dir_fd=kwargs["dir_fd"],
+                )
+                try:
+                    _write_all(replacement, b"competitor\n")
+                    os.fsync(replacement)
+                finally:
+                    os.close(replacement)
+            original_unlink(path, *args, **kwargs)
+
+        with patched_os("unlink", replace_final_during_cleanup):
+            expect_os_error(
+                "publication rollback failed",
+                lambda: write_new(final_identity_output, first_rendered, root),
+            )
+        check(
+            final_identity_output.read_bytes() == b"competitor\n",
+            "identity check removed a replacement final output",
+        )
+        check(
+            not list(root.glob(".final-identity.json.tmp-*")),
+            "identity check left an owned temporary output",
+        )
+        final_identity_output.unlink()
 
         linked_input = root / "linked-matrix.csv"
         linked_input.symlink_to(matrix_path)

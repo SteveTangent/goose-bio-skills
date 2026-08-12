@@ -90,12 +90,14 @@ Candidate-specific minimum gate:
 
 - tiny exact reference and single-end FASTQ fixtures with a bounded reviewed
   adapter contract;
-- two byte-identical deterministic reports and exact SAM/count assertions when
-  the real adapter is evaluated; until then, retain adapter-contract and
-  fail-closed evidence and mark the real runtime unverified;
+- two byte-identical deterministic reports and exact SAM/count assertions;
+- retain adapter-contract and fail-closed evidence, plus a separately recorded
+  real-tool canary, without treating that narrow synthetic run as formal agent
+  runtime or scientific evaluation;
 - reject malformed FASTQ/FASTA, paired-end or unsupported assay requests,
-  reference/input changes, unsafe executable or output paths, symlinks, and
-  overwrite;
+  reference/input changes, unsafe or nonregular resolved targets, unsafe output
+  paths, and overwrite; ordinary input and executable symlinks are accepted only
+  after their final regular targets are resolved and pinned;
 - one positive route plus near-neighbor routes for trimming and existing
   alignment-file operations;
 - no shell invocation, environment inheritance, automatic tool installation,
@@ -125,12 +127,19 @@ The retained offline replay in
 passed twice with 60/60 checks and byte-identical events. It binds all three
 package digests, small input and output hashes, deterministic self-tests,
 invalid and fail-closed paths, and create-new/no-overwrite behavior. The
-canonical routing set contains 62 cases, and an independent evaluator selected
+canonical routing set contained 62 cases at the Wave R3 gate, and an independent evaluator selected
 the expected Skill or no-Skill boundary for all six Wave R3 holdout prompts
 with no forbidden selections or unnecessary questions.
 
-Independent package review found no open P0, P1, or P2 finding. This remains a
-small offline minimum: real minimap2 execution, representative scientific
-benchmarking, formal agent evaluation, expert review, scale, generalization,
-clinical use, and superiority claims were not performed. The exact scope is in
-[`research-wave-r3-minimal-reliability-v0.1.json`](../evals/research-wave-r3-minimal-reliability-v0.1.json).
+Independent package review at the original Wave R3 gate found no open P0, P1,
+or P2 finding. The later cross-wave final publisher seal review closed all P0/P1
+findings and retained one accepted non-blocking P2 for the documented low-level
+local-directory concurrency and exceptional temporary-file cleanup boundary.
+This remains a small minimum. A later synthetic macOS ARM64 canary ran the exact executor twice
+with real minimap2 2.31-r1302, produced byte-identical SAM and report artifacts,
+and passed create-new/no-overwrite checks. It did not add representative
+scientific benchmarking, formal agent evaluation, expert review, scale,
+generalization, clinical use, or superiority evidence. The exact scopes are in
+[`research-wave-r3-minimal-reliability-v0.1.json`](../evals/research-wave-r3-minimal-reliability-v0.1.json)
+and
+[`research-wave-r3-minimap2-canary-v0.1.json`](../evals/research-wave-r3-minimap2-canary-v0.1.json).

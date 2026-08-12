@@ -1,0 +1,98 @@
+{
+  "schema_version": "0.1.0",
+  "record_version": "0.1.0",
+  "evidence_kind": "bounded-public-read-normalizer-canary",
+  "recorded_at": "2026-08-13",
+  "canary_completed_at_utc": "2026-08-12T18:19:02Z",
+  "branch": "research",
+  "package_binding": {
+    "name": "human-variant-evidence-retrieval",
+    "version": "0.7.0",
+    "package_digest": "4ac8b1048237e4ac538bd534ff5468c1f197260c57df6a6fd2264577f384b68e",
+    "script_sha256": "0a2707e7d28dffb6ca798675318bc9da48edfa734497ef72aa8aa4b3c6a3df6e"
+  },
+  "connector_binding": {
+    "provider_id": "ncbi-eutils",
+    "connector_sha256": "f914312d39afc1987be2212552c66267fa003853fcdc04309ecb5ccb3a2026e5",
+    "provider_catalog_sha256": "e30f59cb3f4673105e94839e5bb4e50f47252bb8e7226a1310a687a75f944cce",
+    "anonymous": true,
+    "method": "GET",
+    "max_response_bytes": 16777216,
+    "network_performed": true
+  },
+  "scope": {
+    "status": "pass",
+    "formal_pass": false,
+    "exact_point_in_time_normalizer_used": true,
+    "point_in_time_binding": true,
+    "current_exact_bytes": false,
+    "public_identifier_only": true,
+    "patient_or_private_data_sent": false,
+    "formal_agent_runtime_evaluation": false,
+    "scientific_benchmark": false,
+    "clinical_interpretation": false,
+    "claim": "One public ClinVar record retrieved by exact VCV accession and exact declared Variation ID produced the same payload and normalized provider semantics on the point-in-time package and connector bytes recorded above. Later publication-hardening changes were verified by retained offline replay, not by another live request."
+  },
+  "requests": [
+    {
+      "identifier": "VCV000009325",
+      "identifier_kind": "VCV accession",
+      "http_status": 200,
+      "content_type": "text/xml; charset=UTF-8",
+      "payload_bytes": 442263,
+      "payload_sha256": "751fb72357271eb77a29b72d632b8856d5168d66bd6d477a7a8efeeafcbb3a25",
+      "provenance_sha256": "c3d2135a20fb029957aefd674705eb138eb12c2a4a5ac0bd2c9679b1008daed1",
+      "normalized_output_sha256": "3e5c384bbd1a5a96e81568910fc7b58cd41ab235f3d04efc250dfa5a3797b1df"
+    },
+    {
+      "identifier": "9325",
+      "identifier_kind": "declared Variation ID",
+      "http_status": 200,
+      "content_type": "text/xml; charset=UTF-8",
+      "payload_bytes": 442263,
+      "payload_sha256": "751fb72357271eb77a29b72d632b8856d5168d66bd6d477a7a8efeeafcbb3a25",
+      "provenance_sha256": "b5fdfc3202516a929d4ef83433b39639d8011dd6cdaa85ee54d84232e991b864",
+      "normalized_output_sha256": "cbea3362b470a1384c461d0a7bc8639f066d06f1ac80a16191a94f3ab0e5919a"
+    }
+  ],
+  "normalized_oracle": {
+    "records": 1,
+    "variation_id": "9325",
+    "vcv_accession": "VCV000009325",
+    "clinical_assertions": 87,
+    "rcv_accessions": 17,
+    "conflict_resolution": "not-performed",
+    "clinical_interpretation": "not-performed",
+    "request_independent_semantic_sha256": "219d4f8e2bf82bd95c90f31c237e75e29a142c8886c290cfec6824a29e8ef893",
+    "request_independent_semantics_identical": true
+  },
+  "publication": {
+    "create_new": "pass",
+    "existing_output_rejected": true,
+    "existing_output_exit_code": 3,
+    "existing_output_status": "invalid-output",
+    "existing_output_bytes_unchanged": true,
+    "temporary_residue": false
+  },
+  "artifact_retention": {
+    "raw_payloads_committed": false,
+    "provenance_sidecars_committed": false,
+    "normalized_outputs_committed": false,
+    "sanitized_hash_and_oracle_record_only": true
+  },
+  "remaining_evidence": [
+    "formal exact-package agent runtime evaluation",
+    "provider error, rate-limit, deletion, and live not-found matrix",
+    "multiple records in one bounded request set",
+    "representative variant types and somatic records",
+    "named external clinical-genomics or domain-method review",
+    "clinical validity, classification, diagnosis, treatment, and patient-level use"
+  ],
+  "claims_not_made": [
+    "evaluated or stable assurance",
+    "representative scientific validity",
+    "clinical classification or conflict resolution",
+    "provider availability guarantee",
+    "main Beta membership"
+  ]
+}

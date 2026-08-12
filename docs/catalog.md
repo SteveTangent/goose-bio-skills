@@ -1,11 +1,11 @@
-# Research catalog: 32-Skill Beta plus 6 candidates
+# Research catalog: 32-Skill Beta plus 12 candidates
 
-The verified `main` Beta contains 32 independently installable `preview + reviewed` Skills across 11 Domains and 19 Clusters. The `research` branch adds six Wave R2/R3 candidates, for 38 branch packages across 13 Domains and 22 Clusters. [registry.json](../registry.json) is authoritative for the checked-out branch; a research entry is not a `main` promotion.
+The verified `main` Beta contains 32 independently installable `preview + reviewed` Skills across 11 Domains and 19 Clusters. The `research` branch adds 12 Wave R2/R3/R4 candidates, for 44 branch packages across 13 Domains and 26 Clusters. [registry.json](../registry.json) is authoritative for the checked-out branch; a research entry is not a `main` promotion.
 
 ```text
 13 Domains on research
-  -> 22 Clusters
-    -> 32 Beta Skills + 6 research candidates
+  -> 26 Clusters
+    -> 32 Beta Skills + 12 research candidates
 ```
 
 Every Skill uses the same lightweight interaction boundary:
@@ -72,8 +72,19 @@ Every Skill uses the same lightweight interaction boundary:
 | ---: | --- | --- | --- | --- |
 | R3-1 | D02 Sequence, Reads, Genomes & Evolution | C08 Comparative and evolutionary genomics | `phylogenetic-tree-io-and-qc` | `research`; minimum gate passed |
 | R3-2 | D08 Proteomics, Metabolomics & Cytometry | C23 Metabolomics feature tables | `untargeted-metabolomics-feature-table-qc` | `research`; minimum gate passed |
-| R3-3 | D02 Sequence, Reads, Genomes & Evolution | C05 Read preprocessing and alignment | `read-alignment-selection-and-execution` | `research`; minimum gate passed; real minimap2 unverified |
+| R3-3 | D02 Sequence, Reads, Genomes & Evolution | C05 Read preprocessing and alignment | `read-alignment-selection-and-execution` | `research`; minimum gate passed; synthetic real-minimap2 canary passed |
 
-All 38 exact research-branch packages appear under `skills/<slug>/` and in `registry.json`. The first 32 form the verified v0.7.0 Beta baseline; the six Wave R2/R3 packages remain candidates until [their promotion gates](research-skill-promotion-gates.md) pass. `Preview + reviewed` means a package boundary was reviewed, not that runtime, scientific validity, clinical use, or superiority over a baseline was established. `Stable` is allowed only with bounded `evaluated` assurance.
+## Wave R4 research candidates
 
-D06 and D07 have narrow research candidates for peak-set and amplicon-table QC. Wave R3 adds local Newick QC, metabolomics feature-table QC, and one fixed short-DNA alignment branch. Peak calling, diversity analysis, pathogen interpretation, raw-MS processing, broader proteomics, multi-aligner selection, bulk reads-to-counts, compensation, and gating remain later-wave work.
+| Candidate | Domain | Cluster | Skill | Branch state |
+| ---: | --- | --- | --- | --- |
+| R4-1 | D04 Bulk & Specialized Transcriptomics | C12 Bulk expression pipeline | `bulk-rnaseq-gene-counting-from-alignment` | `research`; minimum gate passed |
+| R4-2 | D04 Bulk & Specialized Transcriptomics | C13 Splicing and isoforms | `junction-psi-and-delta-analysis` | `research`; minimum gate passed |
+| R4-3 | D07 Microbiome, Metagenomics & Pathogens | C20 Community diversity | `amplicon-alpha-diversity-analysis` | `research`; minimum gate passed |
+| R4-4 | D08 Proteomics, Metabolomics & Cytometry | C24 Cytometry file standards | `flow-cytometry-compensation-application` | `research`; minimum gate passed |
+| R4-5 | D12 Study Design & Biostatistics | C36 Survival analysis | `kaplan-meier-survival-analysis` | `research`; minimum gate passed |
+| R4-6 | D13 Biomedical Evidence & Clinical Interpretation | C38 Variant evidence | `human-variant-evidence-retrieval` | `research`; minimum gate passed |
+
+All 44 exact research-branch packages appear under `skills/<slug>/` and in `registry.json`. The first 32 form the verified v0.7.0 Beta baseline; the 12 Wave R2/R3/R4 packages remain candidates until [their promotion gates](research-skill-promotion-gates.md) pass. `Preview + reviewed` means a package boundary was reviewed, not that runtime, scientific validity, clinical use, or superiority over a baseline was established. `Stable` is allowed only with bounded `evaluated` assurance.
+
+D06 and D07 have narrow research candidates for peak-set and amplicon-table QC. Wave R3 adds local Newick QC, metabolomics feature-table QC, and one fixed short-DNA alignment branch. Wave R4 adds bounded counting, PSI, alpha diversity, compensation, Kaplan–Meier, and exact-ID variant-evidence jobs. Peak calling, pathogen interpretation, raw-MS processing, broader proteomics, multi-aligner selection, gating, and clinical classification remain later-wave work.

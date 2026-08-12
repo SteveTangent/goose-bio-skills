@@ -20,7 +20,8 @@ without fitting a model or inferring families from results.
 - local CSV/TSV with unique IDs and finite p-values in `[0,1]`
 - the complete family membership, declared before correction
 - `bh` under its dependence conditions, or `holm` for FWER
-- an explicit alpha in `(0,1)` and new result/validation paths under the current directory
+- an optional alpha in `(0,1)` only when a reject/not-reject decision is wanted,
+  plus a new result path and an optional validation-report path
 
 ## Intake
 
@@ -32,7 +33,7 @@ Decision order:
 
 1. **multiplicity-family.** Which hypotheses form each complete family? Recommended: declare it before viewing adjusted results.
 2. **error-control-method.** Use BH FDR or Holm FWER? Recommended: BH only under its conditions; Holm for FWER.
-3. **alpha.** Which protocol alpha applies? Recommended: supply it explicitly; use 0.05 only when declared.
+3. **alpha.** If reject/not-reject labels are requested, which protocol alpha applies? Recommended: supply it explicitly; otherwise return adjusted p-values without a decision column.
 
 ## Run
 
@@ -40,12 +41,14 @@ Use the dependency-free Python 3.10+ helper:
 
 ```text
 python3 scripts/adjust_pvalues.py --input INPUT --output OUTPUT \
-  --validation-output VALIDATION.json --method bh|holm --alpha 0.05 \
+  --method bh|holm [--alpha 0.05] [--validation-output VALIDATION.json] \
   --id-column record_id --p-column p_value [--family-column family_id]
 ```
 
 It validates before publishing, preserves row order and other columns, handles
-each family separately, and adds `p_adjusted` and `decision`. It refuses
+each family separately, and adds `p_adjusted`; it adds `decision` only when
+`--alpha` is supplied. The optional validation path receives a structured
+invalid-input report. It refuses
 existing outputs, unsafe paths, symlink/non-regular inputs, inputs over 16 MiB,
 tables over 100,000 rows, and unselected `family_id`. Larger batches return
 `needs-tool`. Read [method boundaries](references/multiplicity-methods.md).
@@ -61,5 +64,5 @@ validation artifact with `analysis_performed=false`. Missing choices are
 
 - Never mutate/overwrite, pool undeclared families, or invent results.
 - The [permission policy](security/permission_policy.json) approves only create-exclusive helper outputs below the current working directory; network and subprocess use are forbidden.
-- Record method, alpha, families, Python version, input fingerprint, warnings, and limits.
+- Record method, optional alpha, families, Python version, input fingerprint, warnings, and limits.
 - Require researcher review for family definition and interpretation; never use this preview for clinical or diagnostic decisions.

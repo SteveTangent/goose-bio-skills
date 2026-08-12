@@ -1,0 +1,104 @@
+{
+  "schema_version": "0.2.0",
+  "name": "junction-psi-and-delta-analysis",
+  "version": "0.7.0",
+  "maturity_tier": "production",
+  "context_budget_tier": "production",
+  "domain_id": "D04",
+  "cluster_id": "C13",
+  "risk_tier": "R2",
+  "owner": "project-owner",
+  "updated_at": "2026-08-13",
+  "last_freshness_check": "2026-08-13",
+  "review_cadence": "quarterly",
+  "status": "active",
+  "lifecycle_stage": "production",
+  "distribution_status": "installable",
+  "release_stage": "preview",
+  "assurance_level": "reviewed",
+  "assurance": {
+    "runtime_evaluation": "not-performed",
+    "scientific_benchmark": "not-performed",
+    "human_expert_review": "not-performed",
+    "better_than_baseline_claim": false,
+    "clinical_use": "prohibited",
+    "unverified_boundaries": [
+      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "Scientific benchmark performance, event-definition validity, analytical interpretation, and human-expert review have not been established.",
+      "The bundled self-test uses three synthetic events and six samples; representative cohorts, sparse studies, and large tables were not evaluated.",
+      "Prepared count compatibility, upstream mapping, junction definitions, strandedness, and group design are caller declarations and are not independently verified.",
+      "Windows create-exclusive publication and leaf-symlink semantics have not been verified."
+    ]
+  },
+  "intake_contract_version": "1.3.0",
+  "intake_contract": {
+    "facts_before_questions": true,
+    "question_policy": "one-unresolved-load-bearing-decision-at-a-time-with-recommendation",
+    "wait_after_each_question": true,
+    "explicit_safe_local_execution": "proceed-without-repeat-confirmation",
+    "side_effect_confirmation": "only-when-not-already-authorized-for-current-action-and-scope",
+    "decision_sequence": [
+      {
+        "decision_id": "count-semantics",
+        "applies_when": "The event definition or compatibility of inclusion and exclusion counts is absent or ambiguous.",
+        "question": "Were these inclusion and exclusion counts prepared under one compatible, producer-recorded junction-counting rule?",
+        "recommended_answer": "Use the producer-recorded event definition and counting rule; do not reinterpret raw alignments in this Skill."
+      },
+      {
+        "decision_id": "contrast",
+        "applies_when": "The two group labels or direction of the descriptive contrast is absent or ambiguous.",
+        "question": "Which exact label is group A and which is group B for the reported B-minus-A delta?",
+        "recommended_answer": "Use the prespecified design order rather than choosing the direction after viewing PSI values."
+      },
+      {
+        "decision_id": "coverage",
+        "applies_when": "A minimum total junction-count threshold was not prespecified.",
+        "question": "What minimum inclusion-plus-exclusion coverage does the analysis protocol require?",
+        "recommended_answer": "Use the protocol value rather than selecting a threshold from observed PSI results."
+      }
+    ]
+  },
+  "script_verification": {
+    "bundled_scripts": true,
+    "implementation_origin": "original-new",
+    "self_test_status": "passed",
+    "self_test_command": "python3 scripts/calculate_junction_psi.py --self-test",
+    "runtime_versions": [
+      "Python 3.12.8 self-test; compatible syntax requires Python >=3.10"
+    ]
+  },
+  "runtime_verification": {
+    "mode": "not-performed",
+    "status": "not-performed",
+    "reason": "Only the bundled deterministic small-synthetic helper self-test was performed. This is script verification, not formal exact-package agent runtime evaluation, representative-data benchmarking, scientific evaluation, generalization evidence, or human-expert review.",
+    "tool_versions": [],
+    "unverified_boundaries": [
+      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "Scientific benchmark performance, event-definition validity, analytical interpretation, and human-expert review have not been established.",
+      "The bundled self-test uses three synthetic events and six samples; representative cohorts, sparse studies, and large tables were not evaluated.",
+      "Prepared count compatibility, upstream mapping, junction definitions, strandedness, and group design are caller declarations and are not independently verified.",
+      "Windows create-exclusive publication and leaf-symlink semantics have not been verified."
+    ]
+  },
+  "legal_notices": {
+    "required": true,
+    "files": [
+      "LICENSE"
+    ]
+  },
+  "rollback": {
+    "previous_version": null,
+    "boundary": "Remove this first-release package and its matching registry entry."
+  },
+  "network_mode": "none",
+  "local_adapters": [
+    "Python 3.10+ standard library"
+  ],
+  "external_services": [],
+  "depends_on": [
+    "scientific-file-preflight-and-resource-planning"
+  ],
+  "target_platforms": [
+    "agent-skills"
+  ]
+}

@@ -692,10 +692,11 @@ def with_page(url: str, parameter: str, value: int) -> str:
     return urlunsplit((parsed.scheme, parsed.netloc, parsed.path, urlencode(params), ""))
 
 
-def prepare_temp(path: Path, data: bytes) -> Path:
+def prepare_temp(path: Path, data: bytes) -> tuple[Path, tuple[int, int]]:
     if not path.parent.is_dir():
         raise ConnectorError(f"output directory does not exist: {path.parent}")
     temporary: Path | None = None
+    identity: tuple[int, int] | None = None
     try:
         with tempfile.NamedTemporaryFile(
             mode="wb",
@@ -704,17 +705,24 @@ def prepare_temp(path: Path, data: bytes) -> Path:
             delete=False,
         ) as handle:
             temporary = Path(handle.name)
-            os.chmod(temporary, 0o600)
+            opened = os.fstat(handle.fileno())
+            identity = (opened.st_dev, opened.st_ino)
+            os.fchmod(handle.fileno(), 0o600)
             handle.write(data)
             handle.flush()
             os.fsync(handle.fileno())
-        return temporary
+        return temporary, identity
     except OSError as exc:
-        if temporary is not None:
+        cleanup_failed = False
+        if temporary is not None and identity is not None:
             try:
-                temporary.unlink()
+                cleanup_failed = not unlink_if_owned(temporary, identity)
             except OSError:
-                pass
+                cleanup_failed = True
+        if cleanup_failed:
+            raise ConnectorError(
+                "could not prepare output and staged-file cleanup failed"
+            ) from exc
         raise ConnectorError(f"could not prepare output: {exc}") from exc
 
 
@@ -726,21 +734,50 @@ def fsync_directory(path: Path) -> None:
         os.close(descriptor)
 
 
-def unlink_if_owned(target: Path, temporary: Path) -> None:
+def file_identity(path: Path) -> tuple[int, int]:
+    metadata = path.stat(follow_symlinks=False)
+    return metadata.st_dev, metadata.st_ino
+
+
+def is_owned(target: Path, identity: tuple[int, int]) -> bool:
     try:
-        if os.path.samestat(target.stat(), temporary.stat()):
-            target.unlink()
+        return file_identity(target) == identity
     except FileNotFoundError:
-        pass
+        return False
 
 
-def unlink_temp(path: Path | None) -> None:
-    if path is None:
-        return
+def unlink_if_owned(target: Path, identity: tuple[int, int]) -> bool:
     try:
-        path.unlink()
-    except OSError:
-        pass
+        if not is_owned(target, identity):
+            try:
+                target.stat(follow_symlinks=False)
+            except FileNotFoundError:
+                return True
+            return False
+        target.unlink()
+        return True
+    except FileNotFoundError:
+        return True
+
+
+def rollback_owned(
+    entries: list[tuple[Path, tuple[int, int]]],
+    directories: set[Path],
+) -> None:
+    failures: list[str] = []
+    for path, identity in entries:
+        try:
+            if not unlink_if_owned(path, identity):
+                failures.append(f"{path.name}:identity-mismatch")
+        except OSError as exc:
+            failures.append(f"{path.name}:{exc.__class__.__name__}")
+    for directory in directories:
+        try:
+            fsync_directory(directory)
+        except OSError as exc:
+            failures.append(f"{directory.name or directory}:{exc.__class__.__name__}")
+    if failures:
+        raise ConnectorError("publication rollback failed: " + ", ".join(failures))
 
 
 def publish_outputs(
@@ -757,32 +794,65 @@ def publish_outputs(
             raise ConnectorError(f"output directory does not exist: {parent}")
     output_temp: Path | None = None
     provenance_temp: Path | None = None
+    output_identity: tuple[int, int] | None = None
+    provenance_identity: tuple[int, int] | None = None
     output_published = False
     provenance_published = False
+    directories = {output.parent, provenance_path.parent}
     try:
-        output_temp = prepare_temp(output, payload)
-        provenance_temp = prepare_temp(provenance_path, provenance)
+        output_temp, output_identity = prepare_temp(output, payload)
+        if not is_owned(output_temp, output_identity):
+            raise OSError("staged payload identity changed before publication")
+        provenance_temp, provenance_identity = prepare_temp(provenance_path, provenance)
+        if not is_owned(provenance_temp, provenance_identity):
+            raise OSError("staged provenance identity changed before publication")
         os.link(output_temp, output)
         output_published = True
+        if not is_owned(output, output_identity):
+            raise OSError("published payload identity differs from staged data")
         os.link(provenance_temp, provenance_path)
         provenance_published = True
-        for directory in {output.parent, provenance_path.parent}:
+        if not is_owned(provenance_path, provenance_identity):
+            raise OSError("published provenance identity differs from staged data")
+        if not unlink_if_owned(output_temp, output_identity):
+            raise OSError("staged payload identity changed during cleanup")
+        output_temp = None
+        if not unlink_if_owned(provenance_temp, provenance_identity):
+            raise OSError("staged provenance identity changed during cleanup")
+        provenance_temp = None
+        for directory in directories:
             fsync_directory(directory)
-    except FileExistsError as exc:
-        if provenance_temp is not None and provenance_published:
-            unlink_if_owned(provenance_path, provenance_temp)
-        if output_temp is not None and output_published:
-            unlink_if_owned(output, output_temp)
-        raise ConnectorError("output or provenance already exists; overwrite is forbidden") from exc
-    except OSError as exc:
-        if provenance_temp is not None and provenance_published:
-            unlink_if_owned(provenance_path, provenance_temp)
-        if output_temp is not None and output_published:
-            unlink_if_owned(output, output_temp)
-        raise ConnectorError(f"could not publish create-new output pair: {exc}") from exc
-    finally:
-        unlink_temp(output_temp)
-        unlink_temp(provenance_temp)
+        if not is_owned(output, output_identity) or not is_owned(
+            provenance_path, provenance_identity
+        ):
+            raise OSError("published output identity changed before completion")
+    except BaseException as original:
+        owned: list[tuple[Path, tuple[int, int]]] = []
+        if provenance_identity is not None:
+            if provenance_published:
+                owned.append((provenance_path, provenance_identity))
+            if provenance_temp is not None:
+                owned.append((provenance_temp, provenance_identity))
+        if output_identity is not None:
+            if output_published:
+                owned.append((output, output_identity))
+            if output_temp is not None:
+                owned.append((output_temp, output_identity))
+        try:
+            rollback_owned(owned, directories)
+        except ConnectorError as rollback_error:
+            raise rollback_error from original
+        if isinstance(original, ConnectorError):
+            raise
+        if isinstance(original, FileExistsError):
+            raise ConnectorError(
+                "output or provenance already exists; overwrite is forbidden"
+            ) from original
+        if isinstance(original, OSError):
+            raise ConnectorError(
+                f"could not publish create-new output pair: {original}"
+            ) from original
+        raise
 
 
 def execute(
@@ -1582,6 +1652,78 @@ def self_test(catalog: dict[str, object]) -> int:
             raise ConnectorError("pair rollback self-test failed")
         if rolled_back.exists() or provenance_sentinel.read_bytes() != b"keep-provenance":
             raise ConnectorError("partial pair survived failed publication")
+
+        race_target = Path(temp_dir) / "race-result.json"
+        race_provenance = Path(temp_dir) / "race-result.provenance.json"
+        original_unlink_if_owned = unlink_if_owned
+        race_injected = False
+
+        def replace_final_during_cleanup(
+            target_path: Path, identity: tuple[int, int]
+        ) -> bool:
+            nonlocal race_injected
+            if (
+                not race_injected
+                and target_path.name.startswith(f".{race_target.name}.")
+            ):
+                race_injected = True
+                race_target.unlink()
+                race_target.write_bytes(b"competitor")
+            return original_unlink_if_owned(target_path, identity)
+
+        globals()["unlink_if_owned"] = replace_final_during_cleanup
+        try:
+            publish_outputs(
+                race_target,
+                b'{"owned":true}\n',
+                race_provenance,
+                b'{"source":"owned"}\n',
+            )
+        except ConnectorError:
+            pass
+        else:
+            raise ConnectorError("final-identity replacement self-test did not fail")
+        finally:
+            globals()["unlink_if_owned"] = original_unlink_if_owned
+        if race_target.read_bytes() != b"competitor" or race_provenance.exists():
+            raise ConnectorError("final-identity rollback damaged a competing output")
+        if any(Path(temp_dir).glob(".race-result*." + "*")):
+            raise ConnectorError("final-identity rollback left staged output")
+
+        prepare_race_target = Path(temp_dir) / "prepare-race.json"
+        prepare_race_provenance = Path(temp_dir) / "prepare-race.provenance.json"
+        original_prepare_temp = prepare_temp
+        replaced_stage: Path | None = None
+
+        def replace_stage_after_prepare(
+            target_path: Path, data: bytes
+        ) -> tuple[Path, tuple[int, int]]:
+            nonlocal replaced_stage
+            staged_path, staged_identity = original_prepare_temp(target_path, data)
+            if target_path == prepare_race_target:
+                staged_path.unlink()
+                staged_path.write_bytes(b"competitor-stage")
+                replaced_stage = staged_path
+            return staged_path, staged_identity
+
+        globals()["prepare_temp"] = replace_stage_after_prepare
+        try:
+            publish_outputs(
+                prepare_race_target,
+                b'{"owned":true}\n',
+                prepare_race_provenance,
+                b'{"source":"owned"}\n',
+            )
+        except ConnectorError:
+            pass
+        else:
+            raise ConnectorError("staged-identity replacement self-test did not fail")
+        finally:
+            globals()["prepare_temp"] = original_prepare_temp
+        if prepare_race_target.exists() or prepare_race_provenance.exists():
+            raise ConnectorError("staged-identity replacement published an output")
+        if replaced_stage is None or replaced_stage.read_bytes() != b"competitor-stage":
+            raise ConnectorError("staged-identity rollback damaged a competing file")
     checks += 1
     print(
         json.dumps(
