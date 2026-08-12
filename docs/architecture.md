@@ -2,7 +2,7 @@
 
 ## Research-first system
 
-The repository contains 29 independently installable, one-job bioinformatics Skills across 11 Domains and 17 Clusters. Research questions, current evidence, official tool interfaces, scientific assumptions, and failure boundaries are reviewed before a package is admitted.
+The verified `main` Beta contains 29 independently installable, one-job bioinformatics Skills across 11 Domains and 17 Clusters. The `research` branch currently adds three Wave R1 candidates, bringing that branch to 32 packages across 11 Domains and 19 Clusters. Candidates remain outside the Beta until their common and candidate-specific promotion gates pass.
 
 ```mermaid
 flowchart LR
@@ -113,6 +113,12 @@ Every installable package declares:
 - optional adapters and their network, data, credential, version, and verification limits;
 - bundled-script origin and deterministic self-test status;
 - legally required notices.
+
+Research candidates follow the same package contract but are not release
+claims. Their promotion requirements are recorded in
+[Research Skill promotion gates](research-skill-promotion-gates.md), and their
+unverified evidence remains explicit until a reviewed `research`-to-`main`
+promotion.
 
 Packages remain flat under `skills/<slug>/`; catalog reorganization does not move installed files. `SKILL.md` stays lean, domain depth belongs in referenced files, and deterministic repeated logic belongs in an original reviewed script.
 

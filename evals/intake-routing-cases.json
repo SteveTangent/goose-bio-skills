@@ -385,6 +385,75 @@
       "expected_action": "route-away-and-block-clinical-use",
       "expected_question_count_this_turn": 0,
       "expected_first_decision_id": null
+    },
+    {
+      "id": "missing-data-specified-local",
+      "prompt": "For outcomes.csv, profile missingness in the numeric response column, report the complete-case summary by the declared group column, and evaluate the caller-supplied 0 to 100 outcome bounds and delta grid -5,0,5; write a new JSON report without imputing values.",
+      "expected_skill": "missing-data-and-sensitivity-analysis",
+      "forbidden_skills": [
+        "statistical-analysis-and-multiple-testing"
+      ],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "missing-data-modeling-routes-away",
+      "prompt": "Infer whether my data are MAR, fit several multiple-imputation and regression models, pool all coefficients, and choose the best predictive model.",
+      "expected_skill": null,
+      "forbidden_skills": [
+        "missing-data-and-sensitivity-analysis",
+        "statistical-analysis-and-multiple-testing"
+      ],
+      "expected_action": "route-away",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "protein-interface-explicit-chains-cutoff",
+      "prompt": "For local model.pdb, calculate the deterministic heavy-atom residue contact set between chains A and B at a 4.5 angstrom cutoff and write a new JSON report; do not infer a binding site or affinity.",
+      "expected_skill": "protein-interface-contact-analysis",
+      "forbidden_skills": [
+        "protein-structure-retrieval-and-comparison"
+      ],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "protein-interface-pocket-inference-routes-away",
+      "prompt": "Discover all unknown ligand-binding pockets, rank their druggability, dock a compound library, and predict binding affinity from this protein structure.",
+      "expected_skill": null,
+      "forbidden_skills": [
+        "protein-interface-contact-analysis",
+        "protein-structure-retrieval-and-comparison"
+      ],
+      "expected_action": "route-away",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "public-orthology-exact-identifiers",
+      "prompt": "Retrieve Ensembl Compara orthology assertions for homo_sapiens IDs ENSG00000141510 and ENSG00000139618 against target species mus_musculus, preserving relationship cardinality, confidence fields, release context, and exact provider provenance; do not transfer function.",
+      "expected_skill": "public-orthology-retrieval-and-qc",
+      "forbidden_skills": [
+        "biological-database-record-retrieval-and-identifier-resolution",
+        "sequence-similarity-and-homology-search"
+      ],
+      "expected_action": "bounded-public-read",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "public-orthology-symbol-routes-to-resolution",
+      "prompt": "Find the mouse ortholog of human TP53, but I only supplied the gene symbol and not an exact Ensembl stable gene identifier.",
+      "expected_skill": "biological-database-record-retrieval-and-identifier-resolution",
+      "forbidden_skills": [
+        "public-orthology-retrieval-and-qc"
+      ],
+      "expected_action": "resolve-exact-identifier-first",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
     }
   ]
 }

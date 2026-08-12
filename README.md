@@ -2,11 +2,12 @@
 
 Research-first bioinformatics skills for AI agents.
 
-Bio 02 Skills is a focused collection of 29 Agent Skills for common bioinformatics and biostatistics tasks. Each Skill owns one job, declares the inputs and outputs it expects, routes away from neighboring tasks, and records the tool, database, network, and interpretation boundaries that matter to a researcher.
+Bio 02 Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The verified `main` Beta contains 29 packages. The `research` branch currently carries three additional Wave R1 candidates for bounded evaluation before any promotion.
 
-| Current version | Packages | Release status | External services |
+| Boundary | Packages | State | External services |
 | --- | ---: | --- | --- |
-| `0.6.0` | 29 | `preview + reviewed` | Bounded public read/download; anonymous-first |
+| `main` Beta `0.6.0` | 29 | `preview + reviewed` | Bounded public read/download; anonymous-first |
+| `research` Wave R1 | 3 candidates | Not promoted to `main` | Same connector boundary; exact candidate gates apply |
 
 ## Why Bio 02 Skills
 
@@ -72,6 +73,12 @@ Trim the declared adapters from this small paired FASTQ set with the approved fi
 Check this GTF for structural and gene-model consistency without rewriting it.
 
 Inspect this local FCS file's datasets and channel metadata without compensation or gating.
+
+Profile this table's missing outcome values and run only the bounds and delta scenarios I declared.
+
+Report heavy-atom residue contacts between chains A and B in this local PDB at a fixed cutoff.
+
+Retrieve Ensembl Compara orthology assertions for these exact gene IDs from source species homo_sapiens to target species mus_musculus.
 ```
 
 ## Skill catalog
@@ -79,15 +86,15 @@ Inspect this local FCS file's datasets and channel metadata without compensation
 | Research area | Skills |
 | --- | --- |
 | Data and workflow foundations | `bioinformatics-format-and-identifier-validation`<br>`scientific-file-preflight-and-resource-planning`<br>`biological-database-record-retrieval-and-identifier-resolution`<br>`taxonomy-name-and-taxid-resolution`<br>`public-sequencing-run-manifest-retrieval`<br>`environment-and-provenance-capture` |
-| Sequence, reads, genomes, and evolution | `sequence-io-and-transformation`<br>`sequence-similarity-and-homology-search`<br>`pairwise-and-multiple-sequence-alignment`<br>`raw-read-quality-reporting`<br>`raw-read-trimming-and-filtering`<br>`alignment-file-operations`<br>`genomic-interval-operations`<br>`gff-gtf-gene-model-qc` |
+| Sequence, reads, genomes, and evolution | `sequence-io-and-transformation`<br>`sequence-similarity-and-homology-search`<br>`pairwise-and-multiple-sequence-alignment`<br>`raw-read-quality-reporting`<br>`raw-read-trimming-and-filtering`<br>`alignment-file-operations`<br>`genomic-interval-operations`<br>`gff-gtf-gene-model-qc`<br>`public-orthology-retrieval-and-qc` *(research candidate)* |
 | Variant and cohort genomics | `vcf-normalization-qc-and-query` |
 | Bulk transcriptomics | `count-based-differential-expression` |
 | Single-cell analysis | `single-cell-object-io-and-qc`<br>`single-cell-core-analysis` |
 | Proteomics and cytometry | `proteomics-quantification-table-qc`<br>`fcs-file-io-and-metadata-qc` |
-| Protein structure | `protein-structure-retrieval-and-comparison` |
+| Protein structure | `protein-structure-retrieval-and-comparison`<br>`protein-interface-contact-analysis` *(research candidate)* |
 | Cheminformatics | `molecule-standardization-and-descriptors`<br>`chemical-similarity-and-substructure-search` |
 | Functional interpretation | `over-representation-analysis`<br>`ranked-gene-set-enrichment` |
-| Study design and biostatistics | `experimental-design-power-and-batch-planning`<br>`statistical-analysis-and-multiple-testing` |
+| Study design and biostatistics | `experimental-design-power-and-batch-planning`<br>`statistical-analysis-and-multiple-testing`<br>`missing-data-and-sensitivity-analysis` *(research candidate)* |
 | Biomedical evidence | `biomedical-literature-and-public-study-search`<br>`evidence-synthesis-and-research-traceability` |
 
 See [docs/catalog.md](docs/catalog.md) for Domain, Cluster, risk, dependency, and runtime details. [`registry.json`](registry.json) is the versioned machine-readable index.
@@ -157,7 +164,7 @@ skills/<slug>/
 
 ## Current release boundary
 
-All 29 packages are `preview + reviewed`. Their instructions, interfaces, package structure, declared versions, and safety boundaries have been reviewed, but many external-tool paths have not been executed end to end. A package states those unverified boundaries in its manifest.
+The 29-package `main` Beta is `preview + reviewed`. On `research`, the three Wave R1 packages are installable only for supervised candidate evaluation; they have reviewed package boundaries and offline checks where applicable, but have not passed all candidate-specific promotion gates or been promoted to `main`. Every package states its unverified boundaries in its manifest.
 
 Use the collection for supervised research work. Verify inputs, tool availability, QC, and biological interpretation for each project. The collection does not claim universal scientific correctness, clinical authority, or superiority over another workflow.
 
@@ -174,7 +181,7 @@ python3 skills/statistical-analysis-and-multiple-testing/scripts/adjust_pvalues.
 python3 skills/gff-gtf-gene-model-qc/scripts/check_gene_models.py --self-test
 ```
 
-The skeleton gate also validates the 37 deterministic intake-routing cases in
+The skeleton gate also validates the 43 deterministic intake-routing cases in
 [`evals/intake-routing-cases.json`](evals/intake-routing-cases.json). Those
 fixtures test routing and first-question contracts; they are not a claim of
 model-runtime or scientific evaluation.
@@ -187,4 +194,5 @@ Bio 02 Skills is licensed under the [Apache License 2.0](LICENSE). Each installa
 - [Catalog](docs/catalog.md)
 - [Quality standard](docs/quality-standard.md)
 - [Release flow](docs/release-flow.md)
+- [Research candidate promotion gates](docs/research-skill-promotion-gates.md)
 - [Contributing](CONTRIBUTING.md)

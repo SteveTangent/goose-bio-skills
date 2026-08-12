@@ -1,0 +1,20 @@
+interface:
+  display_name: "Protein-interface Contact Analysis"
+  short_description: "Report exact heavy-atom residue contacts between two declared PDB chains."
+  default_prompt: "Analyze heavy-atom residue contacts between chains A and B in this local legacy PDB at the declared 5.0 angstrom cutoff, and write a new JSON report without overwriting anything."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

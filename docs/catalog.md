@@ -1,11 +1,11 @@
-# 29-Skill catalog
+# Research catalog: 29-Skill Beta plus 3 candidates
 
-The current release contains 29 independently installable `preview + reviewed` Skills across 11 Domains and 17 Clusters. [registry.json](../registry.json) is the authoritative versioned index; this page explains the research organization and routing surface.
+The verified `main` Beta contains 29 independently installable `preview + reviewed` Skills across 11 Domains and 17 Clusters. The `research` branch adds three Wave R1 candidates, for 32 branch packages across 11 Domains and 19 Clusters. [registry.json](../registry.json) is the authoritative index for the checked-out branch; a research entry is not a `main` promotion.
 
 ```text
 11 Domains
-  -> 17 Clusters
-    -> 29 one-job Skills
+  -> 19 Clusters on research
+    -> 29 Beta Skills + 3 research candidates
 ```
 
 Every Skill uses the same lightweight interaction boundary:
@@ -50,6 +50,14 @@ Every Skill uses the same lightweight interaction boundary:
 | 28 | D13 Biomedical Evidence & Clinical Interpretation | C37 Literature and public studies | `biomedical-literature-and-public-study-search` | `preview + reviewed` (`0.6.0`) |
 | 29 | D13 Biomedical Evidence & Clinical Interpretation | C37 Literature and public studies | `evidence-synthesis-and-research-traceability` | `preview + reviewed` (`0.6.0`) |
 
-All 29 exact packages appear under `skills/<slug>/` and in `registry.json`. Their current state means reviewed and installable, not runtime-validated, scientifically proven, clinically authorized, or better than a baseline. `Stable` is allowed only with bounded `evaluated` assurance.
+## Wave R1 research candidates
+
+| Candidate | Domain | Cluster | Skill | Branch state |
+| ---: | --- | --- | --- | --- |
+| R1-1 | D12 Study Design & Biostatistics | C35 Statistical inference | `missing-data-and-sensitivity-analysis` | `research`; not promoted |
+| R1-2 | D09 Protein Structure & Molecular Biophysics | C27 Interfaces and dynamics | `protein-interface-contact-analysis` | `research`; not promoted |
+| R1-3 | D02 Sequence, Reads, Genomes & Evolution | C08 Comparative and evolutionary genomics | `public-orthology-retrieval-and-qc` | `research`; not promoted |
+
+All 32 exact research-branch packages appear under `skills/<slug>/` and in `registry.json`. The first 29 form the verified Beta baseline; the three Wave R1 packages remain candidates until [their promotion gates](research-skill-promotion-gates.md) pass. `Preview + reviewed` means a package boundary was reviewed, not that runtime, scientific validity, clinical use, or superiority over a baseline was established. `Stable` is allowed only with bounded `evaluated` assurance.
 
 D06 epigenomics/perturbation and D07 microbiome/pathogens remain later-wave research areas. D08 now includes bounded proteomics-table and FCS metadata QC; raw-MS processing, broader proteomics workflows, metabolomics, compensation, and gating remain later-wave work.

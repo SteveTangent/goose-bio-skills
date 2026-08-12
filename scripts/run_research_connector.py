@@ -87,6 +87,12 @@ PUBCHEM_ASYNC_PATH = re.compile(
     r"^/rest/pug/compound/(?:substructure|superstructure|similarity_2d|similarity_3d|identity|formula)(?:/|$)",
     re.IGNORECASE,
 )
+ENSEMBL_ORTHOLOGY_SPECIES = {
+    "danio_rerio": "ENSDARG",
+    "homo_sapiens": "ENSG",
+    "mus_musculus": "ENSMUSG",
+    "rattus_norvegicus": "ENSRNOG",
+}
 _NETWORK_PERFORMED = False
 
 
@@ -255,7 +261,8 @@ def decoded_query_pairs(url: str) -> list[tuple[str, str]]:
 
 def validate_read_only_semantics(provider_id: str, url: str) -> None:
     parsed = urlsplit(url)
-    path = decoded_path(parsed.path).lower()
+    decoded_url_path = decoded_path(parsed.path)
+    path = decoded_url_path.lower()
     query = [
         (key.lower(), value.strip().lower())
         for key, value in decoded_query_pairs(url)
@@ -272,6 +279,71 @@ def validate_read_only_semantics(provider_id: str, url: str) -> None:
             )
             if history_write:
                 raise ConnectorError("NCBI History-server state is outside direct-read mode")
+    elif provider_id == "ensembl-rest" and path.startswith("/homology/id/"):
+        if (
+            decoded_url_path != parsed.path
+            or parsed.query != unquote(parsed.query)
+            or ";" in parsed.query
+        ):
+            raise ConnectorError(
+                "Ensembl orthology path and query must use the exact reviewed ASCII spelling"
+            )
+        raw_query = parse_qsl(parsed.query, keep_blank_values=True)
+        if any(key != key.lower() or value != value.strip().lower() for key, value in raw_query):
+            raise ConnectorError(
+                "Ensembl orthology query keys and values must use canonical lowercase spelling"
+            )
+        match = re.fullmatch(
+            r"/homology/id/([a-z][a-z0-9_]{1,63})/"
+            r"(ENS[A-Z0-9]*G[0-9]{6,}(?:\.[0-9]+)?)",
+            decoded_url_path,
+        )
+        if match is None:
+            raise ConnectorError(
+                "Ensembl orthology reads require one exact species path and stable gene ID"
+            )
+        source_species = match.group(1)
+        values: dict[str, list[str]] = {}
+        for key, value in query:
+            values.setdefault(key, []).append(value)
+        expected_keys = {
+            "aligned",
+            "content-type",
+            "format",
+            "sequence",
+            "target_species",
+            "type",
+        }
+        if set(values) != expected_keys or any(len(items) != 1 for items in values.values()):
+            raise ConnectorError(
+                "Ensembl orthology reads require the exact reviewed query fields"
+            )
+        target_species = values["target_species"][0]
+        if source_species not in ENSEMBL_ORTHOLOGY_SPECIES or target_species not in ENSEMBL_ORTHOLOGY_SPECIES:
+            raise ConnectorError(
+                "Ensembl orthology preview requires a reviewed canonical species name"
+            )
+        if target_species == source_species:
+            raise ConnectorError("Ensembl orthology source and target species must differ")
+        expected_prefix = ENSEMBL_ORTHOLOGY_SPECIES[source_species]
+        if re.fullmatch(
+            rf"{re.escape(expected_prefix)}[0-9]{{6,}}(?:\.[0-9]+)?",
+            match.group(2),
+        ) is None:
+            raise ConnectorError(
+                "Ensembl orthology stable gene ID does not match the declared source species"
+            )
+        expected_values = {
+            "aligned": "0",
+            "content-type": "application/json",
+            "format": "condensed",
+            "sequence": "none",
+            "type": "orthologues",
+        }
+        if any(values[key] != [value] for key, value in expected_values.items()):
+            raise ConnectorError(
+                "Ensembl orthology query exceeds the reviewed relationship-only boundary"
+            )
     elif provider_id == "pubchem-pug-rest":
         if PUBCHEM_ASYNC_PATH.match(path) or re.search(r"/(?:listkey|cachekey)(?:/|$)", path):
             raise ConnectorError("PubChem asynchronous and stored-result paths require a job adapter")
@@ -888,6 +960,69 @@ def self_test(catalog: dict[str, object]) -> int:
         "https://rest.ensembl.org/archive/id/ENSG00000141510?content-type=application/json",
         ensembl,
     )
+    orthology_url = (
+        "https://rest.ensembl.org/homology/id/homo_sapiens/ENSG00000141510"
+        "?target_species=mus_musculus&type=orthologues&sequence=none&aligned=0"
+        "&format=condensed&content-type=application/json"
+    )
+    validate_url("ensembl-rest", orthology_url, ensembl)
+    orthology_args = argparse.Namespace(
+        self_test=False,
+        provider="ensembl-rest",
+        url=orthology_url,
+        output=Path("orthology.json"),
+        provenance=None,
+        method="GET",
+        pages=1,
+        page_param=None,
+        acknowledge_terms=False,
+    )
+    validate_args(orthology_args)
+    for method, pages, page_param in (
+        ("HEAD", 1, None),
+        ("GET", 2, "page"),
+    ):
+        rejected_args = argparse.Namespace(
+            **{
+                **vars(orthology_args),
+                "method": method,
+                "pages": pages,
+                "page_param": page_param,
+            }
+        )
+        try:
+            validate_args(rejected_args)
+        except ConnectorError:
+            pass
+        else:
+            raise ConnectorError("Ensembl orthology execution-mode self-test failed")
+    for disallowed_orthology_url in (
+        "https://rest.ensembl.org/homology/id/homo_sapiens/TP53?target_species=mus_musculus&type=orthologues&sequence=none&aligned=0&format=condensed&content-type=application/json",
+        "https://rest.ensembl.org/homology/id/homo_sapiens/ENSG00000141510?target_species=mus_musculus&type=paralogues&sequence=none&aligned=0&format=condensed&content-type=application/json",
+        "https://rest.ensembl.org/homology/id/homo_sapiens/ENSG00000141510?target_species=mus_musculus&type=orthologues&sequence=protein&aligned=0&format=condensed&content-type=application/json",
+        "https://rest.ensembl.org/homology/id/homo_sapiens/ENSG00000141510?type=orthologues&sequence=none&aligned=0&format=condensed&content-type=application/json",
+        "https://rest.ensembl.org/homology/id/homo_sapiens/ENSG00000141510?target_species=mus_musculus&target_species=rattus_norvegicus&type=orthologues&sequence=none&aligned=0&format=condensed&content-type=application/json",
+        "https://rest.ensembl.org/homology/id/homo_sapiens/ENSG00000141510?target_species=homo_sapiens&type=orthologues&sequence=none&aligned=0&format=condensed&content-type=application/json",
+        "https://rest.ensembl.org/homology/id/homo_sapiens/ENSG00000141510?target_species=mus_musculus&type=orthologues&sequence=none&aligned=0&format=condensed&content-type=application/json&extra=1",
+        "https://rest.ensembl.org/homology/id/homo%5Fsapiens/ENSG00000141510?target_species=mus_musculus&type=orthologues&sequence=none&aligned=0&format=condensed&content-type=application/json",
+        "https://rest.ensembl.org/homology/id/homo_sapiens/ENSG00000141510?target_species=mus%255Fmusculus&type=orthologues&sequence=none&aligned=0&format=condensed&content-type=application/json",
+        "https://rest.ensembl.org/homology/id/homo_sapiens/ENSG00000141510?TARGET_SPECIES=mus_musculus&type=orthologues&sequence=none&aligned=0&format=condensed&content-type=application/json",
+        "https://rest.ensembl.org/homology/id/homo_sapiens/ENSG00000141510?target_species=mus_musculus;type=orthologues;sequence=none;aligned=0;format=condensed;content-type=application/json",
+        "https://rest.ensembl.org/homology/id/human/ENSG00000141510?target_species=mus_musculus&type=orthologues&sequence=none&aligned=0&format=condensed&content-type=application/json",
+        "https://rest.ensembl.org/homology/id/homo_sapiens/ENSG00000141510?target_species=human&type=orthologues&sequence=none&aligned=0&format=condensed&content-type=application/json",
+        "https://rest.ensembl.org/homology/id/mouse/ENSMUSG00000059552?target_species=homo_sapiens&type=orthologues&sequence=none&aligned=0&format=condensed&content-type=application/json",
+        "https://rest.ensembl.org/homology/id/mus_musculus/ENSMUSG00000059552?target_species=mouse&type=orthologues&sequence=none&aligned=0&format=condensed&content-type=application/json",
+        "https://rest.ensembl.org/homology/id/homo_sapiens/ENSMUSG00000059552?target_species=mus_musculus&type=orthologues&sequence=none&aligned=0&format=condensed&content-type=application/json",
+        "https://rest.ensembl.org/homology/id/homo_sapiens/ENSGFOOG000001?target_species=mus_musculus&type=orthologues&sequence=none&aligned=0&format=condensed&content-type=application/json",
+        "https://rest.ensembl.org/homology/id/mus_musculus/ENSMUSGG000001?target_species=homo_sapiens&type=orthologues&sequence=none&aligned=0&format=condensed&content-type=application/json",
+    ):
+        try:
+            validate_url("ensembl-rest", disallowed_orthology_url, ensembl)
+        except ConnectorError:
+            pass
+        else:
+            raise ConnectorError("Ensembl orthology boundary self-test failed")
+    checks += 1
     try:
         validate_url(
             "ensembl-rest",
@@ -1545,6 +1680,14 @@ def validate_args(args: argparse.Namespace) -> None:
         return
     if not args.provider or not args.url or args.output is None:
         raise ConnectorError("--provider, --url, and --output are required")
+    if (
+        args.provider == "ensembl-rest"
+        and decoded_path(urlsplit(args.url).path).lower().startswith("/homology/id/")
+        and (args.method != "GET" or args.pages != 1 or args.page_param is not None)
+    ):
+        raise ConnectorError(
+            "Ensembl orthology retrieval requires one non-paginated GET per stable gene ID"
+        )
     if args.pages > 1:
         if not args.page_param or not PAGE_PARAMETER.fullmatch(args.page_param):
             raise ConnectorError("multi-page mode requires a valid --page-param")

@@ -1,0 +1,20 @@
+interface:
+  display_name: "Public Orthology Retrieval and QC"
+  short_description: "Retrieve bounded Ensembl Compara orthology assertions with provenance."
+  default_prompt: "Retrieve Ensembl Compara orthology assertions for these exact gene stable IDs between the declared source and target species; preserve type, cardinality, confidence fields, release, and provenance."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

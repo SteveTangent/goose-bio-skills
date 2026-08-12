@@ -1,6 +1,6 @@
 {
   "schema_version": "0.5.0",
-  "updated_at": "2026-08-10",
+  "updated_at": "2026-08-12",
   "policy": "installable-packages-only",
   "lifecycle_axes": {
     "release_stage": [
@@ -240,6 +240,23 @@
     },
     {
       "manifest_schema_version": "0.2.0",
+      "name": "missing-data-and-sensitivity-analysis",
+      "version": "0.6.0",
+      "path": "skills/missing-data-and-sensitivity-analysis",
+      "domain_id": "D12",
+      "cluster_id": "C35",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "8da79e20c7ecea371dc10b867bc4b079b2ff0bf62914540c832d31fea96dce7a",
+      "previous_version": null
+    },
+    {
+      "manifest_schema_version": "0.2.0",
       "name": "molecule-standardization-and-descriptors",
       "version": "0.6.0",
       "path": "skills/molecule-standardization-and-descriptors",
@@ -297,6 +314,23 @@
     },
     {
       "manifest_schema_version": "0.2.0",
+      "name": "protein-interface-contact-analysis",
+      "version": "0.6.0",
+      "path": "skills/protein-interface-contact-analysis",
+      "domain_id": "D09",
+      "cluster_id": "C27",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "a74e438e831ab5f1c064ff4cb62d80dffe0d144d93fc534ea71a79358b0854c5",
+      "previous_version": null
+    },
+    {
+      "manifest_schema_version": "0.2.0",
       "name": "protein-structure-retrieval-and-comparison",
       "version": "0.6.0",
       "path": "skills/protein-structure-retrieval-and-comparison",
@@ -331,6 +365,25 @@
       "external_services": [],
       "package_digest": "ce6fc6687a96b1e63bee11587237b34aec14deffbbbf2601e3c6493fb0812a57",
       "previous_version": "0.5.0"
+    },
+    {
+      "manifest_schema_version": "0.2.0",
+      "name": "public-orthology-retrieval-and-qc",
+      "version": "0.6.0",
+      "path": "skills/public-orthology-retrieval-and-qc",
+      "domain_id": "D02",
+      "cluster_id": "C08",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "required",
+      "external_services": [
+        "ensembl-rest"
+      ],
+      "package_digest": "cda0c98939f8829225af60c89568ec7b00e75a87136353684f588a11731954a4",
+      "previous_version": null
     },
     {
       "manifest_schema_version": "0.2.0",

@@ -184,6 +184,21 @@ CRITICAL_INTAKE_CASES = {
         1,
         "fcs-dataset-scope",
     ),
+    "missing-data-specified-local": (
+        "missing-data-and-sensitivity-analysis",
+        0,
+        None,
+    ),
+    "protein-interface-explicit-chains-cutoff": (
+        "protein-interface-contact-analysis",
+        0,
+        None,
+    ),
+    "public-orthology-exact-identifiers": (
+        "public-orthology-retrieval-and-qc",
+        0,
+        None,
+    ),
     "fcs-gating-analysis-routes-away": (
         None,
         0,
@@ -1044,7 +1059,7 @@ def validate_intake_routing_fixture(
                     f"{label}/{case_id}: first decision is absent from the Skill manifest",
                 )
 
-    require(len(cases) == 37, f"{label}: expected 37 canonical cases")
+    require(len(cases) == 43, f"{label}: expected 43 canonical cases")
     for case_id, expected in CRITICAL_INTAKE_CASES.items():
         case = by_id.get(case_id)
         require(case is not None, f"{label}: missing critical case {case_id}")

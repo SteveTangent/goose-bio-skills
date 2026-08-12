@@ -84,12 +84,13 @@
     },
     "ensembl-rest": {
       "display_name": "Ensembl REST API",
-      "purpose": "Retrieve public Ensembl gene, transcript, protein, sequence, and cross-reference records.",
+      "purpose": "Retrieve public Ensembl gene, transcript, protein, sequence, cross-reference, and bounded Compara orthology records.",
       "would_send": [
         "public stable identifiers",
         "species or taxon",
         "selected fields",
-        "format parameters"
+        "format parameters",
+        "explicit source and target species for bounded orthology retrieval"
       ],
       "credential_fields": [],
       "billing": {
@@ -104,6 +105,7 @@
         "execution_mode": "direct-read",
         "allowed_url_prefixes": [
           "https://rest.ensembl.org/archive/id/",
+          "https://rest.ensembl.org/homology/id/",
           "https://rest.ensembl.org/lookup/id/",
           "https://rest.ensembl.org/xrefs/id/",
           "https://rest.ensembl.org/xrefs/symbol/",
