@@ -65,9 +65,10 @@ offline semantic response fixture and live canary.
 - require caller-supplied outcome bounds or a caller-supplied delta grid before
   computing best/worst or tipping-style sensitivity results
 - reproduce exact results on normal, all-observed, partially missing, and
-  boundary fixtures; reject nonnumeric outcomes, invalid bounds, empty
-  complete-case sets, malformed tables, overwrite attempts, and unsupported
-  requests for imputation or general model fitting
+  boundary fixtures; report all-missing overall or group strata as
+  `not-estimable-no-observed-values`, and reject nonnumeric outcomes, invalid
+  bounds, malformed tables, overwrite attempts, and unsupported requests for
+  imputation or general model fitting
 - receive a named statistical-method review before promotion
 
 Current gaps: blind routing holdout, representative boundary fixtures bound to
@@ -100,6 +101,9 @@ fixture evidence, and named structural-bioinformatics method review.
 - pass an offline response fixture, reordered/empty/malformed response cases,
   wrong-species and non-gene identifier rejection, redirect/secret/rate-limit/
   truncation fail-closed cases, and one bounded anonymous live canary
+- demonstrate at the package level that a batch of one to five IDs enforces the
+  aggregate five-request, 16 MiB accepted-response, and three-request-per-second
+  limits across the connector's individual single-ID calls
 - retain the shared connector's exact homology path, canonical species/ID,
   query-policy, and output-safety gates; no Skill-local network bypass is permitted
 - receive a named comparative-genomics method review before promotion

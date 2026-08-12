@@ -1,7 +1,7 @@
 {
   "schema_version": "0.2.0",
   "mode": "live-public-read-only",
-  "freshness_checked_at": "2026-08-10",
+  "freshness_checked_at": "2026-08-12",
   "provider_ids": [
     "ncbi-eutils",
     "uniprot-rest",
