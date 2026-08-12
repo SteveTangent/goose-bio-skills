@@ -1,0 +1,20 @@
+interface:
+  display_name: "Read Alignment Selection and Execution"
+  short_description: "Run one pinned local minimap2 short-DNA alignment."
+  default_prompt: "Align this tiny single-end short genomic DNA FASTQ to the exact local FASTA with the digest-pinned minimap2 adapter, then create a new SAM and provenance report without selecting another reference or downstream operation."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

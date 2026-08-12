@@ -568,6 +568,114 @@
       "expected_action": "safe-local-execution-or-needs-tool",
       "expected_question_count_this_turn": 0,
       "expected_first_decision_id": null
+    },
+    {
+      "id": "phylogenetic-tree-qc-specified-local",
+      "prompt": "Inspect this bounded local Newick tree, compare its exact case-sensitive tip set with a second local Newick tree, and write a new deterministic QC report covering duplicate tips, branch-length validity, topology counts, polytomies, and numeric internal-label presence without changing either tree or interpreting its biology.",
+      "expected_skill": "phylogenetic-tree-io-and-qc",
+      "forbidden_skills": [
+        "pairwise-and-multiple-sequence-alignment",
+        "public-orthology-retrieval-and-qc"
+      ],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "phylogenetic-tree-inference-routes-away",
+      "prompt": "Choose a substitution model, infer a maximum-likelihood tree from this alignment, bootstrap it, root the result, and interpret the evolutionary history.",
+      "expected_skill": null,
+      "forbidden_skills": [
+        "phylogenetic-tree-io-and-qc",
+        "pairwise-and-multiple-sequence-alignment"
+      ],
+      "expected_action": "route-away",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "phylogenetic-sequences-route-to-alignment",
+      "prompt": "Align these local homologous nucleotide sequences and report alignment quality; no phylogenetic tree file exists yet.",
+      "expected_skill": "pairwise-and-multiple-sequence-alignment",
+      "forbidden_skills": [
+        "phylogenetic-tree-io-and-qc"
+      ],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "metabolomics-feature-table-qc-specified-local",
+      "prompt": "Inspect this declared feature-by-sample untargeted-metabolomics TSV and matching sample metadata, preserving zero separately from missing, and write a new report with joins, finite nonnegative intensities, detected counts, pooled-QC RSD, blank/study descriptive ratios, and batch and injection-order completeness without filtering or annotating compounds.",
+      "expected_skill": "untargeted-metabolomics-feature-table-qc",
+      "forbidden_skills": [
+        "proteomics-quantification-table-qc",
+        "protein-level-differential-abundance"
+      ],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "metabolomics-raw-ms-routes-away",
+      "prompt": "Peak-pick these raw mzML files, align retention times, correct signal drift, annotate metabolites, and identify compounds from spectra.",
+      "expected_skill": null,
+      "forbidden_skills": [
+        "untargeted-metabolomics-feature-table-qc",
+        "proteomics-quantification-table-qc"
+      ],
+      "expected_action": "route-away",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "metabolomics-differential-model-routes-away",
+      "prompt": "Normalize and impute this metabolomics matrix, choose a differential model, adjust p-values, run pathway analysis, and declare biomarkers.",
+      "expected_skill": null,
+      "forbidden_skills": [
+        "untargeted-metabolomics-feature-table-qc",
+        "protein-level-differential-abundance",
+        "statistical-analysis-and-multiple-testing"
+      ],
+      "expected_action": "route-away-and-block-biomarker-claim",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "read-alignment-specified-short-dna",
+      "prompt": "Align this bounded single-end short-read DNA FASTQ against the exact local reference FASTA using the explicitly supplied reviewed minimap2 executable, publish a new SAM, and report mapping counts plus tool, reference, input, command, and output provenance; do not sort, index, call variants, or quantify expression.",
+      "expected_skill": "read-alignment-selection-and-execution",
+      "forbidden_skills": [
+        "raw-read-trimming-and-filtering",
+        "alignment-file-operations"
+      ],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "read-alignment-existing-sam-routes-to-file-ops",
+      "prompt": "The alignment is already complete. Sort this existing SAM, convert it to BAM, index it, and report mapped and unmapped counts without realigning the reads.",
+      "expected_skill": "alignment-file-operations",
+      "forbidden_skills": [
+        "read-alignment-selection-and-execution"
+      ],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "read-alignment-spliced-rna-routes-away",
+      "prompt": "Align these paired-end RNA-seq reads across splice junctions, discover novel junctions, sort the BAM, and quantify genes.",
+      "expected_skill": null,
+      "forbidden_skills": [
+        "read-alignment-selection-and-execution",
+        "alignment-file-operations",
+        "count-based-differential-expression"
+      ],
+      "expected_action": "route-away",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
     }
   ]
 }

@@ -1,0 +1,20 @@
+interface:
+  display_name: "Untargeted Metabolomics Feature-table QC"
+  short_description: "Audit metabolomics feature tables and sample joins locally."
+  default_prompt: "Audit this local untargeted-metabolomics feature-by-sample TSV against exact sample metadata and declared intensity, zero, and missing semantics, then write a new descriptive JSON report without changing inputs."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

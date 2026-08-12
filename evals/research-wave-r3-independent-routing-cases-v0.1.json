@@ -1,0 +1,78 @@
+{
+  "schema_version": "0.1.0",
+  "evidence_kind": "deterministic-contract-fixture",
+  "assurance_note": "These six cases preserve the oracle used after their independent first execution. This file alone is not model-runtime evidence and must not be reported as evaluated assurance.",
+  "cases": [
+    {
+      "id": "tree-r3-blind-positive",
+      "prompt": "A local single-tree Newick file is already available. Check duplicate tip labels, finite nonnegative branch lengths, polytomies and numeric internal-label presence, compare its exact case-sensitive tip set with a second local Newick tree, and write a new deterministic QC report. Do not infer or reroot a tree.",
+      "expected_skill": "phylogenetic-tree-io-and-qc",
+      "forbidden_skills": [
+        "pairwise-and-multiple-sequence-alignment",
+        "public-orthology-retrieval-and-qc"
+      ],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "tree-r3-blind-neighbor-inference",
+      "prompt": "Choose a substitution model from this MSA, infer a maximum-likelihood phylogeny with bootstraps, root it and interpret the evolutionary history.",
+      "expected_skill": null,
+      "forbidden_skills": [
+        "phylogenetic-tree-io-and-qc",
+        "pairwise-and-multiple-sequence-alignment"
+      ],
+      "expected_action": "route-away",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "metabolomics-r3-blind-positive",
+      "prompt": "For a declared feature-by-sample untargeted-metabolomics TSV and exact sample metadata, keep zeros distinct from NA and report joins, detected and missing counts, pooled-QC RSD, blank/study descriptive ratios, batch and injection-order completeness. Do not normalize, impute or annotate compounds.",
+      "expected_skill": "untargeted-metabolomics-feature-table-qc",
+      "forbidden_skills": [
+        "proteomics-quantification-table-qc",
+        "protein-level-differential-abundance"
+      ],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "metabolomics-r3-blind-neighbor-raw-ms",
+      "prompt": "Peak-pick and align these raw mzML runs, correct drift, annotate metabolites, run differential statistics and declare biomarkers.",
+      "expected_skill": null,
+      "forbidden_skills": [
+        "untargeted-metabolomics-feature-table-qc",
+        "protein-level-differential-abundance"
+      ],
+      "expected_action": "route-away-and-block-biomarker-claim",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "read-alignment-r3-blind-positive",
+      "prompt": "Align this tiny local single-end short genomic-DNA FASTQ against the exact local FASTA using the supplied digest-pinned minimap2 2.31-r1302 executable, publish a new SAM and provenance report, and do not sort, call variants or quantify genes.",
+      "expected_skill": "read-alignment-selection-and-execution",
+      "forbidden_skills": [
+        "raw-read-trimming-and-filtering",
+        "alignment-file-operations"
+      ],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "read-alignment-r3-blind-neighbor-existing-sam",
+      "prompt": "The SAM already exists; sort it, convert it to BAM, index it and report mapped and unmapped counts without realigning reads.",
+      "expected_skill": "alignment-file-operations",
+      "forbidden_skills": [
+        "read-alignment-selection-and-execution"
+      ],
+      "expected_action": "safe-local-execution-or-needs-tool",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    }
+  ]
+}

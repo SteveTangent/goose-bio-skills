@@ -4,7 +4,9 @@ Wave R1 passed the same-level `preview + reviewed` minimum gates and entered
 the v0.7.0 Beta. Its retained evidence remains below as the release baseline;
 future candidates reuse the generic gates and add their own scoped section.
 
-The current next-wave shortlist and its candidate-specific gates are recorded in
+The Wave R3 shortlist and its candidate-specific gates are recorded in
+[research-wave-r3-candidates.md](research-wave-r3-candidates.md). Wave R2's
+completed research package and evidence remain recorded in
 [research-wave-r2-candidates.md](research-wave-r2-candidates.md).
 
 Wave R2 has now passed its research-branch minimum implementation gate. The
@@ -13,6 +15,13 @@ binds the retained small fixtures, repeat outputs, package digests, route
 observations, and independent reviews. This permits continued research use and
 review, not direct merge into the existing v0.7.0 release; any later promotion
 requires a new atomic collection version and a final-byte rerun.
+
+Wave R3 has also passed its research-branch minimum implementation gate. The
+[Wave R3 minimum-reliability record](../evals/research-wave-r3-minimal-reliability-v0.1.json)
+binds its three exact packages, 60/60 retained checks run twice, 62 canonical
+routes, six independent holdout routes, and independent P0/P1/P2=0 reviews.
+Real minimap2 execution remains explicitly unverified. As with Wave R2, this
+permits supervised research use but not direct promotion into v0.7.0.
 
 Every candidate remains on `research` until the applicable minimum gates for
 the target release level pass. For the current target, that level is the same

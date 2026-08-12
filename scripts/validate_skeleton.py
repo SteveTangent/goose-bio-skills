@@ -237,6 +237,38 @@ RESEARCH_R1_HOLDOUT_ORACLES = {
         None,
     ),
 }
+RESEARCH_R3_HOLDOUT_ORACLES = {
+    "tree-r3-blind-positive": (
+        "phylogenetic-tree-io-and-qc",
+        0,
+        None,
+    ),
+    "tree-r3-blind-neighbor-inference": (
+        None,
+        0,
+        None,
+    ),
+    "metabolomics-r3-blind-positive": (
+        "untargeted-metabolomics-feature-table-qc",
+        0,
+        None,
+    ),
+    "metabolomics-r3-blind-neighbor-raw-ms": (
+        None,
+        0,
+        None,
+    ),
+    "read-alignment-r3-blind-positive": (
+        "read-alignment-selection-and-execution",
+        0,
+        None,
+    ),
+    "read-alignment-r3-blind-neighbor-existing-sam": (
+        "alignment-file-operations",
+        0,
+        None,
+    ),
+}
 
 RELEASE_STAGES = {"preview", "stable"}
 ASSURANCE_LEVELS = {"reviewed", "evaluated"}
@@ -1116,7 +1148,7 @@ def validate_intake_routing_cases(
         fixture,
         manifests,
         "intake routing fixture",
-        expected_count=53,
+        expected_count=62,
         required_oracles=CRITICAL_INTAKE_CASES,
     )
     research_holdout = load_json(
@@ -1128,6 +1160,16 @@ def validate_intake_routing_cases(
         "research Wave R1 independent routing fixture",
         expected_count=6,
         required_oracles=RESEARCH_R1_HOLDOUT_ORACLES,
+    )
+    research_r3_holdout = load_json(
+        "evals/research-wave-r3-independent-routing-cases-v0.1.json"
+    )
+    validate_intake_routing_fixture(
+        research_r3_holdout,
+        manifests,
+        "research Wave R3 independent routing fixture",
+        expected_count=6,
+        required_oracles=RESEARCH_R3_HOLDOUT_ORACLES,
     )
 
 
@@ -2333,7 +2375,7 @@ def run_self_test() -> int:
                 intake_fixture,
                 intake_manifests,
                 "self-test intake fixture",
-                expected_count=53,
+                expected_count=62,
                 required_oracles=CRITICAL_INTAKE_CASES,
             )
         ),
@@ -2354,7 +2396,7 @@ def run_self_test() -> int:
                     invalid_intake_fixture,
                     intake_manifests,
                     "self-test invalid intake fixture",
-                    expected_count=53,
+                    expected_count=62,
                     required_oracles=CRITICAL_INTAKE_CASES,
                 )
             )
@@ -2403,6 +2445,47 @@ def run_self_test() -> int:
         "self-test: invalid research Wave R1 holdout oracle accepted",
     )
     checks.append("research-wave-r1-routing-holdout-enforced")
+
+    research_r3_holdout = json_loads_no_duplicates(
+        (ROOT / "evals/research-wave-r3-independent-routing-cases-v0.1.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    require(
+        not captured_errors(
+            lambda: validate_intake_routing_fixture(
+                research_r3_holdout,
+                intake_manifests,
+                "self-test research Wave R3 holdout",
+                expected_count=6,
+                required_oracles=RESEARCH_R3_HOLDOUT_ORACLES,
+            )
+        ),
+        "self-test: valid research Wave R3 holdout rejected",
+    )
+    invalid_research_r3_holdout = copy.deepcopy(research_r3_holdout)
+    if isinstance(invalid_research_r3_holdout, dict):
+        invalid_cases = invalid_research_r3_holdout.get("cases")
+        if isinstance(invalid_cases, list):
+            for case in invalid_cases:
+                if isinstance(case, dict) and case.get("id") == "tree-r3-blind-positive":
+                    case["expected_skill"] = "pairwise-and-multiple-sequence-alignment"
+                    break
+    require(
+        bool(
+            captured_errors(
+                lambda: validate_intake_routing_fixture(
+                    invalid_research_r3_holdout,
+                    intake_manifests,
+                    "self-test invalid research Wave R3 holdout",
+                    expected_count=6,
+                    required_oracles=RESEARCH_R3_HOLDOUT_ORACLES,
+                )
+            )
+        ),
+        "self-test: invalid research Wave R3 holdout oracle accepted",
+    )
+    checks.append("research-wave-r3-routing-holdout-enforced")
 
     preview_disclaimer = "This preview is not scientifically validated."
     positive_claim = "This preview is scientifically validated."

@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "reviewed_at": "2026-08-12",
+  "capabilities": {
+    "file_write": {
+      "decision": "approved",
+      "reviewer": "project-owner",
+      "scope": "Only scripts/run_short_dna_alignment.py may create private temporary input copies and alignment artifacts plus the caller-specified new SAM and JSON leaf files in the current working directory; it may not replace a path, escape the working directory, mutate an input, create user directories, or use the network.",
+      "reason": "Private staging isolates the fixed adapter, and create-exclusive atomic publication prevents overwriting either requested artifact.",
+      "expires_at": "2026-11-30",
+      "evidence": [
+        "SKILL.md",
+        "scripts/run_short_dna_alignment.py"
+      ],
+      "target_enforcement": {
+        "openai": "Allow only private temporary work plus the explicit new SAM and JSON leaf files in the working directory; remote inline execution is forbidden.",
+        "claude": "Allow only private temporary work plus the explicit new SAM and JSON leaf files in the working directory; remote inline execution is forbidden.",
+        "generic": "Run locally and allow only private staging plus the two caller-approved create-new outputs.",
+        "vscode": "Workspace trust plus explicit write approval is required for the two create-new outputs."
+      }
+    },
+    "local_subprocess": {
+      "decision": "approved",
+      "reviewer": "project-owner",
+      "scope": "scripts/run_short_dna_alignment.py may execute only the caller-supplied absolute non-symlink executable after its SHA-256 matches, require exact minimap2 2.31-r1302, and use a fixed short-genomic-DNA argv, one thread, fixed seed, private cwd, clean environment, no stdin, no shell, no caller flags, no installation, and no fallback aligner.",
+      "reason": "Digest and version pinning plus a fixed argv makes minimap2 the sole bounded adapter and preserves fail-closed execution.",
+      "expires_at": "2026-11-30",
+      "evidence": [
+        "SKILL.md",
+        "scripts/run_short_dna_alignment.py"
+      ],
+      "target_enforcement": {
+        "openai": "Permit only the digest-pinned fixed minimap2 invocation; reject shell expansion, caller flags, alternate tools, and version drift.",
+        "claude": "Permit only the digest-pinned fixed minimap2 invocation; reject shell expansion, caller flags, alternate tools, and version drift.",
+        "generic": "Execute only the fixed adapter after input, executable digest, and exact version validation.",
+        "vscode": "Workspace trust plus explicit local-process approval is required for the fixed minimap2 invocation."
+      }
+    }
+  }
+}

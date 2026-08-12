@@ -1,0 +1,102 @@
+{
+  "schema_version": "0.2.0",
+  "name": "read-alignment-selection-and-execution",
+  "version": "0.7.0",
+  "maturity_tier": "production",
+  "context_budget_tier": "production",
+  "domain_id": "D02",
+  "cluster_id": "C05",
+  "risk_tier": "R2",
+  "owner": "project-owner",
+  "updated_at": "2026-08-12",
+  "last_freshness_check": "2026-08-12",
+  "review_cadence": "quarterly",
+  "status": "active",
+  "lifecycle_stage": "production",
+  "distribution_status": "installable",
+  "release_stage": "preview",
+  "assurance_level": "reviewed",
+  "assurance": {
+    "runtime_evaluation": "not-performed",
+    "scientific_benchmark": "not-performed",
+    "human_expert_review": "not-performed",
+    "better_than_baseline_claim": false,
+    "clinical_use": "prohibited",
+    "unverified_boundaries": [
+      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "Real minimap2 execution was not performed because minimap2 was unavailable in the review environment.",
+      "Real minimap2 2.31-r1302 execution and output were not evaluated.",
+      "The deterministic self-test uses a bounded fake executable to verify argv, fail-closed behavior, SAM reconciliation, and publication; it does not validate minimap2's scientific output.",
+      "The fake adapter verifies the integration contract only and is not an aligner.",
+      "Representative genomes, real sequencing reads, mapping accuracy, performance scaling, and human-expert review have not been evaluated.",
+      "Only plain single-end short genomic DNA input and exact minimap2 2.31-r1302 are in scope; paired-end, interleaved, RNA/splice, long-read, compressed, indexed-reference, and other-version behavior is unverified.",
+      "Windows create-new publication and executable semantics have not been verified."
+    ]
+  },
+  "intake_contract_version": "1.3.0",
+  "intake_contract": {
+    "facts_before_questions": true,
+    "question_policy": "one-unresolved-load-bearing-decision-at-a-time-with-recommendation",
+    "wait_after_each_question": true,
+    "explicit_safe_local_execution": "proceed-without-repeat-confirmation",
+    "side_effect_confirmation": "only-when-not-already-authorized-for-current-action-and-scope",
+    "decision_sequence": [
+      {
+        "decision_id": "reference-contract",
+        "applies_when": "The exact intended local reference FASTA is absent or ambiguous.",
+        "question": "Which exact local FASTA is the intended reference for this run?",
+        "recommended_answer": "Use the producer-approved reference file and bind the run to its SHA-256; never infer or substitute a reference build."
+      },
+      {
+        "decision_id": "assay-contract",
+        "applies_when": "Single-end, short-read, genomic-DNA assay identity is absent or ambiguous.",
+        "question": "Are these plain single-end short genomic DNA reads rather than paired/interleaved, RNA/splice, or long reads?",
+        "recommended_answer": "Continue only with an explicit single-end short genomic DNA declaration; route every other assay or layout elsewhere."
+      }
+    ]
+  },
+  "script_verification": {
+    "bundled_scripts": true,
+    "implementation_origin": "original-new",
+    "self_test_status": "passed",
+    "self_test_command": "python3 scripts/run_short_dna_alignment.py --self-test",
+    "runtime_versions": [
+      "Python 3.12.8 self-test; compatible syntax requires Python >=3.10",
+      "Bounded fake minimap2 2.31-r1302 contract adapter"
+    ]
+  },
+  "runtime_verification": {
+    "mode": "skipped-complex-tool",
+    "status": "skipped",
+    "reason": "The real external minimap2 executable was unavailable. Only deterministic input, fixed-argv, fake-adapter, SAM-reconciliation, create-new, and fail-closed script checks were run; no real alignment or scientific output was evaluated.",
+    "tool_versions": [
+      "minimap2 2.31-r1302 required; real executable not run"
+    ],
+    "unverified_boundaries": [
+      "Real minimap2 2.31-r1302 execution and output were not evaluated.",
+      "Representative genomes, real sequencing reads, mapping accuracy, performance scaling, and human-expert review have not been evaluated.",
+      "The fake adapter verifies the integration contract only and is not an aligner."
+    ]
+  },
+  "legal_notices": {
+    "required": true,
+    "files": [
+      "LICENSE"
+    ]
+  },
+  "rollback": {
+    "previous_version": null,
+    "boundary": "Remove this first-release package and its matching registry entry."
+  },
+  "network_mode": "none",
+  "local_adapters": [
+    "minimap2 2.31-r1302 (required external executable; not bundled)"
+  ],
+  "external_services": [],
+  "depends_on": [
+    "raw-read-trimming-and-filtering"
+  ],
+  "target_platforms": [
+    "agent-skills"
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "schema_version": "0.1.0",
+  "suite_version": "0.1.0",
+  "evidence_kind": "retained-minimal-reliability-fixtures",
+  "scope": {
+    "offline": true,
+    "small_synthetic_data_only": true,
+    "formal_scientific_evaluation": false,
+    "real_minimap2_runtime": "not-evaluated",
+    "purpose": "Replay bounded valid, invalid, deterministic, create-new, package-binding, and unavailable-tool checks for the three Wave R3 candidates."
+  },
+  "tree_qc": {
+    "package_digest": "c25931fcad517c4bc51c15ec979d28d3135e5e9dd75afcc78caf8f4d7e97a558",
+    "self_test_checks": 26,
+    "tree": {
+      "filename": "tiny-tree.nwk",
+      "content": "(A:0.1,(B:0.2,C:0.3)95:0.4,D:0.0);\n",
+      "sha256": "e1361f47e320fac5842c37efa10d97bc0b9d0cd17d5408c4d34695b582d3fb52"
+    },
+    "comparison": {
+      "filename": "tiny-tree-reordered.nwk",
+      "content": "(D:0,(C:0.3,B:0.2)80:0.4,A:0.1);\n",
+      "sha256": "6697d0fa0b38a3d5c25d639d3191f6ad23a4ff22a47b97c67dea5f5a849008b4"
+    },
+    "invalid_tree": {
+      "filename": "tiny-tree-duplicate.nwk",
+      "content": "(A:0.1,A:0.2);\n",
+      "sha256": "5f3e41517eae083e08c2ed838eef43d364df2efc62b573b31f891237a8ac31b8",
+      "expected_error": "duplicate-tip-label"
+    },
+    "expected": {
+      "tip_count": 4,
+      "internal_node_count": 2,
+      "polytomy_count": 1,
+      "tip_set_status": "exact-tip-set-match",
+      "output_sha256": "69ab567fdb23ef5a83cffbc27828b593a80e2e12485bb80c5ae9fa2c0395c5d0"
+    }
+  },
+  "metabolomics_qc": {
+    "package_digest": "941e56aa5eb8caa6513c2db8eeb78bfc4c37f86be010147d3d76242ce0cde464",
+    "self_test_checks": 37,
+    "arguments": {
+      "intensity_semantics": "raw-peak-area",
+      "missing_token": "NA",
+      "zero_semantics": "missing"
+    },
+    "feature_table": {
+      "filename": "metabolomics-features.tsv",
+      "content": "feature_id\tmz\tretention_time_seconds\tS1\tS2\tS3\tQC1\tQC2\tQC3\tB1\tB2\tB3\nF1\t100.1\t60\t100\t200\t300\t100\t100\t100\t10\t20\t30\nF2\t200.2\t120\t0\t0\t0\t10\t20\tNA\t0\t5\tNA\nF3\t300.3\t180\t10\tNA\t30\t0\t0\t0\t1\t2\t3\nF4\t400.4\t240\t10\t10\t10\t5\tNA\tNA\tNA\tNA\tNA\nF5\t500.5\t300\t0\t0\t0\t0\t0\t0\t0\t0\t0\n",
+      "sha256": "2cd97173bb685b706f5b44db99727c5406795258339e19632f0feb59e3d624ad"
+    },
+    "metadata": {
+      "filename": "metabolomics-metadata.tsv",
+      "content": "sample_id\tsample_type\tbatch\tinjection_order\nS1\tstudy\tbatch-1\t1\nS2\tstudy\tbatch-1\t2\nS3\tstudy\t\t\nQC1\tpooled_qc\tbatch-1\t3\nQC2\tpooled_qc\tbatch-1\t4\nQC3\tpooled_qc\tbatch-2\t1\nB1\tblank\tbatch-1\t5\nB2\tblank\tbatch-1\t5\nB3\tblank\tbatch-2\t\n",
+      "sha256": "651138d99697e4e2bb37c27a4fbe1dc21086b354992d7414d91d15df88f0ccd3"
+    },
+    "invalid_feature_table": {
+      "filename": "metabolomics-negative.tsv",
+      "content": "feature_id\tmz\tretention_time_seconds\tS1\nF1\t100\t1\t-1\n",
+      "sha256": "4d450b421df8678c4b8dcee6bf162fcdbeaee01051963edd35964eb26c7a98ed",
+      "expected_issue": "negative-intensity"
+    },
+    "expected": {
+      "feature_count": 5,
+      "sample_count": 9,
+      "s2_detected_feature_count": 2,
+      "s2_total_missing_feature_count": 3,
+      "f2_pooled_qc_rsd_percent": 47.14045207910317,
+      "output_sha256": "d1233dc66d9c66aedd287eb0a01653ec5a1f2b7be2bad7b69b470456ae7d33ef"
+    }
+  },
+  "read_alignment": {
+    "package_digest": "98c2d35e1d530ca7963057a49325ab49a6e1c68089953d9557b3f5a5a3b22409",
+    "self_test_checks": 23,
+    "real_minimap2_runtime": "not-evaluated",
+    "reference": {
+      "filename": "tiny-reference.fa",
+      "content": ">ref\nACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGT\n",
+      "sha256": "38cbadbf240bbb6969a1a69abcd5b60eaa417bf6577737045a5b58ac56d8eacd"
+    },
+    "reads": {
+      "filename": "tiny-reads.fastq",
+      "content": "@mapped\nACGTACGTACGTACGTACGTACGTACGTACGTACGTACGT\n+\nIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII\n@unmapped\nTGCATGCATGCATGCATGCATGCATGCATGCATGCATGCA\n+\nIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII\n",
+      "sha256": "8e4b2d80c366e0254e9f5ea537af41877b57bba46ac1e71aff06a12db81c7cef"
+    },
+    "expected": {
+      "unavailable_tool_status": "needs-tool",
+      "unavailable_tool_code": "minimap2-unavailable",
+      "missing_declaration_status": "needs-decision",
+      "missing_declaration_code": "missing-assay-declaration"
+    }
+  }
+}
