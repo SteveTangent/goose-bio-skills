@@ -286,7 +286,7 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "1362af8187200ec2df84494ef977ad575f40f463e44924a1363931aa77452b13",
+      "package_digest": "6dee07a702fbf880a6b3542901d9980eebcb8f707fb488dc7ff801dd6a5ef965",
       "previous_version": null
     },
     {
@@ -339,7 +339,7 @@
       "external_services": [
         "ncbi-eutils"
       ],
-      "package_digest": "aab31b1635999f9e6fa62277fb50c2863ec06275259588d01c1f51b947424af4",
+      "package_digest": "8c108cab698328f5665aa9f76b8c832fb534f62abe7df2ce944eb448ba8be2a6",
       "previous_version": null
     },
     {

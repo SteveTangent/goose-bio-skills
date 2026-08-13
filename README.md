@@ -148,7 +148,8 @@ python3 scripts/run_research_connector.py \
 ```
 
 The shared companion emits `completed` only after the response and create-new
-publication contract were checked; this is not a claim that the record is
+publication contract were checked; its payload/provenance pair uses exception
+rollback and is not crash-atomic between both links. This is not a claim that the record is
 scientifically relevant or biologically correct. Otherwise it emits
 `blocked-or-failed` and reports whether any network request occurred. At the
 Skill layer, incomplete or truncated work remains explicitly partial and

@@ -393,14 +393,17 @@ def parse_xml(payload: bytes, label: str) -> ET.Element:
     if sum(1 for _ in root.iter()) > MAX_ELEMENTS:
         raise InputError(f"{label} exceeds the supported element count")
     for child in list(root):
-        if local_name(child.tag) == "VariationArchive":
+        tag = local_name(child.tag)
+        if tag == "VariationArchive":
             continue
-        for item in child.iter():
-            tag = local_name(item.tag)
-            if tag.casefold() in PROVIDER_FAILURE_TAGS:
-                raise ProviderFailure(
-                    f"{label} contains a ClinVar provider {tag} envelope"
-                )
+        if tag.casefold() in PROVIDER_FAILURE_TAGS:
+            raise ProviderFailure(
+                f"{label} contains a ClinVar provider {tag} envelope"
+            )
+        raise InputError(
+            f"{label} contains an unexpected ClinVar direct child "
+            f"{tag} (provider schema drift)"
+        )
     return root
 
 
@@ -872,6 +875,13 @@ def self_test() -> None:
     require_input_error(
         lambda: parse_xml(utf16_dtd, "UTF-16 DTD fixture"),
         "UTF-16 DTD bypass was accepted",
+    )
+    require_input_error(
+        lambda: parse_xml(
+            b"<ClinVarResult-Set><Unexpected/></ClinVarResult-Set>",
+            "unexpected direct-child fixture",
+        ),
+        "unexpected ClinVar direct child was accepted as a missing record",
     )
 
     with tempfile.TemporaryDirectory(prefix="clinvar-normalizer-selftest-") as directory:

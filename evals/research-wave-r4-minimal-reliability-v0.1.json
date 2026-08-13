@@ -24,7 +24,7 @@
     "statuses": ["pass", "pass"],
     "repeat_events_identical": true,
     "runner_sha256": "a5223aec5a09369a8404dbc609b893a720b46629474d4fa6259b04e22e073e50",
-    "fixture_sha256": "3072aa79e1b7d1251410eb4b71e8195fd187291d747db923a8a3b0ccd5cabdc2",
+    "fixture_sha256": "1408dd9842c7aca7cf0e9eaa6312d384b3b1575bee2b93658576e4c205c417dc",
     "coverage": [
       "six package self-tests",
       "exact package digests and input hashes",
@@ -48,9 +48,9 @@
     "bulk-rnaseq-gene-counting-from-alignment": "73f87e17c0f69d46103b33ebff489d1c083f19f720a079e78b88fbfb46b9f4ae",
     "junction-psi-and-delta-analysis": "a6acdd4bbdb45c2e129fe374f42361d2b7686bab1b34dafd1193b676c2ae0a67",
     "amplicon-alpha-diversity-analysis": "a3204d52d190936b168c8ac8b46552329532ff56da7ac84000f686371555e34d",
-    "flow-cytometry-compensation-application": "1362af8187200ec2df84494ef977ad575f40f463e44924a1363931aa77452b13",
+    "flow-cytometry-compensation-application": "6dee07a702fbf880a6b3542901d9980eebcb8f707fb488dc7ff801dd6a5ef965",
     "kaplan-meier-survival-analysis": "8d5e13de0fad5db3151455c473c01b377778c739879ecbd088db017893bc9a9a",
-    "human-variant-evidence-retrieval": "aab31b1635999f9e6fa62277fb50c2863ec06275259588d01c1f51b947424af4"
+    "human-variant-evidence-retrieval": "8c108cab698328f5665aa9f76b8c832fb534f62abe7df2ce944eb448ba8be2a6"
   },
   "public_canary": {
     "status": "pass",
@@ -169,9 +169,9 @@
   "control_hashes": {
     "evals/intake-routing-cases.json": "e5a68d5524354679aad4c3ed91ac043310292763759f7eb900efc95b17f6300d",
     "scripts/validate_skeleton.py": "311b4376d96b76c82cd2c1b34db7e101701b05988db9c043fdaddd577b6adb68",
-    "registry.json": "99125d160a5ee682be25ff95383916f219f8c29b00860a9764e09eecfa9dec69",
+    "registry.json": "0708d578d455b137330771a5213ecc3df7011dd8467a8c8fd8ac0b0ebbe77f94",
     "connectors/providers.json": "e30f59cb3f4673105e94839e5bb4e50f47252bb8e7226a1310a687a75f944cce",
-    "README.md": "d7440d9d294514fc1948dd1a18ddaf9539622f1746435afcbe5784dde3f3d95c",
+    "README.md": "02eaf22d91fd9ae89b5bec6255e153405f1f10169c04bd4b794e54e122b394d7",
     "docs/architecture.md": "8a05486b42e7d93a623bf91543c4fbb8a477b97968970741196b36d2cd7eb903",
     "docs/catalog.md": "6746152e900dee67df0f5bd1e90d834d086767185be09f59cd21b09f2934e778",
     "docs/research-skill-promotion-gates.md": "66ee5d916f6c7e4c5a45fcc8709ec1d31065fdcd63b0165973362b6e83300776",

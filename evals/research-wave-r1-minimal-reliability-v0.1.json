@@ -169,7 +169,7 @@
   },
   "control_sha256": {
     "validator": "311b4376d96b76c82cd2c1b34db7e101701b05988db9c043fdaddd577b6adb68",
-    "registry": "99125d160a5ee682be25ff95383916f219f8c29b00860a9764e09eecfa9dec69",
+    "registry": "0708d578d455b137330771a5213ecc3df7011dd8467a8c8fd8ac0b0ebbe77f94",
     "promotion_scope": "66ee5d916f6c7e4c5a45fcc8709ec1d31065fdcd63b0165973362b6e83300776"
   },
   "review": {

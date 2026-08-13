@@ -77,7 +77,7 @@ provider, data, credential, storage, and billing boundary; that adapter is not
 this shared executor.
 
 For APIs with numeric pagination, the executor can issue a bounded sequence and
-atomically write one JSON bundle:
+publish one create-new JSON bundle with checked exception rollback:
 
 ```text
 python3 scripts/run_research_connector.py \
@@ -120,11 +120,13 @@ The executor:
   response and both output files are published. A failed event reports whether a
   network attempt began, so it can be `true` without a success artifact.
 
-Here `completed` means checked retrieval and atomic publication under this
+Here `completed` means checked retrieval and completed create-new publication under this
 transport contract. It does not mean the record is scientifically relevant,
 biologically correct, current enough for the research question, or semantically
 validated by a domain expert. The create-new and rollback checks cover ordinary
-output races and observed identity replacement; they do not provide lock-free
+output races and observed identity replacement. The payload/provenance pair is
+exception-rolled-back, not crash-atomic across the two hard links. These checks
+also do not provide lock-free
 isolation from a malicious process that already has write access to the output
 directory and can replace a name between adjacent filesystem system calls.
 
@@ -142,5 +144,5 @@ The self-test makes no network request. It covers the catalog policy, URL and
 redirect rejection, credential-query encoding variants, NCBI History, PubChem
 asynchronous paths, excluded Enrichr paths, paid/job boundaries, KEGG terms,
 anonymous-only behavior, invalid statuses, empty/HTML/error payloads, retries,
-single-invocation pacing, byte limits, temporary-file cleanup, and atomic
-create-new publication with existing-file preservation.
+single-invocation pacing, byte limits, temporary-file cleanup, and checked
+create-new publication with existing-file preservation and exception rollback.

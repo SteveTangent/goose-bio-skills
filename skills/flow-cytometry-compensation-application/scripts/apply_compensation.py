@@ -17,6 +17,7 @@ import stat
 import sys
 import tempfile
 from dataclasses import dataclass
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 
@@ -201,7 +202,7 @@ def valid_identifier(value: str) -> bool:
     )
 
 
-def parse_number(token: str, label: str) -> float:
+def parse_decimal(token: str, label: str) -> Decimal:
     if (
         not token
         or len(token) > MAX_NUMBER_CHARS
@@ -209,12 +210,25 @@ def parse_number(token: str, label: str) -> float:
     ):
         raise ContractError("invalid-number", f"{label} must use strict decimal syntax")
     try:
-        value = float(token)
-    except ValueError as exc:
+        value = Decimal(token)
+    except InvalidOperation as exc:
         raise ContractError("invalid-number", f"{label} is not numeric") from exc
-    if not math.isfinite(value):
+    if not value.is_finite():
         raise ContractError("nonfinite-number", f"{label} must be finite")
     return value
+
+
+def decimal_to_float(value: Decimal, label: str) -> float:
+    converted = float(value)
+    if not math.isfinite(converted):
+        raise ContractError("nonfinite-number", f"{label} exceeds finite float range")
+    if value != 0 and converted == 0:
+        raise ContractError("numeric-underflow", f"{label} is nonzero but underflows float range")
+    return converted
+
+
+def parse_number(token: str, label: str) -> float:
+    return decimal_to_float(parse_decimal(token, label), label)
 
 
 def parse_events(rows: list[list[str]]) -> tuple[list[str], list[str], list[list[float]]]:
@@ -254,26 +268,29 @@ def parse_matrix(rows: list[list[str]], channels: list[str]) -> list[list[float]
     labels = [row[0] for row in rows[1:]]
     if labels != channels:
         raise ContractError("matrix-row-mismatch", "spillover row labels must exactly match channel order")
-    matrix = [
-        [parse_number(token, f"spillover row {index}") for token in row[1:]]
+    decimal_matrix = [
+        [parse_decimal(token, f"spillover row {index}") for token in row[1:]]
         for index, row in enumerate(rows[1:], 2)
     ]
-    for row_index, row in enumerate(matrix):
+    for row_index, row in enumerate(decimal_matrix):
         for column_index, value in enumerate(row):
             if row_index == column_index:
-                if value != 1.0:
+                if value != Decimal(1):
                     raise ContractError(
                         "nonunit-spillover-diagonal",
                         "spillover matrix diagonal entries must be exactly 1",
                         "needs-decision",
                     )
-            elif abs(value) > OFF_DIAGONAL_ABS_LIMIT:
+            elif abs(value) > Decimal(1):
                 raise ContractError(
                     "spillover-coefficient-out-of-range",
                     f"off-diagonal spillover coefficients must have absolute value at most {OFF_DIAGONAL_ABS_LIMIT}",
                     "needs-decision",
                 )
-    return matrix
+    return [
+        [decimal_to_float(value, f"spillover row {index}") for value in row]
+        for index, row in enumerate(decimal_matrix, 2)
+    ]
 
 
 def invert(matrix: list[list[float]]) -> list[list[float]]:
@@ -697,6 +714,16 @@ def self_test() -> dict[str, Any]:
                 lambda token=invalid_token: parse_number(token, "probe"),
             )
 
+        float_overflow = decode_tsv(
+            b"event_id\tFITC-A\ne1\t1e999\n", "float-overflow-event"
+        )
+        expect("nonfinite-number", lambda: parse_events(float_overflow))
+
+        float_underflow = decode_tsv(
+            b"event_id\tFITC-A\ne1\t1e-999\n", "float-underflow-event"
+        )
+        expect("numeric-underflow", lambda: parse_events(float_underflow))
+
         for embedded_line_break in (b'"e\n1"\t1\n', b'"e\r1"\t1\r\n'):
             expect(
                 "invalid-character",
@@ -730,6 +757,16 @@ def self_test() -> dict[str, Any]:
             lambda: parse_matrix(nonunit_rows, ["FITC-A", "PE-A"]),
             "needs-decision",
         )
+        rounded_nonunit_rows = decode_tsv(
+            b"source_channel\tFITC-A\tPE-A\n"
+            b"FITC-A\t1.0000000000000001\t0.1\nPE-A\t0.1\t1\n",
+            "rounded-nonunit-matrix",
+        )
+        expect(
+            "nonunit-spillover-diagonal",
+            lambda: parse_matrix(rounded_nonunit_rows, ["FITC-A", "PE-A"]),
+            "needs-decision",
+        )
         oversized_rows = decode_tsv(
             b"source_channel\tFITC-A\tPE-A\nFITC-A\t1\t1.1\nPE-A\t0.1\t1\n",
             "oversized-matrix",
@@ -737,6 +774,16 @@ def self_test() -> dict[str, Any]:
         expect(
             "spillover-coefficient-out-of-range",
             lambda: parse_matrix(oversized_rows, ["FITC-A", "PE-A"]),
+            "needs-decision",
+        )
+        rounded_oversized_rows = decode_tsv(
+            b"source_channel\tFITC-A\tPE-A\n"
+            b"FITC-A\t1\t1.0000000000000001\nPE-A\t0.1\t1\n",
+            "rounded-oversized-matrix",
+        )
+        expect(
+            "spillover-coefficient-out-of-range",
+            lambda: parse_matrix(rounded_oversized_rows, ["FITC-A", "PE-A"]),
             "needs-decision",
         )
         near_collinear = [[1.0, 0.99999999999], [0.99999999999, 1.0]]
