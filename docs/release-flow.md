@@ -107,6 +107,29 @@ Incomplete package placeholders, partial directories, roadmap entries, and misma
 
 The canonical package digest is SHA-256 of canonical JSON for the path-sorted `[{path, sha256, kind}]` inventory. `manifest.json` and `agents/interface.yaml` are metadata; files under `scripts/` or with recognized code suffixes are code; legal-notice prefixes are license material; other files are text.
 
+## Collection and package versions
+
+The root `VERSION` identifies a collection release and the shared connector.
+Each package owns its own semantic version in `manifest.json`, `SKILL.md`, and
+the registry. A collection release may therefore contain multiple package
+versions. An unchanged package keeps its version and package digest; changing
+collection documentation or adding a different package does not rewrite it.
+
+A changed package must still update its own version, rollback boundary, and
+registry entry atomically. The validator requires the package frontmatter,
+manifest, self-test output, and registry version to agree. Historical retained
+runners remain point-in-time evidence and are not mechanically rebound unless
+the package bytes they attest actually changed.
+
+This split avoids release-wide digest churn while preserving exact package
+identity. It does not relax the full collection gate used for a tagged release.
+
+Registry entries are derived from package manifests and exact package bytes.
+Run `python3 scripts/render_registry.py --check` during normal verification. To
+review a proposed registry after package changes, render it to a new path with
+`--output`; replacement of the current registry remains an explicit reviewed
+release action.
+
 ## Rollback and public boundary
 
 Rollback targets one exact package version and its registry entry. Research history, rights decisions, failed or partial evaluations, and previous release evidence remain intact.

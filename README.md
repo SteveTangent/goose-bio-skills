@@ -115,6 +115,11 @@ Wave R5 added `bulk-rnaseq-gene-count-matrix-assembly`, `amplicon-beta-diversity
 
 See [docs/catalog.md](docs/catalog.md) for Domain, Cluster, risk, dependency, and runtime details. [`registry.json`](registry.json) is the versioned machine-readable index.
 
+The [integration contract](docs/integration-contract.md) separates user
+questions, presentation metadata, permission declarations, status language,
+and host responsibilities. Users are not expected to read or complete the
+package governance files.
+
 ## External research services
 
 An explicit request to search or retrieve from a declared public research
@@ -190,6 +195,10 @@ Use the collection for supervised research work. Verify inputs, tool availabilit
 The repository includes dependency-free checks for package structure and the shared connector contract:
 
 ```bash
+python3 scripts/verify.py quick
+python3 scripts/verify.py release
+
+# Individual gates remain available for diagnosis and historical replay:
 python3 scripts/validate_skeleton.py
 python3 scripts/validate_skeleton.py --self-test
 python3 scripts/run_research_connector.py --self-test
@@ -202,6 +211,10 @@ python3 skills/scientific-file-preflight-and-resource-planning/scripts/preflight
 python3 skills/statistical-analysis-and-multiple-testing/scripts/adjust_pvalues.py --self-test
 python3 skills/gff-gtf-gene-model-qc/scripts/check_gene_models.py --self-test
 ```
+
+See the [verification pipeline](docs/verification-pipeline.md) for when each
+mode runs. Contributors normally need the quick command; the release command is
+reserved for a tagged collection candidate.
 
 The skeleton gate also validates the canonical deterministic intake-routing cases in
 [`evals/intake-routing-cases.json`](evals/intake-routing-cases.json). Those

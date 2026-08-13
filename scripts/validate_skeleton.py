@@ -20,7 +20,7 @@ from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 VALIDATOR_VERSION = "1.3.0"
-PUBLIC_PACKAGE_VERSION = "0.9.0"
+COLLECTION_VERSION = "0.9.0"
 MANIFEST_SCHEMA_VERSION = "0.2.0"
 REGISTRY_SCHEMA_VERSION = "0.5.0"
 PROVIDER_CATALOG_SCHEMA_VERSION = "0.2.0"
@@ -714,6 +714,137 @@ def validate_frontmatter(
         )
 
 
+def validate_interface_metadata(path: Path, label: str) -> None:
+    """Validate the deliberately small, presentation-only interface subset."""
+    require(path.is_file() and not path.is_symlink(), f"{label}: interface metadata is missing or symlinked")
+    if not path.is_file() or path.is_symlink():
+        return
+    try:
+        text = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as exc:
+        require(False, f"{label}: interface metadata is unreadable: {exc}")
+        return
+    require("\t" not in text, f"{label}: interface metadata cannot contain tabs")
+    dynamic = {
+        key: re.findall(rf'^  {key}: "([^"\\]*(?:\\.[^"\\]*)*)"$', text, re.M)
+        for key in ("display_name", "short_description", "default_prompt")
+    }
+    for key, matches in dynamic.items():
+        require(len(matches) == 1, f"{label}: interface {key} must appear exactly once")
+        if len(matches) == 1:
+            require(bool(matches[0].strip()), f"{label}: interface {key} must be non-empty")
+    if len(dynamic["display_name"]) == 1:
+        require(len(dynamic["display_name"][0]) <= 80, f"{label}: interface display_name is too long")
+    if len(dynamic["short_description"]) == 1:
+        require(len(dynamic["short_description"][0]) <= 160, f"{label}: interface short_description is too long")
+    if len(dynamic["default_prompt"]) == 1:
+        require(len(dynamic["default_prompt"][0]) <= 640, f"{label}: interface default_prompt is too long")
+
+    required_lines = {
+        "interface:",
+        "compatibility:",
+        '  canonical_format: "agent-skills"',
+        "  adapter_targets:",
+        '    - "generic"',
+        "  activation:",
+        '    mode: "manual"',
+        "    paths: []",
+        "  execution:",
+        '    context: "inline"',
+        '    shell: "bash"',
+        "  trust:",
+        '    source_tier: "local"',
+        '    remote_inline_execution: "forbid"',
+        '    remote_metadata_policy: "allow-metadata-only"',
+        "  degradation:",
+        '    generic: "neutral-source"',
+    }
+    line_list = [line.rstrip() for line in text.splitlines() if line.strip()]
+    lines = set(line_list)
+    for required_line in required_lines:
+        require(required_line in lines, f"{label}: interface compatibility line is missing: {required_line.strip()}")
+    require(
+        len(line_list) == 20 and len(lines) == 20,
+        f"{label}: interface metadata has duplicate, extra, or missing fields",
+    )
+
+
+def validate_permission_policy(package: Path, code_files: list[Path], label: str) -> None:
+    """Validate declarations without pretending that they grant host permission."""
+    path = package / "security" / "permission_policy.json"
+    if not code_files:
+        require(
+            not path.exists() and not path.is_symlink(),
+            f"{label}: a package without code cannot declare permission",
+        )
+        return
+    if path.is_symlink():
+        require(False, f"{label}: permission policy cannot be symlinked")
+        return
+    if not path.exists():
+        return
+    require(path.is_file() and not path.is_symlink(), f"{label}: permission policy is symlinked or not a file")
+    if not path.is_file() or path.is_symlink():
+        return
+    try:
+        policy = json_loads_no_duplicates(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError, DuplicateJSONKeyError) as exc:
+        require(False, f"{label}: permission policy is invalid or unreadable: {exc}")
+        return
+    require(isinstance(policy, dict), f"{label}: permission policy must be an object")
+    if not isinstance(policy, dict):
+        return
+    require(set(policy) == {"schema_version", "reviewed_at", "capabilities"}, f"{label}: permission policy fields differ")
+    require(policy.get("schema_version") == "1.0", f"{label}: permission policy schema differs")
+    require(valid_date(policy.get("reviewed_at")), f"{label}: permission reviewed_at is invalid")
+    capabilities = policy.get("capabilities")
+    allowed_capabilities = {"file_write", "local_subprocess"}
+    require(
+        isinstance(capabilities, dict)
+        and bool(capabilities)
+        and set(capabilities).issubset(allowed_capabilities),
+        f"{label}: permission capabilities differ",
+    )
+    if not isinstance(capabilities, dict):
+        return
+    expected_fields = {
+        "decision", "reviewer", "scope", "reason", "expires_at", "evidence", "target_enforcement",
+    }
+    for capability_name, declaration in capabilities.items():
+        require(isinstance(declaration, dict), f"{label}: {capability_name} declaration must be an object")
+        if not isinstance(declaration, dict):
+            continue
+        require(set(declaration) == expected_fields, f"{label}: {capability_name} policy fields differ")
+        require(declaration.get("decision") == "approved", f"{label}: {capability_name} declaration is not reviewed")
+        for key in ("reviewer", "scope", "reason"):
+            require(nonempty_string(declaration.get(key)), f"{label}: {capability_name} {key} is missing")
+        require(valid_date(declaration.get("expires_at")), f"{label}: {capability_name} expires_at is invalid")
+        if valid_date(policy.get("reviewed_at")) and valid_date(declaration.get("expires_at")):
+            require(
+                date.fromisoformat(str(declaration["expires_at"])) > date.fromisoformat(str(policy["reviewed_at"])),
+                f"{label}: {capability_name} expiry must follow its review date",
+            )
+        evidence = declaration.get("evidence")
+        require(nonempty_strings(evidence), f"{label}: {capability_name} evidence must be a string list")
+        if isinstance(evidence, list):
+            for relative_text in evidence:
+                if not isinstance(relative_text, str):
+                    continue
+                relative = Path(relative_text)
+                require(not relative.is_absolute() and ".." not in relative.parts, f"{label}: unsafe permission evidence path")
+                require((package / relative).is_file(), f"{label}: permission evidence path is missing: {relative_text}")
+        enforcement = declaration.get("target_enforcement")
+        require(
+            isinstance(enforcement, dict) and set(enforcement) == {"openai", "claude", "generic", "vscode"},
+            f"{label}: {capability_name} target_enforcement fields differ",
+        )
+        if isinstance(enforcement, dict):
+            require(
+                all(nonempty_string(value) for value in enforcement.values()),
+                f"{label}: {capability_name} target enforcement guidance is incomplete",
+            )
+
+
 def validate_apache_license(path: Path, label: str) -> None:
     require(path.is_file() and not path.is_symlink(), f"{label}: Apache-2.0 LICENSE is missing or symlinked")
     if path.is_file() and not path.is_symlink():
@@ -1302,7 +1433,7 @@ def validate_release_version() -> None:
     except OSError as exc:
         require(False, f"VERSION: unreadable: {exc}")
         return
-    require(release_version == PUBLIC_PACKAGE_VERSION, "VERSION: wrong public release version")
+    require(release_version == COLLECTION_VERSION, "VERSION: wrong collection release version")
     validate_apache_license(ROOT / "LICENSE", "repository")
 
 
@@ -1346,7 +1477,7 @@ def run_connector_self_test(root: Path = ROOT) -> None:
     if not isinstance(result, dict):
         return
     require(result.get("status") == "passed", "connector runtime: self-test did not pass")
-    require(result.get("version") == PUBLIC_PACKAGE_VERSION, "connector runtime: version differs from release")
+    require(result.get("version") == COLLECTION_VERSION, "connector runtime: version differs from collection")
     require(result.get("network_performed") is False, "connector runtime: self-test unexpectedly used network")
     require(result.get("paid_use_authorized") is False, "connector runtime: self-test authorized paid use")
 
@@ -1614,7 +1745,6 @@ def validate_installable_boundary() -> int:
         cluster_id = entry.get("cluster_id")
         digest = entry.get("package_digest")
         require(isinstance(version, str) and bool(SEMVER.fullmatch(version)), f"registry: invalid version for {name}")
-        require(version == PUBLIC_PACKAGE_VERSION, f"registry: wrong release version for {name}")
         require(
             entry.get("manifest_schema_version") == MANIFEST_SCHEMA_VERSION,
             f"registry: wrong manifest schema version for {name}",
@@ -1714,6 +1844,8 @@ def validate_installable_boundary() -> int:
         if not isinstance(manifest, dict):
             continue
         package_manifests[name] = manifest
+        validate_interface_metadata(package / "agents" / "interface.yaml", f"skills/{name}")
+        validate_permission_policy(package, code_files, f"skills/{name}")
         validate_frontmatter(
             frontmatter,
             expected_name=name,
@@ -1721,10 +1853,6 @@ def validate_installable_boundary() -> int:
             label=f"skills/{name}",
         )
         require(manifest.get("name") == name, f"skills/{name}: manifest name mismatch")
-        require(
-            manifest.get("version") == PUBLIC_PACKAGE_VERSION,
-            f"skills/{name}: wrong release version",
-        )
         validate_manifest_policy(
             manifest,
             f"skills/{name} manifest",
@@ -1868,6 +1996,102 @@ def run_self_test() -> int:
         require(False, "self-test: duplicate nested JSON key accepted")
     checks.append("duplicate-json-keys-rejected")
 
+    with tempfile.TemporaryDirectory(prefix="bio02-contract-metadata-") as temporary:
+        package = Path(temporary) / "example-skill"
+        (package / "agents").mkdir(parents=True)
+        (package / "scripts").mkdir()
+        (package / "security").mkdir()
+        (package / "SKILL.md").write_text("example\n", encoding="utf-8")
+        script = package / "scripts" / "run.py"
+        script.write_text("pass\n", encoding="utf-8")
+        interface = package / "agents" / "interface.yaml"
+        interface.write_text(
+            """interface:
+  display_name: "Example Skill"
+  short_description: "Do one bounded example job."
+  default_prompt: "Run the bounded example job."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"
+""",
+            encoding="utf-8",
+        )
+        policy = {
+            "schema_version": "1.0",
+            "reviewed_at": "2026-08-08",
+            "capabilities": {
+                "file_write": {
+                    "decision": "approved",
+                    "reviewer": "example-owner",
+                    "scope": "Create only the requested new report.",
+                    "reason": "The bounded example publishes one report.",
+                    "expires_at": "2026-11-30",
+                    "evidence": ["SKILL.md", "scripts/run.py"],
+                    "target_enforcement": {
+                        "openai": "Require host permission.",
+                        "claude": "Require host permission.",
+                        "generic": "Require host permission.",
+                        "vscode": "Require workspace permission.",
+                    },
+                }
+            },
+        }
+        (package / "security" / "permission_policy.json").write_text(
+            json.dumps(policy), encoding="utf-8"
+        )
+        require(
+            not captured_errors(
+                lambda: validate_interface_metadata(interface, "valid-interface")
+            ),
+            "self-test: valid interface metadata rejected",
+        )
+        require(
+            not captured_errors(
+                lambda: validate_permission_policy(package, [script], "valid-policy")
+            ),
+            "self-test: valid permission declaration rejected",
+        )
+        interface.write_text(
+            interface.read_text(encoding="utf-8").replace(
+                '  default_prompt: "Run the bounded example job."\n', ""
+            ),
+            encoding="utf-8",
+        )
+        require(
+            bool(
+                captured_errors(
+                    lambda: validate_interface_metadata(interface, "invalid-interface")
+                )
+            ),
+            "self-test: incomplete interface metadata accepted",
+        )
+        policy["capabilities"]["file_write"]["expires_at"] = "2026-08-08"
+        (package / "security" / "permission_policy.json").write_text(
+            json.dumps(policy), encoding="utf-8"
+        )
+        require(
+            bool(
+                captured_errors(
+                    lambda: validate_permission_policy(package, [script], "invalid-policy")
+                )
+            ),
+            "self-test: non-forward permission expiry accepted",
+        )
+    checks.append("interface-and-permission-declarations-enforced")
+
     intake_fixture = copy.deepcopy(template)
     intake_fixture["intake_contract"]["decision_sequence"] = [
         {
@@ -1934,6 +2158,30 @@ def run_self_test() -> int:
 
     require(not captured_errors(lambda: validate_manifest_policy(template, "preview-reviewed")), "self-test: preview+reviewed rejected")
     checks.append("preview-reviewed-accepted")
+
+    independent_version = copy.deepcopy(template)
+    independent_version["version"] = "0.9.1"
+    independent_version["rollback"]["previous_version"] = "0.9.0"
+    require(
+        not captured_errors(
+            lambda: validate_manifest_policy(
+                independent_version, "package-version-independent-from-collection"
+            )
+        ),
+        "self-test: independently versioned package rejected",
+    )
+    validate_frontmatter(
+        {
+            "name": "example-skill",
+            "description": "One bounded example job.",
+            "license": LICENSE_ID,
+            "metadata": {"version": "0.9.1"},
+        },
+        expected_name="example-skill",
+        expected_version="0.9.1",
+        label="independently-versioned-frontmatter",
+    )
+    checks.append("package-version-independent-from-collection")
 
     evaluated = copy.deepcopy(template)
     evaluated["assurance_level"] = "evaluated"
@@ -2184,13 +2432,13 @@ def run_self_test() -> int:
             "# SPDX-License-Identifier: Apache-2.0\n"
             "from pathlib import Path\n"
             f"Path({str(marker)!r}).write_text('executed', encoding='utf-8')\n"
-            f"print('{{\"status\":\"pass\",\"version\":\"{PUBLIC_PACKAGE_VERSION}\"}}')\n",
+            f"print('{{\"status\":\"pass\",\"version\":\"{COLLECTION_VERSION}\"}}')\n",
             encoding="utf-8",
         )
         linked_script = symlink_package / "scripts/selftest.py"
         linked_script.symlink_to(outside)
         symlink_manifest = {
-            "version": PUBLIC_PACKAGE_VERSION,
+            "version": COLLECTION_VERSION,
             "script_verification": {
                 "self_test_command": "python3 scripts/selftest.py --self-test"
             },
@@ -2213,7 +2461,7 @@ def run_self_test() -> int:
         unchecked = multi_package / "scripts/unchecked.py"
         checked.write_text(
             "# SPDX-License-Identifier: Apache-2.0\n"
-            f"print('{{\"status\":\"pass\",\"version\":\"{PUBLIC_PACKAGE_VERSION}\"}}')\n",
+            f"print('{{\"status\":\"pass\",\"version\":\"{COLLECTION_VERSION}\"}}')\n",
             encoding="utf-8",
         )
         unchecked.write_text(
@@ -2221,7 +2469,7 @@ def run_self_test() -> int:
             encoding="utf-8",
         )
         multi_manifest = {
-            "version": PUBLIC_PACKAGE_VERSION,
+            "version": COLLECTION_VERSION,
             "script_verification": {
                 "self_test_command": "python3 scripts/checked.py --self-test"
             },
@@ -2263,7 +2511,7 @@ def run_self_test() -> int:
         extensionless.write_text(
             "#!/usr/bin/env python3\n"
             "# SPDX-License-Identifier: Apache-2.0\n"
-            f"print('{{\"status\":\"pass\",\"version\":\"{PUBLIC_PACKAGE_VERSION}\"}}')\n",
+            f"print('{{\"status\":\"pass\",\"version\":\"{COLLECTION_VERSION}\"}}')\n",
             encoding="utf-8",
         )
         extensionless.chmod(0o600)
@@ -2273,7 +2521,7 @@ def run_self_test() -> int:
             "self-test: non-executable extensionless script escaped code discovery",
         )
         extensionless_manifest = {
-            "version": PUBLIC_PACKAGE_VERSION,
+            "version": COLLECTION_VERSION,
             "script_verification": {
                 "self_test_command": "python3 scripts/runner --self-test"
             },
@@ -2324,8 +2572,8 @@ def run_self_test() -> int:
     require(
         not captured_errors(
             lambda: parse_script_self_test_output(
-                f'{{"status":"pass","version":"{PUBLIC_PACKAGE_VERSION}"}}\n',
-                PUBLIC_PACKAGE_VERSION,
+                f'{{"status":"pass","version":"{COLLECTION_VERSION}"}}\n',
+                COLLECTION_VERSION,
                 "matching-script-version",
             )
         ),
@@ -2336,7 +2584,7 @@ def run_self_test() -> int:
             captured_errors(
                 lambda: parse_script_self_test_output(
                     '{"status":"pass","version":"9.9.9"}\n',
-                    PUBLIC_PACKAGE_VERSION,
+                    COLLECTION_VERSION,
                     "mismatched-script-version",
                 )
             )
@@ -2400,7 +2648,7 @@ def run_self_test() -> int:
             "# SPDX-License-Identifier: Apache-2.0\n"
             "from pathlib import Path\n"
             f"Path({str(marker)!r}).write_text('executed', encoding='utf-8')\n"
-            f"print('{{\"status\":\"passed\",\"version\":\"{PUBLIC_PACKAGE_VERSION}\"}}')\n",
+            f"print('{{\"status\":\"passed\",\"version\":\"{COLLECTION_VERSION}\"}}')\n",
             encoding="utf-8",
         )
         test_root.mkdir()
