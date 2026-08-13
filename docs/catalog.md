@@ -35,7 +35,7 @@ Every Skill uses the same lightweight interaction boundary:
 | 13 | D02 Sequence, Reads, Genomes & Evolution | C06 Genome coordinates | `genomic-interval-operations` | `preview + reviewed` (`0.9.0`) |
 | 14 | D02 Sequence, Reads, Genomes & Evolution | C07 Gene models and annotation | `gff-gtf-gene-model-qc` | `preview + reviewed` (`0.9.0`) |
 | 15 | D03 Variant, Population & Causal Genomics | C10 Variant representation and cohorts | `vcf-normalization-qc-and-query` | `preview + reviewed` (`0.9.0`) |
-| 16 | D04 Bulk & Specialized Transcriptomics | C12 Bulk expression pipeline | `count-based-differential-expression` | `preview + reviewed` (`0.9.0`) |
+| 16 | D04 Bulk & Specialized Transcriptomics | C12 Bulk expression pipeline | `count-based-differential-expression` | `preview + reviewed` (`0.9.1`) |
 | 17 | D05 Single-cell & Spatial Omics | C14 Object, QC and core analysis | `single-cell-object-io-and-qc` | `preview + reviewed` (`0.9.0`) |
 | 18 | D05 Single-cell & Spatial Omics | C14 Object, QC and core analysis | `single-cell-core-analysis` | `preview + reviewed` (`0.9.0`) |
 | 19 | D08 Proteomics, Metabolomics & Cytometry | C22 Quantitative proteomics | `proteomics-quantification-table-qc` | `preview + reviewed` (`0.9.0`) |

@@ -1,7 +1,7 @@
 {
   "schema_version": "0.2.0",
   "name": "count-based-differential-expression",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D04",
@@ -9,7 +9,7 @@
   "risk_tier": "R2",
   "owner": "project-owner",
   "updated_at": "2026-08-13",
-  "last_freshness_check": "2026-08-08",
+  "last_freshness_check": "2026-08-13",
   "review_cadence": "quarterly",
   "status": "active",
   "lifecycle_stage": "production",
@@ -60,7 +60,7 @@
     "tool_versions": [
       "Bioconductor 3.23 / R 4.6",
       "DESeq2 1.52.0",
-      "edgeR 4.10.1",
+      "edgeR 4.10.3",
       "tximport 1.40.0",
       "PyDESeq2 0.5.4"
     ],
@@ -76,8 +76,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.8.0",
-    "boundary": "Restore package version 0.8.0 and its matching registry entry."
+    "previous_version": "0.9.0",
+    "boundary": "Restore package version 0.9.0 and its matching registry entry."
   },
   "network_mode": "none",
   "local_adapters": [
