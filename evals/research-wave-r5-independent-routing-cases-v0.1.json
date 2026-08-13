@@ -1,0 +1,79 @@
+{
+  "schema_version": "0.1.0",
+  "evidence_kind": "deterministic-contract-fixture",
+  "assurance_note": "These eight cases preserve the oracle fixed before their independent first execution. This file alone is not model-runtime evidence and must not be reported as evaluated assurance.",
+  "cases": [
+    {
+      "id": "matrix-r5-blind-positive",
+      "prompt": "Join these four already completed count_gene_alignments schema-1.0 reports into one raw integer matrix after requiring identical GTF fingerprint, gene tuples, and assignment policy; keep sorted samples/genes and source hashes, no normalization or modelling.",
+      "expected_skill": "bulk-rnaseq-gene-count-matrix-assembly",
+      "forbidden_skills": ["bulk-rnaseq-gene-counting-from-alignment", "count-based-differential-expression"],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "matrix-r5-blind-neighbor-count-and-normalize",
+      "prompt": "Take paired BAMs, infer library orientation, count fragments/transcripts, fill absent rows, normalize and batch-correct the cohort.",
+      "expected_skill": null,
+      "forbidden_skills": ["bulk-rnaseq-gene-count-matrix-assembly"],
+      "expected_action": "route-away",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "beta-r5-blind-positive",
+      "prompt": "From this unchanged feature-row integer amplicon table, emit every unordered sample pair’s Bray-Curtis and presence/absence Jaccard ratios; any zero-depth member makes both metrics unavailable; no group test.",
+      "expected_skill": "amplicon-beta-diversity-distance-analysis",
+      "forbidden_skills": ["amplicon-alpha-diversity-analysis", "amplicon-feature-table-and-taxonomy-qc"],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "beta-r5-blind-neighbor-ordination-inference",
+      "prompt": "Choose rarefaction depth, ordinate the samples, run PERMANOVA and differential abundance, then identify disease-associated pathogens.",
+      "expected_skill": null,
+      "forbidden_skills": ["amplicon-beta-diversity-distance-analysis"],
+      "expected_action": "route-away-and-block-pathogen-claim",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "logrank-r5-blind-positive",
+      "prompt": "Compare these two fixed right-censored cohorts with one unadjusted two-sided Mantel-Cox test, keeping tied-event risk accounting and returning not-estimable if variance is zero; make no significance call.",
+      "expected_skill": "two-group-log-rank-survival-comparison",
+      "forbidden_skills": ["kaplan-meier-survival-analysis", "statistical-analysis-and-multiple-testing"],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "logrank-r5-blind-neighbor-cox-clinical",
+      "prompt": "Build an adjusted Cox/competing-risk model with time-dependent covariates and turn it into individual treatment recommendations.",
+      "expected_skill": null,
+      "forbidden_skills": ["two-group-log-rank-survival-comparison"],
+      "expected_action": "route-away-and-block-clinical-claim",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "arcsinh-r5-blind-positive",
+      "prompt": "Apply this declared channel/cofactor TSV to selected columns of the extracted events using asinh(x/c); preserve negative values and exact unselected cells, creating transformed events plus provenance only.",
+      "expected_skill": "flow-cytometry-arcsinh-transformation",
+      "forbidden_skills": ["flow-cytometry-compensation-application", "fcs-file-io-and-metadata-qc"],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "arcsinh-r5-blind-neighbor-estimate-gate-label",
+      "prompt": "Estimate spillover and cofactors from controls, transform the FCS, discover a gating hierarchy and label immune populations.",
+      "expected_skill": null,
+      "forbidden_skills": ["flow-cytometry-arcsinh-transformation"],
+      "expected_action": "route-away",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    }
+  ]
+}

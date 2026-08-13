@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "reviewed_at": "2026-08-13",
+  "capabilities": {
+    "file_write": {
+      "decision": "approved",
+      "reviewer": "project-owner",
+      "scope": "Only scripts/calculate_beta_distances.py may create the user-specified new JSON report inside the current working directory; it may not replace a path, escape the working directory, mutate an input, create directories, use the network, or start a subprocess.",
+      "reason": "The bounded helper publishes one explicit descriptive distance report; create-exclusive publication and path checks prevent replacement or directory escape.",
+      "expires_at": "2026-11-30",
+      "evidence": [
+        "SKILL.md",
+        "scripts/calculate_beta_distances.py"
+      ],
+      "target_enforcement": {
+        "openai": "Allow only the explicit new local JSON report path inside the current working directory; remote inline execution is forbidden.",
+        "claude": "Allow only the explicit new local JSON report path inside the current working directory; remote inline execution is forbidden.",
+        "generic": "Run locally and allow only the caller-approved create-new JSON report.",
+        "vscode": "Workspace trust plus explicit write approval is required for the new report path."
+      }
+    }
+  }
+}

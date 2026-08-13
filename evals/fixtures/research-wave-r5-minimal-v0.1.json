@@ -1,0 +1,61 @@
+{
+  "schema_version": "0.1.0",
+  "suite_version": "0.1.0",
+  "evidence_kind": "retained-minimal-reliability-fixtures",
+  "scope": {
+    "small_synthetic_data_only": true,
+    "formal_scientific_evaluation": false,
+    "purpose": "Replay one bounded valid job twice, one invalid fail-closed boundary, create-new/no-overwrite behavior, the package self-test, and exact package/input/output binding for each Wave R5 candidate."
+  },
+  "matrix": {
+    "package_digest": "22e39c3cbaf8b65816190a9ea9cf51486377515cc425d53387586192c86451e9",
+    "self_test": {"checks": 39, "status": "pass", "version": "0.8.0"},
+    "input_sha256": {
+      "a": "723985d9380aa150bcd2a6a5fb90d44897df008b62ed9f32b3fb625adcdb0b2d",
+      "b": "96da71a5795621633e29709ec70a0988deb421795a96b151f2d5294ab3654ed7",
+      "invalid_b": "c5a582d984d5ad66d6c7f2c04d6d2df7ad003d083bbb46871b03a67a89e3a109"
+    },
+    "output_sha256": "8639fe797ee621259ff5e9bff9b29b39849e29933c3a8f5a347a48a034ff211d",
+    "a": "{\"adapter\":{\"name\":\"count_gene_alignments\",\"version\":\"0.8.0\"},\"analysis_performed\":true,\"assignment_contract\":{\"duplicate_primary_records\":\"duplicate-flag-alone-does-not-exclude; observed-count-reported\",\"feature\":\"exon\",\"identity\":\"gene_id\",\"minimum_mapq\":20,\"missing_nh\":\"accepted-by-mapq-and-reported\",\"nh_greater_than_one\":\"unassigned-multimapped\",\"secondary_and_supplementary\":\"ignored-and-reported\",\"strandedness\":\"unstranded\"},\"counts\":[{\"contig\":\"chr2\",\"count\":1,\"exon_count\":1,\"gene_id\":\"gB\",\"strand\":\"-\"},{\"contig\":\"chr1\",\"count\":2,\"exon_count\":2,\"gene_id\":\"gA\",\"strand\":\"+\"}],\"inputs\":{\"gtf\":{\"exon_count\":3,\"gene_count\":2,\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}},\"sample_id\":\"sample-a\",\"schema_version\":\"1.0\",\"status\":\"completed\"}\n",
+    "b": "{\"adapter\":{\"name\":\"count_gene_alignments\",\"version\":\"0.8.0\"},\"analysis_performed\":true,\"assignment_contract\":{\"duplicate_primary_records\":\"duplicate-flag-alone-does-not-exclude; observed-count-reported\",\"feature\":\"exon\",\"identity\":\"gene_id\",\"minimum_mapq\":20,\"missing_nh\":\"accepted-by-mapq-and-reported\",\"nh_greater_than_one\":\"unassigned-multimapped\",\"secondary_and_supplementary\":\"ignored-and-reported\",\"strandedness\":\"unstranded\"},\"counts\":[{\"contig\":\"chr2\",\"count\":3,\"exon_count\":1,\"gene_id\":\"gB\",\"strand\":\"-\"},{\"contig\":\"chr1\",\"count\":0,\"exon_count\":2,\"gene_id\":\"gA\",\"strand\":\"+\"}],\"inputs\":{\"gtf\":{\"exon_count\":3,\"gene_count\":2,\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}},\"sample_id\":\"sample-b\",\"schema_version\":\"1.0\",\"status\":\"completed\"}\n",
+    "invalid_b": "{\"adapter\":{\"name\":\"count_gene_alignments\",\"version\":\"0.8.0\"},\"analysis_performed\":true,\"assignment_contract\":{\"duplicate_primary_records\":\"duplicate-flag-alone-does-not-exclude; observed-count-reported\",\"feature\":\"exon\",\"identity\":\"gene_id\",\"minimum_mapq\":20,\"missing_nh\":\"accepted-by-mapq-and-reported\",\"nh_greater_than_one\":\"unassigned-multimapped\",\"secondary_and_supplementary\":\"ignored-and-reported\",\"strandedness\":\"unstranded\"},\"counts\":[{\"contig\":\"chr2\",\"count\":3,\"exon_count\":1,\"gene_id\":\"gB\",\"strand\":\"-\"},{\"contig\":\"chr1\",\"count\":0,\"exon_count\":2,\"gene_id\":\"gA\",\"strand\":\"+\"}],\"inputs\":{\"gtf\":{\"exon_count\":3,\"gene_count\":2,\"sha256\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"}},\"sample_id\":\"sample-b\",\"schema_version\":\"1.0\",\"status\":\"completed\"}\n"
+  },
+  "beta": {
+    "package_digest": "41c0f6487eb4c0603e478ae73906c252e9c8094af6621b8fe282968a4f236f54",
+    "self_test": {"checks": 46, "status": "pass", "version": "0.8.0"},
+    "input_sha256": {
+      "table": "01a2323188579537d75db8d94972f927d9241842c2989e46efbedc4c922d9fe8",
+      "invalid": "852132b919f024a11539ecb901d842038bb8ad965b766c5060e9c22c10eca5ae"
+    },
+    "output_sha256": "e4d689039c4b183ac7bc6432d6a9ac3dc02ad772a2e13ec623cd83240520796a",
+    "table": "feature_id\tZ\tC\tB\tA\nf1\t0\t0\t1\t1\nf2\t0\t2\t0\t1\nf3\t0\t0\t0\t0\nf4\t0\t0\t0\t0\n",
+    "invalid": "feature_id\tA\tB\nf1\t-1\t2\n"
+  },
+  "logrank": {
+    "package_digest": "ad45dddc95e322c30c4f7c281bca3773f070e0e8f3d48d4aaba8d0ffeb25af66",
+    "self_test": {"checks": 48, "status": "pass", "version": "0.8.0"},
+    "input_sha256": {
+      "table": "525a3021a3f27262862764b00a7c9aa9b1dcde5ca51a982191567893cceaaa3b",
+      "invalid": "8e24d2a97d26b599c1ccaa48457c1df7fff38e8379dd942141db3a99b40323bc"
+    },
+    "output_sha256": "ed286f0a6e1e215210d420e5cd3326f4f00d977e63702baa53d676b18e4ceaac",
+    "table": "subject_id\ttime\tevent\tgroup\nA1\t1\t1\tA\nA2\t2\t1\tA\nA3\t2\t0\tA\nB1\t2\t1\tB\nB2\t3\t0\tB\nB3\t4\t0\tB\n",
+    "invalid": "subject_id\ttime\tevent\tgroup\nA1\t1\t2\tA\nB1\t2\t0\tB\n"
+  },
+  "arcsinh": {
+    "package_digest": "049002ea6c6fa68e813e929bc6b0ac0e727ac2f9244f11328d9cf1580e61fb60",
+    "self_test": {"checks": 32, "status": "pass", "version": "0.8.0"},
+    "input_sha256": {
+      "events": "f5f06eee7e1eb5a7f4b0eca801be34b7f9aa21f8cf0a981fc27f1e6083370c89",
+      "cofactors": "8247174488ce9cafd97e692857e3903aaeb32c7a1dfbb8d1a7483f01ee78121d",
+      "invalid_cofactors": "8bf749cabba52ea744c0b3f820a354525030adc645f970bab6386f153e3bcd14"
+    },
+    "output_sha256": {
+      "events": "28e86cd3d9ee56f90284f53128640c5e812a4985dc8019f55031bf8b5a51e098",
+      "report": "7d4b859ce070d577d4c8130ab3bb961e680e877fdcda8f876be6472f0ec4d575"
+    },
+    "events": "event_id\tFITC-A\tPE-A\tAPC-A\ne1\t5\t-5\t7.00\ne2\t-0\t10\t8e0\n",
+    "cofactors": "channel\tcofactor\nPE-A\t10\nFITC-A\t5\n",
+    "invalid_cofactors": "channel\tcofactor\nFITC-A\t0\n"
+  }
+}

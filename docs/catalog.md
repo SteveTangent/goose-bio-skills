@@ -1,11 +1,12 @@
-# Research catalog: 44-Skill Beta
+# Research catalog: 44-Skill Beta plus 4 Wave R5 candidates
 
-The verified v0.8.0 `main` Beta contains 44 independently installable `preview + reviewed` Skills across 13 Domains and 26 Clusters. The `research` branch is reserved for the next bounded candidate wave. [registry.json](../registry.json) is authoritative for the checked-out branch; a future research entry is not a `main` promotion.
+The verified v0.8.0 `main` Beta contains 44 independently installable `preview + reviewed` Skills across 13 Domains and 26 Clusters. The current `research` branch contains 48: those exact 44 plus four Wave R5 `preview + reviewed` research candidates. [registry.json](../registry.json) is authoritative for the checked-out branch; the four R5 entries are not a `main` promotion.
 
 ```text
 13 Domains in v0.8.0
   -> 26 Clusters
-    -> 44 Beta Skills
+    -> 44 main Beta Skills
+    -> 4 additional research-only R5 Skills
 ```
 
 Every Skill uses the same lightweight interaction boundary:
@@ -85,6 +86,20 @@ Every Skill uses the same lightweight interaction boundary:
 | 43 | D12 Study Design & Biostatistics | C36 Survival analysis | `kaplan-meier-survival-analysis` | `preview + reviewed` (`0.8.0`) |
 | 44 | D13 Biomedical Evidence & Clinical Interpretation | C38 Variant evidence | `human-variant-evidence-retrieval` | `preview + reviewed` (`0.8.0`) |
 
-All 44 exact v0.8.0 packages appear under `skills/<slug>/` and in `registry.json`. The first 32 came from the v0.7.0 Beta; the 12 Wave R2/R3/R4 packages entered through the [promotion gates](research-skill-promotion-gates.md) and the v0.8.0 atomic release. `Preview + reviewed` means a package boundary was reviewed, not that runtime, scientific validity, clinical use, or superiority over a baseline was established. `Stable` is allowed only with bounded `evaluated` assurance.
+The 44 exact v0.8.0 `main` packages appear under `skills/<slug>/` and in `registry.json` on `main`; the checked-out `research` registry additionally contains the four R5 entries below. The first 32 came from the v0.7.0 Beta; the 12 Wave R2/R3/R4 packages entered through the [promotion gates](research-skill-promotion-gates.md) and the v0.8.0 atomic release. `Preview + reviewed` means a package boundary was reviewed, not that runtime, scientific validity, clinical use, or superiority over a baseline was established. `Stable` is allowed only with bounded `evaluated` assurance.
 
-D06 and D07 now include narrow peak-set and amplicon-table QC Skills. Wave R3 added local Newick QC, metabolomics feature-table QC, and one fixed short-DNA alignment branch. Wave R4 added bounded counting, PSI, alpha diversity, compensation, Kaplan–Meier, and exact-ID variant-evidence jobs. Peak calling, pathogen interpretation, raw-MS processing, broader proteomics, multi-aligner selection, gating, and clinical classification remain later-wave work.
+## Wave R5 additions on `research` only
+
+| Research order | Domain | Cluster | Skill | Research state |
+| ---: | --- | --- | --- | --- |
+| 45 | D04 Bulk & Specialized Transcriptomics | C12 Bulk expression pipeline | `bulk-rnaseq-gene-count-matrix-assembly` | `preview + reviewed` (`0.8.0`); not on `main` |
+| 46 | D07 Microbiome, Metagenomics & Pathogens | C20 Community diversity | `amplicon-beta-diversity-distance-analysis` | `preview + reviewed` (`0.8.0`); not on `main` |
+| 47 | D08 Proteomics, Metabolomics & Cytometry | C24 Cytometry file standards | `flow-cytometry-arcsinh-transformation` | `preview + reviewed` (`0.8.0`); not on `main` |
+| 48 | D12 Study Design & Biostatistics | C36 Survival analysis | `two-group-log-rank-survival-comparison` | `preview + reviewed` (`0.8.0`); not on `main` |
+
+These four exact research packages are bound by the Wave R5 fixture, package
+digests, deterministic replay, and independent route-selection diagnostic.
+They have not passed a `main` promotion decision, formal agent-runtime or
+scientific evaluation, representative benchmarking, or human-expert review.
+
+D06 and D07 now include narrow peak-set and amplicon-table QC Skills. Wave R3 added local Newick QC, metabolomics feature-table QC, and one fixed short-DNA alignment branch. Wave R4 added bounded counting, PSI, alpha diversity, compensation, Kaplan–Meier, and exact-ID variant-evidence jobs. On `research`, Wave R5 adds count-matrix assembly, two descriptive beta-diversity distances, one fixed two-group log-rank comparison, and explicit-cofactor arcsinh transformation. Peak calling, pathogen interpretation, raw-MS processing, broader proteomics, multi-aligner selection, gating, and clinical classification remain later-wave work.

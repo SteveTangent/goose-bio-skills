@@ -1,0 +1,188 @@
+{
+  "schema_version": "0.1.0",
+  "record_version": "0.1.0",
+  "recorded_at": "2026-08-13",
+  "branch": "research",
+  "scope": {
+    "candidate_count": 4,
+    "research_package_count": 48,
+    "main_beta_package_count": 44,
+    "collection_version": "0.8.0",
+    "small_synthetic_data_only": true,
+    "offline_replay": true,
+    "network_performed": false,
+    "minimum_reliability_pass": true,
+    "formal_scientific_evaluation": false,
+    "formal_pass": false,
+    "main_promotion_authorized": false,
+    "main_promotion_completed": false,
+    "research_commit_authorized": true,
+    "claim": "The four Wave R5 packages passed retained small-data script and contract checks on research. They are not part of the 44-package v0.8.0 main Beta; this is not formal agent-runtime or scientific evaluation, representative validation, expert review, or superiority evidence."
+  },
+  "retained_replay": {
+    "command": "python3 scripts/run_wave_r5_minimal_reliability.py",
+    "runs": 2,
+    "checks_per_run": 112,
+    "statuses": [
+      "pass",
+      "pass"
+    ],
+    "repeat_events_identical": true,
+    "runner_sha256": "7b278573c63a4a06220131b62951e1754fe147caf689c64186df33b9e52d0574",
+    "fixture_sha256": "89713bb861fdbecba53eaf10dfc09d3fba5a0480a6b797b2a05aa143087f46ca",
+    "coverage": [
+      "four package self-tests",
+      "exact package digests and fixture input hashes",
+      "two valid runs with byte-identical outputs and whole JSON event lines",
+      "bounded semantic oracles for matrix order/counts, beta-distance ratios and zero-depth status, log-rank exact rationals and no decision, and arcsinh transformed/preserved cells",
+      "one invalid fail-closed boundary per package with no completed output",
+      "create-new and no-overwrite behavior"
+    ],
+    "output_sha256": {
+      "bulk-rnaseq-gene-count-matrix-assembly": "8639fe797ee621259ff5e9bff9b29b39849e29933c3a8f5a347a48a034ff211d",
+      "amplicon-beta-diversity-distance-analysis": "e4d689039c4b183ac7bc6432d6a9ac3dc02ad772a2e13ec623cd83240520796a",
+      "two-group-log-rank-survival-comparison": "ed286f0a6e1e215210d420e5cd3326f4f00d977e63702baa53d676b18e4ceaac",
+      "flow-cytometry-arcsinh-transformation.events": "28e86cd3d9ee56f90284f53128640c5e812a4985dc8019f55031bf8b5a51e098",
+      "flow-cytometry-arcsinh-transformation.report": "7d4b859ce070d577d4c8130ab3bb961e680e877fdcda8f876be6472f0ec4d575"
+    }
+  },
+  "package_bindings": {
+    "amplicon-beta-diversity-distance-analysis": "41c0f6487eb4c0603e478ae73906c252e9c8094af6621b8fe282968a4f236f54",
+    "bulk-rnaseq-gene-count-matrix-assembly": "22e39c3cbaf8b65816190a9ea9cf51486377515cc425d53387586192c86451e9",
+    "flow-cytometry-arcsinh-transformation": "049002ea6c6fa68e813e929bc6b0ac0e727ac2f9244f11328d9cf1580e61fb60",
+    "two-group-log-rank-survival-comparison": "ad45dddc95e322c30c4f7c281bca3773f070e0e8f3d48d4aaba8d0ffeb25af66"
+  },
+  "independent_routing": {
+    "evaluator_task": "r5_blind_routes",
+    "case_file": "evals/research-wave-r5-independent-routing-cases-v0.1.json",
+    "case_file_sha256": "dd8015011430bb91df46d21dc1a8acd277e18c9562e580ccfa2abc79e189fbf6",
+    "first_execution_blind_to_oracles": true,
+    "eval_files_withheld": true,
+    "model_build_pinned": false,
+    "cases": 8,
+    "route_selections_matching_oracle": 8,
+    "action_compatible": 8,
+    "exact_question_count_matches": 6,
+    "questions_observed": 2,
+    "forbidden_selections": 0,
+    "observations": [
+      {
+        "id": "matrix-r5-blind-positive",
+        "selected_skill": "bulk-rnaseq-gene-count-matrix-assembly",
+        "question_needed": true,
+        "question_observed": "Have these source reports and their upstream SAM/GTF contracts already been reviewed?",
+        "forbidden_selected": false
+      },
+      {
+        "id": "matrix-r5-blind-neighbor-count-and-normalize",
+        "selected_skill": null,
+        "question_needed": false,
+        "question_observed": null,
+        "forbidden_selected": false
+      },
+      {
+        "id": "beta-r5-blind-positive",
+        "selected_skill": "amplicon-beta-diversity-distance-analysis",
+        "question_needed": false,
+        "question_observed": null,
+        "forbidden_selected": false
+      },
+      {
+        "id": "beta-r5-blind-neighbor-ordination-inference",
+        "selected_skill": null,
+        "question_needed": false,
+        "question_observed": null,
+        "forbidden_selected": false
+      },
+      {
+        "id": "logrank-r5-blind-positive",
+        "selected_skill": "two-group-log-rank-survival-comparison",
+        "question_needed": true,
+        "question_observed": "What prespecified event, time origin, unit, and censoring rule do the fields represent?",
+        "forbidden_selected": false
+      },
+      {
+        "id": "logrank-r5-blind-neighbor-cox-clinical",
+        "selected_skill": null,
+        "question_needed": false,
+        "question_observed": null,
+        "forbidden_selected": false
+      },
+      {
+        "id": "arcsinh-r5-blind-positive",
+        "selected_skill": "flow-cytometry-arcsinh-transformation",
+        "question_needed": false,
+        "question_observed": null,
+        "forbidden_selected": false
+      },
+      {
+        "id": "arcsinh-r5-blind-neighbor-estimate-gate-label",
+        "selected_skill": null,
+        "question_needed": false,
+        "question_observed": null,
+        "forbidden_selected": false
+      }
+    ],
+    "diagnostic": "All route/no-route selections and actions were compatible, but two conservative intake questions differed from the fixed zero-question oracle. This 6/8 exact question match is retained without changing the oracle and is a non-blocking research diagnostic, not a claim of routing generalization."
+  },
+  "repository_regression": {
+    "installable_packages": 48,
+    "main_beta_packages": 44,
+    "domains": 13,
+    "clusters": 26,
+    "canonical_routing_cases": 98,
+    "source_clean": true,
+    "wave_r1_checks": 84,
+    "wave_r2_checks": 67,
+    "wave_r3_checks": 60,
+    "wave_r4_checks": 192,
+    "wave_r5_checks": 112,
+    "connector_checks": 21,
+    "validator_version": "1.3.0",
+    "validator_self_test": "pass",
+    "git_diff_check": "pass",
+    "codegraph_sync": "pass",
+    "codegraph_status": "up-to-date"
+  },
+  "control_hashes": {
+    "evals/intake-routing-cases.json": "5a566ed850a32f23c1fbec06db88bd65eb1819a6dde9b7fb45e09996e9d79da8",
+    "evals/research-wave-r5-independent-routing-cases-v0.1.json": "dd8015011430bb91df46d21dc1a8acd277e18c9562e580ccfa2abc79e189fbf6",
+    "scripts/validate_skeleton.py": "4be88ec2892bbbb9348d340fd08a3a913d46638cb6da0811ebdd6c93d1675eeb",
+    "registry.json": "ea3c099da57247a77e4289d3ad9f63bf4c329f7a9707d22c6a32911edf65c40a",
+    "connectors/providers.json": "e30f59cb3f4673105e94839e5bb4e50f47252bb8e7226a1310a687a75f944cce",
+    "README.md": "891910d3038bdb5c8dd02007289105a488853ea224fdbc276858755f8ba5ebaa",
+    "docs/architecture.md": "195e0e7b3b40b386d473b296508157f99da5f5a04359e39da726592b9dae0430",
+    "docs/catalog.md": "aff2344bee5ea04d5efe832b998e490e4fca390b70c5e9541627179c3fc77297",
+    "docs/research-skill-promotion-gates.md": "ef901e7bdae0a1592632b3a11d2701d530fdafd1c5e90a0708c398482676a758",
+    "docs/research-wave-r5-candidates.md": "ca3ae29e14dab2248fabc10f05815761bcd8eb5c9532a95c6424cd40b407bfb6",
+    "skills/README.md": "2d58854ebe0598f7d573af039cc7490505e6be4c0a99ce18e571333a2f08cb6c"
+  },
+  "review": {
+    "status": "passed",
+    "package_reviews": "independent package and final integration reviews ACCEPT; no open P0 or P1",
+    "p0": 0,
+    "p1": 0,
+    "p2": 1,
+    "notes": [
+      "One missing SPDX line was found by the repository gate, added to the arcsinh script, and followed by exact package-digest and fixture rebinding.",
+      "Accepted research diagnostic: two conservative questions reduced exact question-count agreement to 6/8 while route selection, action compatibility, and forbidden-selection checks were 8/8, 8/8, and 0 respectively."
+    ]
+  },
+  "missing_evidence": [
+    "formal exact-package agent or model-runtime evaluation",
+    "representative and large biological datasets",
+    "named external domain-method or human-expert review",
+    "scientific benchmark or baseline comparison",
+    "cross-platform and scale evaluation",
+    "a main promotion decision and exact promoted-release binding",
+    "clinical validity, diagnosis, treatment, or patient-level prediction"
+  ],
+  "claims_not_made": [
+    "part of the v0.8.0 main Beta",
+    "evaluated or stable assurance",
+    "representative scientific validity",
+    "model or router generalization",
+    "superiority over another workflow",
+    "clinical authority"
+  ]
+}

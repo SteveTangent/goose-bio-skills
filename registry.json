@@ -54,6 +54,23 @@
     },
     {
       "manifest_schema_version": "0.2.0",
+      "name": "amplicon-beta-diversity-distance-analysis",
+      "version": "0.8.0",
+      "path": "skills/amplicon-beta-diversity-distance-analysis",
+      "domain_id": "D07",
+      "cluster_id": "C20",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "41c0f6487eb4c0603e478ae73906c252e9c8094af6621b8fe282968a4f236f54",
+      "previous_version": null
+    },
+    {
+      "manifest_schema_version": "0.2.0",
       "name": "amplicon-feature-table-and-taxonomy-qc",
       "version": "0.8.0",
       "path": "skills/amplicon-feature-table-and-taxonomy-qc",
@@ -130,6 +147,23 @@
       ],
       "package_digest": "01587e200c235f0df2c170559a4c81e376d2b1bf677ab99721ccc90f6dd1c79d",
       "previous_version": "0.7.0"
+    },
+    {
+      "manifest_schema_version": "0.2.0",
+      "name": "bulk-rnaseq-gene-count-matrix-assembly",
+      "version": "0.8.0",
+      "path": "skills/bulk-rnaseq-gene-count-matrix-assembly",
+      "domain_id": "D04",
+      "cluster_id": "C12",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "22e39c3cbaf8b65816190a9ea9cf51486377515cc425d53387586192c86451e9",
+      "previous_version": null
     },
     {
       "manifest_schema_version": "0.2.0",
@@ -271,6 +305,23 @@
       "external_services": [],
       "package_digest": "437b47b35a399d11df007002951adbdb8c96cb7eb539d9f568b1aee8bab0d811",
       "previous_version": "0.7.0"
+    },
+    {
+      "manifest_schema_version": "0.2.0",
+      "name": "flow-cytometry-arcsinh-transformation",
+      "version": "0.8.0",
+      "path": "skills/flow-cytometry-arcsinh-transformation",
+      "domain_id": "D08",
+      "cluster_id": "C24",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "049002ea6c6fa68e813e929bc6b0ac0e727ac2f9244f11328d9cf1580e61fb60",
+      "previous_version": null
     },
     {
       "manifest_schema_version": "0.2.0",
@@ -768,6 +819,23 @@
       ],
       "package_digest": "ff1a36b2ba6799c481c9b14f0dcac4b38200641ebed65f4906dc88468665aa89",
       "previous_version": "0.7.0"
+    },
+    {
+      "manifest_schema_version": "0.2.0",
+      "name": "two-group-log-rank-survival-comparison",
+      "version": "0.8.0",
+      "path": "skills/two-group-log-rank-survival-comparison",
+      "domain_id": "D12",
+      "cluster_id": "C36",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "ad45dddc95e322c30c4f7c281bca3773f070e0e8f3d48d4aaba8d0ffeb25af66",
+      "previous_version": null
     },
     {
       "manifest_schema_version": "0.2.0",

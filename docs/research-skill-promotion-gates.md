@@ -10,7 +10,7 @@ completed research package and evidence remain recorded in
 [research-wave-r2-candidates.md](research-wave-r2-candidates.md).
 Wave R4's six one-job candidates and their exact small-data gates are recorded
 in [research-wave-r4-candidates.md](research-wave-r4-candidates.md).
-The assessed, not-yet-implemented Wave R5 shortlist is recorded in
+The implemented, research-only Wave R5 shortlist is recorded in
 [research-wave-r5-candidates.md](research-wave-r5-candidates.md).
 
 Wave R2 passed its research-branch minimum implementation gate and entered the
@@ -46,6 +46,39 @@ point-in-time provider check does not establish availability or clinical validit
 The final cross-wave publisher seal review closed all P0/P1 findings and retained
 one accepted, non-blocking P2 for the explicitly documented low-level local-directory
 concurrency and exceptional temporary-file cleanup boundary.
+
+Wave R5 is implemented on `research` only and has not been promoted to `main`.
+Its retained small-data runner covers four package self-tests, exact
+package/input/output hashes, two valid runs with byte-identical outputs and
+event lines, bounded semantic oracles, invalid/no-output boundaries, and
+create-new/no-overwrite behavior. The independent first routing pass chose the
+intended Skill or no-Skill boundary in 8/8 cases with zero forbidden selection
+and action-compatible handling in 8/8. It asked two conservative questions
+where the fixed oracle expected none, so exact question-count agreement is
+6/8. This is retained as a research diagnostic rather than rewritten into a
+pass. Wave R5 remains `preview + reviewed`; formal evaluation and `main`
+promotion are false.
+
+## Wave R5 research-only gates
+
+- `bulk-rnaseq-gene-count-matrix-assembly`: accept at least two completed
+  schema-1.0 single-sample count reports only when GTF digest, every gene tuple,
+  and the full assignment contract agree; sort genes/samples; never count,
+  complete genes, normalize, batch-correct, or model.
+- `amplicon-beta-diversity-distance-analysis`: compute only pairwise
+  Bray-Curtis and binary Jaccard from unchanged nonnegative integer feature
+  rows; keep any zero-depth pair not estimable; never rarefy, ordinate, test
+  groups, identify pathogens, or interpret biology.
+- `two-group-log-rank-survival-comparison`: compare exactly two prespecified
+  right-censored groups with one unadjusted two-sided Mantel-Cox test, event
+  ties before censor removal, and structured zero-variance output; never emit
+  significance, Cox, competing-risk, prediction, or treatment decisions.
+- `flow-cytometry-arcsinh-transformation`: apply only caller-supplied positive
+  channel cofactors to an extracted event table, preserving unselected tokens;
+  never parse FCS, compensate, choose cofactors, gate, label, or interpret.
+
+All four candidates are local/network-free, first-release packages with
+remove-package rollback, and remain outside the 44-package v0.8.0 `main` Beta.
 
 Every future candidate remains on `research` until the applicable minimum gates for
 the target release level pass. For the current target, that level is the same

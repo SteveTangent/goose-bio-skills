@@ -928,6 +928,78 @@
       "expected_action": "synthesize-local-evidence",
       "expected_question_count_this_turn": 0,
       "expected_first_decision_id": null
+    },
+    {
+      "id": "gene-count-matrix-assembly-specified-local",
+      "prompt": "Assemble these completed schema-1.0 single-sample count reports into one raw gene-by-sample matrix; their GTF digest, gene tuples, and assignment contract match exactly. Sort samples and genes, preserve source hashes, and do not normalize or model.",
+      "expected_skill": "bulk-rnaseq-gene-count-matrix-assembly",
+      "forbidden_skills": ["bulk-rnaseq-gene-counting-from-alignment", "count-based-differential-expression"],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "gene-count-matrix-upstream-work-routes-away",
+      "prompt": "Count paired BAM fragments, infer strandedness, fill missing genes, normalize and batch-correct the cohort before differential expression.",
+      "expected_skill": null,
+      "forbidden_skills": ["bulk-rnaseq-gene-count-matrix-assembly"],
+      "expected_action": "route-away",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "amplicon-beta-diversity-specified-local",
+      "prompt": "Compute Bray-Curtis and presence/absence Jaccard for every unordered pair in this exact nonnegative integer feature-by-sample table, leaving pairs with a zero-depth sample not estimable; do not run group tests.",
+      "expected_skill": "amplicon-beta-diversity-distance-analysis",
+      "forbidden_skills": ["amplicon-alpha-diversity-analysis", "amplicon-feature-table-and-taxonomy-qc"],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "amplicon-ordination-inference-routes-away-from-beta",
+      "prompt": "Choose a rarefaction depth, run ordination and PERMANOVA, test differential abundance, and identify pathogens.",
+      "expected_skill": null,
+      "forbidden_skills": ["amplicon-beta-diversity-distance-analysis"],
+      "expected_action": "route-away-and-block-pathogen-claim",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "two-group-log-rank-specified-local",
+      "prompt": "For these two prespecified right-censored groups with a declared endpoint, time origin, unit, and censoring rule, run one unadjusted two-sided Mantel-Cox log-rank comparison and make no significance decision.",
+      "expected_skill": "two-group-log-rank-survival-comparison",
+      "forbidden_skills": ["kaplan-meier-survival-analysis", "statistical-analysis-and-multiple-testing"],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "survival-adjusted-clinical-routes-away-from-log-rank",
+      "prompt": "Fit adjusted Cox and competing-risk models with time-varying covariates, then issue patient-level treatment recommendations.",
+      "expected_skill": null,
+      "forbidden_skills": ["two-group-log-rank-survival-comparison"],
+      "expected_action": "route-away-and-block-clinical-claim",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "flow-arcsinh-specified-local",
+      "prompt": "Apply these declared positive channel cofactors to the selected columns in this extracted event TSV with asinh(value/cofactor), preserve unselected cells exactly, and create transformed events plus provenance only.",
+      "expected_skill": "flow-cytometry-arcsinh-transformation",
+      "forbidden_skills": ["flow-cytometry-compensation-application", "fcs-file-io-and-metadata-qc"],
+      "expected_action": "safe-local-execution",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
+    },
+    {
+      "id": "flow-estimation-gating-routes-away-from-arcsinh",
+      "prompt": "Estimate spillover and cofactors from controls, transform the FCS, discover gates, and label immune-cell populations.",
+      "expected_skill": null,
+      "forbidden_skills": ["flow-cytometry-arcsinh-transformation"],
+      "expected_action": "route-away",
+      "expected_question_count_this_turn": 0,
+      "expected_first_decision_id": null
     }
   ]
 }

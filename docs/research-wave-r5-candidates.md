@@ -1,10 +1,10 @@
 # Research Wave R5 candidate shortlist
 
-Status: assessed, not implemented. Wave R5 should start only after Wave R4 is
-committed on `research`, and should keep the same small-data `preview + reviewed`
-boundary.
+Status: implemented on `research` as four `preview + reviewed` packages; not
+promoted to `main`. The four packages retain the same small-data, local-only
+research boundary.
 
-## Recommended first four
+## Implemented first four
 
 1. `bulk-rnaseq-gene-count-matrix-assembly` — assemble two or more validated
    single-sample count reports into one exact gene-by-sample integer matrix.
@@ -38,3 +38,12 @@ checks, one positive plus one near-neighbor routing prompt, package digest
 binding, and independent review with no open P0 or P1. These checks support
 research use only; formal runtime evaluation, representative benchmarking,
 expert review, clinical use, and superiority claims remain outside scope.
+
+The four package self-tests pass with 39, 46, 48, and 32 checks respectively.
+The retained Wave R5 runner binds exact packages, inputs, outputs, semantic
+oracles, invalid/no-output boundaries, two-run determinism, and no-overwrite.
+Its first independent routing pass selected the intended Skill or no-Skill
+boundary in all eight cases with no forbidden selection, but two positive
+cases prompted conservatively where the fixed oracle expected no question;
+therefore exact question-count agreement is 6/8. This is a non-blocking
+research diagnostic, not agent-runtime or generalization evidence.

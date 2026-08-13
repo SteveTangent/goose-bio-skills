@@ -2,12 +2,12 @@
 
 Research-first bioinformatics skills for AI agents.
 
-Bio 02 Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The verified `main` Beta contains 44 packages across 13 Domains and 26 Clusters. The `research` branch is reserved for the next bounded candidate wave.
+Bio 02 Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The verified `main` Beta contains 44 packages across 13 Domains and 26 Clusters. The current `research` branch adds four bounded Wave R5 packages for 48 total; those four are not part of `main`.
 
 | Boundary | Packages | State | External services |
 | --- | ---: | --- | --- |
 | `main` Beta `0.8.0` | 44 | `preview + reviewed` | Bounded public read/download; anonymous-first |
-| `research` | Next candidate wave | Not part of the Beta until promoted | Local/replay by default |
+| `research` | 48 (44 Beta + 4 Wave R5) | Wave R5 is `preview + reviewed`, research-only, and not promoted | Local/replay only for Wave R5 |
 
 ## Why Bio 02 Skills
 
@@ -111,6 +111,8 @@ Align this tiny single-end short-DNA FASTQ to the exact local reference using th
 | Study design and biostatistics | `experimental-design-power-and-batch-planning`<br>`statistical-analysis-and-multiple-testing`<br>`missing-data-and-sensitivity-analysis`<br>`kaplan-meier-survival-analysis` |
 | Biomedical evidence | `biomedical-literature-and-public-study-search`<br>`evidence-synthesis-and-research-traceability` |
 
+The `research` branch additionally contains `bulk-rnaseq-gene-count-matrix-assembly`, `amplicon-beta-diversity-distance-analysis`, `two-group-log-rank-survival-comparison`, and `flow-cytometry-arcsinh-transformation`. They remain research-only and must not be described as part of the 44-package v0.8.0 `main` Beta.
+
 See [docs/catalog.md](docs/catalog.md) for Domain, Cluster, risk, dependency, and runtime details. [`registry.json`](registry.json) is the versioned machine-readable index.
 
 ## External research services
@@ -194,6 +196,7 @@ python3 scripts/run_research_connector.py --self-test
 python3 scripts/run_wave_r2_minimal_reliability.py
 python3 scripts/run_wave_r3_minimal_reliability.py
 python3 scripts/run_wave_r4_minimal_reliability.py
+python3 scripts/run_wave_r5_minimal_reliability.py
 python3 skills/scientific-file-preflight-and-resource-planning/scripts/preflight_files.py --self-test
 python3 skills/statistical-analysis-and-multiple-testing/scripts/adjust_pvalues.py --self-test
 python3 skills/gff-gtf-gene-model-qc/scripts/check_gene_models.py --self-test
@@ -203,8 +206,11 @@ The skeleton gate also validates the canonical deterministic intake-routing case
 [`evals/intake-routing-cases.json`](evals/intake-routing-cases.json). Those
 fixtures test routing and first-question contracts; they are not a claim of
 model-runtime or scientific evaluation. Six additional Wave R1 cases, six Wave
-R3 cases, and 12 Wave R4 cases remain as visible regressions after their first
-independent execution.
+R3 cases, 12 Wave R4 cases, and eight Wave R5 cases remain as visible
+regressions after their first independent execution. Wave R5's first pass chose
+the intended Skill or no-Skill boundary in all eight cases but matched the
+predeclared zero-question oracle in only six; the two conservative questions
+remain recorded as a research diagnostic.
 
 ## License
 
