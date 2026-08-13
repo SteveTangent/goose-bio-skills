@@ -5,7 +5,7 @@
   "version": "0.9.0",
   "branch": "research",
   "candidate_parent_commit": "e596bdb546ce49f6b60575ac98ec602b9f3decbf",
-  "status": "pending-final-package-byte-shaped-seal-and-final-review",
+  "status": "released-v0.9.0-preview-reviewed",
   "scope": {
     "package_count": 48,
     "domain_count": 13,
@@ -22,7 +22,7 @@
     "better_than_baseline_claim": false,
     "clinical_use": "prohibited",
     "main_promotion_authorized": true,
-    "main_promotion_completed": false
+    "main_promotion_completed": true
   },
   "governance": {
     "owner": "project-owner",
@@ -37,10 +37,10 @@
     ],
     "output_contract": "One atomic v0.9.0 registry binds 48 exact preview-reviewed packages. Five retained offline runners emit canonical JSON results with exact package, script, fixture, and output hashes.",
     "rollback_boundary": "Restore 44 prior packages and matching registry entries to v0.8.0. Remove the four first-public v0.9.0 Wave R5 packages and their entries. Released v0.8.0 history is not rewritten.",
-    "trust_report": "The local release candidate passed source-clean package validation, deterministic script self-tests, connector self-test, five retained offline gates, and CodeGraph refresh. External shaped-fixture evidence and final independent release review remain explicitly pending."
+    "trust_report": "The exact release bytes passed source-clean package validation, deterministic script self-tests, connector self-test, five retained offline gates, CodeGraph refresh, an independently reviewed final-package-byte shaped seal, and independent exact-byte release review. Two accepted P2 items remain bounded to the earlier R5 question-count diagnostic and local create-new publication under crash, hostile same-directory writer, or unverified Windows conditions."
   },
   "atomic_release": {
-    "status": "prepared-not-published",
+    "status": "published-atomically",
     "version_file_sha256": "9d8c94f1ad3ea96b1e2ac4914fda4cb93c76b4a3e0d8cc6dd8976d6c0b227d15",
     "registry_sha256": "2a1dfd32b7c3bdf42aeedff73e26354fe754127147913188cc79a434e7a0813a",
     "registry_package_count": 48,
@@ -147,7 +147,7 @@
     "claim_boundary": "Minimum shaped-fixture and 48-package regression evidence only; not formal scientific, representative-data, expert, comparative, clinical, or final v0.9.0 package-byte evidence."
   },
   "verification": {
-    "status": "pending-final-package-byte-shaped-seal-and-final-review",
+    "status": "passed-local-gates-and-final-package-byte-shaped-seal",
     "retained_replay_runs_per_wave": 2,
     "retained_replay_checks_per_run": {
       "wave_r1": 84,
@@ -171,7 +171,7 @@
     "connector_self_test_network_performed": false,
     "skill_creator_quick_validate_packages": 48,
     "codegraph_status": "up-to-date",
-    "diff_check": "pending-final-review"
+    "diff_check": "pass"
   },
   "point_in_time_canary_waivers": [
     {
@@ -184,15 +184,15 @@
     }
   ],
   "review": {
-    "status": "pending",
-    "p0": null,
-    "p1": null,
-    "p2": null,
-    "boundary": "Final independent review must cover the exact v0.9.0 package, registry, evidence, documentation, and external-evidence bindings before publication."
+    "status": "passed",
+    "reviewer_task": "final_v090_release_review",
+    "p0": 0,
+    "p1": 0,
+    "p2": 2,
+    "boundary": "Independent review covered the exact v0.9.0 package, registry, retained evidence, documentation, and external shaped-evidence bindings. The two retained P2 items concern the superseded R5 question-count diagnostic and local create-new publication under crash, hostile same-directory writer, or unverified Windows conditions; neither broadens the scientific claim.",
+    "notes": "Independent exact-byte release review ACCEPT; no new P2 or over-engineering blocker was found."
   },
   "missing_evidence": [
-    "final v0.9.0 package-byte shaped seal commit and artifact hash",
-    "final independent exact-byte release review",
     "formal exact-package agent or model runtime evaluation",
     "named domain-method or human-expert review",
     "representative or large research datasets",
@@ -205,9 +205,18 @@
   ],
   "final_package_byte_shaped_seal": {
     "repository": "skill-research",
-    "commit": "__PENDING_V0_9_SHAPED_SEAL_COMMIT__",
-    "artifact": "__PENDING_V0_9_SHAPED_SEAL_ARTIFACT__",
-    "artifact_sha256": "__PENDING_V0_9_SHAPED_SEAL_ARTIFACT_SHA256__",
-    "status": "pending"
+    "branch": "agent/bio02-r5-minimum-reliability-evidence",
+    "commit": "a9aab788ae5cf3d0815f4209411babe759fe6b1c",
+    "artifact": "reports/bio02-v0.9.0-r5-final-package-byte-shaped-seal-v0.1.json",
+    "artifact_sha256": "d738bc0ad637ab966c029afea304649d02787280fd24da8097bcf70c82cf8153",
+    "fixture": "records/fixtures/bio02-v0.9.0-r5-shaped-seal-v0.1.json",
+    "fixture_sha256": "f458c6dfbf0d6b3b83ec574f0d2ed1cb5105f757d3a94429e44056710df58193",
+    "runner": "scripts/run_bio02_v0_9_r5_shaped_seal_v0_1.py",
+    "runner_sha256": "ae4a7d9de6e593880a73f51c9c470bbe07ff05a47b5c046b667ed7fc5fa94814",
+    "canonical_event_sha256": "b8f800aab9d0fa7c40b81e53b52c6b36e9be04b44d193df2f4edeb123a99726c",
+    "candidate_package_commit": "c6927100b07c034c2b83fab3bdaf0276610c0ae1",
+    "status": "passed-bounded-shaped-seal",
+    "formal_pass": false,
+    "main_promotion_authorized_by_external_record": false
   }
 }
