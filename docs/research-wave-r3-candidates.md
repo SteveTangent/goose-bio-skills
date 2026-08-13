@@ -1,8 +1,8 @@
 # Research Wave R3 candidates
 
-Status: minimum research gate passed on `research`. These entries are not part
-of the v0.7.0 Beta and are not authorized for direct `main` promotion. A later
-atomic collection release must bind their final bytes.
+Status: promoted into the v0.8.0 `main` Beta as `preview + reviewed` after the
+minimum research gate passed on `research` and the atomic release bound their
+final package and registry bytes.
 
 Wave R3 combines two fast, deterministic local checks with one strategically
 important reads-to-alignment handoff. Each candidate owns one narrow job.

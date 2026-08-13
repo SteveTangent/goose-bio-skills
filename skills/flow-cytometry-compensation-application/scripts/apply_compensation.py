@@ -21,7 +21,7 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 
-VERSION = "0.7.0"
+VERSION = "0.8.0"
 MAX_BYTES = 16 * 1024 * 1024
 MAX_CHANNELS = 32
 MAX_EVENTS = 100_000

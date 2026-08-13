@@ -1,0 +1,149 @@
+{
+  "schema_version": "0.1.0",
+  "evidence_kind": "atomic-preview-reviewed-release",
+  "evaluated_at": "2026-08-13",
+  "version": "0.8.0",
+  "branch": "research",
+  "candidate_parent_commit": "a3a25608494e2d5893c59077cf0ea4abb5aa262d",
+  "scope": {
+    "package_count": 44,
+    "domain_count": 13,
+    "cluster_count": 26,
+    "release_stage": "preview",
+    "assurance_level": "reviewed",
+    "minimum_reliability_pass": true,
+    "formal_scientific_evaluation": false,
+    "scientific_benchmark": false,
+    "human_expert_review": false,
+    "generalization_evidence": false,
+    "performance_evaluation": false,
+    "better_than_baseline_claim": false,
+    "clinical_use": "prohibited"
+  },
+  "governance": {
+    "owner": "project-owner",
+    "review_cadence": "quarterly package freshness",
+    "fixture_kind": "file-backed fixture",
+    "input_files": [
+      "evals/fixtures/research-wave-r1-minimal-v0.1.json",
+      "evals/fixtures/research-wave-r2-minimal-v0.1.json",
+      "evals/fixtures/research-wave-r3-minimal-v0.1.json",
+      "evals/fixtures/research-wave-r4-minimal-v0.1.json"
+    ],
+    "output_contract": "One atomic v0.8.0 registry binds 44 exact preview-reviewed packages. Four retained offline runners emit canonical JSON results with exact package, script, fixture, and output hashes.",
+    "rollback_boundary": "Restore the 32 prior packages and matching registry entries to v0.7.0. Remove the 12 first-public v0.8.0 packages and their entries. Released v0.7.0 history is not rewritten.",
+    "trust_report": "The final package code review closed all P0 and P1 findings. One accepted non-blocking P2 remains for the documented same-directory malicious-writer race and rare pre-identity temporary-file residue boundary. Release preparation changed version, rollback, registry, fixture, and documentation bindings mechanically and reran all declared gates."
+  },
+  "atomic_release": {
+    "version_file_sha256": "a66780da23103beaf12432b418508966b31a2a3a787f9468a5b6cdaa8667c1ef",
+    "registry_sha256": "3c0eff32e8ac7e471a5bd33cc0f602f738d6cd2a0cdb4c4a2b03e1c98d80ce8e",
+    "registry_package_count": 44,
+    "rollback_to_0_7_0_count": 32,
+    "first_public_release_count": 12,
+    "first_public_packages": [
+      "amplicon-alpha-diversity-analysis",
+      "amplicon-feature-table-and-taxonomy-qc",
+      "bulk-rnaseq-gene-counting-from-alignment",
+      "chromatin-peak-set-qc",
+      "flow-cytometry-compensation-application",
+      "human-variant-evidence-retrieval",
+      "junction-psi-and-delta-analysis",
+      "kaplan-meier-survival-analysis",
+      "phylogenetic-tree-io-and-qc",
+      "protein-level-differential-abundance",
+      "read-alignment-selection-and-execution",
+      "untargeted-metabolomics-feature-table-qc"
+    ],
+    "first_public_package_digests": {
+      "amplicon-alpha-diversity-analysis": "ee9ba7e03cc0701a6ca2fb3cdcb10ea65fc96596feb832e5e8aa8ba17adfb215",
+      "amplicon-feature-table-and-taxonomy-qc": "b7a72844f54c88e5a61113f5b412b7cf2f7ac01e832dac17acc8e08ce6181bbc",
+      "bulk-rnaseq-gene-counting-from-alignment": "4ab65063a882c0dff564bd4f97d4593e7cb050bdfabd684c78661154736e8c75",
+      "chromatin-peak-set-qc": "b9cdd2967ce8517508b4c38f7a48866dee489605c4ed7e36fe4d896407de9869",
+      "flow-cytometry-compensation-application": "f63b941ef874b9c439cb63cb6a66503d5bdb1e412f799f304d0272d45814afbf",
+      "human-variant-evidence-retrieval": "7369fe6987392250fcad669938462511488bb33a57b4d88d2f8ca348b62bd854",
+      "junction-psi-and-delta-analysis": "bbb0b2479118140c119d117ac318766fdd23d5654e6ad0e61b70798965548d56",
+      "kaplan-meier-survival-analysis": "cbbe9ea19b9e689dcebb3e36a6e47a8d7975b61b38c26db9161e09882a459a42",
+      "phylogenetic-tree-io-and-qc": "f855c02038ac4da8222aea6154bcf0d1a096a10260086f00455208c28af7aaf6",
+      "protein-level-differential-abundance": "e18e86dfb0dcf2bcb1edd802b0058d4d073f805af6cea282b9e81746e02871ec",
+      "read-alignment-selection-and-execution": "a7a51759279600aee88e54d0c976e974496de98633f589ccf336c1666ae7de77",
+      "untargeted-metabolomics-feature-table-qc": "2619299ea83dae4826ddc07d98f0d0db5da89e0a305779e557ceee592fb6e0ec"
+    }
+  },
+  "control_sha256": {
+    "validator": "d0a56be0296dfe6f7e0931e74bf75be2ef0dcfbdcfe1bf1272f5448f7ed1d847",
+    "connector": "51a37ec217a2426e87549b5e6ebf40fb46ef76cd7b3f300a02658bd610b89d95",
+    "wave_r1_runner": "cc88b09fd4ca294b1410e9a863ed2b495270074f2b573e117a80e4b35f9f7dd7",
+    "wave_r2_runner": "b58abdd1c37bc8540e711947d8cf0b456bbbf29efda676ac6ed67a1c84e361e5",
+    "wave_r3_runner": "ba72a7096c6af85f14aff44cd6d9245d2572f4228b2b87dbe459ba2e66ab8f4a",
+    "wave_r4_runner": "a5223aec5a09369a8404dbc609b893a720b46629474d4fa6259b04e22e073e50",
+    "wave_r1_fixture": "494b4bfbe237e9f89425a4c7f7d438ca32f1e86daafcc94eb60f90558ce062f3",
+    "wave_r2_fixture": "5236ed436fcb83aba2729a4402e24305e0011dcaccd9000be7b8a3deb3a44e1c",
+    "wave_r3_fixture": "2f4f25ac5c8f4b223ba9d44b158a975824f561d1d72ea3c535e4b7cae9470f96",
+    "wave_r4_fixture": "1dbb3071a2279a126e6c55eb052d32b32b8563a76b7a699d6ad2ae1ff67e2f37"
+  },
+  "retained_evidence_sha256": {
+    "wave_r1": "3f6191e16c59f5b7b5e707a9375a1d657b83b04315adc05fbbae763250301be1",
+    "wave_r2": "c6bce0b09963249872972ed081938b31c8aa866bb8a5bdd61bce3a650db0c6a9",
+    "wave_r3": "3edf80530fc0edf7c6841833268c8474a03b8d04311812154abf97efc8806990",
+    "wave_r4": "73a6767ef7c1014a41f9bdd64e1b997a1b7ea25d935905326f771c2517433be3"
+  },
+  "documentation_sha256": {
+    "README.md": "17551f88bce160df011f14ebefdb65fd78f7c1a64f7bf4e6257951b95a7646d2",
+    "skills/README.md": "a2fb8de79a710b3d5dd90af007cc3601defb8b361b052e05c47e757da4d8ff4c",
+    "docs/architecture.md": "195e0e7b3b40b386d473b296508157f99da5f5a04359e39da726592b9dae0430",
+    "docs/catalog.md": "e23d293e2510c4af59c71f185a9b40fb3248505b284fb440806f0b36d80df1c0",
+    "docs/release-flow.md": "b012c1998208065e4b4d9f4029f23d169ca67b55314b393fd70a084001c5a032",
+    "docs/research-skill-promotion-gates.md": "abe5472a7ef0f02420f4929f9085304a84a415fb06d3529fbba1b55bb6223819"
+  },
+  "verification": {
+    "status": "passed",
+    "retained_replay_runs_per_wave": 2,
+    "retained_replay_checks_per_run": {
+      "wave_r1": 84,
+      "wave_r2": 67,
+      "wave_r3": 60,
+      "wave_r4": 192
+    },
+    "retained_replay_events_byte_identical": true,
+    "network_performed_in_release_replays": false,
+    "validator_version": "1.2.0",
+    "validator_self_test_checks": 25,
+    "installable_packages": 44,
+    "source_clean": true,
+    "canonical_routing_cases": 90,
+    "wave_r1_routing_cases": 6,
+    "wave_r3_routing_cases": 6,
+    "wave_r4_routing_cases": 12,
+    "connector_self_test_checks": 21,
+    "connector_self_test_network_performed": false,
+    "skill_creator_quick_validate_packages": 44,
+    "diff_check": "passed"
+  },
+  "point_in_time_canary_waivers": [
+    {
+      "evidence": "evals/research-wave-r3-minimap2-canary-v0.1.json",
+      "reason": "The synthetic real-minimap2 canary was not rerun for v0.8.0. It remains point-in-time evidence; the current exact alignment package is covered by retained offline self-test, adapter-contract, package-binding, and fail-closed checks."
+    },
+    {
+      "evidence": "evals/research-wave-r4-clinvar-canary-v0.1.json",
+      "reason": "The bounded ClinVar canary was not rerun for v0.8.0. It remains point-in-time provider-shape evidence; the current exact connector, parser, provenance, and publication bytes are covered by retained offline checks. Current provider availability is not claimed."
+    }
+  ],
+  "review": {
+    "status": "passed",
+    "p0": 0,
+    "p1": 0,
+    "p2": 1,
+    "boundary": "Independent code review covered the package candidate and fixes. Final release preparation was a bounded mechanical version, rollback, registry, fixture, evidence, and documentation update with fresh verification."
+  },
+  "missing_evidence": [
+    "formal exact-package agent or model runtime evaluation",
+    "named domain-method or human-expert review",
+    "representative or large research datasets",
+    "scientific benchmarking and cross-study generalization",
+    "performance and scale evaluation",
+    "complete parser, platform, provider, and tool failure matrices",
+    "fresh v0.8.0 live minimap2 and ClinVar canaries",
+    "baseline or source-repository superiority comparison"
+  ]
+}

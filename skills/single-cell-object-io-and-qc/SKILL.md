@@ -3,7 +3,7 @@ name: single-cell-object-io-and-qc
 description: "A user needs to inspect, load, or quality-check a supported small single-cell object, or plan a conversion through a declared adapter. Exclude: silent make-unique, filtering or doublet removal; normalization and clustering; condition differential expression; cross-ecosystem conversion without a declared compatible converter."
 license: Apache-2.0
 metadata:
-  version: "0.7.0"
+  version: "0.8.0"
 ---
 
 # Single-cell Object I/O and QC

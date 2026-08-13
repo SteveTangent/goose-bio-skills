@@ -24,7 +24,7 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PATH = ROOT / "connectors" / "providers.json"
-VERSION = "0.7.0"
+VERSION = "0.8.0"
 CATALOG_SCHEMA_VERSION = "0.2.0"
 DEFAULT_MAX_BYTES = 32 * 1024 * 1024
 HARD_MAX_BYTES = 128 * 1024 * 1024

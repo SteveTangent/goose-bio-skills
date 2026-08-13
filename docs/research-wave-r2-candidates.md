@@ -1,8 +1,8 @@
 # Research Wave R2 candidates
 
-Status: minimum-reliability implementation passed on `research`. These entries
-are not part of the v0.7.0 Beta and are not authorized for direct `main`
-promotion; a later atomic collection release must bind their final bytes.
+Status: promoted into the v0.8.0 `main` Beta as `preview + reviewed` after the
+minimum-reliability implementation passed on `research` and the atomic release
+bound their final package and registry bytes.
 
 Wave R2 adds three narrow jobs that cover different execution patterns: a
 pure-local table check, a local interval workflow, and a pinned scientific tool

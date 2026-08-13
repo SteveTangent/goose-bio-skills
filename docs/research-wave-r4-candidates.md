@@ -1,8 +1,8 @@
 # Research Wave R4 candidates
 
-Status: minimum-reliability gate passed on `research`. These six packages are not
-part of the v0.7.0 Beta; promotion still requires a later atomic release and a
-fresh final-byte rerun.
+Status: promoted into the v0.8.0 `main` Beta as `preview + reviewed` after the
+minimum-reliability gate passed on `research` and the atomic release reran the
+retained final-byte checks.
 
 Wave R4 favors common user jobs with a compact, inspectable oracle. It does not
 attempt six more broad end-to-end pipelines.
@@ -115,8 +115,10 @@ create-new/no-overwrite behavior. ClinVar replay uses a synthetic sidecar bound
 to the fixture and performs no network call. A separate
 [bounded public ClinVar canary](../evals/research-wave-r4-clinvar-canary-v0.1.json)
 retains its point-in-time package, connector, payload, provenance, semantic-oracle,
-and publication hashes; current publication-hardening bytes are covered by the
-offline replay. It is narrow provider-shape evidence only.
+and publication hashes. The canary was not rerun for the v0.8.0 release; the
+release accepts that explicit waiver while binding the current publication-
+hardening and parser bytes through the offline replay. It is narrow provider-
+shape evidence only and does not establish current provider availability.
 
 An independent first-pass routing diagnostic judged 12 held-out prompts before
 opening their oracle file: all six positive prompts selected the intended Skill,

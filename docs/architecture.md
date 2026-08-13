@@ -2,7 +2,7 @@
 
 ## Research-first system
 
-The verified `main` Beta contains 32 independently installable, one-job bioinformatics Skills across 11 Domains and 19 Clusters. The `research` branch adds 12 Wave R2/R3/R4 candidates, bringing the branch to 44 packages across 13 Domains and 26 Clusters. Candidates remain outside the Beta until their common and candidate-specific promotion gates pass.
+The verified `main` v0.8.0 Beta contains 44 independently installable, one-job bioinformatics Skills across 13 Domains and 26 Clusters. The `research` branch is reserved for the next bounded candidate wave; a future candidate remains outside the Beta until its common and candidate-specific promotion gates pass.
 
 ```mermaid
 flowchart LR
@@ -54,7 +54,7 @@ Ask no question when facts already resolve the choice. Ask exactly one question 
 
 ## Public connector contract
 
-The v0.7.0 public connector contract has four execution boundaries:
+The v0.8.0 public connector contract has four execution boundaries:
 
 1. **Bounded public access.** A user's explicit search or retrieval request authorizes the matching allowlisted public `GET` or `HEAD` and requested download. The shared companion enforces reviewed HTTPS hosts and path prefixes, timeouts, retry limits, page and byte caps, redirect checks, non-overwriting output publication, and pacing between paginated requests within one invocation; retry backoff is separate. The agent host must aggregate rate limits across concurrent processes and other traffic sharing the same source address.
 2. **Anonymous-only companion.** The shared companion reads no provider configuration, contact identity, API key, token, or paid credential. Transport follows the agent host's proxy and CA trust policy; a non-default proxy or CA boundary should be disclosed. A host may provide a separate authenticated adapter only after disclosing that adapter's data, identity, storage, and billing boundary.
@@ -114,7 +114,7 @@ Every installable package declares:
 - bundled-script origin and deterministic self-test status;
 - legally required notices.
 
-Research candidates follow the same package contract but are not release
+Future research candidates follow the same package contract but are not release
 claims. Their promotion requirements are recorded in
 [Research Skill promotion gates](research-skill-promotion-gates.md), and their
 unverified evidence remains explicit until a reviewed `research`-to-`main`

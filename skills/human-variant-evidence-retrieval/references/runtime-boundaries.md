@@ -1,7 +1,7 @@
 # Runtime and scientific boundaries
 
 This reference defines the boundary for
-`human-variant-evidence-retrieval` version `0.7.0`. The official ClinVar
+`human-variant-evidence-retrieval` version `0.8.0`. The official ClinVar
 programmatic-access, identifier, and VCV data-model guidance was checked on
 2026-08-13. This preview does not claim formal exact-package agent runtime or
 scientific evaluation. One bounded public record retrieved once by exact VCV
@@ -99,7 +99,7 @@ annotation fields as a complete ClinVar archive substitute.
   normalizer, not formal agent routing, complete live-provider behavior,
   representative scientific use, or human-expert review.
 - Relevant interfaces: NCBI ClinVar rolling VCV XML/E-utilities guidance checked
-  2026-08-13; Bio 02 shared public connector `0.7.0` contract.
+  2026-08-13; Bio 02 shared public connector `0.8.0` contract.
 - Unverified boundaries:
   - Agent routing, interactive identifier clarification, and end-to-end output
     review have not been runtime-evaluated.

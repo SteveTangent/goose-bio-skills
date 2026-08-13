@@ -3,7 +3,7 @@ name: untargeted-metabolomics-feature-table-qc
 description: "Use for bounded, offline structural and descriptive QC of a local untargeted-metabolomics TSV with exact feature rows, sample columns, m/z, retention time, and matching sample metadata. Require declared intensity, zero, and missing-value semantics; report joins, detected and missing counts, pooled-QC RSD, blank-to-study mean ratios, and batch/injection-order completeness. Exclude raw-MS peak picking, alignment, drift correction, filtering, normalization, imputation, compound annotation, differential or pathway analysis, contamination decisions, and biological or clinical interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.7.0"
+  version: "0.8.0"
 ---
 
 # Untargeted Metabolomics Feature-table QC

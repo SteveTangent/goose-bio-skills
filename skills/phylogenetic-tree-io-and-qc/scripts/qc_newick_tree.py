@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any, BinaryIO, Callable, Iterator
 
 
-VERSION = "0.7.0"
+VERSION = "0.8.0"
 MAX_INPUT_BYTES = 2 * 1024 * 1024
 MAX_NODES = 10_000
 MAX_DEPTH = 256

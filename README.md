@@ -2,12 +2,12 @@
 
 Research-first bioinformatics skills for AI agents.
 
-Bio 02 Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The verified `main` Beta contains 32 packages. The `research` branch carries 12 additional Wave R2/R3/R4 candidates for bounded small-data evaluation.
+Bio 02 Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The verified `main` Beta contains 44 packages across 13 Domains and 26 Clusters. The `research` branch is reserved for the next bounded candidate wave.
 
 | Boundary | Packages | State | External services |
 | --- | ---: | --- | --- |
-| `main` Beta `0.7.0` | 32 | `preview + reviewed` | Bounded public read/download; anonymous-first |
-| `research` Waves R2/R3/R4 | 12 candidates | Not part of the Beta until promoted | Local/replay by default; one declared bounded NCBI read path |
+| `main` Beta `0.8.0` | 44 | `preview + reviewed` | Bounded public read/download; anonymous-first |
+| `research` | Next candidate wave | Not part of the Beta until promoted | Local/replay by default |
 
 ## Why Bio 02 Skills
 
@@ -98,17 +98,17 @@ Align this tiny single-end short-DNA FASTQ to the exact local reference using th
 | Research area | Skills |
 | --- | --- |
 | Data and workflow foundations | `bioinformatics-format-and-identifier-validation`<br>`scientific-file-preflight-and-resource-planning`<br>`biological-database-record-retrieval-and-identifier-resolution`<br>`taxonomy-name-and-taxid-resolution`<br>`public-sequencing-run-manifest-retrieval`<br>`environment-and-provenance-capture` |
-| Sequence, reads, genomes, and evolution | `sequence-io-and-transformation`<br>`sequence-similarity-and-homology-search`<br>`pairwise-and-multiple-sequence-alignment`<br>`phylogenetic-tree-io-and-qc` *(research candidate)*<br>`raw-read-quality-reporting`<br>`raw-read-trimming-and-filtering`<br>`read-alignment-selection-and-execution` *(research candidate)*<br>`alignment-file-operations`<br>`genomic-interval-operations`<br>`gff-gtf-gene-model-qc`<br>`public-orthology-retrieval-and-qc` |
-| Variant and cohort genomics | `vcf-normalization-qc-and-query`<br>`human-variant-evidence-retrieval` *(research candidate)* |
-| Bulk transcriptomics | `count-based-differential-expression`<br>`bulk-rnaseq-gene-counting-from-alignment` *(research candidate)*<br>`junction-psi-and-delta-analysis` *(research candidate)* |
+| Sequence, reads, genomes, and evolution | `sequence-io-and-transformation`<br>`sequence-similarity-and-homology-search`<br>`pairwise-and-multiple-sequence-alignment`<br>`phylogenetic-tree-io-and-qc`<br>`raw-read-quality-reporting`<br>`raw-read-trimming-and-filtering`<br>`read-alignment-selection-and-execution`<br>`alignment-file-operations`<br>`genomic-interval-operations`<br>`gff-gtf-gene-model-qc`<br>`public-orthology-retrieval-and-qc` |
+| Variant and cohort genomics | `vcf-normalization-qc-and-query`<br>`human-variant-evidence-retrieval` |
+| Bulk transcriptomics | `count-based-differential-expression`<br>`bulk-rnaseq-gene-counting-from-alignment`<br>`junction-psi-and-delta-analysis` |
 | Single-cell analysis | `single-cell-object-io-and-qc`<br>`single-cell-core-analysis` |
-| Epigenomics *(research candidate)* | `chromatin-peak-set-qc` |
-| Microbiome and amplicon data *(research candidate)* | `amplicon-feature-table-and-taxonomy-qc`<br>`amplicon-alpha-diversity-analysis` |
-| Proteomics, metabolomics, and cytometry | `proteomics-quantification-table-qc`<br>`protein-level-differential-abundance` *(research candidate)*<br>`untargeted-metabolomics-feature-table-qc` *(research candidate)*<br>`fcs-file-io-and-metadata-qc`<br>`flow-cytometry-compensation-application` *(research candidate)* |
+| Epigenomics | `chromatin-peak-set-qc` |
+| Microbiome and amplicon data | `amplicon-feature-table-and-taxonomy-qc`<br>`amplicon-alpha-diversity-analysis` |
+| Proteomics, metabolomics, and cytometry | `proteomics-quantification-table-qc`<br>`protein-level-differential-abundance`<br>`untargeted-metabolomics-feature-table-qc`<br>`fcs-file-io-and-metadata-qc`<br>`flow-cytometry-compensation-application` |
 | Protein structure | `protein-structure-retrieval-and-comparison`<br>`protein-interface-contact-analysis` |
 | Cheminformatics | `molecule-standardization-and-descriptors`<br>`chemical-similarity-and-substructure-search` |
 | Functional interpretation | `over-representation-analysis`<br>`ranked-gene-set-enrichment` |
-| Study design and biostatistics | `experimental-design-power-and-batch-planning`<br>`statistical-analysis-and-multiple-testing`<br>`missing-data-and-sensitivity-analysis`<br>`kaplan-meier-survival-analysis` *(research candidate)* |
+| Study design and biostatistics | `experimental-design-power-and-batch-planning`<br>`statistical-analysis-and-multiple-testing`<br>`missing-data-and-sensitivity-analysis`<br>`kaplan-meier-survival-analysis` |
 | Biomedical evidence | `biomedical-literature-and-public-study-search`<br>`evidence-synthesis-and-research-traceability` |
 
 See [docs/catalog.md](docs/catalog.md) for Domain, Cluster, risk, dependency, and runtime details. [`registry.json`](registry.json) is the versioned machine-readable index.
@@ -179,7 +179,7 @@ skills/<slug>/
 
 ## Current release boundary
 
-The 32-package `main` Beta is `preview + reviewed`. All 12 Wave R2/R3/R4 packages on `research` passed their retained minimum-reliability gates. They require a later atomic release before promotion, and every package states its remaining unverified boundaries in its manifest.
+The 44-package `main` Beta is `preview + reviewed`. The 12 Wave R2/R3/R4 packages were admitted atomically in v0.8.0 after their retained minimum-reliability gates passed. Every package states its remaining unverified boundaries in its manifest.
 
 Use the collection for supervised research work. Verify inputs, tool availability, QC, and biological interpretation for each project. The collection does not claim universal scientific correctness, clinical authority, or superiority over another workflow.
 

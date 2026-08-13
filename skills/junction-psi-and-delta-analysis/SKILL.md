@@ -3,7 +3,7 @@ name: junction-psi-and-delta-analysis
 description: "Use for bounded, offline calculation of per-sample percent-spliced-in (PSI) and a declared two-group PSI delta from a prepared long-form TSV of nonnegative integer inclusion and exclusion junction counts plus exact sample-group metadata. Require a prespecified minimum coverage and group direction. Exclude BAM or CRAM parsing, junction discovery, isoform reconstruction, statistical inference, differential gene expression, and biological or clinical interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.7.0"
+  version: "0.8.0"
 ---
 
 # Junction PSI and Delta Analysis

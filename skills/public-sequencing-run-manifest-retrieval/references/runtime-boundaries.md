@@ -1,7 +1,7 @@
 # Runtime and scientific boundaries
 
 This reference defines the operating boundary for
-`public-sequencing-run-manifest-retrieval` version `0.7.0`. Interfaces were
+`public-sequencing-run-manifest-retrieval` version `0.8.0`. Interfaces were
 reviewed on 2026-08-10; this preview does not claim exact-package runtime
 evaluation.
 
@@ -40,7 +40,7 @@ this Skill.
 | --- | --- | --- | --- |
 | ENA Portal API | rolling `filereport`; `read_run` return fields | [File reports](https://ena-docs.readthedocs.io/en/latest/retrieval/programmatic-access/file-reports.html), [programmatic access and rate limit](https://ena-docs.readthedocs.io/en/latest/retrieval/programmatic-access.html), and [live `read_run` return fields](https://www.ebi.ac.uk/ena/portal/api/returnFields?result=read_run) | 2026-08-10 |
 | NCBI SRA metadata model | public Study/Sample/Experiment/Run relations | [SRA metadata overview](https://www.ncbi.nlm.nih.gov/sra/docs/submitmeta/) and [RunInfo guidance](https://www.ncbi.nlm.nih.gov/sra/docs/sradownload/) | 2026-08-10 |
-| Bio 02 shared connector | `0.7.0` public read-only contract | repository connector contract | 2026-08-10 |
+| Bio 02 shared connector | `0.8.0` public read-only contract | repository connector contract | 2026-08-10 |
 
 NCBI documentation is used for the shared INSDC/SRA object model; this Skill's
 live provider is ENA, not an undocumented NCBI RunInfo endpoint.
@@ -81,7 +81,7 @@ this Skill.
 
 - Mode: `skipped-complex-tool`
 - Reason: Exact-package multi-accession routing, large project expansion, read downloads, and batch retrieval were not run; downloads and bulk paths are excluded rather than treated as passed.
-- Relevant interfaces: ENA Portal API rolling `filereport` and `returnFields`, NCBI SRA public metadata model, Bio 02 shared connector 0.7.0 contract.
+- Relevant interfaces: ENA Portal API rolling `filereport` and `returnFields`, NCBI SRA public metadata model, Bio 02 shared connector 0.8.0 contract.
 - Unverified boundaries:
   - Exact-package accession validation, connector routing, TSV header parsing, and semicolon-delimited file-field alignment have not been runtime-evaluated.
   - Large study or BioProject expansion, withdrawn or suppressed accessions, empty file fields, rate limiting, and oversized responses remain unverified.

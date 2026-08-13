@@ -1,9 +1,9 @@
 {
   "schema_version": "0.1.0",
   "evidence_kind": "minimum-reliability-release-check",
-  "evaluated_at": "2026-08-12T10:58:42Z",
+  "evaluated_at": "2026-08-13",
   "branch": "research",
-  "candidate_base_commit": "3d7d941230f8fd89e0ba7d94ce78cb8dc3607801",
+  "candidate_base_commit": "a3a2560",
   "scope": {
     "target_assurance": "preview-reviewed",
     "minimum_reliability_pass": true,
@@ -15,8 +15,8 @@
     "human_expert_review": false,
     "better_than_baseline_claim": false,
     "clinical_use": "prohibited",
-    "direct_main_merge_authorized": false,
-    "direct_main_merge_reason": "These research candidates are not part of the current main Beta. Promotion requires a later atomic collection release and final-byte rerun."
+    "direct_main_merge_authorized": true,
+    "direct_main_merge_reason": "The exact 44-package v0.8.0 release candidate passed its retained final-byte minimum gates and may be promoted atomically while remaining preview + reviewed."
   },
   "governance": {
     "fixture_kind": "file-backed fixture",
@@ -25,7 +25,7 @@
       "evals/research-wave-r1-independent-routing-cases-v0.1.json"
     ],
     "output_contract": "The offline runner emits one canonical JSON event with status, check count, exact package/script/fixture/output hashes, and explicit network_performed=false. The routing record preserves first-run observations and later serves only as a visible regression oracle.",
-    "rollback_boundary": "Remove this Wave R1 evidence delta and restore the three prior registry package digests; released v0.6.0 history is not rewritten.",
+    "rollback_boundary": "Restore the 32 prior packages and registry entries to v0.7.0; remove the 12 first-public v0.8.0 packages. Released v0.7.0 history is not rewritten.",
     "trust_report": "Minimum release verification only. Final independent seal review reported P0=0, P1=0, and one accepted non-blocking P2 for the documented local-directory concurrency and exceptional temporary-file cleanup boundary."
   },
   "retained_replay": {
@@ -41,7 +41,7 @@
     },
     "fixture": {
       "path": "evals/fixtures/research-wave-r1-minimal-v0.1.json",
-      "sha256": "1f854d24fa424bc7cfe15557152e3c0a7c5bbd8e38c2788c9794b6fa7b8fa340"
+      "sha256": "494b4bfbe237e9f89425a4c7f7d438ca32f1e86daafcc94eb60f90558ce062f3"
     },
     "coverage": {
       "missing-data-and-sensitivity-analysis": [
@@ -68,8 +68,8 @@
       ]
     },
     "output_sha256": {
-      "missing_data_valid": "c830b1147d72edd0e595fbe41a571fd6791808acd43e7323fe86ce3d70ce34cf",
-      "protein_contacts_valid": "869f77d5e7d59b401b9be62f6b1a62371dfc279d28e517fffecbdb25d619aa7",
+      "missing_data_valid": "8a26e936ed96404bc347930d049d12b5587c4d3772e09bfcb496e5aa815e1cd7",
+      "protein_contacts_valid": "5d90729640e30ce982be77d28c8accd8ee6cef43c9ce77d49405b6cb1e51816a",
       "orthology_valid_payload": "55c13b3a34e18ba0ffd67d79cc62bff71356e352587a3c5bfbbecb0e92b1bef2"
     }
   },
@@ -139,9 +139,9 @@
     ]
   },
   "exact_candidate_bytes": {
-    "missing-data-and-sensitivity-analysis": "27314d39519fe77c725366ee12e6749275edc84751eb0141dbb930007c077f28",
-    "protein-interface-contact-analysis": "9fd95fa1711edf3758628edf7afae280d7002da7becb8d585c88cdf2fa8f53db",
-    "public-orthology-retrieval-and-qc": "1e5b814d9d95880487e626e611c5f6b12110454f3e42da95be64066fb78178e0"
+    "missing-data-and-sensitivity-analysis": "8e78edf414f6d1ce46e0eec64784da81b8ce455e29fd5c07cf7551c05c1c1467",
+    "protein-interface-contact-analysis": "61b24f4d5082c818b04f55018feca14acc348651c152f35ee99e07c1d5502b56",
+    "public-orthology-retrieval-and-qc": "2842f4309c52edaa3d6e8c31fe93e606a97b8943b5db7fccaedf4230031a31ba"
   },
   "shared_regression": {
     "status": "passed",
@@ -149,11 +149,11 @@
     "canonical_intake_cases": 90,
     "research_holdout_cases": 6,
     "source_clean": true,
-    "validator_version": "1.1.0",
+    "validator_version": "1.2.0",
     "validator_self_test_checks": 25,
     "connector_self_test_checks": 21,
     "connector_self_test_network_performed": false,
-    "connector_sha256": "060f3bf2c16fe89f574ff113c1293d86ea495b73d56189d43c7c5722b9f44232",
+    "connector_sha256": "51a37ec217a2426e87549b5e6ebf40fb46ef76cd7b3f300a02658bd610b89d95",
     "missing_data_self_test_checks": 12,
     "protein_contact_self_test_checks": 21,
     "diff_check": "passed"
@@ -165,12 +165,14 @@
     "http_status": 200,
     "payload_bytes": 240,
     "payload_sha256": "f6d1af78d67fc86d86a0f6e6baefdc0a1479648d7b0c53b8a0325c6bbe989ec9",
-    "scope": "historical bounded canary, not rerun by the retained offline suite and not a general availability claim"
+    "scope": "historical bounded canary, not rerun by the retained offline suite and not a general availability claim",
+    "current_exact_bytes": false,
+    "release_waiver": "Not rerun for v0.8.0; retained as point-in-time provider evidence while current exact bytes are covered offline."
   },
   "control_sha256": {
-    "validator": "311b4376d96b76c82cd2c1b34db7e101701b05988db9c043fdaddd577b6adb68",
-    "registry": "0708d578d455b137330771a5213ecc3df7011dd8467a8c8fd8ac0b0ebbe77f94",
-    "promotion_scope": "66ee5d916f6c7e4c5a45fcc8709ec1d31065fdcd63b0165973362b6e83300776"
+    "validator": "d0a56be0296dfe6f7e0931e74bf75be2ef0dcfbdcfe1bf1272f5448f7ed1d847",
+    "registry": "3c0eff32e8ac7e471a5bd33cc0f602f738d6cd2a0cdb4c4a2b03e1c98d80ce8e",
+    "promotion_scope": "abe5472a7ef0f02420f4929f9085304a84a415fb06d3529fbba1b55bb6223819"
   },
   "review": {
     "p0": 0,
@@ -178,10 +180,9 @@
     "p2": 1,
     "reviewer_task": "final_wave_r4_seal_review",
     "status": "passed",
-    "verdict": "Accepted for research-branch seal with one documented, non-blocking local-directory concurrency and exceptional temporary-file cleanup P2; this does not authorize main promotion."
+    "verdict": "Accepted for the v0.8.0 preview + reviewed release candidate with one documented, non-blocking local-directory concurrency and exceptional temporary-file cleanup P2."
   },
   "missing_evidence": [
-    "final atomic v0.7.0 collection bytes and package digests",
     "formal exact-package agent/model runtime evaluation",
     "named domain-method or human-expert review",
     "representative or large research datasets",

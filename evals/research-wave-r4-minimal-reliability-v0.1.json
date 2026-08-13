@@ -5,7 +5,7 @@
   "branch": "research",
   "scope": {
     "candidate_count": 6,
-    "collection_version": "0.7.0",
+    "collection_version": "0.8.0",
     "small_synthetic_data_only": true,
     "offline_replay": true,
     "network_performed": false,
@@ -13,18 +13,21 @@
     "synthetic_clinvar_provenance": true,
     "minimum_reliability_pass": true,
     "formal_scientific_evaluation": false,
-    "main_promotion_authorized": false,
+    "main_promotion_authorized": true,
     "research_commit_authorized": true,
-    "claim": "The six Wave R4 candidates passed retained small-data reliability and contract-routing checks on research. This is not representative scientific evaluation, model-generalization evidence, clinical validation, or a main release."
+    "claim": "The six Wave R4 packages passed retained small-data reliability and contract-routing checks and are bound to the exact v0.8.0 preview + reviewed release candidate. This is not representative scientific evaluation, model-generalization evidence, or clinical validation."
   },
   "retained_replay": {
     "command": "python3 scripts/run_wave_r4_minimal_reliability.py",
     "runs": 2,
     "checks_per_run": 192,
-    "statuses": ["pass", "pass"],
+    "statuses": [
+      "pass",
+      "pass"
+    ],
     "repeat_events_identical": true,
     "runner_sha256": "a5223aec5a09369a8404dbc609b893a720b46629474d4fa6259b04e22e073e50",
-    "fixture_sha256": "1408dd9842c7aca7cf0e9eaa6312d384b3b1575bee2b93658576e4c205c417dc",
+    "fixture_sha256": "1dbb3071a2279a126e6c55eb052d32b32b8563a76b7a699d6ad2ae1ff67e2f37",
     "coverage": [
       "six package self-tests",
       "exact package digests and input hashes",
@@ -35,22 +38,22 @@
       "offline synthetic ClinVar provenance binding"
     ],
     "output_sha256": {
-      "bulk-rnaseq-gene-counting-from-alignment": "0fadbf828d2500d170cfced471c85a307508d9400d9eeac94bcfdaf2d359d76f",
+      "bulk-rnaseq-gene-counting-from-alignment": "84aab285ff0f25b5f76ff617f6f75d81828734864e74271c0d578457abc228d6",
       "junction-psi-and-delta-analysis": "f61a51cfa92e3dce2d537c499a856eaac2ab993e42f440434b1726a9cabdb172",
       "amplicon-alpha-diversity-analysis": "c26c66da94f610061d269ed4c6cd689fd96fa73aaf8127f75b6c825b1143e621",
       "flow-cytometry-compensation-application.events": "2ca4ac1929693934c16c87326baefc20a50bcba0e4f277dc356f4a7f7c33a025",
-      "flow-cytometry-compensation-application.report": "0343cb2867bc8008445d4149a228288066e0faa0e1b38d9ac50b9eb2afb9333c",
+      "flow-cytometry-compensation-application.report": "6ff8882c5b9827123f85c117b23ff53932d4be11dfce27551d94beba1221a43d",
       "kaplan-meier-survival-analysis": "01b85a614449ce3d5c42cfc337c5faf4e3874771bda608c24e1d3e278b9d476b",
       "human-variant-evidence-retrieval": "c5b0011a130ee6be53569abd961850a53faafb7c9e8535fac4cbdd5537319573"
     }
   },
   "package_bindings": {
-    "bulk-rnaseq-gene-counting-from-alignment": "73f87e17c0f69d46103b33ebff489d1c083f19f720a079e78b88fbfb46b9f4ae",
-    "junction-psi-and-delta-analysis": "a6acdd4bbdb45c2e129fe374f42361d2b7686bab1b34dafd1193b676c2ae0a67",
-    "amplicon-alpha-diversity-analysis": "a3204d52d190936b168c8ac8b46552329532ff56da7ac84000f686371555e34d",
-    "flow-cytometry-compensation-application": "6dee07a702fbf880a6b3542901d9980eebcb8f707fb488dc7ff801dd6a5ef965",
-    "kaplan-meier-survival-analysis": "8d5e13de0fad5db3151455c473c01b377778c739879ecbd088db017893bc9a9a",
-    "human-variant-evidence-retrieval": "8c108cab698328f5665aa9f76b8c832fb534f62abe7df2ce944eb448ba8be2a6"
+    "amplicon-alpha-diversity-analysis": "ee9ba7e03cc0701a6ca2fb3cdcb10ea65fc96596feb832e5e8aa8ba17adfb215",
+    "bulk-rnaseq-gene-counting-from-alignment": "4ab65063a882c0dff564bd4f97d4593e7cb050bdfabd684c78661154736e8c75",
+    "flow-cytometry-compensation-application": "f63b941ef874b9c439cb63cb6a66503d5bdb1e412f799f304d0272d45814afbf",
+    "human-variant-evidence-retrieval": "7369fe6987392250fcad669938462511488bb33a57b4d88d2f8ca348b62bd854",
+    "junction-psi-and-delta-analysis": "bbb0b2479118140c119d117ac318766fdd23d5654e6ad0e61b70798965548d56",
+    "kaplan-meier-survival-analysis": "cbbe9ea19b9e689dcebb3e36a6e47a8d7975b61b38c26db9161e09882a459a42"
   },
   "public_canary": {
     "status": "pass",
@@ -62,7 +65,8 @@
     "point_in_time_binding": true,
     "current_exact_bytes": false,
     "clinical_assertions": 87,
-    "rcv_accessions": 17
+    "rcv_accessions": 17,
+    "release_waiver": "Not rerun for v0.8.0; retained as point-in-time provider evidence while current parser, connector, and package bytes are covered by retained offline gates."
   },
   "independent_routing": {
     "evaluator_task": "blind_r4_routes",
@@ -162,21 +166,21 @@
     "wave_r2_checks": 67,
     "wave_r3_checks": 60,
     "connector_checks": 21,
-    "connector_sha256": "060f3bf2c16fe89f574ff113c1293d86ea495b73d56189d43c7c5722b9f44232",
+    "connector_sha256": "51a37ec217a2426e87549b5e6ebf40fb46ef76cd7b3f300a02658bd610b89d95",
     "validator_self_test": "pass",
     "git_diff_check": "pass"
   },
   "control_hashes": {
     "evals/intake-routing-cases.json": "e5a68d5524354679aad4c3ed91ac043310292763759f7eb900efc95b17f6300d",
-    "scripts/validate_skeleton.py": "311b4376d96b76c82cd2c1b34db7e101701b05988db9c043fdaddd577b6adb68",
-    "registry.json": "0708d578d455b137330771a5213ecc3df7011dd8467a8c8fd8ac0b0ebbe77f94",
+    "scripts/validate_skeleton.py": "d0a56be0296dfe6f7e0931e74bf75be2ef0dcfbdcfe1bf1272f5448f7ed1d847",
+    "registry.json": "3c0eff32e8ac7e471a5bd33cc0f602f738d6cd2a0cdb4c4a2b03e1c98d80ce8e",
     "connectors/providers.json": "e30f59cb3f4673105e94839e5bb4e50f47252bb8e7226a1310a687a75f944cce",
-    "README.md": "02eaf22d91fd9ae89b5bec6255e153405f1f10169c04bd4b794e54e122b394d7",
-    "docs/architecture.md": "8a05486b42e7d93a623bf91543c4fbb8a477b97968970741196b36d2cd7eb903",
-    "docs/catalog.md": "6746152e900dee67df0f5bd1e90d834d086767185be09f59cd21b09f2934e778",
-    "docs/research-skill-promotion-gates.md": "66ee5d916f6c7e4c5a45fcc8709ec1d31065fdcd63b0165973362b6e83300776",
-    "docs/research-wave-r4-candidates.md": "42b034d7baeec388dba2c0b22bd811d0bb043b118795a7897de2e0027bd1d1a5",
-    "skills/README.md": "830dbbff07ef9235cff924cd8503deaa92a13556eabf18a979fde90e74fa352f"
+    "README.md": "17551f88bce160df011f14ebefdb65fd78f7c1a64f7bf4e6257951b95a7646d2",
+    "docs/architecture.md": "195e0e7b3b40b386d473b296508157f99da5f5a04359e39da726592b9dae0430",
+    "docs/catalog.md": "e23d293e2510c4af59c71f185a9b40fb3248505b284fb440806f0b36d80df1c0",
+    "docs/research-skill-promotion-gates.md": "abe5472a7ef0f02420f4929f9085304a84a415fb06d3529fbba1b55bb6223819",
+    "docs/research-wave-r4-candidates.md": "a5fa26de02ee73c292bb9a01ae51b3698ec849734fd1b1ce6e1017cdb0be9ebe",
+    "skills/README.md": "a2fb8de79a710b3d5dd90af007cc3601defb8b361b052e05c47e757da4d8ff4c"
   },
   "review": {
     "status": "passed",
@@ -207,7 +211,6 @@
     "representative scientific validity",
     "model or router generalization",
     "superiority over another workflow",
-    "clinical authority",
-    "main Beta membership"
+    "clinical authority"
   ]
 }

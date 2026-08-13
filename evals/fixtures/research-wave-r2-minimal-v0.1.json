@@ -9,7 +9,7 @@
     "purpose": "Replay valid, invalid, deterministic, create-new, and package-binding checks for the three Wave R2 candidates."
   },
   "amplicon_qc": {
-    "package_digest": "4f5b4e33cd202b89216d49f3420c008e413c42ae3671e23db1d36bea5cc69926",
+    "package_digest": "b7a72844f54c88e5a61113f5b412b7cf2f7ac01e832dac17acc8e08ce6181bbc",
     "self_test_checks": 21,
     "arguments": {
       "metadata_sample_column": "sample_id",
@@ -43,11 +43,11 @@
       "zero_depth_samples": [
         "NC1"
       ],
-      "output_sha256": "bea0919a0b357ef77f562ca521bbf5e22566814e506885ce8cd5efc4c6a914af"
+      "output_sha256": "9e8fa8ac8dcffa0b5d04dbce6d3cab1e13465c1e15a86740b87b63d15ac8f108"
     }
   },
   "peak_qc": {
-    "package_digest": "e92780189c353ab9227e5208b75af8356e67fe8b8a8cacd8a42e6d2da8a5aa48",
+    "package_digest": "b9cdd2967ce8517508b4c38f7a48866dee489605c4ed7e36fe4d896407de9869",
     "self_test_checks": 27,
     "arguments": {
       "contig_build": "GRCh38-test",
@@ -86,7 +86,7 @@
     "expected": {
       "duplicate_coordinate_count": 1,
       "pairwise_jaccard": 0.354838709677,
-      "output_sha256": "a50203c6ed44fcfecdb42302224c8f0587720c24243a6172eb88c688ba8abc41"
+      "output_sha256": "212cfd621d37c9097b40026d608e7a23a27db99936ad8c3df3d4ec55e78cb308"
     },
     "invalid": {
       "peak_builds": [
@@ -97,7 +97,7 @@
     }
   },
   "protein_da": {
-    "package_digest": "7e92fc70d45fd126030a3efc423c473d7983a1d1d75835cc0f207115572d4614",
+    "package_digest": "e18e86dfb0dcf2bcb1edd802b0058d4d073f805af6cea282b9e81746e02871ec",
     "self_test_checks": 23,
     "arguments": {
       "protein_id_column": "protein_id",
@@ -128,7 +128,7 @@
       "design_rank": 3,
       "residual_degrees_of_freedom": 3,
       "p1_effect_log2": 2.05,
-      "output_sha256": "1da900d6cf6a383d08163aa2e51be3b2749713bc842e8bb04946e7fa0335073b"
+      "output_sha256": "2d13ef4aa7b483a28a47d11239ac9fc04ca31959e9f44009a964f7258655ad69"
     }
   }
 }

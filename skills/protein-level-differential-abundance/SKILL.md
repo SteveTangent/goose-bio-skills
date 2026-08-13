@@ -3,7 +3,7 @@ name: protein-level-differential-abundance
 description: "Use for one offline limma differential-abundance contrast on a bounded, finite protein-by-sample matrix that the caller explicitly declares already normalized and log2 transformed, with exact sample metadata and an estimable categorical design. Exclude raw MS, PSM or peptide modeling, identification, protein inference, normalization, imputation, RNA counts, enrichment, biomarker selection, clinical use, and fallback tests."
 license: Apache-2.0
 metadata:
-  version: "0.7.0"
+  version: "0.8.0"
 ---
 
 # Protein-level Differential Abundance

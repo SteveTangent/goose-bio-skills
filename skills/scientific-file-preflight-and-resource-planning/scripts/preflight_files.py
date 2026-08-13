@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Any, Iterator
 
 
-VERSION = "0.7.0"
+VERSION = "0.8.0"
 DEFAULT_PROBE_BYTES = 64 * 1024
 MAX_PROBE_BYTES = 1024 * 1024
 MIB = 1024 * 1024

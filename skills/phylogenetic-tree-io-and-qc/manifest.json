@@ -1,7 +1,7 @@
 {
   "schema_version": "0.2.0",
   "name": "phylogenetic-tree-io-and-qc",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D02",

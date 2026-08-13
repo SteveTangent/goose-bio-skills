@@ -3,7 +3,7 @@ name: bulk-rnaseq-gene-counting-from-alignment
 description: "Use to assign one bounded local primary single-end bulk RNA-seq SAM sample to gene_id exon unions in one exact local GTF, with explicit unstranded, forward, or reverse library semantics and a declared MAPQ floor. Produce a create-new JSON gene-count table plus assignment categories and provenance. Exclude raw-read alignment, paired-end fragment counting, transcript or isoform abundance, probabilistic multimapper allocation, normalization, differential expression, batches, and biological interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.7.0"
+  version: "0.8.0"
 ---
 
 # Bulk RNA-seq Gene Counting from Alignment

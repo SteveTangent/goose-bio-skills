@@ -1,14 +1,14 @@
 {
   "schema_version": "0.2.0",
   "name": "taxonomy-name-and-taxid-resolution",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D01",
   "cluster_id": "C01",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-12",
+  "updated_at": "2026-08-13",
   "last_freshness_check": "2026-08-10",
   "review_cadence": "quarterly",
   "status": "active",
@@ -60,7 +60,7 @@
     "reason": "This is an instruction-only package. Exact-package routing, literal-query construction, response normalization, ambiguity handling, and output generation were not executed.",
     "tool_versions": [
       "NCBI E-utilities rolling API and Taxonomy fields checked 2026-08-10",
-      "Bio 02 shared public connector 0.7.0 contract"
+      "Bio 02 shared public connector 0.8.0 contract"
     ],
     "unverified_boundaries": [
       "Exact-package literal-query construction, ambiguity handling, response normalization, name-class extraction, and merged TaxId mapping have not been runtime-evaluated.",
@@ -76,12 +76,12 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.6.0",
-    "boundary": "Restore package version 0.6.0 and its matching registry entry."
+    "previous_version": "0.7.0",
+    "boundary": "Restore package version 0.7.0 and its matching registry entry."
   },
   "network_mode": "required",
   "local_adapters": [
-    "Bio 02 shared public connector 0.7.0"
+    "Bio 02 shared public connector 0.8.0"
   ],
   "external_services": [
     "ncbi-eutils"

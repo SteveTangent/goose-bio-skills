@@ -3,7 +3,7 @@ name: kaplan-meier-survival-analysis
 description: "Use for bounded, offline Kaplan-Meier summaries of a local subject-level TSV with one nonnegative follow-up time and one binary event indicator per subject, optionally split by an explicit group column. Produce deterministic product-limit estimates, median survival or not-reached status, and at-risk/event/censor counts. Exclude log-rank or other hypothesis tests, Cox or parametric models, confidence bands, delayed entry, recurrent or competing events, interval censoring, time-varying data, causal claims, treatment recommendations, and clinical interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.7.0"
+  version: "0.8.0"
 ---
 
 # Kaplan-Meier Survival Analysis

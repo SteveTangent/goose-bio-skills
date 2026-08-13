@@ -3,7 +3,7 @@ name: amplicon-alpha-diversity-analysis
 description: "Use for bounded, offline per-sample alpha-diversity summaries from a local TSV containing exact amplicon feature rows, sample columns, and nonnegative integer counts. Calculate observed features, natural-log Shannon diversity, and Simpson diversity defined as one minus the sum of squared relative abundances; return explicit not-estimable results for zero-depth samples. Exclude FASTQ processing, denoising, rarefaction, normalization, compositional correction, beta diversity, hypothesis testing, differential abundance, taxonomy, contamination or pathogen decisions, and biological or clinical interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.7.0"
+  version: "0.8.0"
 ---
 
 # Amplicon Alpha Diversity Analysis

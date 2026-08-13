@@ -3,7 +3,7 @@ name: statistical-analysis-and-multiple-testing
 description: "Use when a table contains raw p-values, every hypothesis belongs to an explicitly declared family, and the user wants offline Benjamini-Hochberg FDR or Holm FWER correction. Exclude model fitting, effect estimation, raw-count differential expression, enrichment, prospective design, undeclared families, and arbitrary-dependence FDR methods."
 license: Apache-2.0
 metadata:
-  version: "0.7.0"
+  version: "0.8.0"
 ---
 
 # Offline BH or Holm Correction

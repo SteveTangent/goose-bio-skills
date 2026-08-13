@@ -13,14 +13,15 @@ in [research-wave-r4-candidates.md](research-wave-r4-candidates.md).
 The assessed, not-yet-implemented Wave R5 shortlist is recorded in
 [research-wave-r5-candidates.md](research-wave-r5-candidates.md).
 
-Wave R2 has now passed its research-branch minimum implementation gate. The
+Wave R2 passed its research-branch minimum implementation gate and entered the
+v0.8.0 Beta as `preview + reviewed`. The
 [Wave R2 minimum-reliability record](../evals/research-wave-r2-minimal-reliability-v0.1.json)
 binds the retained small fixtures, repeat outputs, package digests, route
-observations, and independent reviews. This permits continued research use and
-review, not direct merge into the existing v0.7.0 release; any later promotion
-requires a new atomic collection version and a final-byte rerun.
+observations, and independent reviews; the v0.8.0 release record binds its
+final package and registry bytes.
 
-Wave R3 has also passed its research-branch minimum implementation gate. The
+Wave R3 also passed its research-branch minimum implementation gate and entered
+the v0.8.0 Beta as `preview + reviewed`. The
 [Wave R3 minimum-reliability record](../evals/research-wave-r3-minimal-reliability-v0.1.json)
 binds its three exact packages, 60/60 retained checks run twice, the then-current 62 canonical
 routes, six independent holdout routes, and its then-current package reviews.
@@ -28,15 +29,17 @@ A later bounded synthetic macOS ARM64 canary ran the exact alignment executor
 twice with real minimap2 2.31-r1302 and passed deterministic output and
 no-overwrite checks. That narrow integration evidence is not formal agent
 runtime evaluation, representative scientific validation, or a reason to
-change assurance. As with Wave R2, this permits supervised research use but not
-direct promotion into v0.7.0.
+change assurance. The v0.8.0 release record binds the final package and
+registry bytes; the canary remains point-in-time evidence.
 
-Wave R4 has passed its research-branch minimum gate. Its retained runner passed
+Wave R4 passed its research-branch minimum gate and entered the v0.8.0 Beta as
+`preview + reviewed`. Its retained runner passed
 twice with 192/192 checks across six final packages, and a 12-prompt independent
 contract-routing diagnostic produced six intended selections and six correct
 no-Skill boundaries with no forbidden selection or unnecessary question. This
 remains small-data `preview + reviewed` evidence, not formal scientific or
-model-runtime evaluation, and does not authorize direct promotion into v0.7.0.
+model-runtime evaluation. The v0.8.0 release record binds its final package and
+registry bytes.
 Its exact-ID network boundary also has one retained bounded anonymous
 [ClinVar canary](../evals/research-wave-r4-clinvar-canary-v0.1.json); that
 point-in-time provider check does not establish availability or clinical validity.
@@ -44,7 +47,7 @@ The final cross-wave publisher seal review closed all P0/P1 findings and retaine
 one accepted, non-blocking P2 for the explicitly documented low-level local-directory
 concurrency and exceptional temporary-file cleanup boundary.
 
-Every candidate remains on `research` until the applicable minimum gates for
+Every future candidate remains on `research` until the applicable minimum gates for
 the target release level pass. For the current target, that level is the same
 `preview + reviewed` Beta assurance used on `main`; it is not `evaluated`,
 `stable`, a universal scientific-validity claim, or a better-than-baseline
@@ -90,10 +93,14 @@ exceptional failure before a newly created temporary file's identity can be
 captured may also leave that randomly named, mode-0600 temporary file for
 manual cleanup; it must never be treated as a completed result.
 
-For a networked candidate, same-level Beta promotion also requires an
+For a networked candidate, same-level Beta promotion normally also requires an
 allowlisted read-only provider, reviewed request/page/byte/rate bounds, redirect
 and secret rejection in the shared connector, a retained offline valid/empty/
 malformed response replay, and one successful bounded anonymous public canary.
+The v0.8.0 release records an explicit waiver instead of rerunning the ClinVar
+canary: its prior canary is point-in-time only, while the exact release parser,
+connector, and package bytes are covered by retained offline checks. This does
+not establish current provider availability.
 
 ## Trust and review gates
 
@@ -134,9 +141,9 @@ is never rewritten.
 
 ## Wave R1 candidate-specific gates
 
-The status below is limited to the minimum same-level Beta checks. Each
-candidate still needs final exact-byte digest/registry binding and the final
-no-P0/P1 review before promotion.
+The status below records the minimum same-level Beta checks used before Wave R1
+entered v0.7.0. Its final exact-byte digest/registry binding and no-P0/P1 review
+were completed by that atomic release.
 
 ### `missing-data-and-sensitivity-analysis`
 

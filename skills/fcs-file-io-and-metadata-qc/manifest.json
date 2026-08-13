@@ -1,14 +1,14 @@
 {
   "schema_version": "0.2.0",
   "name": "fcs-file-io-and-metadata-qc",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D08",
   "cluster_id": "C24",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-12",
+  "updated_at": "2026-08-13",
   "last_freshness_check": "2026-08-10",
   "review_cadence": "quarterly",
   "status": "active",
@@ -84,8 +84,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.6.0",
-    "boundary": "Restore package version 0.6.0 and its matching registry entry."
+    "previous_version": "0.7.0",
+    "boundary": "Restore package version 0.7.0 and its matching registry entry."
   },
   "network_mode": "none",
   "local_adapters": [

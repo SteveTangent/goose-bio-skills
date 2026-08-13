@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Any
 
 
-VERSION = "0.7.0"
+VERSION = "0.8.0"
 MAX_INPUT_BYTES = 16 * 1024 * 1024
 MAX_ROWS = 100_000
 

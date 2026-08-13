@@ -10,15 +10,15 @@
       "chromatin-peak-set-qc",
       "protein-level-differential-abundance"
     ],
-    "collection_version": "0.7.0",
+    "collection_version": "0.8.0",
     "small_synthetic_data_only": true,
     "offline": true,
     "network_performed": false,
     "minimum_reliability_pass": true,
     "formal_scientific_evaluation": false,
-    "main_promotion_authorized": false,
+    "main_promotion_authorized": true,
     "research_commit_authorized": true,
-    "claim": "The three Wave R2 candidates passed a retained minimum local reliability and routing check on research. This is not representative scientific evaluation or a main release."
+    "claim": "The Wave R2 packages passed retained minimum local reliability and routing checks and are bound to the exact v0.8.0 preview + reviewed release candidate. This is not representative scientific evaluation."
   },
   "retained_replay": {
     "command": "python3 scripts/run_wave_r2_minimal_reliability.py",
@@ -29,12 +29,12 @@
       "pass"
     ],
     "repeat_events_identical": true,
-    "fixture_sha256": "86191d99230a7fd6ce06f5f897f00e037da67117b31e82f59702c3f832a3c85a",
-    "runner_sha256": "f189240203b6919017ae1ec4d8f7927f76a30d0e35e67ecef54326e529a6af5c",
+    "fixture_sha256": "5236ed436fcb83aba2729a4402e24305e0011dcaccd9000be7b8a3deb3a44e1c",
+    "runner_sha256": "b58abdd1c37bc8540e711947d8cf0b456bbbf29efda676ac6ed67a1c84e361e5",
     "output_sha256": {
-      "amplicon-feature-table-and-taxonomy-qc": "bea0919a0b357ef77f562ca521bbf5e22566814e506885ce8cd5efc4c6a914af",
-      "chromatin-peak-set-qc": "a50203c6ed44fcfecdb42302224c8f0587720c24243a6172eb88c688ba8abc41",
-      "protein-level-differential-abundance": "1da900d6cf6a383d08163aa2e51be3b2749713bc842e8bb04946e7fa0335073b"
+      "amplicon-feature-table-and-taxonomy-qc": "9e8fa8ac8dcffa0b5d04dbce6d3cab1e13465c1e15a86740b87b63d15ac8f108",
+      "chromatin-peak-set-qc": "212cfd621d37c9097b40026d608e7a23a27db99936ad8c3df3d4ec55e78cb308",
+      "protein-level-differential-abundance": "2d13ef4aa7b483a28a47d11239ac9fc04ca31959e9f44009a964f7258655ad69"
     },
     "coverage": [
       "package digest binding",
@@ -49,20 +49,20 @@
   },
   "package_bindings": {
     "amplicon-feature-table-and-taxonomy-qc": {
-      "package_digest": "4f5b4e33cd202b89216d49f3420c008e413c42ae3671e23db1d36bea5cc69926",
-      "script_sha256": "ad57da6e1090fd2aa0a2c5f703b3aba84fa0d24d4733ff9062892437ae844bf2",
+      "package_digest": "b7a72844f54c88e5a61113f5b412b7cf2f7ac01e832dac17acc8e08ce6181bbc",
+      "script_sha256": "898bf3e940af485215b9eba1a94a66a5679c9b97f82882a3c680897d1ff5769e",
       "self_test_checks": 21,
       "self_test_status": "pass"
     },
     "chromatin-peak-set-qc": {
-      "package_digest": "e92780189c353ab9227e5208b75af8356e67fe8b8a8cacd8a42e6d2da8a5aa48",
-      "script_sha256": "99f1313630ace193c93ed777956e3bdfebec9e9b394b9fb45834106c9efdd68f",
+      "package_digest": "b9cdd2967ce8517508b4c38f7a48866dee489605c4ed7e36fe4d896407de9869",
+      "script_sha256": "07be63b794cb2ee804a7b2a0ae5b1299017731ccd6dbfa89a768db00285183ee",
       "self_test_checks": 27,
       "self_test_status": "pass"
     },
     "protein-level-differential-abundance": {
-      "package_digest": "7e92fc70d45fd126030a3efc423c473d7983a1d1d75835cc0f207115572d4614",
-      "script_sha256": "262e5306fcf87a0e74eb9562b031da513fc10121231b0f6ebb2ff0868268835e",
+      "package_digest": "e18e86dfb0dcf2bcb1edd802b0058d4d073f805af6cea282b9e81746e02871ec",
+      "script_sha256": "c577cca755bf05faf3cc709bbde3e65d0df4f6bb361e981bb6b26b84c7eb21aa",
       "self_test_checks": 23,
       "self_test_status": "pass",
       "runtime": [
@@ -123,14 +123,14 @@
     "validator_self_test": {
       "status": "pass",
       "checks": 25,
-      "validator": "1.1.0"
+      "validator": "1.2.0"
     },
     "connector_self_test": {
       "status": "pass",
       "checks": 21,
       "network_performed": false,
-      "version": "0.7.0",
-      "script_sha256": "060f3bf2c16fe89f574ff113c1293d86ea495b73d56189d43c7c5722b9f44232"
+      "version": "0.8.0",
+      "script_sha256": "51a37ec217a2426e87549b5e6ebf40fb46ef76cd7b3f300a02658bd610b89d95"
     },
     "skill_creator_quick_validate": {
       "packages_checked": 3,
@@ -143,14 +143,14 @@
     "git_diff_check": "pass"
   },
   "control_hashes": {
-    "registry.json": "0708d578d455b137330771a5213ecc3df7011dd8467a8c8fd8ac0b0ebbe77f94",
-    "scripts/validate_skeleton.py": "311b4376d96b76c82cd2c1b34db7e101701b05988db9c043fdaddd577b6adb68",
-    "docs/architecture.md": "8a05486b42e7d93a623bf91543c4fbb8a477b97968970741196b36d2cd7eb903",
-    "docs/catalog.md": "6746152e900dee67df0f5bd1e90d834d086767185be09f59cd21b09f2934e778",
-    "docs/research-wave-r2-candidates.md": "ba1b4b3816eca64187ce97ec7a8c87948b476953d03e939fe95d4b52eb90806e",
-    "docs/research-skill-promotion-gates.md": "66ee5d916f6c7e4c5a45fcc8709ec1d31065fdcd63b0165973362b6e83300776",
-    "README.md": "02eaf22d91fd9ae89b5bec6255e153405f1f10169c04bd4b794e54e122b394d7",
-    "skills/README.md": "830dbbff07ef9235cff924cd8503deaa92a13556eabf18a979fde90e74fa352f"
+    "registry.json": "3c0eff32e8ac7e471a5bd33cc0f602f738d6cd2a0cdb4c4a2b03e1c98d80ce8e",
+    "scripts/validate_skeleton.py": "d0a56be0296dfe6f7e0931e74bf75be2ef0dcfbdcfe1bf1272f5448f7ed1d847",
+    "docs/architecture.md": "195e0e7b3b40b386d473b296508157f99da5f5a04359e39da726592b9dae0430",
+    "docs/catalog.md": "e23d293e2510c4af59c71f185a9b40fb3248505b284fb440806f0b36d80df1c0",
+    "docs/research-wave-r2-candidates.md": "5b79d7a84b6ca8d3a108accf092811857e2acd8a1756b0a79ab926081cddd44f",
+    "docs/research-skill-promotion-gates.md": "abe5472a7ef0f02420f4929f9085304a84a415fb06d3529fbba1b55bb6223819",
+    "README.md": "17551f88bce160df011f14ebefdb65fd78f7c1a64f7bf4e6257951b95a7646d2",
+    "skills/README.md": "a2fb8de79a710b3d5dd90af007cc3601defb8b361b052e05c47e757da4d8ff4c"
   },
   "review": {
     "status": "passed",
@@ -171,14 +171,12 @@
     "named external domain-method or human-expert review",
     "scientific benchmark or baseline comparison",
     "cross-study or cross-platform generalization",
-    "Windows publication and symlink behavior",
-    "atomic next-version release preparation and final-byte rerun"
+    "Windows publication and symlink behavior"
   ],
   "claims_not_made": [
     "scientific superiority",
     "clinical validity",
     "universal correctness",
-    "performance or availability guarantee",
-    "main Beta membership"
+    "performance or availability guarantee"
   ]
 }

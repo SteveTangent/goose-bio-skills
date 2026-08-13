@@ -3,7 +3,7 @@ name: taxonomy-name-and-taxid-resolution
 description: "Resolve small sets of taxon names or NCBI TaxIds into current NCBI names, classified aliases, ranks, lineages, and merged or secondary IDs with provenance. Exclude gene mapping, descendants, taxdump, phylogeny, and clinical use."
 license: Apache-2.0
 metadata:
-  version: "0.7.0"
+  version: "0.8.0"
 ---
 
 # Taxonomy Name and TaxId Resolution
