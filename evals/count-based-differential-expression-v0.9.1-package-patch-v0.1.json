@@ -1,0 +1,111 @@
+{
+  "schema_version": "0.1.0",
+  "record_kind": "reviewed-package-freshness-patch",
+  "recorded_at": "2026-08-13",
+  "status": "passed-package-patch-gates-and-final-record-review",
+  "collection": {
+    "version": "0.9.0",
+    "package_count": 48,
+    "collection_tag_rewritten": false
+  },
+  "package": {
+    "name": "count-based-differential-expression",
+    "version": "0.9.1",
+    "previous_version": "0.9.0",
+    "package_digest": "a14424309ba81399228bff1333dc39981cdf961c2960db4eeec27f8646376bd4",
+    "candidate_commit": "1157d404338d61896bf8c8779e0b0c3425f4c492",
+    "release_stage": "preview",
+    "assurance_level": "reviewed",
+    "formal_scientific_evaluation": false,
+    "clinical_use": "prohibited"
+  },
+  "change": {
+    "kind": "tool-version-and-api-name-freshness-only",
+    "bioconductor": "3.23",
+    "r": "4.6",
+    "edger_previous_declaration": "4.10.1",
+    "edger_current_declaration": "4.10.3",
+    "current_api_name": "normLibSizes",
+    "legacy_alias": "calcNormFactors",
+    "behavior_code_changed": false,
+    "interface_changed": false,
+    "new_gate_added": false,
+    "other_packages_changed": 0
+  },
+  "governance": {
+    "owner": "project-owner",
+    "review_cadence": "quarterly package freshness and after any package-byte change",
+    "fixture_kind": "file-backed fixture",
+    "input_files": [
+      {
+        "repository": "02-bio-skills",
+        "path": "skills/count-based-differential-expression/manifest.json",
+        "sha256": "52b7f7433d7d7394e886492310f80ebb6c72d7c59cfbd85852ef3356426b96fd"
+      },
+      {
+        "repository": "02-bio-skills",
+        "path": "skills/count-based-differential-expression/references/runtime-boundaries.md",
+        "sha256": "476c46b6a3999c1b91a8506323121ad1c30ac88f6994621738b853487052e708"
+      },
+      {
+        "repository": "skill-research",
+        "commit": "bab53be60d5cdb2d4f12f9859a474433b65a5c12",
+        "path": "reports/bio02-priority-three-technical-evaluation-v0.2.json",
+        "sha256": "c0ee1267af7db502cc8523fdb4f7b99341e09070fcae270df60333a82f6ba66b"
+      },
+      {
+        "repository": "skill-research",
+        "commit": "bab53be60d5cdb2d4f12f9859a474433b65a5c12",
+        "path": "reports/bio02-priority-three-output-quality-scorecard-v0.2.md",
+        "sha256": "c3150ca8862da70f35d8b479353bb7b81cabe89509925471fe365c71d7300e6b"
+      }
+    ],
+    "output_contract": "One reviewed package version and matching generated registry entry update the declared edgeR interface without changing behavior code, collection identity, lifecycle assurance, or historical evidence.",
+    "rollback_boundary": "Restore the exact count-based-differential-expression 0.9.0 package and matching registry entry. Do not rewrite the v0.9.0 collection tag or append-only research evidence.",
+    "trust_report": "The exact 0.9.1 package and generated registry binding passed the full current 48-package release gate. The external technical record observed edgeR 4.10.3 and semantic identity between the legacy normalization alias and current API name. This is freshness evidence, not package runtime, representative-data, expert, clinical, or formal scientific evaluation."
+  },
+  "bindings": {
+    "registry_sha256": "b6f7d1cb7ef9e6efee00875cdf8b0e8a920ae567d5a76d2b44a4d1a5cbfa8c2c",
+    "skill_sha256": "afbcd44f501e209b24fa9147ffe8d43bffe147105d27324bdfd31e9b3903997c",
+    "manifest_sha256": "52b7f7433d7d7394e886492310f80ebb6c72d7c59cfbd85852ef3356426b96fd",
+    "runtime_boundaries_sha256": "476c46b6a3999c1b91a8506323121ad1c30ac88f6994621738b853487052e708",
+    "catalog_sha256": "fd4f7dcaa13415a7c725dae05bdfb03d6573d4fbf3476b7d73fc4c77cd1c5922",
+    "verify_runner_sha256": "3d9f4d66568038c1fb022ab18b674a750e698605a3a1e0ab119f73932962cbd0",
+    "registry_renderer_sha256": "fada16285678f25913ff5157005aea1a1639f19dd859fdc912c13cd2eb882f8c"
+  },
+  "verification": {
+    "status": "pass",
+    "full_release_gate_checks": 10,
+    "release_gate_stdout_sha256": "80fe6bd6f38b2ce7991c2c33f9a0102541256adfe839646ac8965a8b3b83c909",
+    "registry_package_count": 48,
+    "retained_runners": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5"
+    ],
+    "retained_runners_replayed_twice": true,
+    "retained_runner_outputs_byte_identical": true,
+    "network_performed": false,
+    "strict_json": "pass",
+    "diff_check": "pass",
+    "codegraph_status": "up-to-date"
+  },
+  "review": {
+    "status": "passed",
+    "reviewer_task": "review_de_patch_record",
+    "p0": 0,
+    "p1": 0,
+    "p2": 0,
+    "notes": "Independent final record and exact-binding review ACCEPT. Package 0.9.1 remains preview + reviewed inside collection 0.9.0; the v0.9.0 collection tag is not rewritten and no package tag is required."
+  },
+  "missing_evidence": [
+    "formal exact-package agent or model runtime evaluation",
+    "named domain-method or human-expert review",
+    "representative or large research datasets",
+    "cross-platform replay",
+    "scientific benchmark or source-repository superiority comparison",
+    "clinical validity"
+  ]
+}
