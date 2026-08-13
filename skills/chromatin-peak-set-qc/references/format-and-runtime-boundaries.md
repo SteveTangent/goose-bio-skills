@@ -1,6 +1,6 @@
 # Format and runtime boundaries
 
-This reference defines `chromatin-peak-set-qc` version `0.8.0`. The bundled
+This reference defines `chromatin-peak-set-qc` version `0.9.0`. The bundled
 helper is an original, dependency-free implementation.
 
 ## Exact input contract

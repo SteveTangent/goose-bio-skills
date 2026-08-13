@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any, BinaryIO, Iterator
 
 
-VERSION = "0.8.0"
+VERSION = "0.9.0"
 EXPECTED_MINIMAP2_VERSION = "2.31-r1302"
 MAX_REFERENCE_BYTES = 16 * 1024 * 1024
 MAX_READS_BYTES = 16 * 1024 * 1024

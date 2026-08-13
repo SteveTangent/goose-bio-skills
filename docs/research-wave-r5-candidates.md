@@ -1,8 +1,9 @@
 # Research Wave R5 candidate shortlist
 
-Status: implemented on `research` as four `preview + reviewed` packages; not
-promoted to `main`. The four packages retain the same small-data, local-only
-research boundary.
+Status: promoted together into the v0.9.0 `main` Beta as four
+`preview + reviewed` packages. The packages retain the same small-data,
+local-only reliability boundary; promotion does not make them evaluated or
+stable.
 
 ## Implemented first four
 
@@ -30,14 +31,15 @@ the transformation candidate proves the flow-table handoff. It would apply one
 explicit two-channel rectangle with declared inclusive/exclusive boundaries;
 it must not discover gates, build hierarchies, transform data, or label cells.
 
-## Minimum admission gate
+## Minimum admission gate (passed)
 
 Each implemented candidate needs one exact small positive fixture, one invalid
 or fail-closed fixture, deterministic repeated output, create-new/no-overwrite
 checks, one positive plus one near-neighbor routing prompt, package digest
-binding, and independent review with no open P0 or P1. These checks support
-research use only; formal runtime evaluation, representative benchmarking,
-expert review, clinical use, and superiority claims remain outside scope.
+binding, and independent review with no open P0 or P1. These checks support the
+narrow Beta boundary only; formal runtime evaluation, representative
+benchmarking, expert review, clinical use, and superiority claims remain
+outside scope.
 
 The four package self-tests pass with 39, 46, 48, and 32 checks respectively.
 The retained Wave R5 runner binds exact packages, inputs, outputs, semantic

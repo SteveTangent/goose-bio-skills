@@ -1,7 +1,7 @@
 {
   "schema_version": "0.2.0",
   "name": "public-orthology-retrieval-and-qc",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D02",
@@ -54,7 +54,7 @@
     "tool_versions": [
       "Ensembl REST API 15.12 documentation checked 2026-08-12",
       "Ensembl release 116 citation guidance checked 2026-08-12",
-      "Bio 02 shared public connector 0.8.0 orthology request contract"
+      "Bio 02 shared public connector 0.9.0 orthology request contract"
     ],
     "unverified_boundaries": [
       "The retained offline small fixture covers one exact request, one one-to-one response, one empty result, one malformed response, deterministic payload bytes, provenance binding, and no-overwrite behavior through the shared connector; end-to-end agent normalization, cardinality accounting, confidence-field preservation, and release-context capture remain unevaluated.",
@@ -70,12 +70,12 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.7.0",
-    "boundary": "Restore package version 0.7.0 and its matching registry entry."
+    "previous_version": "0.8.0",
+    "boundary": "Restore package version 0.8.0 and its matching registry entry."
   },
   "network_mode": "required",
   "local_adapters": [
-    "Bio 02 shared public connector 0.8.0"
+    "Bio 02 shared public connector 0.9.0"
   ],
   "external_services": [
     "ensembl-rest"

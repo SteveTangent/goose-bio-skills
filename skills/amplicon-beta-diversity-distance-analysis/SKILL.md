@@ -3,7 +3,7 @@ name: amplicon-beta-diversity-distance-analysis
 description: "Use for bounded, offline pairwise beta-diversity distances from a local TSV containing exact amplicon feature rows, sample columns, and nonnegative integer counts. Calculate Bray-Curtis dissimilarity and presence/absence Jaccard distance for each stably sorted upper-triangle sample pair; return structured not-estimable metrics for every pair involving a zero-depth sample. Exclude FASTQ processing, denoising, rarefaction, normalization, ordination, PERMANOVA or other group comparison, differential abundance, taxonomy, pathogen decisions, and biological or clinical interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.8.0"
+  version: "0.9.0"
 ---
 
 # Amplicon Beta-Diversity Distance Analysis
@@ -21,9 +21,10 @@ biological, or clinical decision.
 
 ## Inputs and intake
 
-Require one UTF-8 TSV and one new JSON output path. The first header must be
-`feature_id`; rows are unique features and every remaining header is a unique
-sample ID containing nonnegative integer counts. Require at least two samples.
+Require one UTF-8 TSV and one new JSON output path, both resolving below the
+current working directory. The first header must be `feature_id`; rows are
+unique features and every remaining header is a unique sample ID containing
+nonnegative integer counts. Require at least two samples.
 
 Inspect safe facts first. Ask one unresolved question with a recommendation,
 then wait:

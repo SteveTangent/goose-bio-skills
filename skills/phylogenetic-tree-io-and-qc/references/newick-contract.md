@@ -1,6 +1,6 @@
 # Newick and runtime contract
 
-This reference defines `phylogenetic-tree-io-and-qc` version `0.8.0`. The
+This reference defines `phylogenetic-tree-io-and-qc` version `0.9.0`. The
 bundled helper is an original, dependency-free implementation for a deliberately
 small Newick subset.
 

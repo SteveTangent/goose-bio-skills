@@ -29,7 +29,7 @@ from decimal import (
 from pathlib import Path
 from typing import Any
 
-VERSION = "0.8.0"
+VERSION = "0.9.0"
 MAX_BYTES = 16 * 1024 * 1024
 MAX_CHANNELS = 64
 MAX_EVENTS = 100_000

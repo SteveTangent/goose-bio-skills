@@ -11,7 +11,7 @@
     "purpose": "Replay bounded valid, invalid, deterministic, create-new, package-binding, and unavailable-tool checks for the three Wave R3 candidates; real-tool canary evidence is recorded separately."
   },
   "tree_qc": {
-    "package_digest": "f855c02038ac4da8222aea6154bcf0d1a096a10260086f00455208c28af7aaf6",
+    "package_digest": "2b87ac4584345506235a7346678d9b8626f6353fcba758421a4146bbeb5649f2",
     "self_test_checks": 30,
     "tree": {
       "filename": "tiny-tree.nwk",
@@ -34,11 +34,11 @@
       "internal_node_count": 2,
       "polytomy_count": 1,
       "tip_set_status": "exact-tip-set-match",
-      "output_sha256": "81f11540ec42df8fd980e9e63f265ac5d585f239f87fa3f5047bd890fe96e400"
+      "output_sha256": "a1d396c73d0fea629964ad85bc93625ac352401a95c1447ba89e96d55c69f2d3"
     }
   },
   "metabolomics_qc": {
-    "package_digest": "2619299ea83dae4826ddc07d98f0d0db5da89e0a305779e557ceee592fb6e0ec",
+    "package_digest": "614164bfcfef5173d8cc76f24a3d33200684671cf3cc263691861b2ce8491b23",
     "self_test_checks": 41,
     "arguments": {
       "intensity_semantics": "raw-peak-area",
@@ -67,11 +67,11 @@
       "s2_detected_feature_count": 2,
       "s2_total_missing_feature_count": 3,
       "f2_pooled_qc_rsd_percent": 47.14045207910317,
-      "output_sha256": "2885537e0a2d7b9c8296093f86b9e2ec140cca34f4556ee955cdf63090e31b52"
+      "output_sha256": "63898c890543518d4d1ff074a9e1ff695cdc1bd93a1e88c5720a974be403bc2a"
     }
   },
   "read_alignment": {
-    "package_digest": "a7a51759279600aee88e54d0c976e974496de98633f589ccf336c1666ae7de77",
+    "package_digest": "c525561a1821b21117143070cd99ede2648a03b966d429d6f8db2c563b175bc5",
     "self_test_checks": 46,
     "real_minimap2_runtime_in_this_offline_replay": "not-evaluated",
     "external_synthetic_canary_status": "passed",

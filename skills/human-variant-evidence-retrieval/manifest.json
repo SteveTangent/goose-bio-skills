@@ -1,7 +1,7 @@
 {
   "schema_version": "0.2.0",
   "name": "human-variant-evidence-retrieval",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D13",
@@ -62,7 +62,7 @@
     "reason": "The bundled deterministic official-shape response normalizer self-test and one bounded public record retrieved through both exact identifier forms were used as developer canaries. These are helper diagnostics, not formal exact-package agent runtime evaluation, complete live-provider validation, representative scientific evaluation, generalization evidence, or human-expert review.",
     "tool_versions": [
       "NCBI ClinVar rolling VCV XML and E-utilities guidance checked 2026-08-13",
-      "Bio 02 shared public connector 0.8.0 contract"
+      "Bio 02 shared public connector 0.9.0 contract"
     ],
     "unverified_boundaries": [
       "Agent routing, interactive identifier clarification, and end-to-end output review have not been runtime-evaluated.",
@@ -79,13 +79,13 @@
     ]
   },
   "rollback": {
-    "previous_version": null,
-    "boundary": "Remove this first-release package and its matching registry entry."
+    "previous_version": "0.8.0",
+    "boundary": "Restore package version 0.8.0 and its matching registry entry."
   },
   "network_mode": "optional",
   "local_adapters": [
     "Python 3.10+ standard library",
-    "Bio 02 shared public connector 0.8.0"
+    "Bio 02 shared public connector 0.9.0"
   ],
   "external_services": [
     "ncbi-eutils"

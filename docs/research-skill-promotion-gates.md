@@ -10,7 +10,7 @@ completed research package and evidence remain recorded in
 [research-wave-r2-candidates.md](research-wave-r2-candidates.md).
 Wave R4's six one-job candidates and their exact small-data gates are recorded
 in [research-wave-r4-candidates.md](research-wave-r4-candidates.md).
-The implemented, research-only Wave R5 shortlist is recorded in
+The implemented Wave R5 shortlist and its v0.9.0 admission boundary are recorded in
 [research-wave-r5-candidates.md](research-wave-r5-candidates.md).
 
 Wave R2 passed its research-branch minimum implementation gate and entered the
@@ -47,19 +47,19 @@ The final cross-wave publisher seal review closed all P0/P1 findings and retaine
 one accepted, non-blocking P2 for the explicitly documented low-level local-directory
 concurrency and exceptional temporary-file cleanup boundary.
 
-Wave R5 is implemented on `research` only and has not been promoted to `main`.
-Its retained small-data runner covers four package self-tests, exact
+Wave R5 passed its same-level minimum gate and entered the v0.9.0 Beta as
+`preview + reviewed`. Its retained small-data runner covers four package self-tests, exact
 package/input/output hashes, two valid runs with byte-identical outputs and
 event lines, bounded semantic oracles, invalid/no-output boundaries, and
 create-new/no-overwrite behavior. The independent first routing pass chose the
 intended Skill or no-Skill boundary in 8/8 cases with zero forbidden selection
 and action-compatible handling in 8/8. It asked two conservative questions
 where the fixed oracle expected none, so exact question-count agreement is
-6/8. This is retained as a research diagnostic rather than rewritten into a
-pass. Wave R5 remains `preview + reviewed`; formal evaluation and `main`
-promotion are false.
+6/8. This is retained as a diagnostic rather than rewritten into a pass.
+Promotion does not establish formal evaluation, representative scientific
+validity, expert review, or evaluated/stable assurance.
 
-## Wave R5 research-only gates
+## Wave R5 admission gates for v0.9.0
 
 - `bulk-rnaseq-gene-count-matrix-assembly`: accept at least two completed
   schema-1.0 single-sample count reports only when GTF digest, every gene tuple,
@@ -77,8 +77,9 @@ promotion are false.
   channel cofactors to an extracted event table, preserving unselected tokens;
   never parse FCS, compensate, choose cofactors, gate, label, or interpret.
 
-All four candidates are local/network-free, first-release packages with
-remove-package rollback, and remain outside the 44-package v0.8.0 `main` Beta.
+All four packages are local/network-free first public releases with
+remove-package rollback. They remained outside the 44-package v0.8.0 Beta and
+entered together in the 48-package v0.9.0 Beta.
 
 Every future candidate remains on `research` until the applicable minimum gates for
 the target release level pass. For the current target, that level is the same
@@ -130,10 +131,11 @@ For a networked candidate, same-level Beta promotion normally also requires an
 allowlisted read-only provider, reviewed request/page/byte/rate bounds, redirect
 and secret rejection in the shared connector, a retained offline valid/empty/
 malformed response replay, and one successful bounded anonymous public canary.
-The v0.8.0 release records an explicit waiver instead of rerunning the ClinVar
-canary: its prior canary is point-in-time only, while the exact release parser,
-connector, and package bytes are covered by retained offline checks. This does
-not establish current provider availability.
+The v0.9.0 release retains an explicit waiver instead of rerunning the ClinVar
+or minimap2 canaries: their prior results are point-in-time only, while the
+exact release parser, connector, runner, and package bytes are covered by
+retained offline checks. This does not establish current provider or tool
+availability.
 
 ## Trust and review gates
 

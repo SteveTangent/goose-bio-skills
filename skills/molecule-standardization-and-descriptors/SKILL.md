@@ -3,7 +3,7 @@ name: molecule-standardization-and-descriptors
 description: "A user needs to clean SMILES/SDF records, normalize structures or compute declared molecular descriptors. Exclude: similarity search; QSAR training; claiming biological mechanism from descriptors."
 license: Apache-2.0
 metadata:
-  version: "0.8.0"
+  version: "0.9.0"
 ---
 
 # Molecule Standardization and Descriptors

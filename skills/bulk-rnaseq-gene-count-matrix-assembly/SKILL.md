@@ -3,7 +3,7 @@ name: bulk-rnaseq-gene-count-matrix-assembly
 description: "Use to assemble at least two completed schema-1.0 single-sample gene-count JSON reports from bulk-rnaseq-gene-counting-from-alignment into one deterministic gene-by-sample raw-count JSON matrix. Require exact agreement on the GTF SHA-256, every gene's gene_id/contig/strand/exon_count tuple, and the full assignment contract; sort samples and genes and fail closed on duplicate keys, duplicate samples, mismatches, or invalid counts. Exclude SAM/BAM/CRAM counting, annotation repair or gene completion, filtering, normalization, transformation, batch correction, differential expression, and biological or clinical interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.8.0"
+  version: "0.9.0"
 ---
 
 # Bulk RNA-seq Gene-count Matrix Assembly

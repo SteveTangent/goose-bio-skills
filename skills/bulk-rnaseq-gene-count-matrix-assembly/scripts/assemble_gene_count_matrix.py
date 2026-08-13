@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 
-VERSION = "0.8.0"
+VERSION = "0.9.0"
 MAX_INPUT_BYTES = 64 * 1024 * 1024
 MIN_SAMPLES = 2
 MAX_SAMPLES = 128
@@ -550,7 +550,7 @@ def self_test() -> None:
 
     def fixture(sample_id: str, g_a: Any, g_b: Any) -> dict[str, Any]:
         return {
-            "adapter": {"name": "count_gene_alignments", "version": "0.8.0"},
+            "adapter": {"name": "count_gene_alignments", "version": "0.9.0"},
             "analysis_performed": True,
             "assignment_contract": deepcopy(contract),
             "counts": [

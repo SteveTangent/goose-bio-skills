@@ -22,7 +22,7 @@ from typing import Any, BinaryIO, Iterator
 from urllib.parse import unquote
 
 
-VERSION = "0.8.0"
+VERSION = "0.9.0"
 MIB = 1024 * 1024
 MAX_ANNOTATION_BYTES = 64 * MIB
 MAX_CONTIG_SIZE_BYTES = 8 * MIB

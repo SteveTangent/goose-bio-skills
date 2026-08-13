@@ -1,7 +1,7 @@
 # Runtime and scientific boundaries
 
 This reference defines the operating boundary for
-`scientific-file-preflight-and-resource-planning` version `0.8.0`.
+`scientific-file-preflight-and-resource-planning` version `0.9.0`.
 
 ## Scientific contract
 

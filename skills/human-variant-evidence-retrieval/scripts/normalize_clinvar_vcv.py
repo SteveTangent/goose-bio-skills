@@ -21,7 +21,7 @@ from typing import Any
 from urllib.parse import parse_qsl, urlsplit
 
 
-VERSION = "0.8.0"
+VERSION = "0.9.0"
 MAX_IDENTIFIERS = 5
 MAX_PAYLOAD_BYTES = 16 * 1024 * 1024
 MAX_TOTAL_INPUT_BYTES = 32 * 1024 * 1024

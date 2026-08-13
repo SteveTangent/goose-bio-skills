@@ -1,7 +1,7 @@
 # Format and runtime boundaries
 
 This reference defines `untargeted-metabolomics-feature-table-qc` version
-`0.8.0`. The bundled helper is an original, dependency-free implementation.
+`0.9.0`. The bundled helper is an original, dependency-free implementation.
 
 ## Exact input contract
 

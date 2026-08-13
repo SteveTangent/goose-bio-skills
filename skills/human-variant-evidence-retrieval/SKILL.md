@@ -3,7 +3,7 @@ name: human-variant-evidence-retrieval
 description: "Use for bounded retrieval and provenance-bound normalization of public ClinVar evidence for one to five exact numeric Variation IDs or VCV accessions. Preserve VCV and SCV identities, provider classifications, review status, conditions, dates, submitters, aggregate records, missing results, and conflicts without resolving them. Exclude free-text variant search or resolution, Allele IDs, RCV- or SCV-led retrieval, VCF processing, variant calling, ACMG classification, evidence scoring, diagnosis, treatment, and clinical recommendations."
 license: Apache-2.0
 metadata:
-  version: "0.8.0"
+  version: "0.9.0"
 ---
 
 # Human Variant Evidence Retrieval

@@ -1,7 +1,7 @@
 {
   "schema_version": "0.2.0",
   "name": "public-sequencing-run-manifest-retrieval",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D01",
@@ -61,7 +61,7 @@
     "tool_versions": [
       "ENA Portal API rolling filereport and returnFields interfaces checked 2026-08-10",
       "NCBI SRA public metadata model checked 2026-08-10",
-      "Bio 02 shared public connector 0.8.0 contract"
+      "Bio 02 shared public connector 0.9.0 contract"
     ],
     "unverified_boundaries": [
       "Exact-package accession validation, connector routing, TSV header parsing, and semicolon-delimited file-field alignment have not been runtime-evaluated.",
@@ -76,12 +76,12 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.7.0",
-    "boundary": "Restore package version 0.7.0 and its matching registry entry."
+    "previous_version": "0.8.0",
+    "boundary": "Restore package version 0.8.0 and its matching registry entry."
   },
   "network_mode": "required",
   "local_adapters": [
-    "Bio 02 shared public connector 0.8.0"
+    "Bio 02 shared public connector 0.9.0"
   ],
   "external_services": [
     "ena-portal-api"

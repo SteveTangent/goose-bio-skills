@@ -3,7 +3,7 @@ name: scientific-file-preflight-and-resource-planning
 description: "Use for a bounded, read-only preflight of explicitly named local scientific files before a workflow starts. Estimate container clues, index presence, and conservative resource floors. Exclude full validation, recursion, decompression, repair, conversion, execution, and biological interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.8.0"
+  version: "0.9.0"
 ---
 
 # Scientific File Preflight and Resource Planning

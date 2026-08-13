@@ -3,7 +3,7 @@ name: public-orthology-retrieval-and-qc
 description: "Retrieve Ensembl Compara orthology assertions for up to five exact public Ensembl gene stable IDs between explicit supported canonical species names: homo_sapiens, mus_musculus, rattus_norvegicus, or danio_rerio. Preserve relationship type, cardinality, confidence fields, release, and provenance. Exclude symbols, identifier resolution, similarity search, de novo inference, functional transfer, tree inference, and clinical use."
 license: Apache-2.0
 metadata:
-  version: "0.8.0"
+  version: "0.9.0"
 ---
 
 # Public Orthology Retrieval and QC

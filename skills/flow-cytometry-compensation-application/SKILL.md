@@ -3,7 +3,7 @@ name: flow-cytometry-compensation-application
 description: "Use to apply one explicitly supplied square spillover matrix to matching numeric channels in an already extracted local flow-cytometry event TSV, producing create-new compensated events and provenance. Exclude FCS parsing, estimating or choosing compensation, transformations, gating, cell labels, batch correction, QC decisions, and biological or clinical interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.8.0"
+  version: "0.9.0"
 ---
 
 # Flow Cytometry Compensation Application

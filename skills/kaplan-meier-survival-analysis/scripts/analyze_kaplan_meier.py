@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 
-VERSION = "0.8.0"
+VERSION = "0.9.0"
 MAX_INPUT_BYTES = 16 * 1024 * 1024
 MAX_SUBJECTS = 100_000
 MAX_GROUPS = 20

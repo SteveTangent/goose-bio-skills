@@ -2,7 +2,7 @@
 
 `registry.json` is the versioned index of installable packages, not a roadmap. A planned Skill appears in neither `skills/` nor the registry.
 
-Version `0.8.0` admits 44 exact packages across 13 Domains and 26 Clusters under the same atomic package-and-registry boundary.
+Version `0.9.0` admits 48 exact packages across 13 Domains and 26 Clusters under the same atomic package-and-registry boundary. Forty-four packages roll back to v0.8.0; the four first-public Wave R5 packages use remove-package rollback.
 
 ## Flow
 
@@ -47,7 +47,7 @@ Public-service declarations are package metadata. The shared companion does not
 accept identity or credential values. Any separate host adapter that uses them
 must disclose its own boundary and never bundle secrets in a package or registry.
 
-The v0.8.0 executable catalog contains reviewed public-free and
+The v0.9.0 executable catalog contains reviewed public-free and
 terms-restricted providers only. A user's explicit search or retrieval request
 authorizes the matching bounded `GET` or `HEAD` and requested download without a
 second acknowledgement. The shared companion at

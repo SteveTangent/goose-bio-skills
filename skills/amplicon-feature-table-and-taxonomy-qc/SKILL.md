@@ -3,7 +3,7 @@ name: amplicon-feature-table-and-taxonomy-qc
 description: "Use for bounded, offline structural and descriptive QC of a local TSV amplicon feature-count table in explicit feature-rows-by-sample-columns orientation, exact sample metadata, and an optional rank-column taxonomy TSV. Report joins, library sizes, zero-depth samples, sparsity, feature totals, taxonomy-rank completeness, and declared negative controls. Exclude FASTQ processing, denoising, chimera removal, taxonomy assignment, BIOM/QZA parsing, diversity, differential abundance, contamination decisions, pathogen diagnosis, and clinical interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.8.0"
+  version: "0.9.0"
 ---
 
 # Amplicon Feature-table and Taxonomy QC

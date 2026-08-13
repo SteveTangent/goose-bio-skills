@@ -3,7 +3,7 @@ name: protein-structure-retrieval-and-comparison
 description: "A user needs to retrieve known structures or compare two existing protein structures or models. Exclude: predicting a new structure; docking or molecular dynamics; equating prediction confidence with experimental resolution; structural database search beyond pairwise comparison."
 license: Apache-2.0
 metadata:
-  version: "0.8.0"
+  version: "0.9.0"
 ---
 
 # Protein Structure Retrieval and Comparison

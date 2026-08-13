@@ -3,7 +3,7 @@ name: read-alignment-selection-and-execution
 description: "Use to align one tiny local plain-FASTQ file of single-end short genomic DNA reads to one exact local plain-FASTA reference with an explicitly supplied minimap2 2.31-r1302 executable, producing a create-new SAM and provenance report with executable fingerprinting. Exclude QC, trimming, paired-end or interleaved reads, RNA/splice or long-read alignment, reference choice, sorting, indexing, BAM/CRAM operations, variant calling, quantification, batches, and overwrites."
 license: Apache-2.0
 metadata:
-  version: "0.8.0"
+  version: "0.9.0"
 ---
 
 # Read Alignment Selection and Execution

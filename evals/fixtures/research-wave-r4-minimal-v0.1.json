@@ -8,17 +8,17 @@
     "purpose": "Replay one bounded valid job, deterministic output, an invalid boundary, create-new publication, no-overwrite, self-test, and exact package binding for each Wave R4 candidate."
   },
   "bulk_gene_counting": {
-    "package_digest": "4ab65063a882c0dff564bd4f97d4593e7cb050bdfabd684c78661154736e8c75",
+    "package_digest": "8270f1f4b262c1eefa76354ace843a9a993a8680cacefbb1db4d1e99be53aebb",
     "self_test": {
       "checks": 44,
       "status": "pass",
-      "version": "0.8.0"
+      "version": "0.9.0"
     },
     "input_sha256": {
       "sam": "8e0f4c5c37c3076d9bde4043b5a66432664886ce099b3348582c2fd5b24e0872",
       "gtf": "18f8c33a3832c17664b61431f557fef0a28ceb6c0523bd476d67908fcc13b515"
     },
-    "output_sha256": "84aab285ff0f25b5f76ff617f6f75d81828734864e74271c0d578457abc228d6",
+    "output_sha256": "372433f6d4aeafeef2fdd3909ccd91fd76a70b602887226ecc580e606b0b986f",
     "sam": "@HD\tVN:1.6\tSO:coordinate\n@SQ\tSN:chr1\tLN:1000\na_unique\t0\tchr1\t105\t60\t20M\t*\t0\t0\t*\t*\tNH:i:1\na_spliced\t0\tchr1\t100\t60\t20M80N20M\t*\t0\t0\t*\t*\tNH:i:1\nb_unique\t16\tchr1\t150\t60\t20M\t*\t0\t0\t*\t*\tNH:i:1\nambiguous\t0\tchr1\t135\t60\t10M\t*\t0\t0\t*\t*\tNH:i:1\nno_feature\t0\tchr1\t400\t60\t20M\t*\t0\t0\t*\t*\nlow_mapq\t0\tchr1\t105\t10\t20M\t*\t0\t0\t*\t*\tNH:i:1\nunmapped\t4\t*\t0\t0\t*\t*\t0\t0\t*\t*\nmultimap\t0\tchr1\t205\t60\t20M\t*\t0\t0\t*\t*\tNH:i:2\n",
     "gtf": "chr1\ttest\texon\t100\t149\t.\t+\t.\tgene_id \"geneA\"; transcript_id \"txA\";\nchr1\ttest\texon\t200\t249\t.\t+\t.\tgene_id \"geneA\"; transcript_id \"txA\";\nchr1\ttest\texon\t130\t179\t.\t-\t.\tgene_id \"geneB\"; transcript_id \"txB\";\n",
     "expected": {
@@ -33,14 +33,14 @@
     }
   },
   "junction_psi": {
-    "package_digest": "bbb0b2479118140c119d117ac318766fdd23d5654e6ad0e61b70798965548d56",
+    "package_digest": "42dea44a68702006a81ec1e01082e394b68552af775efc552eb8f5023cd177af",
     "self_test": {
       "estimable_event_sample_pairs": 13,
       "event_sample_pairs": 18,
       "events": 3,
       "samples": 6,
       "status": "pass",
-      "version": "0.8.0"
+      "version": "0.9.0"
     },
     "input_sha256": {
       "counts": "986e74691d4d7855129e9b9d55ccffa160c9ff746af8391fdacc47fbfb74beca",
@@ -57,11 +57,11 @@
     }
   },
   "alpha_diversity": {
-    "package_digest": "ee9ba7e03cc0701a6ca2fb3cdcb10ea65fc96596feb832e5e8aa8ba17adfb215",
+    "package_digest": "3c1ae5a2ff5ecda417d3f3e582dd63f7bf083304ecee7649f7cefe52c4d4f19d",
     "self_test": {
       "checks": 33,
       "status": "pass",
-      "version": "0.8.0"
+      "version": "0.9.0"
     },
     "input_sha256": {
       "table": "8fedbab06ff1cfa5688d158243504e5359cc5634cefe526cc7a838b6b9ea95dd",
@@ -79,11 +79,11 @@
     }
   },
   "flow_compensation": {
-    "package_digest": "f63b941ef874b9c439cb63cb6a66503d5bdb1e412f799f304d0272d45814afbf",
+    "package_digest": "40edae7dd41fd429f07647db5a99830613f7bf2f125a3024b445e304b6655c29",
     "self_test": {
       "checks": 39,
       "status": "pass",
-      "version": "0.8.0"
+      "version": "0.9.0"
     },
     "input_sha256": {
       "events": "bf83ef0e73f89070a5b81e82ec41b5cb1be6c6863cdec98273269ed951370622",
@@ -92,7 +92,7 @@
     },
     "output_sha256": {
       "events": "2ca4ac1929693934c16c87326baefc20a50bcba0e4f277dc356f4a7f7c33a025",
-      "report": "6ff8882c5b9827123f85c117b23ff53932d4be11dfce27551d94beba1221a43d"
+      "report": "192fbe661cf3dab10d5aec934801c23274581fd6a36a0f4b94a464d6fc9ab413"
     },
     "events": "event_id\tFITC-A\tPE-A\tAPC-A\ne1\t105\t58\t25\ne2\t210\t116\t50\ne3\t0\t0\t0\ne4\t55\t107\t210\ne5\t10.5\t5.8\t2.5\n",
     "spillover": "source_channel\tFITC-A\tPE-A\tAPC-A\nFITC-A\t1\t0.1\t0\nPE-A\t0.05\t1\t0.02\nAPC-A\t0\t0.03\t1\n",
@@ -108,11 +108,11 @@
     }
   },
   "kaplan_meier": {
-    "package_digest": "cbbe9ea19b9e689dcebb3e36a6e47a8d7975b61b38c26db9161e09882a459a42",
+    "package_digest": "011fcc4bf3b9a6e6ec2d81411d9eb13a25a727c7dd5c2f227856e9996346134c",
     "self_test": {
       "checks": 28,
       "status": "pass",
-      "version": "0.8.0"
+      "version": "0.9.0"
     },
     "input_sha256": {
       "table": "532d44028479609c2888072f4dbf005cf57dfda902787f81e19fc7519c2f2fce",
@@ -131,11 +131,11 @@
     }
   },
   "clinvar_evidence": {
-    "package_digest": "7369fe6987392250fcad669938462511488bb33a57b4d88d2f8ca348b62bd854",
+    "package_digest": "9c76093b77bc97169ffb2c003129a18c1f65079d0b3be9e00a1af30c2991f4ca",
     "self_test": {
       "checks": 44,
       "status": "pass",
-      "version": "0.8.0"
+      "version": "0.9.0"
     },
     "input_sha256": {
       "payload": "42af333df0a3b2a26499bdbacbec4a7de38761666f0eb53c309db993d8ad709a",

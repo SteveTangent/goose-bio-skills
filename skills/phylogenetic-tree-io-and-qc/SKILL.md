@@ -3,7 +3,7 @@ name: phylogenetic-tree-io-and-qc
 description: "Use for bounded, offline structural QC of one local single-tree Newick file and optional exact tip-set comparison with a second Newick file. Validate parsing, unique nonempty tip labels, and finite nonnegative branch lengths; report topology shape, polytomies, and numeric internal labels without assigning support semantics. Exclude Nexus/NHX, alignment, tree inference, rooting, pruning, consensus or bootstrap generation, visualization, taxonomy reconciliation, and biological or evolutionary interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.8.0"
+  version: "0.9.0"
 ---
 
 # Phylogenetic Tree I/O and QC

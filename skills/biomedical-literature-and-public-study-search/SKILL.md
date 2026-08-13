@@ -3,7 +3,7 @@ name: biomedical-literature-and-public-study-search
 description: "A user needs publications, public-study metadata, or study-accession discovery for a biomedical question. Exclude claim synthesis, community-only search, clinical recommendations, and non-study identifier resolution."
 license: Apache-2.0
 metadata:
-  version: "0.8.0"
+  version: "0.9.0"
 ---
 
 # Biomedical Literature and Public Study Search

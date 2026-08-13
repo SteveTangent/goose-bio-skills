@@ -3,7 +3,7 @@ name: flow-cytometry-arcsinh-transformation
 description: "Use to apply explicit positive per-channel arcsinh cofactors to selected numeric channels in one already extracted local flow-cytometry event TSV, producing create-new transformed events and provenance. Exclude FCS parsing, compensation, choosing or estimating cofactors, logicle or biexponential transforms, gating, cell labels, QC decisions, and biological or clinical interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.8.0"
+  version: "0.9.0"
 ---
 
 # Flow Cytometry Arcsinh Transformation

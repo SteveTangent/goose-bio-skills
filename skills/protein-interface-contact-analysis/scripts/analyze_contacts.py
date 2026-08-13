@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any, BinaryIO, Iterator
 
 
-VERSION = "0.8.0"
+VERSION = "0.9.0"
 MIB = 1024 * 1024
 MAX_INPUT_BYTES = 32 * MIB
 MAX_LINES = 500_000

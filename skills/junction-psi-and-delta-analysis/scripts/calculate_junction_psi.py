@@ -844,7 +844,7 @@ t3\ttreated
         json.dumps(
             {
                 "status": "pass",
-                "version": "0.8.0",
+                "version": "0.9.0",
                 "events": 3,
                 "samples": 6,
                 "event_sample_pairs": 18,

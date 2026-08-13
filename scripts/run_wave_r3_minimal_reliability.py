@@ -136,7 +136,7 @@ def check_self_tests(fixture: dict[str, Any], root: Path, checks: Checks) -> Non
         expected = {
             "checks": fixture[key]["self_test_checks"],
             "status": "pass",
-            "version": "0.8.0",
+            "version": "0.9.0",
         }
         if key == "read_alignment":
             expected["real_minimap2_runtime"] = "not-evaluated"

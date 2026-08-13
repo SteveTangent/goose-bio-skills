@@ -2,12 +2,12 @@
 
 Research-first bioinformatics skills for AI agents.
 
-Bio 02 Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The verified `main` Beta contains 44 packages across 13 Domains and 26 Clusters. The current `research` branch adds four bounded Wave R5 packages for 48 total; those four are not part of `main`.
+Bio 02 Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The v0.9.0 `main` Beta contains 48 packages across 13 Domains and 26 Clusters, including the four bounded Wave R5 packages.
 
 | Boundary | Packages | State | External services |
 | --- | ---: | --- | --- |
-| `main` Beta `0.8.0` | 44 | `preview + reviewed` | Bounded public read/download; anonymous-first |
-| `research` | 48 (44 Beta + 4 Wave R5) | Wave R5 is `preview + reviewed`, research-only, and not promoted | Local/replay only for Wave R5 |
+| `main` Beta `0.9.0` | 48 | `preview + reviewed` | Bounded public read/download; anonymous-first |
+| `research` | Next candidate wave | No unpublished candidate is part of the Beta until promoted | Candidate-specific |
 
 ## Why Bio 02 Skills
 
@@ -100,18 +100,18 @@ Align this tiny single-end short-DNA FASTQ to the exact local reference using th
 | Data and workflow foundations | `bioinformatics-format-and-identifier-validation`<br>`scientific-file-preflight-and-resource-planning`<br>`biological-database-record-retrieval-and-identifier-resolution`<br>`taxonomy-name-and-taxid-resolution`<br>`public-sequencing-run-manifest-retrieval`<br>`environment-and-provenance-capture` |
 | Sequence, reads, genomes, and evolution | `sequence-io-and-transformation`<br>`sequence-similarity-and-homology-search`<br>`pairwise-and-multiple-sequence-alignment`<br>`phylogenetic-tree-io-and-qc`<br>`raw-read-quality-reporting`<br>`raw-read-trimming-and-filtering`<br>`read-alignment-selection-and-execution`<br>`alignment-file-operations`<br>`genomic-interval-operations`<br>`gff-gtf-gene-model-qc`<br>`public-orthology-retrieval-and-qc` |
 | Variant and cohort genomics | `vcf-normalization-qc-and-query`<br>`human-variant-evidence-retrieval` |
-| Bulk transcriptomics | `count-based-differential-expression`<br>`bulk-rnaseq-gene-counting-from-alignment`<br>`junction-psi-and-delta-analysis` |
+| Bulk transcriptomics | `count-based-differential-expression`<br>`bulk-rnaseq-gene-counting-from-alignment`<br>`bulk-rnaseq-gene-count-matrix-assembly`<br>`junction-psi-and-delta-analysis` |
 | Single-cell analysis | `single-cell-object-io-and-qc`<br>`single-cell-core-analysis` |
 | Epigenomics | `chromatin-peak-set-qc` |
-| Microbiome and amplicon data | `amplicon-feature-table-and-taxonomy-qc`<br>`amplicon-alpha-diversity-analysis` |
-| Proteomics, metabolomics, and cytometry | `proteomics-quantification-table-qc`<br>`protein-level-differential-abundance`<br>`untargeted-metabolomics-feature-table-qc`<br>`fcs-file-io-and-metadata-qc`<br>`flow-cytometry-compensation-application` |
+| Microbiome and amplicon data | `amplicon-feature-table-and-taxonomy-qc`<br>`amplicon-alpha-diversity-analysis`<br>`amplicon-beta-diversity-distance-analysis` |
+| Proteomics, metabolomics, and cytometry | `proteomics-quantification-table-qc`<br>`protein-level-differential-abundance`<br>`untargeted-metabolomics-feature-table-qc`<br>`fcs-file-io-and-metadata-qc`<br>`flow-cytometry-compensation-application`<br>`flow-cytometry-arcsinh-transformation` |
 | Protein structure | `protein-structure-retrieval-and-comparison`<br>`protein-interface-contact-analysis` |
 | Cheminformatics | `molecule-standardization-and-descriptors`<br>`chemical-similarity-and-substructure-search` |
 | Functional interpretation | `over-representation-analysis`<br>`ranked-gene-set-enrichment` |
-| Study design and biostatistics | `experimental-design-power-and-batch-planning`<br>`statistical-analysis-and-multiple-testing`<br>`missing-data-and-sensitivity-analysis`<br>`kaplan-meier-survival-analysis` |
+| Study design and biostatistics | `experimental-design-power-and-batch-planning`<br>`statistical-analysis-and-multiple-testing`<br>`missing-data-and-sensitivity-analysis`<br>`kaplan-meier-survival-analysis`<br>`two-group-log-rank-survival-comparison` |
 | Biomedical evidence | `biomedical-literature-and-public-study-search`<br>`evidence-synthesis-and-research-traceability` |
 
-The `research` branch additionally contains `bulk-rnaseq-gene-count-matrix-assembly`, `amplicon-beta-diversity-distance-analysis`, `two-group-log-rank-survival-comparison`, and `flow-cytometry-arcsinh-transformation`. They remain research-only and must not be described as part of the 44-package v0.8.0 `main` Beta.
+Wave R5 added `bulk-rnaseq-gene-count-matrix-assembly`, `amplicon-beta-diversity-distance-analysis`, `two-group-log-rank-survival-comparison`, and `flow-cytometry-arcsinh-transformation` to the v0.9.0 Beta. They remain `preview + reviewed`; promotion does not upgrade them to evaluated or stable assurance.
 
 See [docs/catalog.md](docs/catalog.md) for Domain, Cluster, risk, dependency, and runtime details. [`registry.json`](registry.json) is the versioned machine-readable index.
 
@@ -181,7 +181,7 @@ skills/<slug>/
 
 ## Current release boundary
 
-The 44-package `main` Beta is `preview + reviewed`. The 12 Wave R2/R3/R4 packages were admitted atomically in v0.8.0 after their retained minimum-reliability gates passed. Every package states its remaining unverified boundaries in its manifest.
+The 48-package v0.9.0 `main` Beta is `preview + reviewed`. The 12 Wave R2/R3/R4 packages entered in v0.8.0, and four Wave R5 packages entered atomically in v0.9.0 after their retained minimum-reliability gates passed. Every package states its remaining unverified boundaries in its manifest.
 
 Use the collection for supervised research work. Verify inputs, tool availability, QC, and biological interpretation for each project. The collection does not claim universal scientific correctness, clinical authority, or superiority over another workflow.
 
@@ -193,6 +193,7 @@ The repository includes dependency-free checks for package structure and the sha
 python3 scripts/validate_skeleton.py
 python3 scripts/validate_skeleton.py --self-test
 python3 scripts/run_research_connector.py --self-test
+python3 scripts/run_wave_r1_minimal_reliability.py
 python3 scripts/run_wave_r2_minimal_reliability.py
 python3 scripts/run_wave_r3_minimal_reliability.py
 python3 scripts/run_wave_r4_minimal_reliability.py

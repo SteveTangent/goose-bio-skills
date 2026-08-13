@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Any, Iterator
 
 
-VERSION = "0.8.0"
+VERSION = "0.9.0"
 MAX_SAM_BYTES = 32 * 1024 * 1024
 MAX_GTF_BYTES = 32 * 1024 * 1024
 MAX_LINE_BYTES = 1024 * 1024

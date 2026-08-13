@@ -3,7 +3,7 @@ name: gff-gtf-gene-model-qc
 description: "Use for bounded, read-only structural QC of an explicitly named local GFF3 or GTF gene-model file against an explicit .fai or contig-size table. Report feature counts, identifier hierarchy, orphan or repeated identifiers, CDS phase fields, parent containment, coordinate bounds, and exact contig consistency. Exclude repair, prediction, completeness scoring, functional annotation, interval algebra, and biological-quality claims."
 license: Apache-2.0
 metadata:
-  version: "0.8.0"
+  version: "0.9.0"
 ---
 
 # GFF/GTF Gene-model Structural QC

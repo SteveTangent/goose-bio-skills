@@ -10,7 +10,7 @@
       "read-alignment-selection-and-execution",
       "untargeted-metabolomics-feature-table-qc"
     ],
-    "collection_version": "0.8.0",
+    "collection_version": "0.9.0",
     "small_synthetic_data_only": true,
     "retained_replay_offline": true,
     "source_retrieval_network_performed_for_later_canary": true,
@@ -18,7 +18,7 @@
     "formal_scientific_evaluation": false,
     "main_promotion_authorized": true,
     "research_commit_authorized": true,
-    "claim": "The Wave R3 packages passed retained minimum local reliability and routing checks and are bound to the exact v0.8.0 preview + reviewed release candidate. This is not representative scientific evaluation."
+    "claim": "The Wave R3 packages passed retained minimum local reliability and routing checks and are bound to the exact v0.9.0 preview + reviewed release candidate. This is not representative scientific evaluation."
   },
   "retained_replay": {
     "command": "python3 scripts/run_wave_r3_minimal_reliability.py",
@@ -29,11 +29,11 @@
       "pass"
     ],
     "repeat_events_identical": true,
-    "fixture_sha256": "2f4f25ac5c8f4b223ba9d44b158a975824f561d1d72ea3c535e4b7cae9470f96",
-    "runner_sha256": "ba72a7096c6af85f14aff44cd6d9245d2572f4228b2b87dbe459ba2e66ab8f4a",
+    "fixture_sha256": "a75e7c385ea128b2b4e780b529fa4d032e506aa52f443da167fa052c36dfcafa",
+    "runner_sha256": "1c7d75ca2ca7f0a544e61f23bd86860f699a13e62fccdd1340330be7e2140be9",
     "output_sha256": {
-      "phylogenetic-tree-io-and-qc": "81f11540ec42df8fd980e9e63f265ac5d585f239f87fa3f5047bd890fe96e400",
-      "untargeted-metabolomics-feature-table-qc": "2885537e0a2d7b9c8296093f86b9e2ec140cca34f4556ee955cdf63090e31b52"
+      "phylogenetic-tree-io-and-qc": "a1d396c73d0fea629964ad85bc93625ac352401a95c1447ba89e96d55c69f2d3",
+      "untargeted-metabolomics-feature-table-qc": "63898c890543518d4d1ff074a9e1ff695cdc1bd93a1e88c5720a974be403bc2a"
     },
     "coverage": [
       "package digest binding",
@@ -47,38 +47,13 @@
     ]
   },
   "package_bindings": {
-    "phylogenetic-tree-io-and-qc": {
-      "package_digest": "f855c02038ac4da8222aea6154bcf0d1a096a10260086f00455208c28af7aaf6",
-      "script_sha256": "11e0000b392e1ca6c4365e02d930d7c3fd7b2d9af5de541df444f7baf0556ab8",
-      "self_test_checks": 30,
-      "self_test_status": "pass"
-    },
-    "read-alignment-selection-and-execution": {
-      "package_digest": "a7a51759279600aee88e54d0c976e974496de98633f589ccf336c1666ae7de77",
-      "script_sha256": "ffc987928355b0462edb356837c375d6b2787b899b09d72a4711ad23e75b3291",
-      "self_test_checks": 46,
-      "self_test_status": "pass",
-      "real_minimap2_runtime_in_retained_offline_replay": "not-evaluated",
-      "synthetic_real_tool_canary": {
-        "status": "pass",
-        "formal_pass": false,
-        "evidence": "evals/research-wave-r3-minimap2-canary-v0.1.json",
-        "evidence_sha256": "a7ad8cc2b2527cc6cf9eb20acc65c14ff8402b49a49f0af6760354c3f2f4bbd8",
-        "point_in_time_binding": true,
-        "current_exact_bytes": false,
-        "release_waiver": "Not rerun for v0.8.0; current exact package bytes are covered by the retained offline gate."
-      }
-    },
-    "untargeted-metabolomics-feature-table-qc": {
-      "package_digest": "2619299ea83dae4826ddc07d98f0d0db5da89e0a305779e557ceee592fb6e0ec",
-      "script_sha256": "68c303fbaba2199ede1b4e308b5866785aa16fb2af28a85592896a764814593c",
-      "self_test_checks": 41,
-      "self_test_status": "pass"
-    }
+    "phylogenetic-tree-io-and-qc": "2b87ac4584345506235a7346678d9b8626f6353fcba758421a4146bbeb5649f2",
+    "read-alignment-selection-and-execution": "c525561a1821b21117143070cd99ede2648a03b966d429d6f8db2c563b175bc5",
+    "untargeted-metabolomics-feature-table-qc": "614164bfcfef5173d8cc76f24a3d33200684671cf3cc263691861b2ce8491b23"
   },
   "routing": {
-    "canonical_fixture_cases": 90,
-    "canonical_fixture_sha256": "e5a68d5524354679aad4c3ed91ac043310292763759f7eb900efc95b17f6300d",
+    "canonical_fixture_cases": 98,
+    "canonical_fixture_sha256": "5a566ed850a32f23c1fbec06db88bd65eb1819a6dde9b7fb45e09996e9d79da8",
     "candidate_canonical_cases": 9,
     "independent_first_execution": {
       "evaluator_task": "wave_r3_route_holdout",
@@ -122,20 +97,20 @@
   "repository_checks": {
     "skeleton": {
       "status": "pass",
-      "installable_packages": 44,
+      "installable_packages": 48,
       "source_clean": true
     },
     "validator_self_test": {
       "status": "pass",
-      "checks": 25,
-      "validator": "1.2.0"
+      "checks": 26,
+      "validator": "1.3.0"
     },
     "connector_self_test": {
       "status": "pass",
       "checks": 21,
       "network_performed": false,
-      "version": "0.8.0",
-      "script_sha256": "51a37ec217a2426e87549b5e6ebf40fb46ef76cd7b3f300a02658bd610b89d95"
+      "version": "0.9.0",
+      "script_sha256": "c053baedc83ff7810126dfb8e05edc53019d99adbf7b6b28ebd8c031f38e8d93"
     },
     "prior_wave_regression": {
       "wave_r1_checks": 84,
@@ -155,21 +130,21 @@
     },
     "codegraph": {
       "status": "rebuilt-and-current",
-      "indexed_files": 69,
-      "nodes": 1345,
-      "edges": 5695
+      "indexed_files": 78,
+      "nodes": 1577,
+      "edges": 6783
     },
     "git_diff_check": "pass"
   },
   "control_hashes": {
-    "registry.json": "3c0eff32e8ac7e471a5bd33cc0f602f738d6cd2a0cdb4c4a2b03e1c98d80ce8e",
-    "scripts/validate_skeleton.py": "d0a56be0296dfe6f7e0931e74bf75be2ef0dcfbdcfe1bf1272f5448f7ed1d847",
-    "docs/architecture.md": "195e0e7b3b40b386d473b296508157f99da5f5a04359e39da726592b9dae0430",
-    "docs/catalog.md": "e23d293e2510c4af59c71f185a9b40fb3248505b284fb440806f0b36d80df1c0",
+    "registry.json": "2a1dfd32b7c3bdf42aeedff73e26354fe754127147913188cc79a434e7a0813a",
+    "scripts/validate_skeleton.py": "f8880ee558fb394ecc03963b3562a58e3725a8baa0652652f756a27caf2d0ace",
+    "docs/architecture.md": "093a95db250d03d684e3b993e6ceb05909a1ff37d8e78851f5f065e440683912",
+    "docs/catalog.md": "e7270514005b7a9a059812619b636b228893e0b528697f24627b41b93e5af377",
     "docs/research-wave-r3-candidates.md": "d4ac86c2bfe585cd58d7d4315655a5ae0a9ddfce43fd590b225932f8200a28c1",
-    "docs/research-skill-promotion-gates.md": "abe5472a7ef0f02420f4929f9085304a84a415fb06d3529fbba1b55bb6223819",
-    "README.md": "17551f88bce160df011f14ebefdb65fd78f7c1a64f7bf4e6257951b95a7646d2",
-    "skills/README.md": "a2fb8de79a710b3d5dd90af007cc3601defb8b361b052e05c47e757da4d8ff4c"
+    "docs/research-skill-promotion-gates.md": "0576a0959267c6540915fb430dd5552946061a360d4d6d09f542e115dd3ae507",
+    "README.md": "7c007e5b5c20fbcfc92c84bc1e6cd91c16bcac2ff0cf8592570f1b221aee1103",
+    "skills/README.md": "cddc256854eb1649498a9f3adbb671e71b13d2528737eb0cc3b3c8239534ed9d"
   },
   "review": {
     "status": "passed",

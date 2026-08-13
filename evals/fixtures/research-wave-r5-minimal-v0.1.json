@@ -8,21 +8,29 @@
     "purpose": "Replay one bounded valid job twice, one invalid fail-closed boundary, create-new/no-overwrite behavior, the package self-test, and exact package/input/output binding for each Wave R5 candidate."
   },
   "matrix": {
-    "package_digest": "22e39c3cbaf8b65816190a9ea9cf51486377515cc425d53387586192c86451e9",
-    "self_test": {"checks": 39, "status": "pass", "version": "0.8.0"},
-    "input_sha256": {
-      "a": "723985d9380aa150bcd2a6a5fb90d44897df008b62ed9f32b3fb625adcdb0b2d",
-      "b": "96da71a5795621633e29709ec70a0988deb421795a96b151f2d5294ab3654ed7",
-      "invalid_b": "c5a582d984d5ad66d6c7f2c04d6d2df7ad003d083bbb46871b03a67a89e3a109"
+    "package_digest": "4e0ac59b2badd63240af8f6c1b2f1a1292e4f93cc7e8e8a4bdffdec9ba2c4368",
+    "self_test": {
+      "checks": 39,
+      "status": "pass",
+      "version": "0.9.0"
     },
-    "output_sha256": "8639fe797ee621259ff5e9bff9b29b39849e29933c3a8f5a347a48a034ff211d",
-    "a": "{\"adapter\":{\"name\":\"count_gene_alignments\",\"version\":\"0.8.0\"},\"analysis_performed\":true,\"assignment_contract\":{\"duplicate_primary_records\":\"duplicate-flag-alone-does-not-exclude; observed-count-reported\",\"feature\":\"exon\",\"identity\":\"gene_id\",\"minimum_mapq\":20,\"missing_nh\":\"accepted-by-mapq-and-reported\",\"nh_greater_than_one\":\"unassigned-multimapped\",\"secondary_and_supplementary\":\"ignored-and-reported\",\"strandedness\":\"unstranded\"},\"counts\":[{\"contig\":\"chr2\",\"count\":1,\"exon_count\":1,\"gene_id\":\"gB\",\"strand\":\"-\"},{\"contig\":\"chr1\",\"count\":2,\"exon_count\":2,\"gene_id\":\"gA\",\"strand\":\"+\"}],\"inputs\":{\"gtf\":{\"exon_count\":3,\"gene_count\":2,\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}},\"sample_id\":\"sample-a\",\"schema_version\":\"1.0\",\"status\":\"completed\"}\n",
-    "b": "{\"adapter\":{\"name\":\"count_gene_alignments\",\"version\":\"0.8.0\"},\"analysis_performed\":true,\"assignment_contract\":{\"duplicate_primary_records\":\"duplicate-flag-alone-does-not-exclude; observed-count-reported\",\"feature\":\"exon\",\"identity\":\"gene_id\",\"minimum_mapq\":20,\"missing_nh\":\"accepted-by-mapq-and-reported\",\"nh_greater_than_one\":\"unassigned-multimapped\",\"secondary_and_supplementary\":\"ignored-and-reported\",\"strandedness\":\"unstranded\"},\"counts\":[{\"contig\":\"chr2\",\"count\":3,\"exon_count\":1,\"gene_id\":\"gB\",\"strand\":\"-\"},{\"contig\":\"chr1\",\"count\":0,\"exon_count\":2,\"gene_id\":\"gA\",\"strand\":\"+\"}],\"inputs\":{\"gtf\":{\"exon_count\":3,\"gene_count\":2,\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}},\"sample_id\":\"sample-b\",\"schema_version\":\"1.0\",\"status\":\"completed\"}\n",
-    "invalid_b": "{\"adapter\":{\"name\":\"count_gene_alignments\",\"version\":\"0.8.0\"},\"analysis_performed\":true,\"assignment_contract\":{\"duplicate_primary_records\":\"duplicate-flag-alone-does-not-exclude; observed-count-reported\",\"feature\":\"exon\",\"identity\":\"gene_id\",\"minimum_mapq\":20,\"missing_nh\":\"accepted-by-mapq-and-reported\",\"nh_greater_than_one\":\"unassigned-multimapped\",\"secondary_and_supplementary\":\"ignored-and-reported\",\"strandedness\":\"unstranded\"},\"counts\":[{\"contig\":\"chr2\",\"count\":3,\"exon_count\":1,\"gene_id\":\"gB\",\"strand\":\"-\"},{\"contig\":\"chr1\",\"count\":0,\"exon_count\":2,\"gene_id\":\"gA\",\"strand\":\"+\"}],\"inputs\":{\"gtf\":{\"exon_count\":3,\"gene_count\":2,\"sha256\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"}},\"sample_id\":\"sample-b\",\"schema_version\":\"1.0\",\"status\":\"completed\"}\n"
+    "input_sha256": {
+      "a": "49fd6db521812d1b6ee5e875349ec84f988f94586eb8715927a3e42b8da58c5a",
+      "b": "0ac1bd0aeb6728a8f4b4f459178cd11f41cda8287ebc6f001f31d5e8a240e5c6",
+      "invalid_b": "5e81f5c07e9a7dbe3e61c9ac174b2b10adce4f808c0fcdc58917ba53d30ec984"
+    },
+    "output_sha256": "cc82e8aad8ab1b44bf3c8c6725e1f9c302b018928548cb952fff1f31aafaf1f1",
+    "a": "{\"adapter\":{\"name\":\"count_gene_alignments\",\"version\":\"0.9.0\"},\"analysis_performed\":true,\"assignment_contract\":{\"duplicate_primary_records\":\"duplicate-flag-alone-does-not-exclude; observed-count-reported\",\"feature\":\"exon\",\"identity\":\"gene_id\",\"minimum_mapq\":20,\"missing_nh\":\"accepted-by-mapq-and-reported\",\"nh_greater_than_one\":\"unassigned-multimapped\",\"secondary_and_supplementary\":\"ignored-and-reported\",\"strandedness\":\"unstranded\"},\"counts\":[{\"contig\":\"chr2\",\"count\":1,\"exon_count\":1,\"gene_id\":\"gB\",\"strand\":\"-\"},{\"contig\":\"chr1\",\"count\":2,\"exon_count\":2,\"gene_id\":\"gA\",\"strand\":\"+\"}],\"inputs\":{\"gtf\":{\"exon_count\":3,\"gene_count\":2,\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}},\"sample_id\":\"sample-a\",\"schema_version\":\"1.0\",\"status\":\"completed\"}\n",
+    "b": "{\"adapter\":{\"name\":\"count_gene_alignments\",\"version\":\"0.9.0\"},\"analysis_performed\":true,\"assignment_contract\":{\"duplicate_primary_records\":\"duplicate-flag-alone-does-not-exclude; observed-count-reported\",\"feature\":\"exon\",\"identity\":\"gene_id\",\"minimum_mapq\":20,\"missing_nh\":\"accepted-by-mapq-and-reported\",\"nh_greater_than_one\":\"unassigned-multimapped\",\"secondary_and_supplementary\":\"ignored-and-reported\",\"strandedness\":\"unstranded\"},\"counts\":[{\"contig\":\"chr2\",\"count\":3,\"exon_count\":1,\"gene_id\":\"gB\",\"strand\":\"-\"},{\"contig\":\"chr1\",\"count\":0,\"exon_count\":2,\"gene_id\":\"gA\",\"strand\":\"+\"}],\"inputs\":{\"gtf\":{\"exon_count\":3,\"gene_count\":2,\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}},\"sample_id\":\"sample-b\",\"schema_version\":\"1.0\",\"status\":\"completed\"}\n",
+    "invalid_b": "{\"adapter\":{\"name\":\"count_gene_alignments\",\"version\":\"0.9.0\"},\"analysis_performed\":true,\"assignment_contract\":{\"duplicate_primary_records\":\"duplicate-flag-alone-does-not-exclude; observed-count-reported\",\"feature\":\"exon\",\"identity\":\"gene_id\",\"minimum_mapq\":20,\"missing_nh\":\"accepted-by-mapq-and-reported\",\"nh_greater_than_one\":\"unassigned-multimapped\",\"secondary_and_supplementary\":\"ignored-and-reported\",\"strandedness\":\"unstranded\"},\"counts\":[{\"contig\":\"chr2\",\"count\":3,\"exon_count\":1,\"gene_id\":\"gB\",\"strand\":\"-\"},{\"contig\":\"chr1\",\"count\":0,\"exon_count\":2,\"gene_id\":\"gA\",\"strand\":\"+\"}],\"inputs\":{\"gtf\":{\"exon_count\":3,\"gene_count\":2,\"sha256\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"}},\"sample_id\":\"sample-b\",\"schema_version\":\"1.0\",\"status\":\"completed\"}\n"
   },
   "beta": {
-    "package_digest": "41c0f6487eb4c0603e478ae73906c252e9c8094af6621b8fe282968a4f236f54",
-    "self_test": {"checks": 46, "status": "pass", "version": "0.8.0"},
+    "package_digest": "0164a34b737b59a5a647624eca27d6afdfa01cef23c5549e0f8ed24df10995c3",
+    "self_test": {
+      "checks": 46,
+      "status": "pass",
+      "version": "0.9.0"
+    },
     "input_sha256": {
       "table": "01a2323188579537d75db8d94972f927d9241842c2989e46efbedc4c922d9fe8",
       "invalid": "852132b919f024a11539ecb901d842038bb8ad965b766c5060e9c22c10eca5ae"
@@ -32,8 +40,12 @@
     "invalid": "feature_id\tA\tB\nf1\t-1\t2\n"
   },
   "logrank": {
-    "package_digest": "ad45dddc95e322c30c4f7c281bca3773f070e0e8f3d48d4aaba8d0ffeb25af66",
-    "self_test": {"checks": 48, "status": "pass", "version": "0.8.0"},
+    "package_digest": "8e74d9aaefa7579166003ddfca27354f60019c508a3775d5fdb4c06e5bbad84d",
+    "self_test": {
+      "checks": 48,
+      "status": "pass",
+      "version": "0.9.0"
+    },
     "input_sha256": {
       "table": "525a3021a3f27262862764b00a7c9aa9b1dcde5ca51a982191567893cceaaa3b",
       "invalid": "8e24d2a97d26b599c1ccaa48457c1df7fff38e8379dd942141db3a99b40323bc"
@@ -43,8 +55,12 @@
     "invalid": "subject_id\ttime\tevent\tgroup\nA1\t1\t2\tA\nB1\t2\t0\tB\n"
   },
   "arcsinh": {
-    "package_digest": "049002ea6c6fa68e813e929bc6b0ac0e727ac2f9244f11328d9cf1580e61fb60",
-    "self_test": {"checks": 32, "status": "pass", "version": "0.8.0"},
+    "package_digest": "505895d558e2fe758f06bd7d622984f87c349619e5df4bfdf7510385623267d5",
+    "self_test": {
+      "checks": 32,
+      "status": "pass",
+      "version": "0.9.0"
+    },
     "input_sha256": {
       "events": "f5f06eee7e1eb5a7f4b0eca801be34b7f9aa21f8cf0a981fc27f1e6083370c89",
       "cofactors": "8247174488ce9cafd97e692857e3903aaeb32c7a1dfbb8d1a7483f01ee78121d",
@@ -52,7 +68,7 @@
     },
     "output_sha256": {
       "events": "28e86cd3d9ee56f90284f53128640c5e812a4985dc8019f55031bf8b5a51e098",
-      "report": "7d4b859ce070d577d4c8130ab3bb961e680e877fdcda8f876be6472f0ec4d575"
+      "report": "2d7c06ad7f32710dd0a89d4190fceda02647499bca8122154aa0c561714395ff"
     },
     "events": "event_id\tFITC-A\tPE-A\tAPC-A\ne1\t5\t-5\t7.00\ne2\t-0\t10\t8e0\n",
     "cofactors": "channel\tcofactor\nPE-A\t10\nFITC-A\t5\n",

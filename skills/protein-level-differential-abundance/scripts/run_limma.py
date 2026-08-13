@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Any, Iterator
 
 
-VERSION = "0.8.0"
+VERSION = "0.9.0"
 EXPECTED_R_VERSION = "4.4.1"
 EXPECTED_LIMMA_VERSION = "3.60.6"
 MAX_INPUT_BYTES = 16 * 1024 * 1024

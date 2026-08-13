@@ -3,7 +3,7 @@ name: chromatin-peak-set-qc
 description: "Use for bounded, offline QC of up to four local BED3 or narrowPeak files against caller-declared identical reference-build labels, a matching contig-size file, and an optional matching BED3 blacklist. Report coordinate and field validity, bounds, widths, duplicate coordinates, blacklist overlap, and descriptive pairwise base-coverage Jaccard. Exclude BAM/read QC, peak calling, FRiP, IDR, consensus peaks, differential accessibility, motif analysis, lift-over, and biological reproducibility claims."
 license: Apache-2.0
 metadata:
-  version: "0.8.0"
+  version: "0.9.0"
 ---
 
 # Chromatin Peak-set QC
