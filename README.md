@@ -2,16 +2,15 @@
   <img src="assets/waterloo-goose.png" alt="A Waterloo goose in a snowy scene" width="100%">
 </p>
 
+<p align="center">
+  <sub>Image source: <a href="https://uwaterloo.ca/support/goose-loose-holiday-contest">University of Waterloo — “The Goose is on the Loose”</a>. This independent project is not affiliated with or endorsed by the University of Waterloo.</sub>
+</p>
+
 # Goose Bio Skills
 
 Research-first bioinformatics skills for AI agents.
 
 Goose Bio Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The v0.9.0 `main` Beta contains 48 packages across 13 Domains and 26 Clusters, including the four bounded Wave R5 packages.
-
-Previously named **Bio 02 Skills**, this is the same repository and Git history.
-Historical `bio02-*` identifiers, tags, releases, and evidence remain unchanged;
-see the [name history](docs/name-history.md). The project is independent and is
-not affiliated with the University of Waterloo.
 
 | Boundary | Packages | State | External services |
 | --- | ---: | --- | --- |
