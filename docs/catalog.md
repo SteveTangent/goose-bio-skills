@@ -1,4 +1,4 @@
-# Bio 02 catalog: 48-Skill Beta
+# Goose Bio Skills catalog: 48-Skill Beta
 
 The v0.9.0 `main` Beta contains 48 independently installable `preview + reviewed` Skills across 13 Domains and 26 Clusters. [registry.json](../registry.json) is authoritative for the checked-out branch. Wave R5 entered at the same assurance level; this is not an upgrade to evaluated or stable assurance.
 

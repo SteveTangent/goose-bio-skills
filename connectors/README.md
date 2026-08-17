@@ -1,6 +1,6 @@
 # Public research connectors
 
-Bio 02 can make bounded `GET` and `HEAD` requests to reviewed public research
+Goose Bio Skills can make bounded `GET` and `HEAD` requests to reviewed public research
 services. Public, no-key access is the default. Users do not need a provider
 configuration file or a confirmation token for ordinary public queries and small
 downloads.

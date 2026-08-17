@@ -1,4 +1,4 @@
-# Working rules for 02-bio-skills
+# Working rules for Goose Bio Skills
 
 ## Mission
 

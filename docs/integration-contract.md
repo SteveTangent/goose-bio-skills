@@ -1,6 +1,6 @@
 # Integration contract
 
-Bio 02 keeps the user-facing contract smaller than its package governance.
+Goose Bio Skills keeps the user-facing contract smaller than its package governance.
 The files below have different roles and must not be presented as one large
 form that a user needs to understand.
 
@@ -14,7 +14,7 @@ form that a user needs to understand.
 - `completed` is reserved for the whole declared job. `partial`, `dry-run`,
   `needs-decision`, `needs-tool`, `invalid-input`, `invalid-output`,
   `provider-failure`, and `io-error` are truthful non-completed outcomes.
-- Bio 02 does not yet impose one universal result envelope on scientifically
+- Goose Bio Skills does not yet impose one universal result envelope on scientifically
   different helpers. A host may normalize these outcomes, but package-native
   detail remains authoritative.
 
@@ -34,7 +34,7 @@ system remain the enforcement points.
 
 Installing one Skill directory installs its instructions, not the repository's
 shared connector. Live completion therefore requires either a compatible host
-adapter or a separately installed, reviewed Bio 02 connector. Without one, the
+adapter or a separately installed, reviewed Goose Bio Skills connector. Without one, the
 Skill must return `needs-tool`, `dry-run`, or `partial` and must not claim a live
 call occurred.
 

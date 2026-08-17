@@ -82,7 +82,7 @@ and terms state.
 ## Package skeleton
 
 ```text
-02-bio-skills/
+goose-bio-skills/
 ├── README.md
 ├── AGENTS.md
 ├── CONTRIBUTING.md

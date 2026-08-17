@@ -1,15 +1,24 @@
-# Bio 02 Skills
+<p align="center">
+  <img src="assets/waterloo-goose.png" alt="A Waterloo goose in a snowy scene" width="100%">
+</p>
+
+# Goose Bio Skills
 
 Research-first bioinformatics skills for AI agents.
 
-Bio 02 Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The v0.9.0 `main` Beta contains 48 packages across 13 Domains and 26 Clusters, including the four bounded Wave R5 packages.
+Goose Bio Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The v0.9.0 `main` Beta contains 48 packages across 13 Domains and 26 Clusters, including the four bounded Wave R5 packages.
+
+Previously named **Bio 02 Skills**, this is the same repository and Git history.
+Historical `bio02-*` identifiers, tags, releases, and evidence remain unchanged;
+see the [name history](docs/name-history.md). The project is independent and is
+not affiliated with the University of Waterloo.
 
 | Boundary | Packages | State | External services |
 | --- | ---: | --- | --- |
 | `main` Beta `0.9.0` | 48 | `preview + reviewed` | Bounded public read/download; anonymous-first |
 | `research` | Next candidate wave | No unpublished candidate is part of the Beta until promoted | Candidate-specific |
 
-## Why Bio 02 Skills
+## Why Goose Bio Skills
 
 - **Research question first.** The agent establishes the scientific task, assumptions, and available evidence before choosing a tool.
 - **One job per Skill.** Sequence I/O, alignment handling, differential expression, enrichment, single-cell analysis, structure comparison, statistics, and literature work have separate boundaries.
@@ -43,8 +52,8 @@ The detailed interaction and connector rules are in [docs/architecture.md](docs/
 Clone the repository:
 
 ```bash
-git clone https://github.com/SteveTangent/02-bio-skills.git
-cd 02-bio-skills
+git clone https://github.com/SteveTangent/goose-bio-skills.git
+cd goose-bio-skills
 ```
 
 Choose a Skill from [`skills/`](skills/) and install the complete `skills/<slug>/` directory in an Agent Skills-compatible host. Keep its `LICENSE`, `SKILL.md`, manifest, interface, references, and scripts together. The repository root is a catalog, not a single installable Skill.
@@ -167,7 +176,7 @@ state, and `network_performed=true`.
 
 ### External API, data, and tool terms
 
-Apache-2.0 covers Bio 02 Skills itself. External APIs, databases, downloaded datasets, and research tools keep their providers' own terms, licenses, citation requirements, access rules, and usage limits. Comply with the applicable terms before using external data or software; terms-restricted paths require the declared acknowledgement.
+Apache-2.0 covers Goose Bio Skills itself. External APIs, databases, downloaded datasets, and research tools keep their providers' own terms, licenses, citation requirements, access rules, and usage limits. Comply with the applicable terms before using external data or software; terms-restricted paths require the declared acknowledgement.
 
 ## Package contents
 
@@ -228,7 +237,7 @@ remain recorded as a research diagnostic.
 
 ## License
 
-Bio 02 Skills is licensed under the [Apache License 2.0](LICENSE). Each installable Skill carries the same license text so the terms remain available when a package is installed on its own.
+Goose Bio Skills is licensed under the [Apache License 2.0](LICENSE). Each installable Skill carries the same license text so the terms remain available when a package is installed on its own.
 
 - [Architecture](docs/architecture.md)
 - [Catalog](docs/catalog.md)

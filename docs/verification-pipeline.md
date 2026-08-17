@@ -1,6 +1,6 @@
 # Verification pipeline
 
-Bio 02 has two verification modes, not eight separate contributor decisions.
+Goose Bio Skills has two verification modes, not eight separate contributor decisions.
 The existing gates remain independently runnable and retain their historical
 evidence; the thin orchestrator only chooses and reports them.
 

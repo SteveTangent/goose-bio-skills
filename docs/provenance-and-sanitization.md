@@ -2,7 +2,7 @@
 
 ## Principle
 
-Complete provenance belongs in a separate private research archive. The installable `02-bio-skills` core is intentionally source-clean: it does not display upstream repository credits, source labels, source watermarks, or private provenance IDs. The project owner may add one consistent source and credit treatment later in the publication cover/release layer.
+Complete provenance belongs in a separate private research archive. The installable `goose-bio-skills` core is intentionally source-clean: it does not display upstream repository credits, source labels, source watermarks, or private provenance IDs. The project owner may add one consistent source and credit treatment later in the publication cover/release layer.
 
 ## Private evidence retained outside the distribution repository
 
@@ -14,7 +14,7 @@ Complete provenance belongs in a separate private research archive. The installa
 - license analysis and approval record
 - a publication-credit bundle prepared for the owner’s future cover or release page
 
-## Content allowed in `02-bio-skills`
+## Content allowed in `goose-bio-skills`
 
 - newly written, reviewed instructions
 - original scripts written after private behavior evaluation and never copied verbatim from an upstream repository
