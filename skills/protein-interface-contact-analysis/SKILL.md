@@ -1,9 +1,9 @@
 ---
 name: protein-interface-contact-analysis
-description: "Use for bounded, offline residue-contact analysis between two explicitly declared chains in one local legacy PDB file. Report the deterministic heavy-atom residue contact set and minimum atom-pair distance at an explicit fixed cutoff. Exclude mmCIF, alternate conformers, multiple models, interface-area or pocket calculations, docking, molecular dynamics, affinity estimation, and functional claims."
+description: "Calculate fixed-cutoff heavy-atom contacts between two declared chains in a legacy PDB file. Exclude mmCIF, molecular dynamics, affinity prediction and biological interface claims."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Protein-interface Contact Analysis
@@ -11,6 +11,20 @@ metadata:
 `Preview + reviewed`; the helper self-test passed. Agent runtime, scientific
 benchmarking, representative-structure testing, and expert review were not
 performed.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Use for bounded, offline residue-contact analysis between two explicitly declared chains in one local legacy PDB file. Report the deterministic heavy-atom residue contact set and minimum atom-pair distance at an explicit fixed cutoff. Exclude mmCIF, alternate conformers, multiple models, interface-area or pocket calculations, docking, molecular dynamics, affinity estimation, and functional claims.
 
 ## Owns
 

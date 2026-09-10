@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pairwise and Multiple Sequence Alignment"
+  short_description: "Produce an alignment fit for a declared downstream purpose and report sensitivity to key alignment choices."
+  default_prompt: "Create a protein MSA for these eight sequences and flag poorly aligned regions."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Multi Comparison Result Concordance"
+  short_description: "Compare membership and effect direction across two to five existing result tables."
+  default_prompt: "Compare membership and effect direction across two to five existing result tables. Inspect my inputs and clarify only facts that change the analysis."

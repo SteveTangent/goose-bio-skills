@@ -30,6 +30,18 @@ bundled helper. `approved` means project review of that declaration; it is not
 a host permission grant. The helper's checks and the host's own permission
 system remain the enforcement points.
 
+`agents/openai.yaml` contains the matching native Codex presentation subset:
+display name, short description and default prompt. It contains no permission,
+tool or execution-policy overrides. The validator rejects drift from the
+platform-neutral presentation metadata. Host discovery remains a separate check.
+
+A package's version tracks all package bytes. Optional
+`script_verification.artifact_version` tracks an unchanged helper's self-test
+version independently; when absent, the package version remains the default.
+Registry digests still bind the entire package. This allows instruction-only
+patches without rewriting old executable fixtures or claiming they evaluated
+new agent behavior.
+
 ## Networked Skills
 
 Installing one Skill directory installs its instructions, not the repository's

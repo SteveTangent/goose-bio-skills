@@ -1,9 +1,9 @@
 ---
 name: kaplan-meier-survival-analysis
-description: "Use for bounded, offline Kaplan-Meier summaries of a local subject-level TSV with one nonnegative follow-up time and one binary event indicator per subject, optionally split by an explicit group column. Produce deterministic product-limit estimates, median survival or not-reached status, and at-risk/event/censor counts. Exclude log-rank or other hypothesis tests, Cox or parametric models, confidence bands, delayed entry, recurrent or competing events, interval censoring, time-varying data, causal claims, treatment recommendations, and clinical interpretation."
+description: "Estimate Kaplan-Meier survival from declared follow-up times and binary event indicators. Exclude log-rank tests, Cox models, competing risks and clinical recommendations."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Kaplan-Meier Survival Analysis
@@ -11,6 +11,20 @@ metadata:
 `Preview + reviewed`; the deterministic helper self-test passed. Agent runtime,
 representative-data benchmarking, scientific evaluation, and expert review were
 not performed.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Use for bounded, offline Kaplan-Meier summaries of a local subject-level TSV with one nonnegative follow-up time and one binary event indicator per subject, optionally split by an explicit group column. Produce deterministic product-limit estimates, median survival or not-reached status, and at-risk/event/censor counts. Exclude log-rank or other hypothesis tests, Cox or parametric models, confidence bands, delayed entry, recurrent or competing events, interval censoring, time-varying data, causal claims, treatment recommendations, and clinical interpretation.
 
 ## Owns
 

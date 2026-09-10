@@ -1,0 +1,9 @@
+sample_id	subject_id	group	outcome	value
+control0	D0	control	signal	1
+treated0	D0	treated	signal	3
+control1	D1	control	signal	2
+treated1	D1	treated	signal	5
+control2	D2	control	signal	4
+treated2	D2	treated	signal	8
+control3	D3	control	signal	6
+treated3	D3	treated	signal	9

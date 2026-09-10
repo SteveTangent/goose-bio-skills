@@ -1,0 +1,20 @@
+interface:
+  display_name: "Bioinformatics Qc And Publication Reporting"
+  short_description: "Assemble local analysis outputs into a source-linked report and execution-methods record."
+  default_prompt: "Assemble local analysis outputs into a source-linked report and execution-methods record. Inspect my inputs and clarify only facts that change the analysis."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

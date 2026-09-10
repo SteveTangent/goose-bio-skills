@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sequence Similarity and Homology Search"
+  short_description: "Run or plan a reproducible query-to-database similarity search and qualify what the hits do and do not support."
+  default_prompt: "Search this protein against a fixed, question-appropriate complete or curated database and record its release and digest."

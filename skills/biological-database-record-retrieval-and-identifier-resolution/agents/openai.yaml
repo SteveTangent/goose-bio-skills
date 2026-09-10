@@ -1,0 +1,4 @@
+interface:
+  display_name: "Biological Database Record Retrieval and Identifier Resolution"
+  short_description: "Retrieve bounded public gene, transcript, protein, or nucleotide records with exact provider provenance."
+  default_prompt: "Retrieve these public UniProt, Ensembl, or NCBI records, preserve versions and one-to-many mappings, and report exact provider provenance."

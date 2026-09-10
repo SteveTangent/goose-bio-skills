@@ -1,0 +1,4 @@
+interface:
+  display_name: "Read Alignment Selection and Execution"
+  short_description: "Run one fingerprinted local minimap2 short-DNA alignment."
+  default_prompt: "Align this tiny single-end short genomic DNA FASTQ to the exact local FASTA with the explicit minimap2 adapter, record its computed fingerprint, then create a new SAM and provenance report without selecting another reference or downstream operation."

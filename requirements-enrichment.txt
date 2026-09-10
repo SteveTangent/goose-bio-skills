@@ -1,0 +1,3 @@
+# Versions used for the bounded local permutation check.
+gseapy==1.3.0
+pandas==2.3.3

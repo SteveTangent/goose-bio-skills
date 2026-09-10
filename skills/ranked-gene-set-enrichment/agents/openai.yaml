@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ranked Gene-set Enrichment"
+  short_description: "Produce reproducible ranked-set enrichment statistics without converting the task into cutoff-based ORA."
+  default_prompt: "Run preranked enrichment with gene-set permutations, a fixed gene-set release, and a recorded seed."

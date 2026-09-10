@@ -1,0 +1,4 @@
+interface:
+  display_name: "Genomic Interval Operations"
+  short_description: "Apply deterministic same-build interval algebra under an auditable coordinate contract."
+  default_prompt: "Intersect these BED peaks with promoters while respecting strand and report the coordinate convention."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Single Cell Marker Evidence Review"
+  short_description: "Review cluster markers against a declared local reference and return candidate cell-type evidence."
+  default_prompt: "Review cluster markers against a declared local reference and return candidate cell-type evidence. Inspect my inputs and clarify only facts that change the analysis."

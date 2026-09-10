@@ -1,0 +1,4 @@
+interface:
+  display_name: "Amplicon Beta-Diversity Distance Analysis"
+  short_description: "Calculate bounded pairwise beta-diversity distances."
+  default_prompt: "Calculate upper-triangle Bray-Curtis and presence/absence Jaccard distances from this local feature-by-sample integer TSV, return structured not-estimable metrics for pairs involving a zero-depth sample, and write a new descriptive JSON report."

@@ -1,18 +1,32 @@
 ---
 name: alignment-file-operations
-description: "A user needs metadata inspection, sorting, indexing, region extraction, filtering or basic query operations on SAM/BAM/CRAM. Exclude: aligning raw reads; variant calling; assuming a missing or mismatched reference."
+description: "Inspect, sort, index, filter, convert or summarize existing SAM/BAM/CRAM alignments. Exclude read alignment, variant calling and biological interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Alignment File Operations
 
 `Preview + reviewed`; runtime, scientific, expert, and clinical validation were not performed.
 
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: A user needs metadata inspection, sorting, indexing, region extraction, filtering or basic query operations on SAM/BAM/CRAM. Exclude: aligning raw reads; variant calling; assuming a missing or mismatched reference.
+
 ## Owns
 
-Perform bounded, auditable operations on existing alignment files without changing biological meaning silently. Exclusions are declared in the trigger above.
+Perform bounded, auditable operations on existing alignment files without changing biological meaning silently. Apply the detailed scope below.
 
 ## Inputs
 

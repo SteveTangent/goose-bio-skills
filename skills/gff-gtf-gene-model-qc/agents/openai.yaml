@@ -1,0 +1,4 @@
+interface:
+  display_name: "GFF/GTF Gene-model Structural QC"
+  short_description: "Audit bounded local gene-model structure against exact contig sizes."
+  default_prompt: "Structurally audit this local GFF3 gene model against its exact reference .fai and write a new JSON report without repairing or overwriting anything."

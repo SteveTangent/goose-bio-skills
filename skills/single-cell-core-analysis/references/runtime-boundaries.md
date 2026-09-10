@@ -1,50 +1,13 @@
-# Runtime and scientific boundaries
+# Runtime boundaries
 
-This reference defines the source-clean operating boundary for
-`single-cell-core-analysis`. It records interfaces reviewed on 2026-08-08; it does not claim
-that the tools were installed or runtime-tested in this preview.
+The original helper is a small local adapter. It has deterministic standard-library self-tests and separately recorded small execution checks. These checks do not establish agent behavior, scientific benchmark performance, expert approval or superiority to a source repository.
 
-## Scientific contract
+Current versions: Python >=3.10; dependency-free deterministic self-test; NumPy 2.4.4 / SciPy 1.17.1 small local execution; AnnData 0.13.3.post0 / h5py 3.16.0 small h5ad execution; Scanpy 1.12.4 / igraph 0.11.9 CPU smoke.
 
-- Require a validated object, authoritative counts layer, and explicit QC handoff before analysis
-- Fix normalization, HVG method, PCA dimensions, neighbor backend, seed, UMAP, clustering algorithm, and resolution
-- Do not treat Scanpy and Seurat outputs as numerically interchangeable
-- A SingleCellExperiment object may be an input container, but it is not an execution stack for this Skill
-- Limit the owned job to an exploratory baseline; exclude integration, annotation, trajectory, and condition-level inference
+Inputs: Checked h5ad and matching qc.json; preserved counts layer; explicit HVG/PCA/neighbors/resolution/seed settings.
 
-## Optional adapters
+Outputs: Processed object, embedding.tsv, descriptive cluster-vs-rest markers.tsv and analysis.json with actual settings/versions.
 
-- `Scanpy`
-- `AnnData`
-- `Seurat`
+Unsupported: Batch integration, automatic annotation, trajectory/velocity, GPU/distributed workflows and condition-level DE.
 
-These names identify compatible capability surfaces, not rankings or silent
-dependencies. Record the exact local version and command before execution.
-
-## Interface freshness
-
-| Component | Reviewed version/interface | Official documentation | Checked |
-| --- | --- | --- | --- |
-| Scanpy | 1.12.1 | [normalization, HVG, PCA, graph, embedding, and clustering](https://scanpy.readthedocs.io/en/latest/release-notes/index.html) | 2026-08-08 |
-| AnnData | 0.13.2 | [input object container for Scanpy execution](https://anndata.readthedocs.io/en/stable/release-notes/) | 2026-08-08 |
-| Seurat | 5.5.1 | [exploratory single-cell analysis](https://satijalab.org/seurat/news/) | 2026-08-08 |
-
-## Network and data boundary
-
-Local object analysis is offline. Remote arrays, cloud compute, and hosted embeddings are optional network paths and require explicit authorization.
-
-Before any network call, disclose the provider, query or data fields sent,
-credential requirement, rate or access constraint, and local output location.
-Never upload controlled or patient data under this preview contract.
-
-## Verification status
-
-- Mode: `skipped-complex-tool`
-- Reason: Object-scale preprocessing, graph construction, embedding, clustering, GPU, and distributed paths were not run.
-- Relevant versions: Scanpy 1.12.1 + AnnData 0.13.2, Seurat 5.5.1
-- Unverified boundaries:
-  - Normalization, HVG, PCA, graph, UMAP, and clustering were not executed on an exact package fixture
-  - GPU, distributed, cloud, integration, annotation, trajectory, and condition-inference paths are outside the reviewed runtime scope
-
-A skip is not a pass. The exact package remains `preview + reviewed` until a
-separate bounded evaluation records what actually ran.
+Local write capability is bounded by security/permission_policy.json and host permissions. Missing tools return needs-tool; incomplete decisions remain unresolved. No patient, controlled-access or credential data belongs in distributable artifacts. The core makes no network requests. Optional repository companions remain separate and must disclose their own provider, purpose, data sent and credential boundaries.

@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 
-VERSION = "0.9.0"
+VERSION = "0.10.0"
 MAX_INPUT_BYTES = 64 * 1024 * 1024
 MIN_SAMPLES = 2
 MAX_SAMPLES = 128
@@ -108,21 +108,30 @@ def parse_json(text: str) -> dict[str, Any]:
     return value
 
 
-def _path_parts(path: Path, root: Path, role: str) -> tuple[Path, tuple[str, ...], os.stat_result]:
+def _path_parts(
+    path: Path, root: Path, role: str
+) -> tuple[Path, tuple[str, ...], os.stat_result]:
     supplied = Path(path)
     if ".." in supplied.parts:
-        raise reject(f"{role}-parent-traversal", f"{role} path contains parent traversal")
+        raise reject(
+            f"{role}-parent-traversal", f"{role} path contains parent traversal"
+        )
     lexical_root = Path(os.path.abspath(root))
     root_state = os.lstat(lexical_root)
     if stat.S_ISLNK(root_state.st_mode) or not stat.S_ISDIR(root_state.st_mode):
-        raise reject("unsafe-working-directory", "working directory is not a regular directory")
-    candidate = Path(os.path.abspath(
-        supplied if supplied.is_absolute() else lexical_root / supplied
-    ))
+        raise reject(
+            "unsafe-working-directory", "working directory is not a regular directory"
+        )
+    candidate = Path(
+        os.path.abspath(supplied if supplied.is_absolute() else lexical_root / supplied)
+    )
     try:
         relative = candidate.relative_to(lexical_root)
     except ValueError as exc:
-        raise reject(f"{role}-outside-working-directory", f"{role} path is outside the working directory") from exc
+        raise reject(
+            f"{role}-outside-working-directory",
+            f"{role} path is outside the working directory",
+        ) from exc
     if not relative.parts:
         raise reject(f"invalid-{role}-path", f"{role} path names the working directory")
     return candidate, relative.parts, root_state
@@ -149,7 +158,9 @@ def _open_parent(path: Path, root: Path, role: str) -> tuple[Path, int, str]:
             try:
                 child = os.open(part, flags, dir_fd=descriptor)
             except OSError as exc:
-                raise reject(f"unsafe-{role}-parent", f"{role} parent is absent or unsafe") from exc
+                raise reject(
+                    f"unsafe-{role}-parent", f"{role} parent is absent or unsafe"
+                ) from exc
             os.close(descriptor)
             descriptor = child
         return candidate, descriptor, parts[-1]
@@ -180,11 +191,15 @@ def read_input(path: Path, *, root: Path | None = None) -> tuple[bytes, str]:
             if not stat.S_ISREG(opened.st_mode):
                 raise reject("input-not-regular-file", "input must be a regular file")
             if (opened.st_dev, opened.st_ino) != (before.st_dev, before.st_ino):
-                raise reject("input-changed-during-read", "input identity changed before reading")
+                raise reject(
+                    "input-changed-during-read", "input identity changed before reading"
+                )
             chunks: list[bytes] = []
             total = 0
             while total <= MAX_INPUT_BYTES:
-                chunk = os.read(descriptor, min(1024 * 1024, MAX_INPUT_BYTES + 1 - total))
+                chunk = os.read(
+                    descriptor, min(1024 * 1024, MAX_INPUT_BYTES + 1 - total)
+                )
                 if not chunk:
                     break
                 chunks.append(chunk)
@@ -200,7 +215,9 @@ def read_input(path: Path, *, root: Path | None = None) -> tuple[bytes, str]:
         if any(getattr(opened, key) != getattr(after_open, key) for key in stable):
             raise reject("input-changed-during-read", "input changed while being read")
         if any(getattr(after_open, key) != getattr(after_path, key) for key in stable):
-            raise reject("input-changed-during-read", "input path changed while being read")
+            raise reject(
+                "input-changed-during-read", "input path changed while being read"
+            )
         try:
             text = payload.decode("utf-8")
         except UnicodeDecodeError as exc:
@@ -219,17 +236,30 @@ def read_input(path: Path, *, root: Path | None = None) -> tuple[bytes, str]:
 
 def validate_assignment_contract(value: Any) -> dict[str, Any]:
     if not isinstance(value, dict) or set(value) != CONTRACT_KEYS:
-        raise reject("invalid-assignment-contract", "assignment_contract has an unexpected schema")
+        raise reject(
+            "invalid-assignment-contract",
+            "assignment_contract has an unexpected schema",
+        )
     if value["feature"] != "exon" or value["identity"] != "gene_id":
-        raise reject("invalid-assignment-contract", "assignment identity is not gene_id exon counting")
-    if value["duplicate_primary_records"] != "duplicate-flag-alone-does-not-exclude; observed-count-reported":
-        raise reject("invalid-assignment-contract", "duplicate-record policy is unsupported")
+        raise reject(
+            "invalid-assignment-contract",
+            "assignment identity is not gene_id exon counting",
+        )
+    if (
+        value["duplicate_primary_records"]
+        != "duplicate-flag-alone-does-not-exclude; observed-count-reported"
+    ):
+        raise reject(
+            "invalid-assignment-contract", "duplicate-record policy is unsupported"
+        )
     if value["missing_nh"] != "accepted-by-mapq-and-reported":
         raise reject("invalid-assignment-contract", "missing-NH policy is unsupported")
     if value["nh_greater_than_one"] != "unassigned-multimapped":
         raise reject("invalid-assignment-contract", "multimapper policy is unsupported")
     if value["secondary_and_supplementary"] != "ignored-and-reported":
-        raise reject("invalid-assignment-contract", "secondary-record policy is unsupported")
+        raise reject(
+            "invalid-assignment-contract", "secondary-record policy is unsupported"
+        )
     if value["strandedness"] not in {"unstranded", "forward", "reverse"}:
         raise reject("invalid-assignment-contract", "strandedness is unsupported")
     bounded_integer(value["minimum_mapq"], "minimum_mapq", maximum=255)
@@ -239,11 +269,16 @@ def validate_assignment_contract(value: Any) -> dict[str, Any]:
 def validate_source(payload: bytes, report: dict[str, Any]) -> dict[str, Any]:
     if report.get("schema_version") != "1.0":
         raise reject("unsupported-source-schema", "source schema_version must be 1.0")
-    if report.get("status") != "completed" or report.get("analysis_performed") is not True:
+    if (
+        report.get("status") != "completed"
+        or report.get("analysis_performed") is not True
+    ):
         raise reject("source-not-completed", "source report must be completed")
     adapter = report.get("adapter")
     if not isinstance(adapter, dict) or adapter.get("name") != "count_gene_alignments":
-        raise reject("unsupported-source-adapter", "source adapter must be count_gene_alignments")
+        raise reject(
+            "unsupported-source-adapter", "source adapter must be count_gene_alignments"
+        )
     adapter_version = validate_id(adapter.get("version"), "adapter.version")
     sample_id = validate_id(report.get("sample_id"), "sample_id")
 
@@ -255,7 +290,9 @@ def validate_source(payload: bytes, report: dict[str, Any]) -> dict[str, Any]:
     if not SHA256.fullmatch(gtf_sha256):
         raise reject("invalid-gtf-fingerprint", "source GTF SHA-256 is invalid")
 
-    assignment_contract = validate_assignment_contract(report.get("assignment_contract"))
+    assignment_contract = validate_assignment_contract(
+        report.get("assignment_contract")
+    )
     rows = report.get("counts")
     if not isinstance(rows, list) or not rows:
         raise reject("missing-gene-rows", "source report has no gene rows")
@@ -283,10 +320,19 @@ def validate_source(payload: bytes, report: dict[str, Any]) -> dict[str, Any]:
             "strand": strand,
         }
 
-    gene_count = bounded_integer(gtf.get("gene_count"), "inputs.gtf.gene_count", minimum=1, maximum=MAX_GENES)
-    exon_total = bounded_integer(gtf.get("exon_count"), "inputs.gtf.exon_count", minimum=1)
-    if gene_count != len(genes) or exon_total != sum(row["exon_count"] for row in genes.values()):
-        raise reject("inconsistent-gtf-summary", "source GTF summary does not match its gene rows")
+    gene_count = bounded_integer(
+        gtf.get("gene_count"), "inputs.gtf.gene_count", minimum=1, maximum=MAX_GENES
+    )
+    exon_total = bounded_integer(
+        gtf.get("exon_count"), "inputs.gtf.exon_count", minimum=1
+    )
+    if gene_count != len(genes) or exon_total != sum(
+        row["exon_count"] for row in genes.values()
+    ):
+        raise reject(
+            "inconsistent-gtf-summary",
+            "source GTF summary does not match its gene rows",
+        )
 
     return {
         "adapter_version": adapter_version,
@@ -342,15 +388,27 @@ def assemble(sources: list[dict[str, Any]]) -> dict[str, Any]:
     }
     for source in ordered[1:]:
         if source["gtf_sha256"] != reference["gtf_sha256"]:
-            raise reject("gtf-fingerprint-mismatch", "source reports use different GTF fingerprints")
+            raise reject(
+                "gtf-fingerprint-mismatch",
+                "source reports use different GTF fingerprints",
+            )
         if source["assignment_contract"] != reference["assignment_contract"]:
-            raise reject("assignment-contract-mismatch", "source reports use different assignment contracts")
+            raise reject(
+                "assignment-contract-mismatch",
+                "source reports use different assignment contracts",
+            )
         if set(source["genes"]) != set(reference["genes"]):
-            raise reject("gene-set-mismatch", "source reports contain different gene sets")
+            raise reject(
+                "gene-set-mismatch", "source reports contain different gene sets"
+            )
         for gene_id in gene_ids:
             row = source["genes"][gene_id]
-            if (row["contig"], row["strand"], row["exon_count"]) != reference_tuples[gene_id]:
-                raise reject("gene-tuple-mismatch", "source reports disagree on a gene tuple")
+            if (row["contig"], row["strand"], row["exon_count"]) != reference_tuples[
+                gene_id
+            ]:
+                raise reject(
+                    "gene-tuple-mismatch", "source reports disagree on a gene tuple"
+                )
 
     genes = [
         {
@@ -408,13 +466,16 @@ def assemble(sources: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def render(report: dict[str, Any]) -> bytes:
-    return (json.dumps(
-        report,
-        allow_nan=False,
-        ensure_ascii=False,
-        indent=2,
-        sort_keys=True,
-    ) + "\n").encode("utf-8")
+    return (
+        json.dumps(
+            report,
+            allow_nan=False,
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n"
+    ).encode("utf-8")
 
 
 def _unlink_owned(name: str, directory_fd: int, identity: tuple[int, int]) -> bool:
@@ -475,13 +536,17 @@ def write_new(path: Path, payload: bytes, *, root: Path | None = None) -> Path:
             except FileExistsError as exc:
                 raise FileExistsError(target) from exc
             published = True
-            final_state = os.stat(target_name, dir_fd=directory_fd, follow_symlinks=False)
+            final_state = os.stat(
+                target_name, dir_fd=directory_fd, follow_symlinks=False
+            )
             if (final_state.st_dev, final_state.st_ino) != identity:
                 raise OSError("published output identity differs from staged data")
             if not _unlink_owned(temporary_name, directory_fd, identity):
                 raise OSError("staged output identity changed before cleanup")
             os.fsync(directory_fd)
-            final_state = os.stat(target_name, dir_fd=directory_fd, follow_symlinks=False)
+            final_state = os.stat(
+                target_name, dir_fd=directory_fd, follow_symlinks=False
+            )
             if (final_state.st_dev, final_state.st_ino) != identity:
                 raise OSError("published output identity changed before completion")
         except BaseException as exc:
@@ -554,8 +619,20 @@ def self_test() -> None:
             "analysis_performed": True,
             "assignment_contract": deepcopy(contract),
             "counts": [
-                {"contig": "chr2", "count": g_b, "exon_count": 1, "gene_id": "gB", "strand": "-"},
-                {"contig": "chr1", "count": g_a, "exon_count": 2, "gene_id": "gA", "strand": "+"},
+                {
+                    "contig": "chr2",
+                    "count": g_b,
+                    "exon_count": 1,
+                    "gene_id": "gB",
+                    "strand": "-",
+                },
+                {
+                    "contig": "chr1",
+                    "count": g_a,
+                    "exon_count": 2,
+                    "gene_id": "gA",
+                    "strand": "+",
+                },
             ],
             "inputs": {"gtf": {"exon_count": 3, "gene_count": 2, "sha256": "a" * 64}},
             "sample_id": sample_id,
@@ -574,14 +651,26 @@ def self_test() -> None:
     report = assemble([b, a])
     matrix = report["matrix"]
     check(matrix["sample_ids"] == ["sample-a", "sample-b"], "sample order differs")
-    check([row["gene_id"] for row in matrix["genes"]] == ["gA", "gB"], "gene order differs")
+    check(
+        [row["gene_id"] for row in matrix["genes"]] == ["gA", "gB"],
+        "gene order differs",
+    )
     check(matrix["genes"][0]["counts"] == [2, 0], "gA counts differ")
     check(matrix["genes"][1]["counts"] == [1, 3], "gB counts differ")
-    check(matrix["genes"][0]["contig"] == "chr1" and matrix["genes"][1]["strand"] == "-", "gene tuples differ")
+    check(
+        matrix["genes"][0]["contig"] == "chr1" and matrix["genes"][1]["strand"] == "-",
+        "gene tuples differ",
+    )
     check(report["assignment_contract"] == contract, "assignment contract differs")
     check(report["reference"]["gtf_sha256"] == "a" * 64, "GTF fingerprint differs")
-    check([item["sample_id"] for item in report["sources"]] == ["sample-a", "sample-b"], "source order differs")
-    check(render(report) == render(assemble([a, b])), "reversed input order changed output")
+    check(
+        [item["sample_id"] for item in report["sources"]] == ["sample-a", "sample-b"],
+        "source order differs",
+    )
+    check(
+        render(report) == render(assemble([a, b])),
+        "reversed input order changed output",
+    )
     check(b"sample-a.json" not in render(report), "output leaked an input path")
 
     expect("too-few-samples", lambda: assemble([a]))
@@ -600,7 +689,10 @@ def self_test() -> None:
             oversized_loader,
         ),
     )
-    check(projected_loads == 1, "projected cell cap did not stop subsequent source loading")
+    check(
+        projected_loads == 1,
+        "projected cell cap did not stop subsequent source loading",
+    )
     mismatch = fixture("sample-b", 0, 3)
     mismatch["inputs"]["gtf"]["sha256"] = "b" * 64
     expect("gtf-fingerprint-mismatch", lambda: assemble([a, source(mismatch)]))
@@ -616,7 +708,12 @@ def self_test() -> None:
     mismatch["assignment_contract"]["minimum_mapq"] = 30
     expect("assignment-contract-mismatch", lambda: assemble([a, source(mismatch)]))
 
-    for bad_count, code in ((True, "invalid-integer"), (-1, "integer-out-of-range"), (1.5, "invalid-integer"), (MAX_SAFE_INTEGER + 1, "integer-out-of-range")):
+    for bad_count, code in (
+        (True, "invalid-integer"),
+        (-1, "integer-out-of-range"),
+        (1.5, "invalid-integer"),
+        (MAX_SAFE_INTEGER + 1, "integer-out-of-range"),
+    ):
         bad = fixture("sample-x", bad_count, 0)
         expect(code, lambda bad=bad: source(bad))
     duplicate_gene = fixture("sample-x", 1, 2)
@@ -631,7 +728,10 @@ def self_test() -> None:
     bad_adapter = fixture("sample-x", 1, 2)
     bad_adapter["adapter"]["name"] = "other"
     expect("unsupported-source-adapter", lambda: source(bad_adapter))
-    expect("duplicate-json-key", lambda: parse_json('{"status":"completed","status":"completed"}'))
+    expect(
+        "duplicate-json-key",
+        lambda: parse_json('{"status":"completed","status":"completed"}'),
+    )
 
     with tempfile.TemporaryDirectory(prefix="gene-matrix-selftest-") as temporary_name:
         root = Path(temporary_name)
@@ -641,19 +741,31 @@ def self_test() -> None:
         b_path.write_bytes(render(b_report))
         loaded_a = load_source(a_path, root=root)
         loaded_b = load_source(b_path, root=root)
-        check(loaded_a["sample_id"] == "sample-a" and loaded_b["sample_id"] == "sample-b", "source loading differs")
-        check(loaded_a["sha256"] == hashlib.sha256(a_path.read_bytes()).hexdigest(), "source hash differs")
+        check(
+            loaded_a["sample_id"] == "sample-a" and loaded_b["sample_id"] == "sample-b",
+            "source loading differs",
+        )
+        check(
+            loaded_a["sha256"] == hashlib.sha256(a_path.read_bytes()).hexdigest(),
+            "source hash differs",
+        )
 
         linked = root / "linked.json"
         linked.symlink_to(a_path)
         expect("input-not-regular-file", lambda: load_source(linked, root=root))
-        expect("input-parent-traversal", lambda: load_source(Path("..") / "outside.json", root=root))
+        expect(
+            "input-parent-traversal",
+            lambda: load_source(Path("..") / "outside.json", root=root),
+        )
         real_input_parent = root / "real-input-parent"
         real_input_parent.mkdir()
         (real_input_parent / "source.json").write_bytes(render(a_report))
         linked_input_parent = root / "linked-input-parent"
         linked_input_parent.symlink_to(real_input_parent, target_is_directory=True)
-        expect("unsafe-input-parent", lambda: load_source(linked_input_parent / "source.json", root=root))
+        expect(
+            "unsafe-input-parent",
+            lambda: load_source(linked_input_parent / "source.json", root=root),
+        )
 
         output = root / "matrix.json"
         expected = render(assemble([loaded_b, loaded_a]))
@@ -665,13 +777,19 @@ def self_test() -> None:
             check(output.read_bytes() == expected, "existing output was replaced")
         else:
             raise AssertionError("existing output was replaced")
-        expect("output-parent-traversal", lambda: write_new(Path("..") / "escape.json", expected, root=root))
+        expect(
+            "output-parent-traversal",
+            lambda: write_new(Path("..") / "escape.json", expected, root=root),
+        )
 
         real_parent = root / "real-parent"
         real_parent.mkdir()
         linked_parent = root / "linked-parent"
         linked_parent.symlink_to(real_parent, target_is_directory=True)
-        expect("unsafe-output-parent", lambda: write_new(linked_parent / "matrix.json", expected, root=root))
+        expect(
+            "unsafe-output-parent",
+            lambda: write_new(linked_parent / "matrix.json", expected, root=root),
+        )
         protected = root / "protected.json"
         protected.write_text("protected\n", encoding="utf-8")
         linked_output = root / "linked-output.json"
@@ -679,7 +797,10 @@ def self_test() -> None:
         try:
             write_new(linked_output, expected, root=root)
         except FileExistsError:
-            check(protected.read_text(encoding="utf-8") == "protected\n", "output symlink target changed")
+            check(
+                protected.read_text(encoding="utf-8") == "protected\n",
+                "output symlink target changed",
+            )
         else:
             raise AssertionError("output symlink was accepted")
 
@@ -699,20 +820,345 @@ def self_test() -> None:
             try:
                 write_new(rollback_output, expected, root=root)
             except OSError:
-                check(not rollback_output.exists(), "failed publication left a final output")
-                check(not list(root.glob(".rollback.json.tmp-*")), "failed publication left a staged output")
+                check(
+                    not rollback_output.exists(),
+                    "failed publication left a final output",
+                )
+                check(
+                    not list(root.glob(".rollback.json.tmp-*")),
+                    "failed publication left a staged output",
+                )
             else:
                 raise AssertionError("publication failure was accepted")
         finally:
             os.fsync = original_fsync
 
-    print(json.dumps({"checks": checks, "status": "pass", "version": VERSION}, sort_keys=True))
+    previous_cwd = Path.cwd()
+    with tempfile.TemporaryDirectory() as temporary:
+        os.chdir(temporary)
+        try:
+            bridge_report = {
+                "status": "completed",
+                "schema_version": "1.0",
+                "assembly_performed": True,
+                "adapter": {"name": "assemble_gene_count_matrix"},
+                "matrix": {
+                    "orientation": "gene-rows-by-sample-order",
+                    "sample_ids": ["a", "b", "c", "d"],
+                    "sample_count": 4,
+                    "gene_count": 20,
+                    "count_cell_count": 80,
+                    "genes": [
+                        {"gene_id": f"g{i}", "counts": [1, 2, 3, 4]} for i in range(20)
+                    ],
+                },
+            }
+            Path("matrix.json").write_bytes(render(bridge_report))
+            args = argparse.Namespace(
+                matrix_json=Path("matrix.json"),
+                output=Path("ready"),
+                metadata=None,
+                covariate=None,
+            )
+            result = export_de_inputs(args)
+            check(
+                result["next_step_status"] == "needs-decision",
+                "missing sample facts were invented",
+            )
+            check(
+                Path("ready/samples-template.tsv").read_text().splitlines()[1] == "a\t",
+                "condition template is not blank",
+            )
+            expect("output-exists", lambda: export_de_inputs(args))
+            args.output = Path("bad-ready")
+            bridge_report["matrix"]["genes"][0]["counts"][0] = 1.5
+            Path("matrix.json").write_bytes(render(bridge_report))
+            expect("de-count-range", lambda: export_de_inputs(args))
+        finally:
+            os.chdir(previous_cwd)
+
+    print(
+        json.dumps(
+            {"checks": checks, "status": "pass", "version": VERSION}, sort_keys=True
+        )
+    )
+
+
+def bridge_require(condition, code, message, status=None):
+    if not condition:
+        raise reject(code, message)
+
+
+def export_de_inputs(arguments):
+    payload, text = read_input(arguments.matrix_json)
+    report = parse_json(text)
+    bridge_require(
+        report.get("status") == "completed"
+        and report.get("schema_version") == "1.0"
+        and report.get("assembly_performed") is True
+        and isinstance(report.get("adapter"), dict)
+        and report["adapter"].get("name") == "assemble_gene_count_matrix",
+        "matrix-source",
+        "Use a completed schema-1.0 matrix-assembly report.",
+    )
+    matrix = report.get("matrix", {})
+    bridge_require(
+        isinstance(matrix, dict)
+        and matrix.get("orientation") == "gene-rows-by-sample-order",
+        "matrix-orientation",
+        "Require the declared gene-row/sample-column orientation.",
+    )
+    samples = matrix.get("sample_ids")
+    genes = matrix.get("genes")
+    bridge_require(
+        not arguments.covariate
+        or (
+            re.fullmatch(r"[A-Za-z][A-Za-z0-9_]{0,63}", arguments.covariate)
+            and arguments.covariate not in {"sample_id", "condition"}
+        ),
+        "covariate-column",
+        "Declare a distinct supported covariate column.",
+    )
+    bridge_require(
+        isinstance(samples, list) and isinstance(genes, list),
+        "matrix-shape",
+        "The matrix report is missing samples or gene rows.",
+    )
+    pattern = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}\Z")
+    bridge_require(
+        4 <= len(samples) <= 32
+        and all(isinstance(x, str) and pattern.fullmatch(x) for x in samples)
+        and len(set(samples)) == len(samples),
+        "de-sample-boundary",
+        "The DE adapter requires 4–32 unique supported sample IDs. Technical replicates do not substitute for biological replication.",
+    )
+    bridge_require(
+        20 <= len(genes) <= 30000
+        and matrix.get("sample_count") == len(samples)
+        and matrix.get("gene_count") == len(genes)
+        and matrix.get("count_cell_count") == len(samples) * len(genes),
+        "de-matrix-boundary",
+        "The DE adapter requires 20–30,000 genes and consistent dimensions.",
+    )
+    ids = []
+    rows = [["gene_id", *samples]]
+    for row in genes:
+        bridge_require(
+            isinstance(row, dict)
+            and isinstance(row.get("gene_id"), str)
+            and pattern.fullmatch(row["gene_id"]),
+            "de-gene-id",
+            "Gene IDs must meet the DE input contract.",
+        )
+        values = row.get("counts")
+        bridge_require(
+            isinstance(values, list) and len(values) == len(samples),
+            "de-count-shape",
+            "Each gene must have one count per sample.",
+        )
+        bridge_require(
+            all(
+                isinstance(x, int) and not isinstance(x, bool) and 0 <= x <= 2**31 - 1
+                for x in values
+            ),
+            "de-count-range",
+            "DE inputs require nonnegative signed-32-bit integer counts.",
+        )
+        ids.append(row["gene_id"])
+        rows.append([row["gene_id"], *map(str, values)])
+    bridge_require(
+        len(set(ids)) == len(ids), "duplicate-gene-id", "Gene IDs must be unique."
+    )
+    import io, csv
+
+    def table_bytes(rows):
+        stream = io.StringIO()
+        csv.writer(stream, delimiter="\t", lineterminator="\n").writerows(rows)
+        return stream.getvalue().encode()
+
+    files = {"counts.tsv": table_bytes(rows)}
+    bridge_require(
+        len(files["counts.tsv"]) <= 8 * 1024 * 1024,
+        "de-file-size",
+        "The DE count TSV must be at most 8 MiB.",
+    )
+    pending = True
+    metadata_hash = None
+    if arguments.metadata:
+        raw, metadata_text = read_input(arguments.metadata)
+        metadata_hash = hashlib.sha256(raw).hexdigest()
+        table = list(
+            csv.reader(io.StringIO(metadata_text), delimiter="\t", strict=True)
+        )
+        expected = ["sample_id", "condition"] + (
+            [arguments.covariate] if arguments.covariate else []
+        )
+        bridge_require(
+            len(table) == len(samples) + 1
+            and table[0] == expected
+            and all(len(r) == len(expected) for r in table),
+            "metadata-shape",
+            "Use sample_id, condition and the declared optional covariate, with one row per sample.",
+        )
+        index = {r[0]: r for r in table[1:]}
+        bridge_require(
+            len(index) == len(samples) and set(index) == set(samples),
+            "metadata-samples",
+            "Metadata must contain exactly the matrix samples.",
+        )
+        bridge_require(
+            all(
+                re.fullmatch(r"[A-Za-z][A-Za-z0-9_]{0,63}", x)
+                for r in table[1:]
+                for x in r[1:]
+            ),
+            "metadata-values",
+            "Fill in declared condition/covariate labels; do not infer them from file names.",
+        )
+        groups = [r[1] for r in table[1:]]
+        bridge_require(
+            len(set(groups)) == 2 and min(groups.count(x) for x in set(groups)) >= 2,
+            "metadata-replication",
+            "Supply two condition levels with at least two declared biological replicates each.",
+        )
+        files["samples.tsv"] = table_bytes(
+            [expected] + [index[sample] for sample in samples]
+        )
+        pending = False
+    else:
+        files["samples-template.tsv"] = table_bytes(
+            [["sample_id", "condition"]] + [[sample, ""] for sample in samples]
+        )
+    record = {
+        "schema_version": "1.0",
+        "status": "completed",
+        "next_step_status": "needs-decision" if pending else "ready-for-design-check",
+        "tool": {"name": "goose_de_input_export", "version": VERSION},
+        "input_sha256": {
+            "matrix": hashlib.sha256(payload).hexdigest(),
+            "metadata": metadata_hash,
+        },
+        "samples": samples,
+        "gene_count": len(genes),
+        "counts_changed": False,
+        "limitations": [
+            "This export preserves count values and sample order; it does not establish raw-count provenance, biological independence or an estimable model design.",
+            "Blank metadata is intentional; the user must supply condition labels and any justified batch/subject information.",
+        ],
+    }
+    files["handoff.json"] = render(record)
+    files["README.txt"] = (
+        "Counts are ready for the bounded DE input parser.\n"
+        + (
+            "Fill samples-template.tsv from the study records and save a new samples.tsv; never guess conditions from names.\n"
+            if pending
+            else "Sample rows were aligned to count columns. The DE helper must still validate the design.\n"
+        )
+        + "Declare numerator/denominator, biological replication and any batch or subject structure before fitting.\n"
+    ).encode()
+    bridge_bundle(arguments.output, files)
+    return {
+        "status": "completed",
+        "export_performed": True,
+        "next_step_status": record["next_step_status"],
+        "genes": len(genes),
+        "samples": len(samples),
+    }
+
+
+def bridge_path(value):
+    path = Path(value)
+    root = Path.cwd().resolve()
+    bridge_require(
+        ".." not in path.parts,
+        "parent-traversal",
+        "Use a path within the working directory.",
+    )
+    path = path if path.is_absolute() else root / path
+    bridge_require(
+        path != root and path.is_relative_to(root),
+        "outside-workspace",
+        "Use a file or new output directory inside the working directory.",
+    )
+    current = root
+    for part in path.relative_to(root).parts:
+        current /= part
+        bridge_require(
+            not current.is_symlink(), "symlink-path", "Symlink paths are not accepted."
+        )
+    bridge_require(
+        path.parent.is_dir(),
+        "missing-parent",
+        "Create the output parent directory first.",
+    )
+    return path
+
+
+def bridge_bundle(value, files):
+    """Reserve a new directory exclusively; rollback only files we created."""
+    path = bridge_path(value)
+    bridge_require(
+        not path.exists(),
+        "output-exists",
+        "Choose a new output directory.",
+        "invalid-output",
+    )
+    bridge_require(
+        files
+        and all(
+            re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,100}", name) for name in files
+        ),
+        "bundle-names",
+        "Invalid output member.",
+        "invalid-output",
+    )
+    bridge_require(
+        sum(map(len, files.values())) <= 64 * 1024 * 1024,
+        "output-size",
+        "Output exceeds 64 MiB.",
+        "invalid-output",
+    )
+    created = []
+    with tempfile.TemporaryDirectory(prefix=".goose-stage-", dir=path.parent) as stage:
+        for name, data in files.items():
+            with (Path(stage) / name).open("xb") as stream:
+                stream.write(data)
+                stream.flush()
+                os.fsync(stream.fileno())
+        path.mkdir(mode=0o700, exist_ok=False)
+        directory_id = path.stat().st_ino
+        try:
+            for name in files:
+                target = path / name
+                os.link(Path(stage) / name, target, follow_symlinks=False)
+                created.append((target, target.stat().st_ino))
+        except BaseException:
+            if not path.is_symlink() and path.stat().st_ino == directory_id:
+                for target, identity in created:
+                    if (
+                        not target.is_symlink()
+                        and target.exists()
+                        and target.stat().st_ino == identity
+                    ):
+                        target.unlink()
+                try:
+                    path.rmdir()
+                except OSError:
+                    pass
+            raise
 
 
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description=__doc__)
     result.add_argument("--count-json", nargs="+", type=Path)
     result.add_argument("--output", type=Path)
+    result.add_argument(
+        "--matrix-json",
+        type=Path,
+        help="Export an existing matrix as DE inputs into a new directory.",
+    )
+    result.add_argument("--metadata", type=Path)
+    result.add_argument("--covariate")
     result.add_argument("--self-test", action="store_true")
     result.add_argument("--version", action="version", version=VERSION)
     return result
@@ -723,43 +1169,88 @@ def main(argv: list[str] | None = None) -> int:
     if arguments.self_test:
         self_test()
         return 0
-    if arguments.count_json is None or arguments.output is None:
+    if (
+        arguments.count_json is None and arguments.matrix_json is None
+    ) or arguments.output is None:
         parser().error("--count-json and --output are required for execution")
     try:
+        if arguments.matrix_json is not None:
+            if arguments.count_json is not None:
+                raise reject(
+                    "input-choice", "Use either --count-json or --matrix-json."
+                )
+            print(json.dumps(export_de_inputs(arguments), sort_keys=True))
+            return 0
+        if arguments.metadata is not None or arguments.covariate is not None:
+            raise reject(
+                "export-only-option",
+                "Metadata options belong to --matrix-json export mode.",
+            )
         if not MIN_SAMPLES <= len(arguments.count_json) <= MAX_SAMPLES:
-            raise reject("invalid-sample-count", "provide two through 128 source reports")
+            raise reject(
+                "invalid-sample-count", "provide two through 128 source reports"
+            )
         sources = load_sources(arguments.count_json)
         report = assemble(sources)
         target = write_new(arguments.output, render(report))
-        print(json.dumps({
-            "assembly_performed": True,
-            "genes": report["matrix"]["gene_count"],
-            "output": target.name,
-            "samples": report["matrix"]["sample_count"],
-            "status": "completed",
-        }, sort_keys=True))
+        print(
+            json.dumps(
+                {
+                    "assembly_performed": True,
+                    "genes": report["matrix"]["gene_count"],
+                    "output": target.name,
+                    "samples": report["matrix"]["sample_count"],
+                    "status": "completed",
+                },
+                sort_keys=True,
+            )
+        )
         return 0
     except ContractError as exc:
-        print(json.dumps({
-            "assembly_performed": False,
-            "code": exc.code,
-            "message": exc.message,
-            "status": "invalid-input",
-        }, sort_keys=True), file=sys.stderr)
+        print(
+            json.dumps(
+                {
+                    "assembly_performed": False,
+                    "code": exc.code,
+                    "message": exc.message,
+                    "status": "invalid-input",
+                },
+                sort_keys=True,
+            ),
+            file=sys.stderr,
+        )
         return 2
-    except (FileExistsError, FileNotFoundError, IsADirectoryError, NotADirectoryError, PermissionError) as exc:
-        print(json.dumps({
-            "assembly_performed": False,
-            "error": exc.__class__.__name__,
-            "status": "invalid-output",
-        }, sort_keys=True), file=sys.stderr)
+    except (
+        FileExistsError,
+        FileNotFoundError,
+        IsADirectoryError,
+        NotADirectoryError,
+        PermissionError,
+    ) as exc:
+        print(
+            json.dumps(
+                {
+                    "assembly_performed": False,
+                    "error": exc.__class__.__name__,
+                    "status": "invalid-output",
+                },
+                sort_keys=True,
+            ),
+            file=sys.stderr,
+        )
         return 3
     except OSError as exc:
-        print(json.dumps({
-            "assembly_performed": False,
-            "error": exc.__class__.__name__,
-            "status": "io-error",
-        }, sort_keys=True), file=sys.stderr)
+        print(
+            json.dumps(
+                {
+                    "assembly_performed": False,
+                    "error": exc.__class__.__name__,
+                    "status": "io-error",
+                },
+                sort_keys=True,
+            ),
+            file=sys.stderr,
+        )
         return 3
 
 

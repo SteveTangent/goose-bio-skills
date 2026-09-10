@@ -1,14 +1,28 @@
 ---
 name: public-sequencing-run-manifest-retrieval
-description: "Retrieve a bounded public sequencing run/file manifest for exact INSDC study, experiment, sample, BioProject, BioSample, or run accessions; narrow over-limit exact-accession requests before execution. Return linked IDs, layout, platform, file URLs, bytes, and MD5. Exclude discovery, read downloads, QC, conversion, alignment, and bulk harvesting."
+description: "Retrieve a bounded public sequencing-run manifest from exact INSDC accessions. Exclude downloading reads, broad study discovery and deciding assay suitability."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Public Sequencing Run Manifest Retrieval
 
 `Preview + reviewed`; runtime and expert review were not performed.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Retrieve a bounded public sequencing run/file manifest for exact INSDC study, experiment, sample, BioProject, BioSample, or run accessions; narrow over-limit exact-accession requests before execution. Return linked IDs, layout, platform, file URLs, bytes, and MD5. Exclude discovery, read downloads, QC, conversion, alignment, and bulk harvesting.
 
 ## Owns
 

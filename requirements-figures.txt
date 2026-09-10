@@ -1,0 +1,3 @@
+# Versions used for the small rendering check; install in an isolated environment.
+numpy==2.4.4
+matplotlib==3.10.8

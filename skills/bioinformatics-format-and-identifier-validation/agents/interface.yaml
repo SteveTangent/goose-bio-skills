@@ -1,7 +1,7 @@
 interface:
-  display_name: "Bioinformatics Format and Identifier Validation"
-  short_description: "Check supported bioinformatics structures and identifier syntax, with optional exact-accession existence checks."
-  default_prompt: "Validate these declared FASTA records and NCBI accession.version identifiers without changing them; check only exact accession existence when requested."
+  display_name: "Bioinformatics Format And Identifier Validation"
+  short_description: "Validate and explicitly align sample metadata with a declared feature-by-sample matrix."
+  default_prompt: "Validate and explicitly align sample metadata with a declared feature-by-sample matrix. Inspect my inputs and clarify only facts that change the analysis."
 compatibility:
   canonical_format: "agent-skills"
   adapter_targets:

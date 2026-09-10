@@ -1,0 +1,4 @@
+interface:
+  display_name: "Chromatin Peak-set QC"
+  short_description: "Check bounded local BED3 and narrowPeak sets under one declared build."
+  default_prompt: "Check these local BED3 or narrowPeak files against the matching declared-build contig sizes and optional pinned blacklist, then write a new deterministic QC report without inferring the build or overwriting anything."

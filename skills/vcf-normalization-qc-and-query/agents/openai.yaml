@@ -1,0 +1,4 @@
+interface:
+  display_name: "VCF Normalization, QC and Query"
+  short_description: "Produce an auditable normalized or filtered variant representation and QC findings from an existing callset."
+  default_prompt: "Left-normalize this small VCF against the pinned reference and list REF mismatches."

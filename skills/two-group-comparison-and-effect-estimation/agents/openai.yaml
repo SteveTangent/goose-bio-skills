@@ -1,0 +1,4 @@
+interface:
+  display_name: "Two Group Comparison And Effect Estimation"
+  short_description: "Estimate a continuous-outcome difference between two independent or paired groups."
+  default_prompt: "Estimate a continuous-outcome difference between two independent or paired groups. Inspect my inputs and clarify only facts that change the analysis."

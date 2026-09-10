@@ -1,18 +1,32 @@
 ---
 name: environment-and-provenance-capture
-description: "A user needs to record, compare or verify the environment and provenance of a biological computation. Exclude: installing or upgrading software; running a scheduler or workflow engine; uploading manifests without explicit authorization; pipeline design or workflow authoring."
+description: "Record, compare or verify a biological analysis environment and provenance manifest. Exclude installation, upgrades, pipeline execution and workflow authoring."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Environment and Provenance Capture
 
 `Preview + reviewed`; runtime, scientific, expert, and clinical validation were not performed.
 
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: A user needs to record, compare or verify the environment and provenance of a biological computation. Exclude: installing or upgrading software; running a scheduler or workflow engine; uploading manifests without explicit authorization; pipeline design or workflow authoring.
+
 ## Owns
 
-Create a portable, read-only provenance record for one planned or completed computational analysis. Exclusions are declared in the trigger above.
+Create a portable, read-only provenance record for one planned or completed computational analysis. Apply the detailed scope below.
 
 ## Inputs
 

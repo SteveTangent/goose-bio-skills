@@ -1,7 +1,7 @@
 {
   "schema_version": "0.2.0",
   "mode": "live-public-read-only",
-  "freshness_checked_at": "2026-08-13",
+  "freshness_checked_at": "2026-09-10",
   "provider_ids": [
     "ncbi-eutils",
     "uniprot-rest",
@@ -18,7 +18,8 @@
     "enrichr",
     "kegg-rest",
     "embl-ebi-job-dispatcher",
-    "ncbi-blast-remote"
+    "ncbi-blast-remote",
+    "ncbi-geo-files"
   ],
   "providers": {
     "ncbi-eutils": {
@@ -497,6 +498,31 @@
         "max_response_bytes": 0
       },
       "official_docs": "https://www.ncbi.nlm.nih.gov/books/NBK279684/"
+    },
+    "ncbi-geo-files": {
+      "display_name": "NCBI GEO matrix files",
+      "purpose": "List and retrieve a bounded explicitly selected public GEO Series Matrix file.",
+      "would_send": [
+        "public GSE accession and selected matrix filename"
+      ],
+      "credential_fields": [],
+      "billing": {
+        "mode": "public-free",
+        "requires_separate_paid_authorization": false,
+        "summary": "The shared executor uses anonymous no-key access at the public rate limit; host-managed identity or API keys stay outside this adapter."
+      },
+      "allowed_hosts": [
+        "ftp.ncbi.nlm.nih.gov"
+      ],
+      "execution": {
+        "execution_mode": "direct-read",
+        "allowed_url_prefixes": [
+          "https://ftp.ncbi.nlm.nih.gov/geo/series/"
+        ],
+        "rate_limit_per_second": 1,
+        "max_response_bytes": 5242880
+      },
+      "official_docs": "https://www.ncbi.nlm.nih.gov/geo/info/geo_paccess.html"
     }
   }
 }

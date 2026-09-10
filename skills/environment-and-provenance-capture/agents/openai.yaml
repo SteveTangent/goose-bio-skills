@@ -1,0 +1,4 @@
+interface:
+  display_name: "Environment and Provenance Capture"
+  short_description: "Create a portable, read-only provenance record for one planned or completed computational analysis."
+  default_prompt: "Create a reproducibility manifest for this RNA-seq analysis, including package and reference versions."

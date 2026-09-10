@@ -13,10 +13,12 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+from validate_skeleton import package_digest
+
 
 ROOT = Path(__file__).resolve().parents[1]
-FIXTURE = ROOT / "evals" / "fixtures" / "research-wave-r3-minimal-v0.1.json"
-VERSION = "0.1.0"
+FIXTURE = ROOT / "evals" / "fixtures" / "research-wave-r3-minimal-v0.3.json"
+VERSION = "0.3.0"
 PACKAGES = {
     "tree_qc": "phylogenetic-tree-io-and-qc",
     "metabolomics_qc": "untargeted-metabolomics-feature-table-qc",
@@ -27,11 +29,6 @@ SCRIPTS = {
     "metabolomics_qc": ROOT / "skills" / PACKAGES["metabolomics_qc"] / "scripts" / "qc_metabolomics_feature_table.py",
     "read_alignment": ROOT / "skills" / PACKAGES["read_alignment"] / "scripts" / "run_short_dna_alignment.py",
 }
-LEGAL_PREFIXES = (
-    "LICENSE", "NOTICE", "COPYING", "COPYRIGHT", "ATTRIBUTION",
-    "THIRD_PARTY_NOTICES", "THIRD-PARTY-NOTICES",
-)
-CODE_SUFFIXES = {".py", ".r", ".sh", ".bash", ".zsh", ".pl", ".rb", ".js", ".ts"}
 
 
 class Checks:
@@ -65,28 +62,6 @@ def sha256_bytes(payload: bytes) -> str:
 
 def sha256_file(path: Path) -> str:
     return sha256_bytes(path.read_bytes())
-
-
-def package_digest(package: Path) -> str:
-    projection: list[dict[str, str]] = []
-    for path in sorted(item for item in package.rglob("*") if item.is_file()):
-        relative = path.relative_to(package)
-        if any(part.startswith(".") or part == "__pycache__" for part in relative.parts):
-            continue
-        upper_name = relative.name.upper()
-        if upper_name.startswith(LEGAL_PREFIXES):
-            kind = "license"
-        elif relative.as_posix() in {"manifest.json", "agents/interface.yaml"}:
-            kind = "metadata"
-        elif relative.parts[0] == "scripts" or relative.suffix.lower() in CODE_SUFFIXES:
-            kind = "code"
-        else:
-            kind = "text"
-        projection.append({"kind": kind, "path": relative.as_posix(), "sha256": sha256_file(path)})
-    encoded = json.dumps(
-        projection, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-    ).encode("utf-8")
-    return sha256_bytes(encoded)
 
 
 def run_cli(script: Path, arguments: list[str], cwd: Path, timeout: int = 90) -> subprocess.CompletedProcess[str]:

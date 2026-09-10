@@ -1,0 +1,156 @@
+{
+  "schema_version": "0.1.0",
+  "suite_version": "0.3.0",
+  "evidence_kind": "retained-minimal-reliability-fixtures",
+  "scope": {
+    "small_synthetic_data_only": true,
+    "formal_scientific_evaluation": false,
+    "purpose": "Retained small helper checks rebound to the efficiency/dialogue package revision; old fixtures preserved. Inputs and scientific goldens unchanged except matrix adapter version, separately compared after version normalization. No Agent A/B."
+  },
+  "bulk_gene_counting": {
+    "package_digest": "08831a7349db2adb02495faec182626e392abf376d9306ee2e5144174ae7fc0f",
+    "self_test": {
+      "checks": 44,
+      "status": "pass",
+      "version": "0.9.0"
+    },
+    "input_sha256": {
+      "sam": "8e0f4c5c37c3076d9bde4043b5a66432664886ce099b3348582c2fd5b24e0872",
+      "gtf": "18f8c33a3832c17664b61431f557fef0a28ceb6c0523bd476d67908fcc13b515"
+    },
+    "output_sha256": "372433f6d4aeafeef2fdd3909ccd91fd76a70b602887226ecc580e606b0b986f",
+    "sam": "@HD\tVN:1.6\tSO:coordinate\n@SQ\tSN:chr1\tLN:1000\na_unique\t0\tchr1\t105\t60\t20M\t*\t0\t0\t*\t*\tNH:i:1\na_spliced\t0\tchr1\t100\t60\t20M80N20M\t*\t0\t0\t*\t*\tNH:i:1\nb_unique\t16\tchr1\t150\t60\t20M\t*\t0\t0\t*\t*\tNH:i:1\nambiguous\t0\tchr1\t135\t60\t10M\t*\t0\t0\t*\t*\tNH:i:1\nno_feature\t0\tchr1\t400\t60\t20M\t*\t0\t0\t*\t*\nlow_mapq\t0\tchr1\t105\t10\t20M\t*\t0\t0\t*\t*\tNH:i:1\nunmapped\t4\t*\t0\t0\t*\t*\t0\t0\t*\t*\nmultimap\t0\tchr1\t205\t60\t20M\t*\t0\t0\t*\t*\tNH:i:2\n",
+    "gtf": "chr1\ttest\texon\t100\t149\t.\t+\t.\tgene_id \"geneA\"; transcript_id \"txA\";\nchr1\ttest\texon\t200\t249\t.\t+\t.\tgene_id \"geneA\"; transcript_id \"txA\";\nchr1\ttest\texon\t130\t179\t.\t-\t.\tgene_id \"geneB\"; transcript_id \"txB\";\n",
+    "expected": {
+      "geneA": 2,
+      "geneB": 1,
+      "assigned": 3,
+      "ambiguous": 1,
+      "no_feature": 1,
+      "low_mapq": 1,
+      "unmapped": 1,
+      "multimapped": 1
+    }
+  },
+  "junction_psi": {
+    "package_digest": "9a0e1376ff7cd2e3dd87c4b84dbd0c8bdb0b3b6dc76a29972517830d5a177649",
+    "self_test": {
+      "estimable_event_sample_pairs": 13,
+      "event_sample_pairs": 18,
+      "events": 3,
+      "samples": 6,
+      "status": "pass",
+      "version": "0.9.0"
+    },
+    "input_sha256": {
+      "counts": "986e74691d4d7855129e9b9d55ccffa160c9ff746af8391fdacc47fbfb74beca",
+      "groups": "e4fdb19a8246e776a50c8b88bf02bd05dcd5554e94de71d0ee0919efce18f4da"
+    },
+    "output_sha256": "f61a51cfa92e3dce2d537c499a856eaac2ab993e42f440434b1726a9cabdb172",
+    "counts": "event_id\tsample_id\tinclusion_count\texclusion_count\nE1\tc1\t2\t8\nE1\tc2\t4\t16\nE1\tc3\t1\t3\nE1\tt1\t6\t4\nE1\tt2\t12\t8\nE1\tt3\t0\t0\nE2\tc1\t5\t5\nE2\tc2\t10\t10\nE2\tc3\t8\t8\nE2\tt1\t3\t7\nE2\tt2\t6\t14\nE2\tt3\t9\t21\nE3\tc1\t1\t1\nE3\tc2\t2\t2\nE3\tc3\t0\t0\nE3\tt1\t9\t1\nE3\tt2\t18\t2\nE3\tt3\t27\t3\n",
+    "groups": "sample_id\tgroup\nc1\tcontrol\nc2\tcontrol\nc3\tcontrol\nt1\ttreated\nt2\ttreated\nt3\ttreated\n",
+    "expected": {
+      "events": 3,
+      "samples": 6,
+      "event_sample_pairs": 18,
+      "estimable_event_sample_pairs": 13
+    }
+  },
+  "alpha_diversity": {
+    "package_digest": "fa79a4b842264e3643f07d2afe271a86cd216f314e0d25bc7286ff75385eaed7",
+    "self_test": {
+      "checks": 33,
+      "status": "pass",
+      "version": "0.9.0"
+    },
+    "input_sha256": {
+      "table": "8fedbab06ff1cfa5688d158243504e5359cc5634cefe526cc7a838b6b9ea95dd",
+      "invalid_table": "cca46e9f79ccd4ec116efbae35c17783cc6d847542cd4215d1dc0c9e5b4f2731"
+    },
+    "output_sha256": "c26c66da94f610061d269ed4c6cd689fd96fa73aaf8127f75b6c825b1143e621",
+    "table": "feature_id\tS1\tS2\tS3\nF1\t1\t0\t0\nF2\t1\t2\t0\nF3\t2\t2\t0\nF4\t0\t0\t0\n",
+    "invalid_table": "feature_id\tS1\nF1\t-1\n",
+    "expected": {
+      "S1_depth": 4,
+      "S1_observed": 3,
+      "S1_shannon": 1.0397207708399179,
+      "S1_simpson": 0.625,
+      "S3_status": "not-estimable"
+    }
+  },
+  "flow_compensation": {
+    "package_digest": "b2b85af454566683102edb129323202437b3681b7ce3187bb314efcdafb5e582",
+    "self_test": {
+      "checks": 39,
+      "status": "pass",
+      "version": "0.9.0"
+    },
+    "input_sha256": {
+      "events": "bf83ef0e73f89070a5b81e82ec41b5cb1be6c6863cdec98273269ed951370622",
+      "spillover": "bb75dafc64a01bac1dc29ace31a6fc6c18b2d8ace2c99d2f1d985aca304053c3",
+      "invalid_spillover": "05efc630e81a238cc8a3138ca7262351d0f90c5cc72a1600745e51cfc324d203"
+    },
+    "output_sha256": {
+      "events": "2ca4ac1929693934c16c87326baefc20a50bcba0e4f277dc356f4a7f7c33a025",
+      "report": "192fbe661cf3dab10d5aec934801c23274581fd6a36a0f4b94a464d6fc9ab413"
+    },
+    "events": "event_id\tFITC-A\tPE-A\tAPC-A\ne1\t105\t58\t25\ne2\t210\t116\t50\ne3\t0\t0\t0\ne4\t55\t107\t210\ne5\t10.5\t5.8\t2.5\n",
+    "spillover": "source_channel\tFITC-A\tPE-A\tAPC-A\nFITC-A\t1\t0.1\t0\nPE-A\t0.05\t1\t0.02\nAPC-A\t0\t0.03\t1\n",
+    "invalid_spillover": "source_channel\tFITC-A\tPE-A\tAPC-A\nFITC-A\t0.9\t0.1\t0\nPE-A\t0.05\t1\t0.02\nAPC-A\t0\t0.03\t1\n",
+    "expected": {
+      "channels": 3,
+      "events": 5,
+      "first_row": [
+        102.64933628318583,
+        47.01327433628318,
+        24.059734513274336
+      ]
+    }
+  },
+  "kaplan_meier": {
+    "package_digest": "ccbc28e37d60627c444eabfea384ba6c124909cfcc5e5e122af5cd79df96e5e4",
+    "self_test": {
+      "checks": 28,
+      "status": "pass",
+      "version": "0.9.0"
+    },
+    "input_sha256": {
+      "table": "532d44028479609c2888072f4dbf005cf57dfda902787f81e19fc7519c2f2fce",
+      "invalid_table": "89bfc46777c9886743f0b3983ab6fc02f2088c886c2b1bf4dbae27a6e213379a"
+    },
+    "output_sha256": "01b85a614449ce3d5c42cfc337c5faf4e3874771bda608c24e1d3e278b9d476b",
+    "table": "subject_id\ttime\tevent\tgroup\nA1\t1\t1\tA\nA2\t2\t0\tA\nA3\t3\t1\tA\nB1\t1\t0\tB\nB2\t2\t1\tB\nB3\t4\t1\tB\n",
+    "invalid_table": "subject_id\ttime\tevent\tgroup\nA1\t1\t2\tA\n",
+    "expected": {
+      "subjects": 6,
+      "events": 4,
+      "censors": 2,
+      "median": 3.0,
+      "group_A_median": 3.0,
+      "group_B_median": 2.0
+    }
+  },
+  "clinvar_evidence": {
+    "package_digest": "61d6f4a5f36ca3730d70583821a877590c3c574135a39f9ea60a075bd3956854",
+    "self_test": {
+      "checks": 44,
+      "status": "pass",
+      "version": "0.9.0"
+    },
+    "input_sha256": {
+      "payload": "42af333df0a3b2a26499bdbacbec4a7de38761666f0eb53c309db993d8ad709a",
+      "synthetic_provenance": "e424e2a2861f2d06b8e18ae08e16f8dce0ca0eeb97aabc75305bf1baee701aa2"
+    },
+    "output_sha256": "c5b0011a130ee6be53569abd961850a53faafb7c9e8535fac4cbdd5537319573",
+    "identifier": "VCV000000101.3",
+    "payload_filename": "VCV000000101.3.xml",
+    "payload": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ClinVarResult-Set><VariationArchive VariationID=\"101\" Accession=\"VCV000000101\" Version=\"3\" VariationName=\"fixture\" VariationType=\"single nucleotide variant\" RecordType=\"classified\" DateLastUpdated=\"2026-02-02\" NumberOfSubmissions=\"2\" NumberOfSubmitters=\"2\"><RecordStatus>current</RecordStatus><Species>Homo sapiens</Species><ClassifiedRecord><RCVList><RCVAccession Accession=\"RCV000000001\" Version=\"1\" Title=\"fixture condition\"/></RCVList><Classifications><GermlineClassification><ReviewStatus>criteria provided, conflicting classifications</ReviewStatus><Description>Pathogenic</Description><Description>Benign</Description></GermlineClassification></Classifications><ClinicalAssertionList><ClinicalAssertion ID=\"1011\" SubmissionDate=\"2026-01-01\" ContributesToAggregateClassification=\"true\"><ClinVarAccession Accession=\"SCV000000101\" Version=\"1\" SubmitterName=\"Submitter A\"/><Classification><ReviewStatus>criteria provided, single submitter</ReviewStatus><GermlineClassification>Pathogenic</GermlineClassification></Classification><Assertion>variation to disease</Assertion><TraitSet Type=\"Disease\"><Trait Type=\"Disease\"><Name><ElementValue Type=\"Preferred\">Condition A</ElementValue></Name></Trait></TraitSet></ClinicalAssertion><ClinicalAssertion ID=\"1012\" SubmissionDate=\"2026-01-02\" ContributesToAggregateClassification=\"true\"><ClinVarAccession Accession=\"SCV000000102\" Version=\"1\" SubmitterName=\"Submitter B\"/><Classification><ReviewStatus>criteria provided, single submitter</ReviewStatus><GermlineClassification>Benign</GermlineClassification></Classification><Assertion>variation to disease</Assertion><TraitSet Type=\"Disease\"><Trait Type=\"Disease\"><Name><ElementValue Type=\"Preferred\">Condition B</ElementValue></Name></Trait></TraitSet></ClinicalAssertion></ClinicalAssertionList></ClassifiedRecord></VariationArchive></ClinVarResult-Set>",
+    "expected": {
+      "records": 1,
+      "assertions": 2,
+      "aggregate_review_status": "criteria provided, conflicting classifications",
+      "conflict_resolution": "not-performed"
+    }
+  },
+  "supersedes_fixture": "research-wave-r4-minimal-v0.1.json"
+}

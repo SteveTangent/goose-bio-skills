@@ -1,0 +1,4 @@
+interface:
+  display_name: "Over-representation Analysis"
+  short_description: "Produce an auditable contingency-test enrichment result for a selected set against a defensible universe."
+  default_prompt: "Run ORA for these significant genes using all tested genes as background."

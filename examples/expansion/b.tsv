@@ -1,0 +1,4 @@
+feature_id	effect	padj	tested
+g1	3	0.02	true
+g2	1	0.5	true
+g4	2	0.01	true

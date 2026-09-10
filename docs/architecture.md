@@ -2,13 +2,13 @@
 
 ## Research-first system
 
-The v0.9.0 `main` Beta contains 48 independently installable, one-job bioinformatics Skills across 13 Domains and 26 Clusters. The `research` branch is reserved for the next bounded candidate wave; a future candidate remains outside the Beta until its common and candidate-specific promotion gates pass.
+The current catalog contains 56 independently installable, one-job bioinformatics Skills across 13 Domains and 27 Clusters. The immutable collection release is `v0.9.0`; consult the registry for package-level patches on `main`. Unpublished candidates remain on separate candidate branches until their common and candidate-specific promotion gates pass. A branch name alone does not establish release or candidate membership.
 
 ```mermaid
 flowchart LR
     R["Research question<br/>+ evidence and current interfaces"] --> B["One-job boundary<br/>inputs, outputs, exclusions"]
     B --> P["Versioned Skill package"]
-    P --> G["Grill intake"]
+    P --> G["Inspect facts and resolve missing decisions"]
     G --> C["Provider-neutral core"]
     C --> O["Reproducible output<br/>+ declared status"]
     P --> X["registry.json"]
@@ -23,7 +23,7 @@ Only the one-job Skill directory is installable. Domains and Clusters organize t
 
 ## Invocation contract
 
-Every package follows the same fact-first Grill interaction contract.
+Every package follows the same fact-first interaction contract.
 
 ```mermaid
 flowchart TD
@@ -125,3 +125,9 @@ Packages remain flat under `skills/<slug>/`; catalog reorganization does not mov
 ## Lifecycle boundary
 
 Package and registry metadata are admitted together and joined by name, version, and canonical package digest. `preview + reviewed` may omit runtime, scientific, or human evaluation only when that absence and every resulting unverified boundary are explicit. See [Release flow](release-flow.md).
+
+## Practical interaction and handoffs
+
+Every standalone package carries a task-aware dialogue reference, loaded only when needed. It distinguishes observed metadata, supplied study facts and unresolved assumptions; missing scientific facts require focused clarification, while complete requests proceed. See [dialogue examples](user-experience.md).
+
+The prepared-count path now connects matrix export, count-DE, explicit local ID mapping, ORA or complete-ranking GSEA, scientific figures and a source-linked Markdown report. These remain independent one-job packages selected through [task bundles](task-bundles.md), without a second workflow engine. The report preserves source statuses and does not infer biological conclusions.

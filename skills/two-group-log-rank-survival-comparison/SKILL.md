@@ -1,9 +1,9 @@
 ---
 name: two-group-log-rank-survival-comparison
-description: "Use for one bounded, offline, two-sided Mantel-Cox log-rank comparison of exactly two prespecified nonempty groups in a local subject-level TSV with one exact nonnegative follow-up time and one binary event indicator per unique subject. Produce deterministic risk-set/event accounting, observed-minus-expected events, hypergeometric variance, a one-degree-of-freedom chi-square statistic, and an unadjusted p-value or structured not-estimable status. Exclude Kaplan-Meier curves or medians, more than two groups, stratified tests, Cox or parametric models, competing risks, delayed entry, multiplicity correction, significance decisions, clinical prediction, causal claims, and treatment recommendations."
+description: "Compare two declared survival groups using a bounded Mantel-Cox log-rank test with binary events. Exclude Kaplan-Meier estimation, Cox models, competing risks and automatic multiplicity correction."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Two-Group Log-Rank Survival Comparison
@@ -11,6 +11,20 @@ metadata:
 `Preview + reviewed`; the deterministic helper self-test passed. Agent runtime,
 representative-data benchmarking, scientific evaluation, and expert review were
 not performed.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Use for one bounded, offline, two-sided Mantel-Cox log-rank comparison of exactly two prespecified nonempty groups in a local subject-level TSV with one exact nonnegative follow-up time and one binary event indicator per unique subject. Produce deterministic risk-set/event accounting, observed-minus-expected events, hypergeometric variance, a one-degree-of-freedom chi-square statistic, and an unadjusted p-value or structured not-estimable status. Exclude Kaplan-Meier curves or medians, more than two groups, stratified tests, Cox or parametric models, competing risks, delayed entry, multiplicity correction, significance decisions, clinical prediction, causal claims, and treatment recommendations.
 
 ## Owns
 

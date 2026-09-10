@@ -25,7 +25,7 @@ Maintain a small, trustworthy library of installable bioinformatics agent Skills
 ## Pre-execution interaction contract
 
 - Inspect safely discoverable facts first.
-- Ask exactly one question with a recommended answer only when an unresolved user choice would materially change the result; wait before asking another.
+- Ask one focused question for the most consequential unresolved fact or choice. Explain why it matters and request the minimum useful record; related fields may use one compact table. Wait on dependent work. Explain unfamiliar terms, flag evidence-backed misconceptions, and never guess biological facts. With complete inputs, proceed.
 - If the current request already authorizes safe local, non-destructive execution and the scope is unchanged, proceed without a shared-understanding confirmation or a second execution confirmation.
 - Ask one scoped authorization question only for a new material side effect that is not already explicitly authorized for the current action and scope.
 - Keep the core provider-neutral. External adapters must be optional, explicit, tested or marked unverified, and free of advertising or sign-up funnels.
@@ -51,6 +51,13 @@ Maintain a small, trustworthy library of installable bioinformatics agent Skills
 - Require the user to inspect QC and biological plausibility at decision points that cannot be safely automated.
 
 ## Verification before completion
+
+Choose checks by the changed behavior: package edits require structure, source
+and affected helper checks; shared validator or execution changes require their
+regressions. Use the full retained replay set for release preparation or changes
+that affect that set. Once relevant checks pass, do not repeat or expand them
+without a new change, failure or unresolved concern. These completion rules do
+not weaken the admission, privacy, input-validation or no-overwrite boundaries.
 
 - Validate Skill structure and frontmatter.
 - Review trigger positives, negatives, and near-neighbor cases statically; execute them only when the declared assurance includes that bounded evaluation.

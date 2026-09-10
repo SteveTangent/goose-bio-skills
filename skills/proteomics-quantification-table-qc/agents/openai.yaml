@@ -1,0 +1,4 @@
+interface:
+  display_name: "Proteomics Quantification Table QC"
+  short_description: "Assess peptide or protein abundance tables for modeling readiness."
+  default_prompt: "Review this already quantified protein-abundance table and sample metadata for joins, duplicates, missing-versus-zero semantics, distributions, replication, and confounding; do not normalize, impute, or fit a model."

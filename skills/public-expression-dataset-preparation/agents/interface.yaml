@@ -1,0 +1,20 @@
+interface:
+  display_name: "Public Expression Dataset Preparation"
+  short_description: "Prepare one explicitly selected GEO Series Matrix platform and preserve unresolved sample facts."
+  default_prompt: "Prepare one explicitly selected GEO Series Matrix platform and preserve unresolved sample facts. Inspect my inputs and clarify only facts that change the analysis."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

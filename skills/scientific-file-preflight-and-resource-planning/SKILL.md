@@ -1,15 +1,29 @@
 ---
 name: scientific-file-preflight-and-resource-planning
-description: "Use for a bounded, read-only preflight of explicitly named local scientific files before a workflow starts. Estimate container clues, index presence, and conservative resource floors. Exclude full validation, recursion, decompression, repair, conversion, execution, and biological interpretation."
+description: "Inspect bounded metadata for named local scientific files and estimate resource needs. Exclude full format validation, installation, processing and unsupported capacity guarantees."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Scientific File Preflight and Resource Planning
 
 `Preview + reviewed`; the helper self-test passed. Large-file calibration,
 scientific benchmarking, and expert review were not performed.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Use for a bounded, read-only preflight of explicitly named local scientific files before a workflow starts. Estimate container clues, index presence, and conservative resource floors. Exclude full validation, recursion, decompression, repair, conversion, execution, and biological interpretation.
 
 ## Scope and inputs
 

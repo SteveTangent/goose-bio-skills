@@ -1,0 +1,4 @@
+interface:
+  display_name: "Flow Cytometry Compensation Application"
+  short_description: "Apply one declared spillover matrix to local event values."
+  default_prompt: "Apply this exact spillover matrix to the matching channels in my extracted local event table and create compensated events plus a provenance report. Do not estimate compensation, transform, gate, or label cells."

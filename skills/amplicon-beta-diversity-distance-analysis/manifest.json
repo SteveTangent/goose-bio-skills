@@ -1,14 +1,14 @@
 {
   "schema_version": "0.2.0",
   "name": "amplicon-beta-diversity-distance-analysis",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D07",
   "cluster_id": "C20",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-13",
+  "updated_at": "2026-09-10",
   "last_freshness_check": "2026-08-13",
   "review_cadence": "quarterly",
   "status": "active",
@@ -62,7 +62,8 @@
     "self_test_command": "python3 scripts/calculate_beta_distances.py --self-test",
     "runtime_versions": [
       "Python 3.12.8 self-test; compatible syntax requires Python >=3.10"
-    ]
+    ],
+    "artifact_version": "0.9.0"
   },
   "runtime_verification": {
     "mode": "not-performed",
@@ -87,8 +88,8 @@
     ]
   },
   "rollback": {
-    "previous_version": null,
-    "boundary": "Remove this first-release package and its matching registry entry."
+    "previous_version": "0.9.1",
+    "boundary": "Restore the preceding package 0.9.1 and its matching registry entry."
   },
   "network_mode": "none",
   "local_adapters": [

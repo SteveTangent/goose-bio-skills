@@ -1,0 +1,4 @@
+interface:
+  display_name: "Molecule Standardization and Descriptors"
+  short_description: "Create traceable standardized molecular representations and descriptors without erasing the original records."
+  default_prompt: "Standardize these SMILES, keep stereochemistry, remove declared counterions and compute basic descriptors."

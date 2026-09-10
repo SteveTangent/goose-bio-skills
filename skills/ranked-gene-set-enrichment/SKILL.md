@@ -1,18 +1,32 @@
 ---
 name: ranked-gene-set-enrichment
-description: "A user has a complete ranked gene list and requests cutoff-free gene-set enrichment. Exclude selected-list ORA, silent duplicate collapsing, causal claims, per-sample pathway scoring, or phenotype permutation without a separate matrix-and-label contract."
+description: "Analyze enrichment from a complete declared gene ranking and compatible gene sets. Exclude selected-gene over-representation, identifier guessing and mechanistic conclusions."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Ranked Gene-set Enrichment
 
 `Preview + reviewed`; runtime, scientific, expert, and clinical validation were not performed.
 
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: A user has a complete ranked gene list and requests cutoff-free gene-set enrichment. Exclude selected-list ORA, silent duplicate collapsing, causal claims, per-sample pathway scoring, or phenotype permutation without a separate matrix-and-label contract.
+
 ## Owns
 
-Produce reproducible ranked-set enrichment statistics without converting the task into cutoff-based ORA. Exclusions are declared in the trigger above.
+Produce reproducible ranked-set enrichment statistics without converting the task into cutoff-based ORA. Apply the detailed scope below.
 
 ## Inputs
 
@@ -40,6 +54,11 @@ reads. No reviewed ranked-list submission adapter exists, so return
 PHI, controlled data, credentials, or secrets. On failure use pinned data or a
 non-completed status. Record input/collection digests, provider, parameters,
 hashes, and network status.
+
+## Local helper
+
+Use [the bounded adapter and handoff guide](references/local-adapter.md) for
+executable local work. This helper does not expand the network boundary.
 
 ## Workflow
 

@@ -1,14 +1,28 @@
 ---
 name: raw-read-quality-reporting
-description: "Use to generate or interpret read-quality reports for a small, user-provided local FASTQ set or existing FastQC reports. FastQC is primary; MultiQC may only aggregate existing reports. Exclude read download, trimming, alignment, large or batch QC, contamination classification, and experimental pass/fail decisions."
+description: "Inspect small FASTQ inputs or existing FastQC reports and describe read-quality issues. Exclude trimming, filtering, alignment and deciding biological sample adequacy."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.11.0"
 ---
 
 # Raw Read Quality Reporting
 
 `Preview + reviewed`; FastQC and MultiQC runtime execution was skipped.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Use to generate or interpret read-quality reports for a small, user-provided local FASTQ set or existing FastQC reports. FastQC is primary; MultiQC may only aggregate existing reports. Exclude read download, trimming, alignment, large or batch QC, contamination classification, and experimental pass/fail decisions.
 
 ## Owns
 
@@ -54,3 +68,7 @@ checks. Never include reads or claim an unobserved run.
 - Require researcher review for biological interpretation; no clinical authority.
 
 Read [runtime boundaries](references/runtime-boundaries.md) before running or aggregating reports.
+
+## Small local execution adapter (0.11.0)
+
+Summarize existing bounded FastQC text or ZIP reports and preserve module warning flags. Use [the local adapter](references/local-adapter.md) for exact inputs, flags, outputs and limits. Broader guidance above remains available; only this declared adapter has small execution evidence. No undocumented route is silently substituted.

@@ -1,0 +1,96 @@
+{
+  "schema_version": "0.1.0",
+  "suite_version": "0.3.0",
+  "evidence_kind": "retained-minimal-reliability-fixtures",
+  "scope": {
+    "offline": true,
+    "small_data_only": true,
+    "formal_scientific_evaluation": false,
+    "purpose": "Retained small helper checks rebound to the efficiency/dialogue package revision; old fixtures preserved. Inputs and scientific goldens unchanged except matrix adapter version, separately compared after version normalization. No Agent A/B."
+  },
+  "missing_data": {
+    "arguments": {
+      "outcome_column": "outcome",
+      "group_column": "arm",
+      "lower_bound": "0",
+      "upper_bound": "100",
+      "delta_grid": "-10,0,10",
+      "missing_token": "NA"
+    },
+    "valid": {
+      "filename": "missing-valid.csv",
+      "content": "arm,outcome\nA,10\nA,\nB,20\nB,30\n",
+      "sha256": "a21bdfd1c67904441d1f66d8218d3c96ad0eb5d664072836e0a7607c7564e7f3",
+      "output_sha256": "660b82d9dd9e1cadb61d54bae1e5bda56f88a0ba034f664c69cd1080d52cbf5a",
+      "expected_total_rows": 4,
+      "expected_missing_rows": 1
+    },
+    "empty": {
+      "filename": "missing-all-missing.csv",
+      "content": "arm,outcome\nA,\nB,NA\n",
+      "sha256": "c0be7b6fc7bbbd432788591a4ebcee04c2264f2c339059a194b0951d11c8785a",
+      "expected_total_rows": 2,
+      "expected_observed_rows": 0
+    },
+    "malformed": {
+      "filename": "missing-malformed.csv",
+      "content": "arm,outcome\nA,word\n",
+      "sha256": "a6818fc19a30eff300bcf1fe5da2abd22c37810fc9bdd98a28a69c88043d16e4",
+      "expected_issue": "non-finite-or-nonnumeric-outcome"
+    }
+  },
+  "protein_contacts": {
+    "arguments": {
+      "chain_a": "A",
+      "chain_b": "B",
+      "cutoff": "5"
+    },
+    "valid": {
+      "filename": "contacts-valid.pdb",
+      "content": "ATOM      1   CA ALA A   1       0.000   0.000   0.000  1.00 20.00           C\nATOM      2   CA GLY B   2       3.000   4.000   0.000  1.00 20.00           C\nEND\n",
+      "sha256": "ba172b39ab0db5ac00236037f238a893ddd938afbc7ba8bf41bc04cea34261dc",
+      "output_sha256": "e6dbd7832c18bce7813879152d6cb826251c2c7472d962c37f9468cab8ee1d1b",
+      "expected_contact_count": 1,
+      "expected_distance_angstrom": 5.0
+    },
+    "empty": {
+      "filename": "contacts-empty.pdb",
+      "content": "ATOM      1   CA ALA A   1       0.000   0.000   0.000  1.00 20.00           C\nATOM      2   CA GLY B   2      10.000   0.000   0.000  1.00 20.00           C\nEND\n",
+      "sha256": "cf1498aa4b60e44c4c33262ad96b3b1fd10325ece5ec1403d990643e6b30a925",
+      "expected_contact_count": 0
+    },
+    "malformed": {
+      "filename": "contacts-malformed.pdb",
+      "content": "ATOM      1   CA ALA A   1\n",
+      "sha256": "1b3e93b22599162d079eaa461f379524c79fa31e280374a229a8faa790b3a706",
+      "expected_error": "short-coordinate-record"
+    }
+  },
+  "orthology": {
+    "request": {
+      "url": "https://rest.ensembl.org/homology/id/homo_sapiens/ENSG00000141510?target_species=mus_musculus&type=orthologues&sequence=none&aligned=0&format=condensed&content-type=application/json",
+      "source_id": "ENSG00000141510",
+      "target_id": "ENSMUSG00000059552",
+      "target_species": "mus_musculus"
+    },
+    "valid": {
+      "filename": "orthology-valid.json",
+      "content": "{\"data\":[{\"homologies\":[{\"id\":\"ENSMUSG00000059552\",\"method_link_type\":\"ENSEMBL_ORTHOLOGUES\",\"species\":\"mus_musculus\",\"taxonomy_level\":\"Euarchontoglires\",\"type\":\"ortholog_one2one\"}],\"id\":\"ENSG00000141510\"}]}\n",
+      "sha256": "55c13b3a34e18ba0ffd67d79cc62bff71356e352587a3c5bfbbecb0e92b1bef2",
+      "expected_classification": "completed"
+    },
+    "empty": {
+      "filename": "orthology-empty.json",
+      "content": "{\"data\":[{\"homologies\":[],\"id\":\"ENSG00000141510\"}]}\n",
+      "sha256": "b9c922e1d3c5d75caf67e97594549402355173eb950fad2f899c9428e63fd96c",
+      "expected_classification": "no-ortholog-returned"
+    },
+    "malformed": {
+      "filename": "orthology-malformed.json",
+      "content": "{\"data\":",
+      "sha256": "a97439d33ccc4254ff7556847815cba4751a64f6afef1b8c076fec5691210b65",
+      "expected_classification": "invalid"
+    }
+  },
+  "supersedes_fixture": "research-wave-r1-minimal-v0.1.json"
+}

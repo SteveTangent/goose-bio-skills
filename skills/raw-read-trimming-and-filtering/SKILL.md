@@ -1,14 +1,28 @@
 ---
 name: raw-read-trimming-and-filtering
-description: "Use to trim declared adapters and apply an approved quality, length, or N-base filter to a small, explicitly listed local single-end or paired-end FASTQ set, producing new synchronized FASTQ files plus retention and provenance records. Exclude read download, QC interpretation, UMI handling, contamination classification, demultiplexing, deduplication, merging, alignment, broad batches, and overwrites."
+description: "Trim or filter reads using declared adapters, quality thresholds and pairing rules. Exclude guessing adapters, UMI demultiplexing, alignment and biological interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Raw Read Trimming and Filtering
 
 `Preview + reviewed`; external-tool runtime skipped.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Use to trim declared adapters and apply an approved quality, length, or N-base filter to a small, explicitly listed local single-end or paired-end FASTQ set, producing new synchronized FASTQ files plus retention and provenance records. Exclude read download, QC interpretation, UMI handling, contamination classification, demultiplexing, deduplication, merging, alignment, broad batches, and overwrites.
 
 ## Owns
 

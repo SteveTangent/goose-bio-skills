@@ -1,0 +1,20 @@
+interface:
+  display_name: "Single Cell Marker Evidence Review"
+  short_description: "Review cluster markers against a declared local reference and return candidate cell-type evidence."
+  default_prompt: "Review cluster markers against a declared local reference and return candidate cell-type evidence. Inspect my inputs and clarify only facts that change the analysis."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

@@ -1,0 +1,74 @@
+[
+  {
+    "name": "two-group-comparison-and-effect-estimation",
+    "helper": "compare_groups",
+    "job": "Estimate a continuous-outcome difference between two independent or paired groups.",
+    "new": true
+  },
+  {
+    "name": "correlation-and-association-screening",
+    "helper": "analyze_correlations",
+    "job": "Screen explicitly selected Pearson or Spearman variable pairs with optional bounded permutation inference.",
+    "new": true
+  },
+  {
+    "name": "multi-comparison-result-concordance",
+    "helper": "compare_results",
+    "job": "Compare membership and effect direction across two to five existing result tables.",
+    "new": true
+  },
+  {
+    "name": "public-expression-dataset-preparation",
+    "helper": "prepare_geo_matrix",
+    "job": "Prepare one explicitly selected GEO Series Matrix platform and preserve unresolved sample facts.",
+    "new": true
+  },
+  {
+    "name": "single-cell-marker-evidence-review",
+    "helper": "review_marker_evidence",
+    "job": "Review cluster markers against a declared local reference and return candidate cell-type evidence.",
+    "new": true
+  },
+  {
+    "name": "single-cell-pseudobulk-aggregation",
+    "helper": "aggregate_pseudobulk",
+    "job": "Sum authoritative raw counts for one cell type by independent biological sample for a two-group handoff.",
+    "new": true
+  },
+  {
+    "name": "bioinformatics-format-and-identifier-validation",
+    "helper": "validate_sample_table",
+    "job": "Validate and explicitly align sample metadata with a declared feature-by-sample matrix.",
+    "new": false
+  },
+  {
+    "name": "raw-read-quality-reporting",
+    "helper": "summarize_fastqc",
+    "job": "Summarize existing bounded FastQC text or ZIP reports and preserve module warning flags.",
+    "new": false
+  },
+  {
+    "name": "single-cell-object-io-and-qc",
+    "helper": "inspect_single_cell",
+    "job": "Inspect and explicitly filter a small RNA h5ad with authoritative counts and biological sample metadata.",
+    "new": false
+  },
+  {
+    "name": "single-cell-core-analysis",
+    "helper": "run_single_cell",
+    "job": "Run a bounded exploratory Scanpy RNA baseline from an exact matching QC object and receipt.",
+    "new": false
+  },
+  {
+    "name": "bioinformatics-result-visualization",
+    "helper": "plot_results",
+    "job": "Export source-backed volcano, PCA, heatmap, group, correlation, concordance, marker or embedding figures.",
+    "new": false
+  },
+  {
+    "name": "bioinformatics-qc-and-publication-reporting",
+    "helper": "build_analysis_report",
+    "job": "Assemble local analysis outputs into a source-linked report and execution-methods record.",
+    "new": false
+  }
+]

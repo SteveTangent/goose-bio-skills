@@ -1,9 +1,9 @@
 ---
 name: flow-cytometry-compensation-application
-description: "Use to apply one explicitly supplied square spillover matrix to matching numeric channels in an already extracted local flow-cytometry event TSV, producing create-new compensated events and provenance. Exclude FCS parsing, estimating or choosing compensation, transformations, gating, cell labels, batch correction, QC decisions, and biological or clinical interpretation."
+description: "Apply a supplied spillover matrix to a compatible cytometry event TSV. Exclude estimating spillover, raw FCS parsing, gating and clinical interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Flow Cytometry Compensation Application
@@ -11,6 +11,20 @@ metadata:
 `Preview + reviewed`; the bounded deterministic helper self-test passed. Formal
 agent runtime, representative cytometry data, scientific benchmarking, and
 expert review were not performed.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Use to apply one explicitly supplied square spillover matrix to matching numeric channels in an already extracted local flow-cytometry event TSV, producing create-new compensated events and provenance. Exclude FCS parsing, estimating or choosing compensation, transformations, gating, cell labels, batch correction, QC decisions, and biological or clinical interpretation.
 
 ## Owns
 

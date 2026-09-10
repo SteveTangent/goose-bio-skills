@@ -1,0 +1,4 @@
+interface:
+  display_name: "Amplicon Alpha Diversity Analysis"
+  short_description: "Calculate bounded per-sample alpha diversity locally."
+  default_prompt: "Calculate observed features, natural-log Shannon diversity, and Simpson diversity for each sample in this local feature-by-sample integer TSV, return explicit not-estimable results for zero-depth samples, and write a new descriptive JSON report."

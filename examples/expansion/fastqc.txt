@@ -1,0 +1,12 @@
+##FastQC	0.12.1
+>>Basic Statistics	pass
+#Measure	Value
+Filename	synthetic.fastq.gz
+Total Sequences	100
+Sequence length	50
+%GC	48
+>>END_MODULE
+>>Per base sequence quality	warn
+#Base	Mean
+1	25
+>>END_MODULE

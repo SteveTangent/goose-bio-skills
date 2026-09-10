@@ -66,7 +66,7 @@ truncation, or missing authorization, degrade honestly and never claim a call.
 ## Verification status
 
 - Mode: `not-performed`
-- Reason: The preview defines bounded local structural checks but ships no validator implementation; live NCBI and UniProt resolution was not run.
+- Reason: The preview defines bounded local structural checks outside the new sample-table adapter; live NCBI and UniProt resolution was not run.
 - Relevant versions: Biopython 1.87, hts-specs rolling documentation checked 2026-08-08, NCBI sequence identifier documentation checked 2026-08-08, UniProt REST documentation checked 2026-08-09
 - Unverified boundaries:
   - Large-directory and compressed-file batch validation has not been run
@@ -74,3 +74,20 @@ truncation, or missing authorization, degrade honestly and never claim a call.
 
 A skip is not a pass. The exact package remains `preview + reviewed` until a
 separate bounded evaluation records what actually ran.
+
+
+## New sample-table helper
+
+# Runtime boundaries
+
+The original helper is a small local adapter. It has deterministic standard-library self-tests and separately recorded small execution checks. These checks do not establish agent behavior, scientific benchmark performance, expert approval or superiority to a source repository.
+
+Current versions: Python >=3.10; dependency-free deterministic self-test.
+
+Inputs: Sample TSV; optional matrix; declared sample/group/subject/batch columns, matrix scale and explicit renames.
+
+Outputs: New samples.tsv and validation.json with input hashes, renames, sample order, unresolved fields and design warnings.
+
+Unsupported: Inferred groups, silent sample drops, automatic ID mapping, data imputation or choosing a statistical model.
+
+Local write capability is bounded by security/permission_policy.json and host permissions. Missing tools return needs-tool; incomplete decisions remain unresolved. No patient, controlled-access or credential data belongs in distributable artifacts. The core makes no network requests. Optional repository companions remain separate and must disclose their own provider, purpose, data sent and credential boundaries.

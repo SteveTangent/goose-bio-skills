@@ -1,18 +1,32 @@
 ---
 name: biomedical-literature-and-public-study-search
-description: "A user needs publications, public-study metadata, or study-accession discovery for a biomedical question. Exclude claim synthesis, community-only search, clinical recommendations, and non-study identifier resolution."
+description: "Find biomedical publications and public study accessions from a research question. Exclude evidence synthesis, read downloads and clinical recommendations."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Biomedical Literature and Public Study Search
 
 `Preview + reviewed`; runtime, scientific, expert, and clinical validation were not performed.
 
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: A user needs publications, public-study metadata, or study-accession discovery for a biomedical question. Exclude claim synthesis, community-only search, clinical recommendations, and non-study identifier resolution.
+
 ## Owns
 
-Retrieve and screen a traceable corpus of publications or public studies while separating discovery signals from scientific evidence. Exclusions are declared in the trigger above.
+Retrieve and screen a traceable corpus of publications or public studies while separating discovery signals from scientific evidence. Apply the detailed scope below.
 
 ## Inputs
 

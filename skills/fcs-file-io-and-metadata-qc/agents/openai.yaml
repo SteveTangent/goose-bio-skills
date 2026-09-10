@@ -1,0 +1,4 @@
+interface:
+  display_name: "FCS File I/O and Metadata QC"
+  short_description: "Inspect bounded FCS structure and channel metadata safely."
+  default_prompt: "Inspect these explicitly named local FCS files for structure, datasets, event and channel counts, channel labels and scaling keywords, time, and spillover declarations; remain metadata-only unless I explicitly request bounded event statistics."

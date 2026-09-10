@@ -1,15 +1,15 @@
 {
   "schema_version": "0.2.0",
   "name": "single-cell-object-io-and-qc",
-  "version": "0.9.0",
+  "version": "0.11.0",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D05",
   "cluster_id": "C14",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-13",
-  "last_freshness_check": "2026-08-08",
+  "updated_at": "2026-09-10",
+  "last_freshness_check": "2026-09-10",
   "review_cadence": "quarterly",
   "status": "active",
   "lifecycle_stage": "production",
@@ -24,10 +24,9 @@
     "clinical_use": "prohibited",
     "unverified_boundaries": [
       "Agent routing and interactive behavior have not been runtime-evaluated.",
-      "Scientific benchmark performance has not been established.",
-      "Human-expert review has not been performed.",
-      "Large, backed, sparse, and Zarr object behavior has not been evaluated.",
-      "AnnData, Seurat, and SingleCellExperiment cross-conversion loss and compatibility have not been runtime-tested."
+      "Scientific benchmarks, no-Skill comparisons and human-expert review are not performed.",
+      "Small local helper checks do not establish generalization, biological validity or large-dataset support.",
+      "Seurat execution/conversion, doublet detection, ambient-RNA correction, automatic cutoffs, integration and annotation."
     ]
   },
   "intake_contract_version": "1.3.0",
@@ -43,29 +42,41 @@
         "applies_when": "More than one assay or layer could contain counts and the authoritative count source is absent or ambiguous.",
         "question": "Which assay or layer is the authoritative count source for QC?",
         "recommended_answer": "Inspect all candidates and never copy the current matrix into a counts slot by default."
+      },
+      {
+        "decision_id": "input-and-design",
+        "applies_when": "A safely inspected fact remains missing and changes the result or method.",
+        "question": "哪一层保存未经归一化的原始计数，哪些 QC 阈值有实验依据?",
+        "recommended_answer": "建议保留原层，并明确哪些阈值暂不筛选。"
       }
     ]
   },
   "script_verification": {
-    "bundled_scripts": false,
-    "implementation_origin": "none",
-    "self_test_status": "not-applicable",
-    "self_test_command": null,
-    "runtime_versions": []
+    "bundled_scripts": true,
+    "implementation_origin": "original-new",
+    "self_test_status": "passed",
+    "self_test_command": "python3 scripts/inspect_single_cell.py --self-test",
+    "runtime_versions": [
+      "Python >=3.10; dependency-free deterministic self-test",
+      "NumPy 2.4.4 / SciPy 1.17.1 small local execution",
+      "AnnData 0.13.3.post0 / h5py 3.16.0 small h5ad execution"
+    ],
+    "artifact_version": "0.11.0"
   },
   "runtime_verification": {
-    "mode": "skipped-complex-tool",
-    "status": "skipped",
-    "reason": "Large, backed, Zarr, and cross-ecosystem object loading and conversion were not run.",
+    "mode": "not-performed",
+    "status": "not-performed",
+    "reason": "Basic helper execution and input/hand-off checks are recorded separately; no agent or scientific benchmark claim.",
     "tool_versions": [
-      "AnnData 0.13.2",
-      "Scanpy 1.12.1",
-      "Seurat 5.5.1",
-      "SingleCellExperiment 1.34.0 / Bioconductor 3.23"
+      "Python >=3.10; dependency-free deterministic self-test",
+      "NumPy 2.4.4 / SciPy 1.17.1 small local execution",
+      "AnnData 0.13.3.post0 / h5py 3.16.0 small h5ad execution"
     ],
     "unverified_boundaries": [
-      "Large, backed, sparse, and Zarr object behavior has not been evaluated.",
-      "AnnData, Seurat, and SingleCellExperiment cross-conversion loss and compatibility have not been runtime-tested."
+      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "Scientific benchmarks, no-Skill comparisons and human-expert review are not performed.",
+      "Small local helper checks do not establish generalization, biological validity or large-dataset support.",
+      "Seurat execution/conversion, doublet detection, ambient-RNA correction, automatic cutoffs, integration and annotation."
     ]
   },
   "legal_notices": {
@@ -75,15 +86,16 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.8.0",
-    "boundary": "Restore package version 0.8.0 and its matching registry entry."
+    "previous_version": "0.10.0",
+    "boundary": "Restore preceding package 0.10.0 and its matching registry entry."
   },
   "network_mode": "none",
   "local_adapters": [
+    "Python standard library",
     "AnnData",
-    "Scanpy",
-    "Seurat",
-    "SingleCellExperiment"
+    "NumPy",
+    "SciPy",
+    "h5py"
   ],
   "external_services": [],
   "depends_on": [],

@@ -1,14 +1,28 @@
 ---
 name: proteomics-quantification-table-qc
-description: "Use for QC of an already quantified peptide-, protein-group-, or protein-abundance table and sample metadata. Check missingness, duplicates, scale, and design readiness. Exclude raw MS, identification/FDR, protein inference, normalization, imputation, modeling, and clinical use."
+description: "Check quantified proteomics tables, sample metadata and missingness before downstream modeling. Exclude raw spectrum processing, automatic normalization and differential abundance."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Proteomics Quantification Table QC
 
 `Preview + reviewed`; large-table and R/Bioconductor execution were not performed.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Use for QC of an already quantified peptide-, protein-group-, or protein-abundance table and sample metadata. Check missingness, duplicates, scale, and design readiness. Exclude raw MS, identification/FDR, protein inference, normalization, imputation, modeling, and clinical use.
 
 ## Scope and inputs
 

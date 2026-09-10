@@ -1,14 +1,28 @@
 ---
 name: public-orthology-retrieval-and-qc
-description: "Retrieve Ensembl Compara orthology assertions for up to five exact public Ensembl gene stable IDs between explicit supported canonical species names: homo_sapiens, mus_musculus, rattus_norvegicus, or danio_rerio. Preserve relationship type, cardinality, confidence fields, release, and provenance. Exclude symbols, identifier resolution, similarity search, de novo inference, functional transfer, tree inference, and clinical use."
+description: "Retrieve and check public orthology for up to five exact Ensembl IDs within the supported species contract. Exclude de novo orthology inference and automatic function transfer."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Public Orthology Retrieval and QC
 
 `Preview + reviewed`; live runtime, scientific benchmark, and expert review were not performed.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Retrieve Ensembl Compara orthology assertions for up to five exact public Ensembl gene stable IDs between explicit supported canonical species names: homo_sapiens, mus_musculus, rattus_norvegicus, or danio_rerio. Preserve relationship type, cardinality, confidence fields, release, and provenance. Exclude symbols, identifier resolution, similarity search, de novo inference, functional transfer, tree inference, and clinical use.
 
 ## Owns
 

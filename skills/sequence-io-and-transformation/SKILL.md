@@ -1,18 +1,32 @@
 ---
 name: sequence-io-and-transformation
-description: "A user requests deterministic sequence conversion or transformation after validation-only preflight. Exclude: validation-only inspection without transformation; raw-read trimming or filtering; database similarity search; pairwise or multiple sequence alignment; functional annotation from sequence alone."
+description: "Read, write or transform declared sequence formats and identifiers while preserving requested sequence semantics. Exclude read-quality analysis, trimming, alignment and biological inference."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Sequence I/O and Transformation
 
 `Preview + reviewed`; runtime, scientific, expert, and clinical validation were not performed.
 
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: A user requests deterministic sequence conversion or transformation after validation-only preflight. Exclude: validation-only inspection without transformation; raw-read trimming or filtering; database similarity search; pairwise or multiple sequence alignment; functional annotation from sequence alone.
+
 ## Owns
 
-Read, transform and write sequence records with explicit loss and round-trip checks. Exclusions are declared in the trigger above.
+Read, transform and write sequence records with explicit loss and round-trip checks. Apply the detailed scope below.
 
 ## Inputs
 

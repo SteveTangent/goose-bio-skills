@@ -1,15 +1,29 @@
 ---
 name: gff-gtf-gene-model-qc
-description: "Use for bounded, read-only structural QC of an explicitly named local GFF3 or GTF gene-model file against an explicit .fai or contig-size table. Report feature counts, identifier hierarchy, orphan or repeated identifiers, CDS phase fields, parent containment, coordinate bounds, and exact contig consistency. Exclude repair, prediction, completeness scoring, functional annotation, interval algebra, and biological-quality claims."
+description: "Check a declared GFF/GTF gene model against explicit contig lengths and coordinate conventions. Exclude annotation repair, sequence retrieval and expression quantification."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # GFF/GTF Gene-model Structural QC
 
 `Preview + reviewed`; the helper self-test passed. Agent runtime, large-file
 calibration, scientific benchmarking, and expert review were not performed.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Use for bounded, read-only structural QC of an explicitly named local GFF3 or GTF gene-model file against an explicit .fai or contig-size table. Report feature counts, identifier hierarchy, orphan or repeated identifiers, CDS phase fields, parent containment, coordinate bounds, and exact contig consistency. Exclude repair, prediction, completeness scoring, functional annotation, interval algebra, and biological-quality claims.
 
 ## Owns
 

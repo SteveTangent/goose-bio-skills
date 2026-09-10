@@ -1,11 +1,19 @@
-# Runtime and scientific boundaries
+# Runtime boundaries
 
-This reference defines the operating boundary for
-`biological-database-record-retrieval-and-identifier-resolution` version
-`0.9.0`. Interfaces were reviewed on 2026-08-09; this preview does not claim that
-the exact Skill was runtime-evaluated.
+- Agent routing and interactive behavior have not been runtime-evaluated.
+- Scientific benchmark performance and human-expert review have not been established.
+- Basic helper execution uses small fixtures only; dataset generalization and large jobs are unverified.
+- Exact-package provider selection, pagination, rate limiting, release capture, and identifier normalization have not been runtime-evaluated.
+- One-to-many, deprecated, replaced, malformed, rate-limited, and oversized live responses remain unverified for this exact package.
+- Asynchronous and bulk ID mapping, full-database downloads, uploads, and private or controlled records are outside this preview.
 
-## Scientific contract
+The bundled local adapter is documented in [local-adapter.md](local-adapter.md). Other adapters retain their explicit limits; no silent fallback or network submission is permitted.
+
+## Retained external-adapter contract
+
+The following external-adapter freshness records retain their original review dates; the new offline helper does not broaden these interfaces.
+
+### Scientific contract
 
 - Select the provider from the declared identifier authority or requested database, not from search popularity.
 - Preserve accession versions, all returned cross-references, one-to-many mappings, deprecated or replaced status, and not-found results.
@@ -72,16 +80,3 @@ destination, credential, and billing boundary first; this Skill still does not
 execute excluded bulk or job paths. On missing adapters, unavailable network,
 provider failure, truncation, or missing authorization, degrade honestly and
 never claim a call.
-
-## Verification status
-
-- Mode: `not-performed`
-- Reason: This instruction-only preview did not execute exact-package routing, provider selection, live retrieval, pagination, response normalization, or scientific benchmarking.
-- Relevant versions: UniProt REST rolling / release 2026_02, Ensembl REST 15.12, NCBI E-utilities rolling, Bio 02 shared public connector 0.9.0 contract.
-- Unverified boundaries:
-  - Exact-package provider selection, pagination, rate limiting, release capture, and identifier normalization have not been runtime-evaluated.
-  - One-to-many, deprecated, replaced, malformed, rate-limited, and oversized live responses remain unverified for this exact package.
-  - Asynchronous and bulk ID mapping, full-database downloads, uploads, and private or controlled records are outside this preview.
-
-A skip is not a pass. The exact package remains `preview + reviewed` until a
-separate bounded evaluation records what actually ran.

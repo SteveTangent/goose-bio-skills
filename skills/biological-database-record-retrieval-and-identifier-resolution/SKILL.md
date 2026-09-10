@@ -1,14 +1,28 @@
 ---
 name: biological-database-record-retrieval-and-identifier-resolution
-description: "Retrieve bounded public gene, transcript, protein, or nucleotide records from UniProt, Ensembl, or NCBI. Preserve provider provenance and mapping ambiguity. Exclude syntax checks, literature, homology, structures, chemistry, bulk mapping, and clinical use."
+description: "Resolve gene identifiers with a declared local mapping table or retrieve bounded public gene, transcript and protein records. Preserve ambiguous mappings and provenance; exclude remote bulk jobs, literature and clinical interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Biological Database Record Retrieval and Identifier Resolution
 
 `Preview + reviewed`; runtime and expert review were not performed.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Resolve up to 30,000 IDs using an explicit local mapping table, or retrieve bounded public gene, transcript, protein, or nucleotide records from UniProt, Ensembl, or NCBI. Preserve provider provenance and mapping ambiguity. Exclude syntax checks, literature, homology, structures, chemistry, remote bulk mapping, and clinical use.
 
 ## Owns
 
@@ -38,10 +52,18 @@ Use the shared read-only connector with `uniprot-rest`, `ensembl-rest`, or
 `ncbi-eutils`. Choose the issuing authority from the namespace; never silently
 fall back. Limit one invocation to 20 identifiers, 5 requests, and 16 MiB.
 Paid providers, uploads, arbitrary URLs, remote writes, full downloads, and
-asynchronous or bulk mapping are out of scope.
+asynchronous or remote bulk mapping are out of scope.
 
 Pass `--max-bytes 16777216`. Count every HTTP response, including pagination,
 toward the five-request limit; stop before a sixth.
+
+## Local helper
+
+Use [the bounded adapter and handoff guide](references/local-adapter.md) for
+executable local work. This helper does not expand the network boundary.
+
+Bounded offline mapping of up to 30,000 IDs is supported by the local helper;
+the smaller public-network retrieval limits remain unchanged.
 
 ## Workflow
 

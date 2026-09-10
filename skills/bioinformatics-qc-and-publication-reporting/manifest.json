@@ -1,0 +1,97 @@
+{
+  "schema_version": "0.2.0",
+  "name": "bioinformatics-qc-and-publication-reporting",
+  "version": "0.11.0",
+  "maturity_tier": "production",
+  "context_budget_tier": "production",
+  "domain_id": "D01",
+  "cluster_id": "C03",
+  "risk_tier": "R2",
+  "owner": "project-owner",
+  "updated_at": "2026-09-10",
+  "last_freshness_check": "2026-09-10",
+  "review_cadence": "quarterly",
+  "status": "active",
+  "lifecycle_stage": "production",
+  "distribution_status": "installable",
+  "release_stage": "preview",
+  "assurance_level": "reviewed",
+  "assurance": {
+    "runtime_evaluation": "not-performed",
+    "scientific_benchmark": "not-performed",
+    "human_expert_review": "not-performed",
+    "better_than_baseline_claim": false,
+    "clinical_use": "prohibited",
+    "unverified_boundaries": [
+      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "Scientific benchmarks, no-Skill comparisons and human-expert review are not performed.",
+      "Small local helper checks do not establish generalization, biological validity or large-dataset support.",
+      "Invented results, automatic scientific certification, clinical advice, manuscript conclusions and analysis reruns."
+    ]
+  },
+  "intake_contract_version": "1.3.0",
+  "intake_contract": {
+    "facts_before_questions": true,
+    "question_policy": "one-unresolved-load-bearing-decision-at-a-time-with-recommendation",
+    "wait_after_each_question": true,
+    "explicit_safe_local_execution": "proceed-without-repeat-confirmation",
+    "side_effect_confirmation": "only-when-not-already-authorized-for-current-action-and-scope",
+    "decision_sequence": [
+      {
+        "decision_id": "report-audience",
+        "applies_when": "The report audience or set of source artifacts is not specified.",
+        "question": "Who will read this report and which existing result files should it cover?",
+        "recommended_answer": "Use a concise project handoff report with linked source tables, figures, assumptions and unresolved items."
+      },
+      {
+        "decision_id": "input-and-design",
+        "applies_when": "A safely inspected fact remains missing and changes the result or method.",
+        "question": "哪些内容需要研究者补充才能解释这些结果?",
+        "recommended_answer": "建议先补研究设计、真实分组与未解决的样本信息。"
+      }
+    ]
+  },
+  "script_verification": {
+    "bundled_scripts": true,
+    "implementation_origin": "original-new",
+    "self_test_status": "passed",
+    "self_test_command": "python3 scripts/build_analysis_report.py --self-test",
+    "runtime_versions": [
+      "Python >=3.10; dependency-free deterministic self-test"
+    ],
+    "artifact_version": "0.11.0"
+  },
+  "runtime_verification": {
+    "mode": "not-performed",
+    "status": "not-performed",
+    "reason": "Basic helper execution and input/hand-off checks are recorded separately; no agent or scientific benchmark claim.",
+    "tool_versions": [
+      "Python >=3.10; dependency-free deterministic self-test"
+    ],
+    "unverified_boundaries": [
+      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "Scientific benchmarks, no-Skill comparisons and human-expert review are not performed.",
+      "Small local helper checks do not establish generalization, biological validity or large-dataset support.",
+      "Invented results, automatic scientific certification, clinical advice, manuscript conclusions and analysis reruns."
+    ]
+  },
+  "legal_notices": {
+    "required": true,
+    "files": [
+      "LICENSE"
+    ]
+  },
+  "rollback": {
+    "previous_version": "0.10.0",
+    "boundary": "Restore preceding package 0.10.0 and its matching registry entry."
+  },
+  "network_mode": "none",
+  "local_adapters": [
+    "Python standard library"
+  ],
+  "external_services": [],
+  "depends_on": [],
+  "target_platforms": [
+    "agent-skills"
+  ]
+}

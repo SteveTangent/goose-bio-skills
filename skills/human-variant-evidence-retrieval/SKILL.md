@@ -1,9 +1,9 @@
 ---
 name: human-variant-evidence-retrieval
-description: "Use for bounded retrieval and provenance-bound normalization of public ClinVar evidence for one to five exact numeric Variation IDs or VCV accessions. Preserve VCV and SCV identities, provider classifications, review status, conditions, dates, submitters, aggregate records, missing results, and conflicts without resolving them. Exclude free-text variant search or resolution, Allele IDs, RCV- or SCV-led retrieval, VCF processing, variant calling, ACMG classification, evidence scoring, diagnosis, treatment, and clinical recommendations."
+description: "Retrieve bounded ClinVar evidence for one to five exact Variation IDs or VCV accessions. Exclude allele search, RCV lookup, pathogenicity reassessment and clinical decisions."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Human Variant Evidence Retrieval
@@ -12,6 +12,20 @@ metadata:
 public record retrieved through both exact identifier forms passed as developer
 canaries. Formal agent runtime, representative-data benchmarking, scientific
 evaluation, and expert review were not performed.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Use for bounded retrieval and provenance-bound normalization of public ClinVar evidence for one to five exact numeric Variation IDs or VCV accessions. Preserve VCV and SCV identities, provider classifications, review status, conditions, dates, submitters, aggregate records, missing results, and conflicts without resolving them. Exclude free-text variant search or resolution, Allele IDs, RCV- or SCV-led retrieval, VCF processing, variant calling, ACMG classification, evidence scoring, diagnosis, treatment, and clinical recommendations.
 
 ## Owns
 

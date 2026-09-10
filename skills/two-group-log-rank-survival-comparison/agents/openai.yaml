@@ -1,0 +1,4 @@
+interface:
+  display_name: "Two-Group Log-Rank Comparison"
+  short_description: "Compare two right-censored groups with a log-rank test."
+  default_prompt: "Use $two-group-log-rank-survival-comparison to compare exactly two prespecified groups in this local right-censored survival TSV and write a new JSON report without a significance decision."

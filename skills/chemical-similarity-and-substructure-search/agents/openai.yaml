@@ -1,0 +1,4 @@
+interface:
+  display_name: "Chemical Similarity and Substructure Search"
+  short_description: "Return reproducible chemical matches with exact representation, fingerprint, metric and threshold provenance."
+  default_prompt: "Search this standardized library for molecules containing this substructure and report exact query semantics."
