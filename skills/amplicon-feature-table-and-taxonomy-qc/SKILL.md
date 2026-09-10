@@ -1,9 +1,9 @@
 ---
 name: amplicon-feature-table-and-taxonomy-qc
-description: "Use for bounded, offline structural and descriptive QC of a local TSV amplicon feature-count table in explicit feature-rows-by-sample-columns orientation, exact sample metadata, and an optional rank-column taxonomy TSV. Report joins, library sizes, zero-depth samples, sparsity, feature totals, taxonomy-rank completeness, and declared negative controls. Exclude FASTQ processing, denoising, chimera removal, taxonomy assignment, BIOM/QZA parsing, diversity, differential abundance, contamination decisions, pathogen diagnosis, and clinical interpretation."
+description: "Check amplicon feature-count TSVs, sample metadata and optional taxonomy for structural consistency. Exclude filtering, diversity analysis, taxonomic assignment and contamination decisions."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Amplicon Feature-table and Taxonomy QC
@@ -11,6 +11,20 @@ metadata:
 `Preview + reviewed`; the deterministic helper self-test passed. Agent runtime,
 representative-data benchmarking, scientific evaluation, and expert review were
 not performed.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Use for bounded, offline structural and descriptive QC of a local TSV amplicon feature-count table in explicit feature-rows-by-sample-columns orientation, exact sample metadata, and an optional rank-column taxonomy TSV. Report joins, library sizes, zero-depth samples, sparsity, feature totals, taxonomy-rank completeness, and declared negative controls. Exclude FASTQ processing, denoising, chimera removal, taxonomy assignment, BIOM/QZA parsing, diversity, differential abundance, contamination decisions, pathogen diagnosis, and clinical interpretation.
 
 ## Owns
 

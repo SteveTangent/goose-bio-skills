@@ -1,14 +1,28 @@
 ---
 name: sequence-similarity-and-homology-search
-description: "A user needs candidate homologs or similar sequences from a fixed suitable local database or a disclosed remote adapter. Exclude: building a reference database; multiple alignment; claiming function from identity alone."
+description: "Search sequence similarity against a declared database with recorded query and hit-selection settings. Exclude multiple sequence alignment and treating a match as established function."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Sequence Similarity and Homology Search
 
 `Preview + reviewed`; runtime, scientific, expert, and clinical validation were not performed.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: A user needs candidate homologs or similar sequences from a fixed suitable local database or a disclosed remote adapter. Exclude: building a reference database; multiple alignment; claiming function from identity alone.
 
 ## Owns
 

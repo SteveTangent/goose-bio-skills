@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bioinformatics Result Visualization"
+  short_description: "Export source-backed volcano, PCA, heatmap, group, correlation, concordance, marker or embedding figures."
+  default_prompt: "Export source-backed volcano, PCA, heatmap, group, correlation, concordance, marker or embedding figures. Inspect my inputs and clarify only facts that change the analysis."

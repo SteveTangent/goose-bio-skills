@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bounded Missing-outcome Sensitivity"
+  short_description: "Profile missing outcomes and run declared aggregate sensitivity scenarios."
+  default_prompt: "Profile missingness for the continuous outcome in this local table, optionally by my declared group column, and write a new JSON report using my declared outcome bounds and explicit delta grid without imputing rows."

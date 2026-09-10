@@ -1,6 +1,6 @@
 {
   "schema_version": "0.5.0",
-  "updated_at": "2026-08-13",
+  "updated_at": "2026-09-10",
   "policy": "installable-packages-only",
   "lifecycle_axes": {
     "release_stage": [
@@ -21,7 +21,7 @@
     {
       "manifest_schema_version": "0.2.0",
       "name": "alignment-file-operations",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/alignment-file-operations",
       "domain_id": "D02",
       "cluster_id": "C05",
@@ -32,13 +32,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "3bef80ecb44b8f9cf43062e22bf5c27c17eb790f85fda79bf919b9747a1cf6fc",
-      "previous_version": "0.8.0"
+      "package_digest": "2411e4a8ed82172e16dc84a0158bfb2ece96252f6853262c1d64d3939373a2bf",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "amplicon-alpha-diversity-analysis",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/amplicon-alpha-diversity-analysis",
       "domain_id": "D07",
       "cluster_id": "C20",
@@ -49,13 +49,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "3c1ae5a2ff5ecda417d3f3e582dd63f7bf083304ecee7649f7cefe52c4d4f19d",
-      "previous_version": "0.8.0"
+      "package_digest": "fa79a4b842264e3643f07d2afe271a86cd216f314e0d25bc7286ff75385eaed7",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "amplicon-beta-diversity-distance-analysis",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/amplicon-beta-diversity-distance-analysis",
       "domain_id": "D07",
       "cluster_id": "C20",
@@ -66,13 +66,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "0164a34b737b59a5a647624eca27d6afdfa01cef23c5549e0f8ed24df10995c3",
-      "previous_version": null
+      "package_digest": "a6f2943b8081d2149f5ccbca86b50bc05f996cbb4d1aa53e6c6fee3cfaf1fcce",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "amplicon-feature-table-and-taxonomy-qc",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/amplicon-feature-table-and-taxonomy-qc",
       "domain_id": "D07",
       "cluster_id": "C18",
@@ -83,13 +83,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "c199acf56ca4fc869244a81834344b71a248a80f0cb218f0aac2be63baf4feaf",
-      "previous_version": "0.8.0"
+      "package_digest": "e5f2c8c856a9a6486fdb18d5e9c7b380f8f709380cb4c0654b336f25e883df0e",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "bioinformatics-format-and-identifier-validation",
-      "version": "0.9.0",
+      "version": "0.11.0",
       "path": "skills/bioinformatics-format-and-identifier-validation",
       "domain_id": "D01",
       "cluster_id": "C01",
@@ -103,13 +103,47 @@
         "ncbi-eutils",
         "uniprot-rest"
       ],
-      "package_digest": "b099b12855b8dcd403d7eda076b4f3e1bc4c0776f0cdf98a22d963f5dc7efb9b",
-      "previous_version": "0.8.0"
+      "package_digest": "1b7db132b9d0c64b282ade034759ba87dc10b03886f615081717f0a0b5541ab8",
+      "previous_version": "0.10.0"
+    },
+    {
+      "manifest_schema_version": "0.2.0",
+      "name": "bioinformatics-qc-and-publication-reporting",
+      "version": "0.11.0",
+      "path": "skills/bioinformatics-qc-and-publication-reporting",
+      "domain_id": "D01",
+      "cluster_id": "C03",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "4cbe1eed63fffa18e23e1c71b6d39036959bb9961ddaade53f101c1cd73062c7",
+      "previous_version": "0.10.0"
+    },
+    {
+      "manifest_schema_version": "0.2.0",
+      "name": "bioinformatics-result-visualization",
+      "version": "0.11.0",
+      "path": "skills/bioinformatics-result-visualization",
+      "domain_id": "D01",
+      "cluster_id": "C03",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "4db1667d77fd7de56f2f5ea51076c26a4a919b6495d4383cfd150c17ee5a7d54",
+      "previous_version": "0.10.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "biological-database-record-retrieval-and-identifier-resolution",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/biological-database-record-retrieval-and-identifier-resolution",
       "domain_id": "D01",
       "cluster_id": "C01",
@@ -124,13 +158,13 @@
         "ensembl-rest",
         "ncbi-eutils"
       ],
-      "package_digest": "417d2782337209a85da2b033c71549418df71acecba208b03ba27f26d8836c0c",
-      "previous_version": "0.8.0"
+      "package_digest": "7758856d304a3476fb2c8107a69048b405a5825e0c4d25a1d3c8ec03ef999b64",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "biomedical-literature-and-public-study-search",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/biomedical-literature-and-public-study-search",
       "domain_id": "D13",
       "cluster_id": "C37",
@@ -145,13 +179,13 @@
         "europe-pmc",
         "ebi-biostudies"
       ],
-      "package_digest": "844f2cc1717106be786d5be8d5c8e19423798c913ca9bae3e11d85a13f1da00c",
-      "previous_version": "0.8.0"
+      "package_digest": "9dda7cee05cf5685f67f1a3702765dd6afa7f80d2c978f6b5238cef144113699",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "bulk-rnaseq-gene-count-matrix-assembly",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/bulk-rnaseq-gene-count-matrix-assembly",
       "domain_id": "D04",
       "cluster_id": "C12",
@@ -162,13 +196,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "4e0ac59b2badd63240af8f6c1b2f1a1292e4f93cc7e8e8a4bdffdec9ba2c4368",
-      "previous_version": null
+      "package_digest": "829ce1dc733862941a838ed9ffb4d6c31787b06d82031d6f4b4e8afbfee2ae2a",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "bulk-rnaseq-gene-counting-from-alignment",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/bulk-rnaseq-gene-counting-from-alignment",
       "domain_id": "D04",
       "cluster_id": "C12",
@@ -179,13 +213,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "8270f1f4b262c1eefa76354ace843a9a993a8680cacefbb1db4d1e99be53aebb",
-      "previous_version": "0.8.0"
+      "package_digest": "08831a7349db2adb02495faec182626e392abf376d9306ee2e5144174ae7fc0f",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "chemical-similarity-and-substructure-search",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/chemical-similarity-and-substructure-search",
       "domain_id": "D10",
       "cluster_id": "C28",
@@ -199,13 +233,13 @@
         "pubchem-pug-rest",
         "chembl-rest"
       ],
-      "package_digest": "d992e64643f791a92c3365df54807243d85ad0b8dfac7086ce834b460e975f83",
-      "previous_version": "0.8.0"
+      "package_digest": "22ad2ba22b4331a4c430ca7b7385721c627d9a92b95b82b1462e1179d9c9cef4",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "chromatin-peak-set-qc",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/chromatin-peak-set-qc",
       "domain_id": "D06",
       "cluster_id": "C16",
@@ -216,13 +250,30 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "9350b55bf7dd80386c924eaae59454f05b3bd02f799c12af21fc91ab2e9bbc3d",
-      "previous_version": "0.8.0"
+      "package_digest": "0c224117bf9c3741a24dd58f0467655abb4a53af9675ae5afe0014d9caf7fcbd",
+      "previous_version": "0.9.1"
+    },
+    {
+      "manifest_schema_version": "0.2.0",
+      "name": "correlation-and-association-screening",
+      "version": "0.11.0",
+      "path": "skills/correlation-and-association-screening",
+      "domain_id": "D12",
+      "cluster_id": "C35",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "1dc51e3dd29f829fc0919c0196ce0e6673570eb8320471920de72931cbe5aae6",
+      "previous_version": null
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "count-based-differential-expression",
-      "version": "0.9.1",
+      "version": "0.10.0",
       "path": "skills/count-based-differential-expression",
       "domain_id": "D04",
       "cluster_id": "C12",
@@ -233,13 +284,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "a14424309ba81399228bff1333dc39981cdf961c2960db4eeec27f8646376bd4",
-      "previous_version": "0.9.0"
+      "package_digest": "8f85a4315bbdc3cd8c20e291ed1407146e7ae8ef3f6745753bb06ce311f41fa4",
+      "previous_version": "0.9.2"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "environment-and-provenance-capture",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/environment-and-provenance-capture",
       "domain_id": "D01",
       "cluster_id": "C02",
@@ -250,13 +301,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "c8ec36400df33f356d1a8d7217dee6cf92880d7ca7e017003a23221d2d7f12f4",
-      "previous_version": "0.8.0"
+      "package_digest": "466828626298d52907d94c36259f0e9375a9889dbe6c12d52a6b0adf6cc348e6",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "evidence-synthesis-and-research-traceability",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/evidence-synthesis-and-research-traceability",
       "domain_id": "D13",
       "cluster_id": "C37",
@@ -269,13 +320,13 @@
       "external_services": [
         "crossref-rest"
       ],
-      "package_digest": "0dfb246fe871e60f1a010db46b02c5ce5be8f84b40ddbfb73564d347c68cbd3e",
-      "previous_version": "0.8.0"
+      "package_digest": "82847ac50489138befe75b46c5d923f5f10f53697c11f8cc776ca1f50578082e",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "experimental-design-power-and-batch-planning",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/experimental-design-power-and-batch-planning",
       "domain_id": "D12",
       "cluster_id": "C34",
@@ -286,13 +337,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "da2fbb07fe304fc51fe68c1ceeed86ceff35bf731f345880ae9b9191f03eff5b",
-      "previous_version": "0.8.0"
+      "package_digest": "ac29d6267dc3fed51a6bd36a72990c9ed089377d57da03f904a273403f9462fe",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "fcs-file-io-and-metadata-qc",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/fcs-file-io-and-metadata-qc",
       "domain_id": "D08",
       "cluster_id": "C24",
@@ -303,13 +354,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "99933d48fb0ad8d63c39832cfa486f5a5a581940111832c2ff242494b50d2d0d",
-      "previous_version": "0.8.0"
+      "package_digest": "9a8f5243e2b2f5a84156f6ab8e115c0439a5f2b24f96b49da7747f3cb07db1af",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "flow-cytometry-arcsinh-transformation",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/flow-cytometry-arcsinh-transformation",
       "domain_id": "D08",
       "cluster_id": "C24",
@@ -320,13 +371,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "505895d558e2fe758f06bd7d622984f87c349619e5df4bfdf7510385623267d5",
-      "previous_version": null
+      "package_digest": "329dfda212b18094cbd70540ef5dd3ddd3a407b966fdb8bbc4c9985411300a47",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "flow-cytometry-compensation-application",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/flow-cytometry-compensation-application",
       "domain_id": "D08",
       "cluster_id": "C24",
@@ -337,13 +388,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "40edae7dd41fd429f07647db5a99830613f7bf2f125a3024b445e304b6655c29",
-      "previous_version": "0.8.0"
+      "package_digest": "b2b85af454566683102edb129323202437b3681b7ce3187bb314efcdafb5e582",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "genomic-interval-operations",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/genomic-interval-operations",
       "domain_id": "D02",
       "cluster_id": "C06",
@@ -354,13 +405,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "ebb40a6fde3d4412348d2d3d44b2465c631ea0626c4d29a3d0c89cdc6f01fd12",
-      "previous_version": "0.8.0"
+      "package_digest": "31eecc22aad62d7d9c04474de20555968f5b72c0993e09fa4b3cd8183e4a15eb",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "gff-gtf-gene-model-qc",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/gff-gtf-gene-model-qc",
       "domain_id": "D02",
       "cluster_id": "C07",
@@ -371,13 +422,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "50623ac652325bd605a8a515e52817b749fb7cd04264c4c27ffaa82eea0e0faf",
-      "previous_version": "0.8.0"
+      "package_digest": "3c592072f8729a018192b125468ae582e09d2cbc885d0a038a1bd7a3105ef0ab",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "human-variant-evidence-retrieval",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/human-variant-evidence-retrieval",
       "domain_id": "D13",
       "cluster_id": "C38",
@@ -390,13 +441,13 @@
       "external_services": [
         "ncbi-eutils"
       ],
-      "package_digest": "9c76093b77bc97169ffb2c003129a18c1f65079d0b3be9e00a1af30c2991f4ca",
-      "previous_version": "0.8.0"
+      "package_digest": "61d6f4a5f36ca3730d70583821a877590c3c574135a39f9ea60a075bd3956854",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "junction-psi-and-delta-analysis",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/junction-psi-and-delta-analysis",
       "domain_id": "D04",
       "cluster_id": "C13",
@@ -407,13 +458,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "42dea44a68702006a81ec1e01082e394b68552af775efc552eb8f5023cd177af",
-      "previous_version": "0.8.0"
+      "package_digest": "9a0e1376ff7cd2e3dd87c4b84dbd0c8bdb0b3b6dc76a29972517830d5a177649",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "kaplan-meier-survival-analysis",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/kaplan-meier-survival-analysis",
       "domain_id": "D12",
       "cluster_id": "C36",
@@ -424,13 +475,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "011fcc4bf3b9a6e6ec2d81411d9eb13a25a727c7dd5c2f227856e9996346134c",
-      "previous_version": "0.8.0"
+      "package_digest": "ccbc28e37d60627c444eabfea384ba6c124909cfcc5e5e122af5cd79df96e5e4",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "missing-data-and-sensitivity-analysis",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/missing-data-and-sensitivity-analysis",
       "domain_id": "D12",
       "cluster_id": "C35",
@@ -441,13 +492,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "6da2484f036f129f0fd5fcaac59514e6156b9efef7ec79e349e8cba47291fda1",
-      "previous_version": "0.8.0"
+      "package_digest": "b211c82eeaae129f6055513186411bdd4f365f6e172abc359458066e289e13b1",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "molecule-standardization-and-descriptors",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/molecule-standardization-and-descriptors",
       "domain_id": "D10",
       "cluster_id": "C28",
@@ -458,13 +509,30 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "026bb1f19b4ee1ce25ff2a90c9bed9139f644a693b31a59f44e866b54ea40fd9",
-      "previous_version": "0.8.0"
+      "package_digest": "27d93c2ef81a556b5571593fe0d3469594d1443503318559394417c4c425a0ee",
+      "previous_version": "0.9.1"
+    },
+    {
+      "manifest_schema_version": "0.2.0",
+      "name": "multi-comparison-result-concordance",
+      "version": "0.11.0",
+      "path": "skills/multi-comparison-result-concordance",
+      "domain_id": "D01",
+      "cluster_id": "C03",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "6e86eb24a0124e9568887672056bbbeba79c9a877e4adec655e00577d9856cb2",
+      "previous_version": null
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "over-representation-analysis",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/over-representation-analysis",
       "domain_id": "D11",
       "cluster_id": "C31",
@@ -479,13 +547,13 @@
         "enrichr",
         "kegg-rest"
       ],
-      "package_digest": "531cc537fa771862e7e45c8e6c2c0341ee1be0e8cf51cae6efa5d62b1eb009c3",
-      "previous_version": "0.8.0"
+      "package_digest": "55b69cc18bb3bf348f787e29bf9ea589d5488fe20bef5ab077badf8d84f79b86",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "pairwise-and-multiple-sequence-alignment",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/pairwise-and-multiple-sequence-alignment",
       "domain_id": "D02",
       "cluster_id": "C04",
@@ -498,13 +566,13 @@
       "external_services": [
         "embl-ebi-job-dispatcher"
       ],
-      "package_digest": "e8e14398719b7313d1af8afeae99c1f4d3ccb8ffd4710ae61335aa6f2068459e",
-      "previous_version": "0.8.0"
+      "package_digest": "458b66a4d4ddf23a43bc8fcfc90204329506bf51a2f727ee2f01a04730f63c4d",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "phylogenetic-tree-io-and-qc",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/phylogenetic-tree-io-and-qc",
       "domain_id": "D02",
       "cluster_id": "C08",
@@ -515,13 +583,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "2b87ac4584345506235a7346678d9b8626f6353fcba758421a4146bbeb5649f2",
-      "previous_version": "0.8.0"
+      "package_digest": "4b73809cf6cedc0a60f7d2030cac488a5abc96f7f07f60070467830ffcdbeda7",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "protein-interface-contact-analysis",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/protein-interface-contact-analysis",
       "domain_id": "D09",
       "cluster_id": "C27",
@@ -532,13 +600,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "fbc0a1cc7252d8844614c28f7affd96eef3a7481603feeb7eb461dba2bb8433e",
-      "previous_version": "0.8.0"
+      "package_digest": "7de48c61e3c8a8102275cbaf89e7f9984dc50942c211ee13bd58a5fb3572a841",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "protein-level-differential-abundance",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/protein-level-differential-abundance",
       "domain_id": "D08",
       "cluster_id": "C22",
@@ -549,13 +617,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "586e57bb8f8d7ce5fcf65bfed2f4c6242d373d3883f3a65eb0670f1043763f49",
-      "previous_version": "0.8.0"
+      "package_digest": "107e69c2861899077cd62401dd7b57a24ef7addbbe7ab683aac89c0d04160fc8",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "protein-structure-retrieval-and-comparison",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/protein-structure-retrieval-and-comparison",
       "domain_id": "D09",
       "cluster_id": "C25",
@@ -569,13 +637,13 @@
         "rcsb-pdb",
         "alphafold-db"
       ],
-      "package_digest": "aa0da39907f4a3020e72aa937df74277cfe240b463b4c429e36dfd1d321635e0",
-      "previous_version": "0.8.0"
+      "package_digest": "f20d4d712b8991d94da058ada8fc66ee008d4c42ed2a3e815aac410eae182e5b",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "proteomics-quantification-table-qc",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/proteomics-quantification-table-qc",
       "domain_id": "D08",
       "cluster_id": "C22",
@@ -586,13 +654,30 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "52a64f3d9cc2db6dbbedda68cced79c6b6042537a9caa165767dcf2e48679424",
-      "previous_version": "0.8.0"
+      "package_digest": "e7ee3f5a392bbb3e23cc3b02cce9a62fe596ce5bdf09396298379f28925b005d",
+      "previous_version": "0.9.1"
+    },
+    {
+      "manifest_schema_version": "0.2.0",
+      "name": "public-expression-dataset-preparation",
+      "version": "0.11.0",
+      "path": "skills/public-expression-dataset-preparation",
+      "domain_id": "D01",
+      "cluster_id": "C01",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "79744c9f1b4fe63794ea689db30fdf3e5147117df2d5794a33752ef40a0ae20b",
+      "previous_version": null
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "public-orthology-retrieval-and-qc",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/public-orthology-retrieval-and-qc",
       "domain_id": "D02",
       "cluster_id": "C08",
@@ -605,13 +690,13 @@
       "external_services": [
         "ensembl-rest"
       ],
-      "package_digest": "dc9ddc7ad600b113888b589d4f5ec39dfca7b2441c1264c5f6e55b5e28c59221",
-      "previous_version": "0.8.0"
+      "package_digest": "5992975a4ad4cede952ec6451743fd32548a92bedb9c9d79382f1bc0cd1f3d82",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "public-sequencing-run-manifest-retrieval",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/public-sequencing-run-manifest-retrieval",
       "domain_id": "D01",
       "cluster_id": "C01",
@@ -624,13 +709,13 @@
       "external_services": [
         "ena-portal-api"
       ],
-      "package_digest": "82006e3d9ee2cfa4e8de6180186aee3af08f1dbb93aa21ae0e12b7884b593ef7",
-      "previous_version": "0.8.0"
+      "package_digest": "33f1c229a12ba493be1945027dc4d1e833e39b288c6b1eb44f38bd9057b12040",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "ranked-gene-set-enrichment",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/ranked-gene-set-enrichment",
       "domain_id": "D11",
       "cluster_id": "C31",
@@ -643,13 +728,13 @@
       "external_services": [
         "enrichr"
       ],
-      "package_digest": "7557f3121620feacbeafaa2b98c39c69a5ef39409ec33fdc57190c1726bbe4ad",
-      "previous_version": "0.8.0"
+      "package_digest": "d9251c320e95ef84069336e2f02b59d9067c7eeb82f586ae71b2c6356d3d58c9",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "raw-read-quality-reporting",
-      "version": "0.9.0",
+      "version": "0.11.0",
       "path": "skills/raw-read-quality-reporting",
       "domain_id": "D02",
       "cluster_id": "C05",
@@ -660,13 +745,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "ac957d93fccfea5ac74015f21ae39b323dbf2ec1d263f6f28adba9d37eb407d1",
-      "previous_version": "0.8.0"
+      "package_digest": "ada66d98c4eaa53a5f2062cdeb1006cd741026eff033ba8e8b89431933556ed9",
+      "previous_version": "0.10.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "raw-read-trimming-and-filtering",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/raw-read-trimming-and-filtering",
       "domain_id": "D02",
       "cluster_id": "C05",
@@ -677,13 +762,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "cf129b37e474c3bf406d8a2e54f08b7a8c6ea3a65afa85a51880596d36f4399c",
-      "previous_version": "0.8.0"
+      "package_digest": "7e0e7248c70f8689325f0dac50fe3bddf210353f18790f9818a9a32a6a7084b3",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "read-alignment-selection-and-execution",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/read-alignment-selection-and-execution",
       "domain_id": "D02",
       "cluster_id": "C05",
@@ -694,13 +779,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "c525561a1821b21117143070cd99ede2648a03b966d429d6f8db2c563b175bc5",
-      "previous_version": "0.8.0"
+      "package_digest": "cc41d128be5d9f69616574f0306001ea3d7464aa1c08dc424113d24b18f36109",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "scientific-file-preflight-and-resource-planning",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/scientific-file-preflight-and-resource-planning",
       "domain_id": "D01",
       "cluster_id": "C01",
@@ -711,13 +796,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "a60c2d1faec7c9224c41e0c0730f95ed625128461f0ff557b311639e2d9fcfa1",
-      "previous_version": "0.8.0"
+      "package_digest": "730fb103f00695045098c29cf8a10d29d8ce645aea1f140206a8608176d01782",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "sequence-io-and-transformation",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/sequence-io-and-transformation",
       "domain_id": "D02",
       "cluster_id": "C04",
@@ -728,13 +813,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "a77dff407e40fbabc135569886c766fbe27c849cf0bbfce255112cfa577ddbe0",
-      "previous_version": "0.8.0"
+      "package_digest": "73cd0eff1db23a0af611147311e816b60d6ae37ccaef611b1630d2b2c44b4a87",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "sequence-similarity-and-homology-search",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/sequence-similarity-and-homology-search",
       "domain_id": "D02",
       "cluster_id": "C04",
@@ -747,13 +832,13 @@
       "external_services": [
         "ncbi-blast-remote"
       ],
-      "package_digest": "a0aa956001632780d0592d9a61bd1b1712f5680dac6082dcbf7bdf4076097e38",
-      "previous_version": "0.8.0"
+      "package_digest": "0556738614b04e93112867ccdfbafa298f79238f26c13d60b1e3e0ae56e69b95",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "single-cell-core-analysis",
-      "version": "0.9.0",
+      "version": "0.11.0",
       "path": "skills/single-cell-core-analysis",
       "domain_id": "D05",
       "cluster_id": "C14",
@@ -764,13 +849,30 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "6f9159dd9ea25e429177218911b089d500996d81774aceabb626e0b7a6d82c5a",
-      "previous_version": "0.8.0"
+      "package_digest": "fde625a498c39c436756bda1968b35e99edab61e09e722e8a6d52334b8ea2e04",
+      "previous_version": "0.10.0"
+    },
+    {
+      "manifest_schema_version": "0.2.0",
+      "name": "single-cell-marker-evidence-review",
+      "version": "0.11.0",
+      "path": "skills/single-cell-marker-evidence-review",
+      "domain_id": "D05",
+      "cluster_id": "C14",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "d5cb3bc13ced6e33e95e8bf8819ff6ab788ae202e2858dc2ea0e7469973859dc",
+      "previous_version": null
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "single-cell-object-io-and-qc",
-      "version": "0.9.0",
+      "version": "0.11.0",
       "path": "skills/single-cell-object-io-and-qc",
       "domain_id": "D05",
       "cluster_id": "C14",
@@ -781,13 +883,30 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "821fad216f6fd7e21c8ab8cf14d0e32dc64540f59068dc71b3f76fc5696ad379",
-      "previous_version": "0.8.0"
+      "package_digest": "c702ee761a313e3d99e5a64df29947b7f97f81c83eb26af3b4c4a46fc7aefccd",
+      "previous_version": "0.10.0"
+    },
+    {
+      "manifest_schema_version": "0.2.0",
+      "name": "single-cell-pseudobulk-aggregation",
+      "version": "0.11.0",
+      "path": "skills/single-cell-pseudobulk-aggregation",
+      "domain_id": "D05",
+      "cluster_id": "C14",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "7210d5821d85312ddac67036419e4b9f271a807839a18a80d155787909ec300b",
+      "previous_version": null
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "statistical-analysis-and-multiple-testing",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/statistical-analysis-and-multiple-testing",
       "domain_id": "D12",
       "cluster_id": "C35",
@@ -798,13 +917,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "46ef1a0cc5514b5472a3f9d8be176d996a3ef2e9c28edf760c96552989c26538",
-      "previous_version": "0.8.0"
+      "package_digest": "a724f23057d1002a350aa9f8381d1c743c578382ce862381f81845c02892ad23",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "taxonomy-name-and-taxid-resolution",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/taxonomy-name-and-taxid-resolution",
       "domain_id": "D01",
       "cluster_id": "C01",
@@ -817,13 +936,30 @@
       "external_services": [
         "ncbi-eutils"
       ],
-      "package_digest": "1458920846a2370f42e0d678d704f693f1d457f18f9bd8bf21d4dfebbb7a13c0",
-      "previous_version": "0.8.0"
+      "package_digest": "f155451fcf6b76a7ae57677d64520c7577f41eec13029c8c84eb52cca1c60e15",
+      "previous_version": "0.9.1"
+    },
+    {
+      "manifest_schema_version": "0.2.0",
+      "name": "two-group-comparison-and-effect-estimation",
+      "version": "0.11.0",
+      "path": "skills/two-group-comparison-and-effect-estimation",
+      "domain_id": "D12",
+      "cluster_id": "C35",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "b7a4532f8d5a4673b958f36b8b94abb43fb2fd43e6cef8d8d9c563974942a88c",
+      "previous_version": null
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "two-group-log-rank-survival-comparison",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/two-group-log-rank-survival-comparison",
       "domain_id": "D12",
       "cluster_id": "C36",
@@ -834,13 +970,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "8e74d9aaefa7579166003ddfca27354f60019c508a3775d5fdb4c06e5bbad84d",
-      "previous_version": null
+      "package_digest": "f36bf7ae0e1e5dc6561bed484745dd17833aa3717357bbe59283cfc119f651ac",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "untargeted-metabolomics-feature-table-qc",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/untargeted-metabolomics-feature-table-qc",
       "domain_id": "D08",
       "cluster_id": "C23",
@@ -851,13 +987,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "614164bfcfef5173d8cc76f24a3d33200684671cf3cc263691861b2ce8491b23",
-      "previous_version": "0.8.0"
+      "package_digest": "26926fa4e6090fb26c93baf68b1c875e75bb1bca795b89133ec98e77d274d9e3",
+      "previous_version": "0.9.1"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "vcf-normalization-qc-and-query",
-      "version": "0.9.0",
+      "version": "0.10.0",
       "path": "skills/vcf-normalization-qc-and-query",
       "domain_id": "D03",
       "cluster_id": "C10",
@@ -868,8 +1004,8 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "4fc57baf29c2552271b8457cb71d4e1fa3248a2d4afd11a92be6aac2e0284e8b",
-      "previous_version": "0.8.0"
+      "package_digest": "026cc8273050e7c38dd4a55fa4815745175b86f2973c6d7d2363832d4d955c5e",
+      "previous_version": "0.9.1"
     }
   ]
 }

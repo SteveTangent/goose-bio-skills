@@ -1,51 +1,13 @@
-# Runtime and scientific boundaries
+# Runtime boundaries
 
-This reference defines the source-clean operating boundary for
-`single-cell-object-io-and-qc`. It records interfaces reviewed on 2026-08-08; it does not claim
-that the tools were installed or runtime-tested in this preview.
+The original helper is a small local adapter. It has deterministic standard-library self-tests and separately recorded small execution checks. These checks do not establish agent behavior, scientific benchmark performance, expert approval or superiority to a source repository.
 
-## Scientific contract
+Current versions: Python >=3.10; dependency-free deterministic self-test; NumPy 2.4.4 / SciPy 1.17.1 small local execution; AnnData 0.13.3.post0 / h5py 3.16.0 small h5ad execution.
 
-- Record the object and file version, axes, assays, layers, authoritative counts source, sparse or backed state, and duplicate-ID policy
-- Inventory conversion losses for assays, layers, categories, graphs, sparse types, and provenance
-- Default QC to reporting metrics and recommendations rather than silently filtering cells
-- Treat AnnData 0.13 copy-on-write, layers[None], and Zarr changes as an explicit compatibility boundary
+Inputs: Small h5ad; named raw-count layer, sample column, RNA assay, explicit min-counts/min-genes; optional mitochondrial prefix/fraction.
 
-## Optional adapters
+Outputs: New checked.h5ad, per-cell qc.tsv and qc.json including exact output hash for the core-analysis handoff.
 
-- `AnnData`
-- `Scanpy`
-- `Seurat`
-- `SingleCellExperiment`
+Unsupported: Seurat execution/conversion, doublet detection, ambient-RNA correction, automatic cutoffs, integration and annotation.
 
-These names identify compatible capability surfaces, not rankings or silent
-dependencies. Record the exact local version and command before execution.
-
-## Interface freshness
-
-| Component | Reviewed version/interface | Official documentation | Checked |
-| --- | --- | --- | --- |
-| AnnData | 0.13.2 | [single-cell object I/O](https://anndata.readthedocs.io/en/stable/release-notes/) | 2026-08-08 |
-| Scanpy | 1.12.1 | [single-cell QC metrics](https://scanpy.readthedocs.io/en/latest/release-notes/index.html) | 2026-08-08 |
-| Seurat | 5.5.1 | [Seurat object schema and QC](https://satijalab.org/seurat/news/) | 2026-08-08 |
-| SingleCellExperiment | 1.34.0 with Bioconductor 3.23 | [Bioconductor single-cell object contract](https://bioconductor.org/packages/release/bioc/html/SingleCellExperiment.html) | 2026-08-08 |
-
-## Network and data boundary
-
-Local object I/O and QC are offline. Remote object stores or cloud-backed arrays are optional network paths and require explicit data and credential disclosure.
-
-Before any network call, disclose the provider, query or data fields sent,
-credential requirement, rate or access constraint, and local output location.
-Never upload controlled or patient data under this preview contract.
-
-## Verification status
-
-- Mode: `skipped-complex-tool`
-- Reason: Large, backed, Zarr, and cross-ecosystem object loading and conversion were not run.
-- Relevant versions: AnnData 0.13.2, Scanpy 1.12.1, Seurat 5.5.1, SingleCellExperiment 1.34.0 / Bioconductor 3.23
-- Unverified boundaries:
-  - Large, backed, sparse, and Zarr object behavior has not been evaluated
-  - AnnData, Seurat, and SingleCellExperiment cross-conversion loss and compatibility have not been runtime-tested
-
-A skip is not a pass. The exact package remains `preview + reviewed` until a
-separate bounded evaluation records what actually ran.
+Local write capability is bounded by security/permission_policy.json and host permissions. Missing tools return needs-tool; incomplete decisions remain unresolved. No patient, controlled-access or credential data belongs in distributable artifacts. The core makes no network requests. Optional repository companions remain separate and must disclose their own provider, purpose, data sent and credential boundaries.

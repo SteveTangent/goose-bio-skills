@@ -1,9 +1,9 @@
 ---
 name: protein-level-differential-abundance
-description: "Use for one offline limma differential-abundance contrast on a bounded, finite protein-by-sample matrix that the caller explicitly declares already normalized and log2 transformed, with exact sample metadata and an estimable categorical design. Exclude raw MS, PSM or peptide modeling, identification, protein inference, normalization, imputation, RNA counts, enrichment, biomarker selection, clinical use, and fallback tests."
+description: "Analyze one declared contrast in already-normalized log2 protein abundances using a compatible local limma adapter. Exclude raw mass-spectrometry processing, normalization and RNA count models."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Protein-level Differential Abundance
@@ -11,6 +11,20 @@ metadata:
 `Preview + reviewed`; the fixed-runtime helper self-test passed. Agent runtime,
 scientific benchmarking, representative-data evaluation, and expert review were
 not performed.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Use for one offline limma differential-abundance contrast on a bounded, finite protein-by-sample matrix that the caller explicitly declares already normalized and log2 transformed, with exact sample metadata and an estimable categorical design. Exclude raw MS, PSM or peptide modeling, identification, protein inference, normalization, imputation, RNA counts, enrichment, biomarker selection, clinical use, and fallback tests.
 
 ## Owns
 

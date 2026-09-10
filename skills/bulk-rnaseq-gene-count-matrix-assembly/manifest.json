@@ -1,15 +1,15 @@
 {
   "schema_version": "0.2.0",
   "name": "bulk-rnaseq-gene-count-matrix-assembly",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D04",
   "cluster_id": "C12",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-13",
-  "last_freshness_check": "2026-08-13",
+  "updated_at": "2026-09-10",
+  "last_freshness_check": "2026-09-10",
   "review_cadence": "quarterly",
   "status": "active",
   "lifecycle_stage": "production",
@@ -24,8 +24,8 @@
     "clinical_use": "prohibited",
     "unverified_boundaries": [
       "Agent routing and interactive behavior have not been runtime-evaluated.",
-      "Scientific benchmark performance, representative-data behavior, and human-expert review have not been established.",
-      "The bundled self-test uses two synthetic two-gene source reports; representative cohorts, large matrices, and producer-version variation were not evaluated.",
+      "Scientific benchmark performance and human-expert review have not been established.",
+      "Basic helper execution uses small fixtures only; dataset generalization and large jobs are unverified.",
       "The helper verifies exact report-level GTF, gene-row, and assignment-contract agreement but cannot independently verify the underlying SAM, GTF, sample identity, protocol, or cohort suitability.",
       "The full upstream reference dictionary is not present in the source-report schema, so equality is bounded to the GTF SHA-256 and gene tuples exposed by those reports.",
       "Create-new publication has tested rollback after staged identity is recorded; a rare pre-identity failure may leave a hidden mode-0600 stage, it is not crash-atomic, and malicious same-directory writers were not evaluated.",
@@ -60,18 +60,21 @@
     "self_test_status": "passed",
     "self_test_command": "python3 scripts/assemble_gene_count_matrix.py --self-test",
     "runtime_versions": [
-      "Python 3.12.8 self-test; compatible syntax requires Python >=3.10"
-    ]
+      "Python >=3.10; dependency-free input and file-contract self-test"
+    ],
+    "artifact_version": "0.10.0"
   },
   "runtime_verification": {
     "mode": "not-performed",
     "status": "not-performed",
-    "reason": "Only the deterministic bundled small-synthetic helper self-test was performed. This verifies the fixed assembly contract, not formal exact-package agent runtime behavior, representative scientific performance, generalization, or expert review.",
-    "tool_versions": [],
+    "reason": "Basic input/file checks and small local execution checks are recorded separately; these do not claim agent evaluation, scientific benchmarking or expert review.",
+    "tool_versions": [
+      "Python >=3.10; dependency-free input and file-contract self-test"
+    ],
     "unverified_boundaries": [
       "Agent routing and interactive behavior have not been runtime-evaluated.",
-      "Scientific benchmark performance, representative-data behavior, and human-expert review have not been established.",
-      "The bundled self-test uses two synthetic two-gene source reports; representative cohorts, large matrices, and producer-version variation were not evaluated.",
+      "Scientific benchmark performance and human-expert review have not been established.",
+      "Basic helper execution uses small fixtures only; dataset generalization and large jobs are unverified.",
       "The helper verifies exact report-level GTF, gene-row, and assignment-contract agreement but cannot independently verify the underlying SAM, GTF, sample identity, protocol, or cohort suitability.",
       "The full upstream reference dictionary is not present in the source-report schema, so equality is bounded to the GTF SHA-256 and gene tuples exposed by those reports.",
       "Create-new publication has tested rollback after staged identity is recorded; a rare pre-identity failure may leave a hidden mode-0600 stage, it is not crash-atomic, and malicious same-directory writers were not evaluated.",
@@ -85,8 +88,8 @@
     ]
   },
   "rollback": {
-    "previous_version": null,
-    "boundary": "Remove this first-release package and its matching registry entry."
+    "previous_version": "0.9.1",
+    "boundary": "Restore the preceding package 0.9.1 and its matching registry entry."
   },
   "network_mode": "none",
   "local_adapters": [

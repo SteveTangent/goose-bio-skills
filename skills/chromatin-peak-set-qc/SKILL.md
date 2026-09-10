@@ -1,9 +1,9 @@
 ---
 name: chromatin-peak-set-qc
-description: "Use for bounded, offline QC of up to four local BED3 or narrowPeak files against caller-declared identical reference-build labels, a matching contig-size file, and an optional matching BED3 blacklist. Report coordinate and field validity, bounds, widths, duplicate coordinates, blacklist overlap, and descriptive pairwise base-coverage Jaccard. Exclude BAM/read QC, peak calling, FRiP, IDR, consensus peaks, differential accessibility, motif analysis, lift-over, and biological reproducibility claims."
+description: "Check up to four same-build BED3 or narrowPeak sets with declared contig lengths and optional blacklist. Exclude peak calling, FRiP, IDR, consensus construction and biological interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Chromatin Peak-set QC
@@ -11,6 +11,20 @@ metadata:
 `Preview + reviewed`; the helper self-test passed. Agent runtime, representative
 genome-scale testing, scientific benchmarking, and expert review were not
 performed.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Use for bounded, offline QC of up to four local BED3 or narrowPeak files against caller-declared identical reference-build labels, a matching contig-size file, and an optional matching BED3 blacklist. Report coordinate and field validity, bounds, widths, duplicate coordinates, blacklist overlap, and descriptive pairwise base-coverage Jaccard. Exclude BAM/read QC, peak calling, FRiP, IDR, consensus peaks, differential accessibility, motif analysis, lift-over, and biological reproducibility claims.
 
 ## Owns
 

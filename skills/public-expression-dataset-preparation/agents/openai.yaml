@@ -1,0 +1,4 @@
+interface:
+  display_name: "Public Expression Dataset Preparation"
+  short_description: "Prepare one explicitly selected GEO Series Matrix platform and preserve unresolved sample facts."
+  default_prompt: "Prepare one explicitly selected GEO Series Matrix platform and preserve unresolved sample facts. Inspect my inputs and clarify only facts that change the analysis."

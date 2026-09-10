@@ -1,0 +1,4 @@
+interface:
+  display_name: "Experimental Design, Power and Batch Planning"
+  short_description: "Produce a feasible, auditable design that separates the primary contrast from known batches and states power assumptions."
+  default_prompt: "Plan treatment and control samples across three sequencing batches and show whether treatment is confounded."

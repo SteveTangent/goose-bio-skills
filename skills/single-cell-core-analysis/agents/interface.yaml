@@ -1,7 +1,7 @@
 interface:
-  display_name: "Single-cell Core Analysis"
-  short_description: "Produce a reproducible exploratory embedding and clustering baseline from an explicitly validated single-cell object."
-  default_prompt: "Normalize and cluster this QC-approved PBMC count object with a reproducible small-data workflow."
+  display_name: "Single Cell Core Analysis"
+  short_description: "Run a bounded exploratory Scanpy RNA baseline from an exact matching QC object and receipt."
+  default_prompt: "Run a bounded exploratory Scanpy RNA baseline from an exact matching QC object and receipt. Inspect my inputs and clarify only facts that change the analysis."
 compatibility:
   canonical_format: "agent-skills"
   adapter_targets:

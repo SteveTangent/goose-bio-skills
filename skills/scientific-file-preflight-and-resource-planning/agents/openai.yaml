@@ -1,0 +1,4 @@
+interface:
+  display_name: "Scientific File Preflight and Resource Planning"
+  short_description: "Inspect bounded local file metadata and plan conservative resource floors."
+  default_prompt: "Preflight these local scientific files for an indexed analysis, inspect no more than 64 KiB per file, and write a new JSON blocker-and-resource report without modifying inputs."

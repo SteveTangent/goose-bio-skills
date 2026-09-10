@@ -8,13 +8,15 @@ evidence; the thin orchestrator only chooses and reports them.
 flowchart TD
     C["change"] --> Q["quick\nverify.py quick"]
     Q --> G["generated registry check"]
-    Q --> S["48-package skeleton\nall bundled self-tests"]
+    Q --> S["all current packages\nall bundled self-tests"]
     Q --> V["validator self-test"]
+    Q --> I["installer self-test"]
     Q --> D["diff check"]
     G --> R{"tagged release?"}
     S --> R
     V --> R
     D --> R
+    I --> R
     R -- "no" --> Done["ready for code review"]
     R -- "yes" --> Full["verify.py release"]
     Full --> X["connector self-test"]
@@ -42,3 +44,13 @@ new retained evidence boundary genuinely requires it.
 
 The current [source-code graph](codegraph.md) records implementation structure,
 not scientific or routing assurance.
+
+
+## Unreleased replay revision
+
+The current runners use v0.2 fixture snapshots for the instruction/native-metadata
+patches. The original v0.1 files remain unchanged. Scientific input payloads,
+expected helper outputs and helper versions are retained; package bindings and
+suite identity reflect a fresh run of the new packages. All five runners use
+the validator's canonical package-digest function, including native metadata.
+A passing replay proves only the bounded helper/connector contracts exercised.

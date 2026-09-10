@@ -1,0 +1,7 @@
+sample_id	group	outcome	value
+S0	control	signal	1
+S1	control	signal	2
+S2	control	signal	4
+S3	treated	signal	4
+S4	treated	signal	6
+S5	treated	signal	9

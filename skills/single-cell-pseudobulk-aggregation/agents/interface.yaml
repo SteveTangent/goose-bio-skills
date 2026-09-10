@@ -1,0 +1,20 @@
+interface:
+  display_name: "Single Cell Pseudobulk Aggregation"
+  short_description: "Sum authoritative raw counts for one cell type by independent biological sample for a two-group handoff."
+  default_prompt: "Sum authoritative raw counts for one cell type by independent biological sample for a two-group handoff. Inspect my inputs and clarify only facts that change the analysis."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

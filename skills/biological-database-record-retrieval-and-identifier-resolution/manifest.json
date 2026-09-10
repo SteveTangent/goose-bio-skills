@@ -1,15 +1,15 @@
 {
   "schema_version": "0.2.0",
   "name": "biological-database-record-retrieval-and-identifier-resolution",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D01",
   "cluster_id": "C01",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-13",
-  "last_freshness_check": "2026-08-09",
+  "updated_at": "2026-09-10",
+  "last_freshness_check": "2026-09-10",
   "review_cadence": "quarterly",
   "status": "active",
   "lifecycle_stage": "production",
@@ -24,8 +24,8 @@
     "clinical_use": "prohibited",
     "unverified_boundaries": [
       "Agent routing and interactive behavior have not been runtime-evaluated.",
-      "Scientific benchmark performance has not been established.",
-      "Human-expert review has not been performed.",
+      "Scientific benchmark performance and human-expert review have not been established.",
+      "Basic helper execution uses small fixtures only; dataset generalization and large jobs are unverified.",
       "Exact-package provider selection, pagination, rate limiting, release capture, and identifier normalization have not been runtime-evaluated.",
       "One-to-many, deprecated, replaced, malformed, rate-limited, and oversized live responses remain unverified for this exact package.",
       "Asynchronous and bulk ID mapping, full-database downloads, uploads, and private or controlled records are outside this preview."
@@ -48,23 +48,26 @@
     ]
   },
   "script_verification": {
-    "bundled_scripts": false,
-    "implementation_origin": "none",
-    "self_test_status": "not-applicable",
-    "self_test_command": null,
-    "runtime_versions": []
+    "bundled_scripts": true,
+    "implementation_origin": "original-new",
+    "self_test_status": "passed",
+    "self_test_command": "python3 scripts/resolve_local_ids.py --self-test",
+    "runtime_versions": [
+      "Python >=3.10; dependency-free input and file-contract self-test"
+    ],
+    "artifact_version": "0.10.0"
   },
   "runtime_verification": {
     "mode": "not-performed",
     "status": "not-performed",
-    "reason": "This is an instruction-only package. Exact-package provider selection, live retrieval, pagination, response normalization, and routing were not executed; asynchronous and bulk paths are excluded.",
+    "reason": "Basic input/file checks and small local execution checks are recorded separately; these do not claim agent evaluation, scientific benchmarking or expert review.",
     "tool_versions": [
-      "UniProt REST rolling API; UniProt release 2026_02 checked 2026-08-09",
-      "Ensembl REST API 15.12 checked 2026-08-09",
-      "NCBI E-utilities rolling API checked 2026-08-09",
-      "Bio 02 shared public connector 0.9.0 contract"
+      "Python >=3.10; dependency-free input and file-contract self-test"
     ],
     "unverified_boundaries": [
+      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "Scientific benchmark performance and human-expert review have not been established.",
+      "Basic helper execution uses small fixtures only; dataset generalization and large jobs are unverified.",
       "Exact-package provider selection, pagination, rate limiting, release capture, and identifier normalization have not been runtime-evaluated.",
       "One-to-many, deprecated, replaced, malformed, rate-limited, and oversized live responses remain unverified for this exact package.",
       "Asynchronous and bulk ID mapping, full-database downloads, uploads, and private or controlled records are outside this preview."
@@ -78,8 +81,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.8.0",
-    "boundary": "Restore package version 0.8.0 and its matching registry entry."
+    "previous_version": "0.9.1",
+    "boundary": "Restore the preceding package 0.9.1 and its matching registry entry."
   },
   "network_mode": "required",
   "local_adapters": [

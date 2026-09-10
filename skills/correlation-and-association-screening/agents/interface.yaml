@@ -1,0 +1,20 @@
+interface:
+  display_name: "Correlation And Association Screening"
+  short_description: "Screen explicitly selected Pearson or Spearman variable pairs with optional bounded permutation inference."
+  default_prompt: "Screen explicitly selected Pearson or Spearman variable pairs with optional bounded permutation inference. Inspect my inputs and clarify only facts that change the analysis."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

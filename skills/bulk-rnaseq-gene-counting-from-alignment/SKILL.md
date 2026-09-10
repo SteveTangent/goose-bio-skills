@@ -1,9 +1,9 @@
 ---
 name: bulk-rnaseq-gene-counting-from-alignment
-description: "Use to assign one bounded local primary single-end bulk RNA-seq SAM sample to gene_id exon unions in one exact local GTF, with explicit unstranded, forward, or reverse library semantics and a declared MAPQ floor. Produce a create-new JSON gene-count table plus assignment categories and provenance. Exclude raw-read alignment, paired-end fragment counting, transcript or isoform abundance, probabilistic multimapper allocation, normalization, differential expression, batches, and biological interpretation."
+description: "Count primary single-end SAM alignments against a GTF with explicit strand and MAPQ policies. Exclude paired-end counting, transcript quantification and differential expression."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Bulk RNA-seq Gene Counting from Alignment
@@ -11,6 +11,20 @@ metadata:
 `Preview + reviewed`; the deterministic helper self-test passed. Agent runtime,
 representative-data benchmarking, scientific evaluation, and expert review were
 not performed.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Use to assign one bounded local primary single-end bulk RNA-seq SAM sample to gene_id exon unions in one exact local GTF, with explicit unstranded, forward, or reverse library semantics and a declared MAPQ floor. Produce a create-new JSON gene-count table plus assignment categories and provenance. Exclude raw-read alignment, paired-end fragment counting, transcript or isoform abundance, probabilistic multimapper allocation, normalization, differential expression, batches, and biological interpretation.
 
 ## Owns
 

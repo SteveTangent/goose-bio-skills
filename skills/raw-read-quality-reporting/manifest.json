@@ -1,15 +1,15 @@
 {
   "schema_version": "0.2.0",
   "name": "raw-read-quality-reporting",
-  "version": "0.9.0",
+  "version": "0.11.0",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D02",
   "cluster_id": "C05",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-08-13",
-  "last_freshness_check": "2026-08-10",
+  "updated_at": "2026-09-10",
+  "last_freshness_check": "2026-09-10",
   "review_cadence": "quarterly",
   "status": "active",
   "lifecycle_stage": "production",
@@ -24,9 +24,9 @@
     "clinical_use": "prohibited",
     "unverified_boundaries": [
       "Agent routing and interactive behavior have not been runtime-evaluated.",
-      "Scientific benchmark performance and human-expert review have not been established.",
-      "FastQC report generation, archive parsing, and MultiQC aggregation were not executed.",
-      "Large or batch FASTQ inputs and assay-, platform-, and library-specific expectations were not runtime-evaluated."
+      "Scientific benchmarks, no-Skill comparisons and human-expert review are not performed.",
+      "Small local helper checks do not establish generalization, biological validity or large-dataset support.",
+      "Executing FastQC on raw reads, trimming, mapping, automatic rejection and large MultiQC integrations."
     ]
   },
   "intake_contract_version": "1.3.0",
@@ -54,29 +54,37 @@
         "applies_when": "Multiple inputs are present and unique sample membership or R1/R2 pairing remains ambiguous after bounded metadata inspection.",
         "question": "Which explicit sample and mate mapping should the report use?",
         "recommended_answer": "Provide a unique sample identifier and R1/R2 role for every input before cross-sample comparison."
+      },
+      {
+        "decision_id": "input-and-design",
+        "applies_when": "A safely inspected fact remains missing and changes the result or method.",
+        "question": "这是哪类建库数据，哪些偏倚可能符合预期?",
+        "recommended_answer": "建议先明确 RNA-seq、扩增子或其他建库背景再解释告警。"
       }
     ]
   },
   "script_verification": {
-    "bundled_scripts": false,
-    "implementation_origin": "none",
-    "self_test_status": "not-applicable",
-    "self_test_command": null,
-    "runtime_versions": []
+    "bundled_scripts": true,
+    "implementation_origin": "original-new",
+    "self_test_status": "passed",
+    "self_test_command": "python3 scripts/summarize_fastqc.py --self-test",
+    "runtime_versions": [
+      "Python >=3.10; dependency-free deterministic self-test"
+    ],
+    "artifact_version": "0.11.0"
   },
   "runtime_verification": {
-    "mode": "skipped-complex-tool",
-    "status": "skipped",
-    "reason": "FastQC requires an external Java application and real sequencing inputs; MultiQC is another external application. Complex-tool and batch execution were deliberately skipped for this instruction-only preview.",
+    "mode": "not-performed",
+    "status": "not-performed",
+    "reason": "Basic helper execution and input/hand-off checks are recorded separately; no agent or scientific benchmark claim.",
     "tool_versions": [
-      "FastQC 0.12.1",
-      "MultiQC 1.35"
+      "Python >=3.10; dependency-free deterministic self-test"
     ],
     "unverified_boundaries": [
       "Agent routing and interactive behavior have not been runtime-evaluated.",
-      "Scientific benchmark performance and human-expert review have not been established.",
-      "FastQC report generation, archive parsing, and MultiQC aggregation were not executed.",
-      "Large or batch FASTQ inputs and assay-, platform-, and library-specific expectations were not runtime-evaluated."
+      "Scientific benchmarks, no-Skill comparisons and human-expert review are not performed.",
+      "Small local helper checks do not establish generalization, biological validity or large-dataset support.",
+      "Executing FastQC on raw reads, trimming, mapping, automatic rejection and large MultiQC integrations."
     ]
   },
   "legal_notices": {
@@ -86,13 +94,12 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.8.0",
-    "boundary": "Restore package version 0.8.0 and its matching registry entry."
+    "previous_version": "0.10.0",
+    "boundary": "Restore preceding package 0.10.0 and its matching registry entry."
   },
   "network_mode": "none",
   "local_adapters": [
-    "FastQC 0.12.1",
-    "MultiQC 1.35"
+    "Python standard library"
   ],
   "external_services": [],
   "depends_on": [

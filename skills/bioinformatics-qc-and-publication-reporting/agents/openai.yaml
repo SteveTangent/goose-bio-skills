@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bioinformatics Qc And Publication Reporting"
+  short_description: "Assemble local analysis outputs into a source-linked report and execution-methods record."
+  default_prompt: "Assemble local analysis outputs into a source-linked report and execution-methods record. Inspect my inputs and clarify only facts that change the analysis."

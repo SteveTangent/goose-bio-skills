@@ -1,18 +1,32 @@
 ---
 name: experimental-design-power-and-batch-planning
-description: "A user needs sample-size, allocation, blocking, randomization or confounding review for a biological study. Exclude: claiming analysis can repair complete confounding; physical wet-lab execution or instrument operation; using a generic formula where assay-specific distribution is load-bearing."
+description: "Plan sample size, power, allocation, randomization, blocking or confounding review for a biological study. Exclude wet-lab execution, invented effect sizes and claims that analysis repairs complete confounding."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Experimental Design, Power and Batch Planning
 
 `Preview + reviewed`; runtime, scientific, expert, and clinical validation were not performed.
 
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: A user needs sample-size, allocation, blocking, randomization or confounding review for a biological study. Exclude: claiming analysis can repair complete confounding; physical wet-lab execution or instrument operation; using a generic formula where assay-specific distribution is load-bearing.
+
 ## Owns
 
-Produce a feasible, auditable design that separates the primary contrast from known batches and states power assumptions. Exclusions are declared in the trigger above.
+Produce a feasible, auditable design that separates the primary contrast from known batches and states power assumptions. Apply the detailed scope below.
 
 ## Inputs
 

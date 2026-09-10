@@ -769,6 +769,22 @@ def validate_interface_metadata(path: Path, label: str) -> None:
     )
 
 
+def validate_native_interface(package: Path, label: str) -> None:
+    """Optional native presentation adapter; it cannot add execution policy."""
+    native = package / "agents/openai.yaml"
+    if not native.exists() and not native.is_symlink():
+        return
+    require(native.is_file() and not native.is_symlink(), f"{label}: native interface is not a regular file")
+    if not native.is_file() or native.is_symlink():
+        return
+    try:
+        expected = (package / "agents/interface.yaml").read_text(encoding="utf-8").split("compatibility:", 1)[0]
+        actual = native.read_text(encoding="utf-8")
+        require(actual == expected, f"{label}: native interface must match the presentation-only subset")
+    except (OSError, UnicodeError) as exc:
+        require(False, f"{label}: native interface is unreadable: {exc}")
+
+
 def validate_permission_policy(package: Path, code_files: list[Path], label: str) -> None:
     """Validate declarations without pretending that they grant host permission."""
     path = package / "security" / "permission_policy.json"
@@ -984,7 +1000,11 @@ def validate_script_verification(
     require(isinstance(verification, dict), f"{label}: script_verification must be an object")
     if not isinstance(verification, dict):
         return
-    require(set(verification) == SCRIPT_VERIFICATION_FIELDS, f"{label}: script_verification fields do not match policy")
+    require(set(verification) - {"artifact_version"} == SCRIPT_VERIFICATION_FIELDS, f"{label}: script_verification fields do not match policy")
+    if "artifact_version" in verification:
+        require(has_scripts and isinstance(verification["artifact_version"], str)
+                and bool(SEMVER.fullmatch(verification["artifact_version"])),
+                f"{label}: artifact_version requires a bundled script and valid version")
     require(verification.get("bundled_scripts") is has_scripts, f"{label}: bundled_scripts differs from package contents")
 
     status = verification.get("self_test_status")
@@ -1600,7 +1620,9 @@ def run_script_self_test(
         return
     require(completed.returncode == 0, f"{label}: self-test exited {completed.returncode}")
     if completed.returncode == 0:
-        parse_script_self_test_output(completed.stdout, manifest.get("version"), label)
+        parse_script_self_test_output(
+            completed.stdout, verification.get("artifact_version", manifest.get("version")), label
+        )
 
 
 def allowed_package_relative(relative: Path) -> bool:
@@ -1623,7 +1645,7 @@ def package_file_kind(relative: Path) -> str:
     upper_name = relative.name.upper()
     if upper_name.startswith(LEGAL_NOTICE_PREFIXES):
         return "license"
-    if relative.as_posix() in {"manifest.json", "agents/interface.yaml"}:
+    if relative.as_posix() in {"manifest.json", "agents/interface.yaml", "agents/openai.yaml"}:
         return "metadata"
     if (relative.parts and relative.parts[0] == "scripts") or relative.suffix.lower() in CODE_SUFFIXES:
         return "code"
@@ -1845,6 +1867,7 @@ def validate_installable_boundary() -> int:
             continue
         package_manifests[name] = manifest
         validate_interface_metadata(package / "agents" / "interface.yaml", f"skills/{name}")
+        validate_native_interface(package, f"skills/{name}")
         validate_permission_policy(package, code_files, f"skills/{name}")
         validate_frontmatter(
             frontmatter,
@@ -2612,6 +2635,32 @@ compatibility:
         "self-test: live bundled-script self-test failed",
     )
     checks.append("live-bundled-script-self-test-passed")
+
+    independent_version = copy.deepcopy(live_script_manifest)
+    independent_version["version"] = "8.0.0"
+    independent_version["script_verification"]["artifact_version"] = live_script_manifest["script_verification"].get("artifact_version", live_script_manifest["version"])
+    require(not captured_errors(lambda: run_script_self_test(
+        live_script_package, independent_version, "independent-helper-version",
+        package_code_files(live_script_package))), "self-test: independent helper version rejected")
+    independent_version["script_verification"]["artifact_version"] = "9.9.9"
+    require(bool(captured_errors(lambda: run_script_self_test(
+        live_script_package, independent_version, "incorrect-helper-version",
+        package_code_files(live_script_package)))), "self-test: incorrect helper version accepted")
+    checks.append("independent-helper-version-and-mismatch-checked")
+    with tempfile.TemporaryDirectory() as tmp:
+        sample = Path(tmp)
+        (sample / "agents").mkdir()
+        canonical = (live_script_package / "agents/interface.yaml").read_text()
+        (sample / "agents/interface.yaml").write_text(canonical)
+        (sample / "agents/openai.yaml").write_text(canonical.split("compatibility:", 1)[0])
+        require(not captured_errors(lambda: validate_native_interface(sample, "native-valid")),
+                "self-test: valid native adapter rejected")
+        with (sample / "agents/openai.yaml").open("a") as stream:
+            stream.write("policy: {}\n")
+        require(bool(captured_errors(lambda: validate_native_interface(sample, "native-policy"))),
+                "self-test: unsupported native policy accepted")
+    checks.append("native-presentation-policy-boundary-checked")
+
 
     skipped_script = copy.deepcopy(script)
     skipped_script["script_verification"]["self_test_status"] = "skipped"

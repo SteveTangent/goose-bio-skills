@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sequence I/O and Transformation"
+  short_description: "Read, transform and write sequence records with explicit loss and round-trip checks."
+  default_prompt: "Convert this FASTQ subset to FASTA and report which metadata will be lost."

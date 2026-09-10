@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "reviewed_at": "2026-09-10",
+  "capabilities": {
+    "file_write": {
+      "decision": "approved",
+      "reviewer": "project-owner-authorized-agent-review",
+      "scope": "Only scripts/resolve_local_ids.py may create the requested new result file or artifact directory inside the working directory. No replacement, input mutation, network, or subprocess. Temporary local staging/cache directories are removed after use.",
+      "reason": "Explicit local outputs with path, size and create-new checks; this declaration never grants host permissions.",
+      "expires_at": "2026-12-10",
+      "evidence": [
+        "SKILL.md",
+        "scripts/resolve_local_ids.py",
+        "references/local-adapter.md"
+      ],
+      "target_enforcement": {
+        "openai": "Apply host workspace permissions to the explicitly requested new output; do not repeat an already granted authorization.",
+        "claude": "Apply host workspace permissions to the explicitly requested new output; do not repeat an already granted authorization.",
+        "generic": "Apply host workspace permissions to the explicitly requested new output; do not repeat an already granted authorization.",
+        "vscode": "Apply host workspace permissions to the explicitly requested new output; do not repeat an already granted authorization."
+      }
+    }
+  }
+}

@@ -1,10 +1,19 @@
-# Runtime and scientific boundaries
+# Runtime boundaries
 
-This reference defines the source-clean operating boundary for
-`ranked-gene-set-enrichment`. It records interfaces reviewed on 2026-08-08; it does not claim
-that the tools were installed or runtime-tested in this preview.
+- Agent routing and interactive behavior have not been runtime-evaluated.
+- Scientific benchmark performance and human-expert review have not been established.
+- Basic helper execution uses small fixtures only; dataset generalization and large jobs are unverified.
+- Large permutation counts, full catalogs, multi-core scaling, and dependency source builds have not been evaluated.
+- Live Enrichr library metadata reads are permitted but not runtime-evaluated; ranked-list submission is outside the executable catalog.
+- Only GSEApy 1.3.0 gene-set permutation is supported; phenotype permutation and multilevel estimation are outside this helper.
 
-## Scientific contract
+The bundled local adapter is documented in [local-adapter.md](local-adapter.md). Other adapters retain their explicit limits; no silent fallback or network submission is permitted.
+
+## Retained external-adapter contract
+
+The following external-adapter freshness records retain their original review dates; the new offline helper does not broaden these interfaces.
+
+### Scientific contract
 
 - Record the ranking statistic, direction, duplicate-gene policy, tie handling, and complete ranked input
 - For preranked input use gene-set permutation only, with permutation count and random seed
@@ -62,15 +71,3 @@ provider, data, scope, destination, credential and billing boundary first; do
 not reconfirm an exact action already authorized by the current request, except
 for sensitive data. On missing adapters, unavailable network, provider failure,
 truncation, or missing authorization, degrade honestly and never claim a call.
-
-## Verification status
-
-- Mode: `skipped-complex-tool`
-- Reason: Large permutation runs, full catalogs, multi-core execution, and R/Rust source builds were not run.
-- Relevant versions: GSEApy 1.3.0, clusterProfiler 4.20.0, GO 2026-06-19, Reactome V97, WikiPathways 20260710, KEGG 119.0
-- Unverified boundaries:
-  - Large permutation counts, full catalogs, multi-core scaling, and dependency source builds have not been evaluated
-  - Live Enrichr or other rolling gene-set services are outside the reproducible preview path
-
-A skip is not a pass. The exact package remains `preview + reviewed` until a
-separate bounded evaluation records what actually ran.

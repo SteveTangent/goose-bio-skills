@@ -1,0 +1,4 @@
+interface:
+  display_name: "Alignment File Operations"
+  short_description: "Perform bounded, auditable operations on existing alignment files without changing biological meaning silently."
+  default_prompt: "Check this BAM header, sort it by coordinate and extract chr2:1-10000 into a new file."

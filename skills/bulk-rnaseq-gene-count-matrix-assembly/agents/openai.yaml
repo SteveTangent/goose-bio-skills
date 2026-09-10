@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bulk RNA-seq Gene-count Matrix Assembly"
+  short_description: "Assemble matched sample gene counts into one matrix."
+  default_prompt: "Use $bulk-rnaseq-gene-count-matrix-assembly to assemble these completed matching single-sample raw gene-count JSON reports into one deterministic gene-by-sample JSON matrix."

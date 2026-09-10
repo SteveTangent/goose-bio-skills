@@ -1,0 +1,4 @@
+interface:
+  display_name: "Single Cell Core Analysis"
+  short_description: "Run a bounded exploratory Scanpy RNA baseline from an exact matching QC object and receipt."
+  default_prompt: "Run a bounded exploratory Scanpy RNA baseline from an exact matching QC object and receipt. Inspect my inputs and clarify only facts that change the analysis."

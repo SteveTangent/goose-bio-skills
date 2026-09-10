@@ -1,9 +1,9 @@
 ---
 name: flow-cytometry-arcsinh-transformation
-description: "Use to apply explicit positive per-channel arcsinh cofactors to selected numeric channels in one already extracted local flow-cytometry event TSV, producing create-new transformed events and provenance. Exclude FCS parsing, compensation, choosing or estimating cofactors, logicle or biexponential transforms, gating, cell labels, QC decisions, and biological or clinical interpretation."
+description: "Apply arcsinh to declared cytometry event columns using explicit positive cofactors. Exclude selecting cofactors, compensation, gating and cell classification."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Flow Cytometry Arcsinh Transformation
@@ -11,6 +11,20 @@ metadata:
 `Preview + reviewed`; the bounded deterministic helper self-test passed. Formal
 agent runtime, representative cytometry data, scientific benchmarking, and
 expert review were not performed.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Use to apply explicit positive per-channel arcsinh cofactors to selected numeric channels in one already extracted local flow-cytometry event TSV, producing create-new transformed events and provenance. Exclude FCS parsing, compensation, choosing or estimating cofactors, logicle or biexponential transforms, gating, cell labels, QC decisions, and biological or clinical interpretation.
 
 ## Owns
 

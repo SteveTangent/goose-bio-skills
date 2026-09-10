@@ -1,9 +1,9 @@
 ---
 name: amplicon-alpha-diversity-analysis
-description: "Use for bounded, offline per-sample alpha-diversity summaries from a local TSV containing exact amplicon feature rows, sample columns, and nonnegative integer counts. Calculate observed features, natural-log Shannon diversity, and Simpson diversity defined as one minus the sum of squared relative abundances; return explicit not-estimable results for zero-depth samples. Exclude FASTQ processing, denoising, rarefaction, normalization, compositional correction, beta diversity, hypothesis testing, differential abundance, taxonomy, contamination or pathogen decisions, and biological or clinical interpretation."
+description: "Calculate per-sample observed features, Shannon and Simpson alpha diversity from amplicon integer-count TSVs. Return not-estimable for zero depth; exclude normalization, beta diversity and group tests."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Amplicon Alpha Diversity Analysis
@@ -11,6 +11,20 @@ metadata:
 `Preview + reviewed`; the deterministic helper self-test passed. Agent runtime,
 representative-data benchmarking, scientific evaluation, and expert review were
 not performed.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Use for bounded, offline per-sample alpha-diversity summaries from a local TSV containing exact amplicon feature rows, sample columns, and nonnegative integer counts. Calculate observed features, natural-log Shannon diversity, and Simpson diversity defined as one minus the sum of squared relative abundances; return explicit not-estimable results for zero-depth samples. Exclude FASTQ processing, denoising, rarefaction, normalization, compositional correction, beta diversity, hypothesis testing, differential abundance, taxonomy, contamination or pathogen decisions, and biological or clinical interpretation.
 
 ## Owns
 

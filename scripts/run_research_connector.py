@@ -21,7 +21,6 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import parse_qsl, unquote, urlencode, urljoin, urlsplit, urlunsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 
-
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PATH = ROOT / "connectors" / "providers.json"
 VERSION = "0.9.0"
@@ -121,6 +120,7 @@ EXPECTED_PROVIDER_IDS = (
     "kegg-rest",
     "embl-ebi-job-dispatcher",
     "ncbi-blast-remote",
+    "ncbi-geo-files",
 )
 EXECUTION_FIELDS = {
     "execution_mode",
@@ -149,7 +149,9 @@ def load_json_no_duplicates(path: Path) -> object:
         return result
 
     try:
-        return json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=pairs_hook)
+        return json.loads(
+            path.read_text(encoding="utf-8"), object_pairs_hook=pairs_hook
+        )
     except ConnectorError:
         raise
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
@@ -179,40 +181,60 @@ def load_catalog() -> dict[str, object]:
             raise ConnectorError(f"provider entry is invalid: {provider_id}")
         hosts = provider.get("allowed_hosts")
         billing = provider.get("billing")
-        if not isinstance(hosts, list) or not all(isinstance(host, str) for host in hosts):
+        if not isinstance(hosts, list) or not all(
+            isinstance(host, str) for host in hosts
+        ):
             raise ConnectorError(f"provider hosts are invalid: {provider_id}")
         if not isinstance(billing, dict):
             raise ConnectorError(f"provider billing boundary is invalid: {provider_id}")
         execution = provider.get("execution")
         if not isinstance(execution, dict) or set(execution) != EXECUTION_FIELDS:
-            raise ConnectorError(f"provider execution boundary is invalid: {provider_id}")
+            raise ConnectorError(
+                f"provider execution boundary is invalid: {provider_id}"
+            )
         mode = execution.get("execution_mode")
         prefixes = execution.get("allowed_url_prefixes")
         rate = execution.get("rate_limit_per_second")
         max_bytes = execution.get("max_response_bytes")
         if mode not in EXECUTION_MODES:
             raise ConnectorError(f"provider execution mode is invalid: {provider_id}")
-        if not isinstance(prefixes, list) or not prefixes or not all(isinstance(item, str) for item in prefixes):
+        if (
+            not isinstance(prefixes, list)
+            or not prefixes
+            or not all(isinstance(item, str) for item in prefixes)
+        ):
             raise ConnectorError(f"provider URL prefixes are invalid: {provider_id}")
         if not isinstance(rate, (int, float)) or isinstance(rate, bool) or rate < 0:
             raise ConnectorError(f"provider rate limit is invalid: {provider_id}")
-        if not isinstance(max_bytes, int) or isinstance(max_bytes, bool) or max_bytes < 0:
+        if (
+            not isinstance(max_bytes, int)
+            or isinstance(max_bytes, bool)
+            or max_bytes < 0
+        ):
             raise ConnectorError(f"provider response limit is invalid: {provider_id}")
         active = mode in {"direct-read", "terms-read"}
         if active and (rate <= 0 or not 0 < max_bytes <= HARD_MAX_BYTES):
             raise ConnectorError(f"active provider limits are invalid: {provider_id}")
         if not active and (rate != 0 or max_bytes != 0):
-            raise ConnectorError(f"inactive provider limits must be zero: {provider_id}")
+            raise ConnectorError(
+                f"inactive provider limits must be zero: {provider_id}"
+            )
         for prefix in prefixes:
             parsed = urlsplit(prefix)
             if parsed.scheme != "https" or parsed.hostname not in hosts:
-                raise ConnectorError(f"executable prefix escapes catalog hosts: {provider_id}")
-        if mode in {"direct-read", "terms-read"} and billing.get("requires_separate_paid_authorization"):
+                raise ConnectorError(
+                    f"executable prefix escapes catalog hosts: {provider_id}"
+                )
+        if mode in {"direct-read", "terms-read"} and billing.get(
+            "requires_separate_paid_authorization"
+        ):
             raise ConnectorError(f"paid provider cannot be direct: {provider_id}")
     return catalog
 
 
-def policy_for(provider_id: str, catalog: dict[str, object], acknowledge_terms: bool) -> Policy:
+def policy_for(
+    provider_id: str, catalog: dict[str, object], acknowledge_terms: bool
+) -> Policy:
     providers = catalog["providers"]
     assert isinstance(providers, dict)
     if provider_id not in providers:
@@ -231,13 +253,17 @@ def policy_for(provider_id: str, catalog: dict[str, object], acknowledge_terms: 
     assert isinstance(max_bytes, int)
     policy = Policy(mode, tuple(prefixes), float(rate), max_bytes)
     if policy.mode == "disabled":
-        raise ConnectorError("metered or paid execution is disabled; use a user-supplied external tool")
+        raise ConnectorError(
+            "metered or paid execution is disabled; use a user-supplied external tool"
+        )
     if policy.mode == "conditional-job":
         raise ConnectorError(
             "remote submission is conditional and not implemented by this read-only executor"
         )
     if policy.mode == "terms-read" and not acknowledge_terms:
-        raise ConnectorError("this provider requires --acknowledge-terms for academic-use terms")
+        raise ConnectorError(
+            "this provider requires --acknowledge-terms for academic-use terms"
+        )
     return policy
 
 
@@ -264,12 +290,30 @@ def validate_read_only_semantics(provider_id: str, url: str) -> None:
     decoded_url_path = decoded_path(parsed.path)
     path = decoded_url_path.lower()
     query = [
-        (key.lower(), value.strip().lower())
-        for key, value in decoded_query_pairs(url)
+        (key.lower(), value.strip().lower()) for key, value in decoded_query_pairs(url)
     ]
-    if provider_id == "ncbi-eutils":
+    if provider_id == "ncbi-geo-files":
+        match = re.fullmatch(
+            r"/geo/series/(GSE[0-9]*nnn)/(GSE[0-9]{1,9})/matrix/(?:((GSE[0-9]{1,9})(?:-GPL[0-9]{1,9})?_series_matrix\.txt\.gz))?",
+            parsed.path,
+        )
+        if not match or parsed.query or decoded_url_path != parsed.path:
+            raise ConnectorError(
+                "GEO access is limited to an exact Series Matrix directory or matrix gzip file"
+            )
+        bucket, accession, filename, file_accession = match.groups()
+        expected_bucket = (
+            "GSE" + accession[3:-3] + "nnn" if len(accession[3:]) > 3 else "GSEnnn"
+        )
+        if bucket != expected_bucket or (filename and file_accession != accession):
+            raise ConnectorError(
+                "GEO directory and matrix filename must match the same accession"
+            )
+    elif provider_id == "ncbi-eutils":
         if path.endswith("/epost.fcgi"):
-            raise ConnectorError("NCBI EPost writes to the History server and requires a job adapter")
+            raise ConnectorError(
+                "NCBI EPost writes to the History server and requires a job adapter"
+            )
         for key, value in query:
             history_write = (
                 key == "webenv"
@@ -278,7 +322,9 @@ def validate_read_only_semantics(provider_id: str, url: str) -> None:
                 or (key == "cmd" and value == "neighbor_history")
             )
             if history_write:
-                raise ConnectorError("NCBI History-server state is outside direct-read mode")
+                raise ConnectorError(
+                    "NCBI History-server state is outside direct-read mode"
+                )
     elif provider_id == "ensembl-rest" and path.startswith("/homology/id/"):
         if (
             decoded_url_path != parsed.path
@@ -289,7 +335,10 @@ def validate_read_only_semantics(provider_id: str, url: str) -> None:
                 "Ensembl orthology path and query must use the exact reviewed ASCII spelling"
             )
         raw_query = parse_qsl(parsed.query, keep_blank_values=True)
-        if any(key != key.lower() or value != value.strip().lower() for key, value in raw_query):
+        if any(
+            key != key.lower() or value != value.strip().lower()
+            for key, value in raw_query
+        ):
             raise ConnectorError(
                 "Ensembl orthology query keys and values must use canonical lowercase spelling"
             )
@@ -314,22 +363,32 @@ def validate_read_only_semantics(provider_id: str, url: str) -> None:
             "target_species",
             "type",
         }
-        if set(values) != expected_keys or any(len(items) != 1 for items in values.values()):
+        if set(values) != expected_keys or any(
+            len(items) != 1 for items in values.values()
+        ):
             raise ConnectorError(
                 "Ensembl orthology reads require the exact reviewed query fields"
             )
         target_species = values["target_species"][0]
-        if source_species not in ENSEMBL_ORTHOLOGY_SPECIES or target_species not in ENSEMBL_ORTHOLOGY_SPECIES:
+        if (
+            source_species not in ENSEMBL_ORTHOLOGY_SPECIES
+            or target_species not in ENSEMBL_ORTHOLOGY_SPECIES
+        ):
             raise ConnectorError(
                 "Ensembl orthology preview requires a reviewed canonical species name"
             )
         if target_species == source_species:
-            raise ConnectorError("Ensembl orthology source and target species must differ")
+            raise ConnectorError(
+                "Ensembl orthology source and target species must differ"
+            )
         expected_prefix = ENSEMBL_ORTHOLOGY_SPECIES[source_species]
-        if re.fullmatch(
-            rf"{re.escape(expected_prefix)}[0-9]{{6,}}(?:\.[0-9]+)?",
-            match.group(2),
-        ) is None:
+        if (
+            re.fullmatch(
+                rf"{re.escape(expected_prefix)}[0-9]{{6,}}(?:\.[0-9]+)?",
+                match.group(2),
+            )
+            is None
+        ):
             raise ConnectorError(
                 "Ensembl orthology stable gene ID does not match the declared source species"
             )
@@ -345,13 +404,19 @@ def validate_read_only_semantics(provider_id: str, url: str) -> None:
                 "Ensembl orthology query exceeds the reviewed relationship-only boundary"
             )
     elif provider_id == "pubchem-pug-rest":
-        if PUBCHEM_ASYNC_PATH.match(path) or re.search(r"/(?:listkey|cachekey)(?:/|$)", path):
-            raise ConnectorError("PubChem asynchronous and stored-result paths require a job adapter")
+        if PUBCHEM_ASYNC_PATH.match(path) or re.search(
+            r"/(?:listkey|cachekey)(?:/|$)", path
+        ):
+            raise ConnectorError(
+                "PubChem asynchronous and stored-result paths require a job adapter"
+            )
         for key, value in query:
             if key in {"listkey", "cachekey"} or (
                 key == "list_return" and value in {"listkey", "cachekey"}
             ):
-                raise ConnectorError("PubChem stored-result creation requires a job adapter")
+                raise ConnectorError(
+                    "PubChem stored-result creation requires a job adapter"
+                )
     elif provider_id == "enrichr":
         if re.search(r"/(?:api/)?addlist/?$", path):
             raise ConnectorError("Enrichr list submission is outside direct-read mode")
@@ -392,14 +457,18 @@ def validate_read_only_semantics(provider_id: str, url: str) -> None:
             re.IGNORECASE,
         )
         if len(accession) != 1 or not accession_pattern.fullmatch(accession[0]):
-            raise ConnectorError("ENA file reports require one explicit public INSDC accession")
+            raise ConnectorError(
+                "ENA file reports require one explicit public INSDC accession"
+            )
         if result != ["read_run"]:
             raise ConnectorError("ENA file reports are limited to the read_run result")
         if response_format != ["tsv"]:
             raise ConnectorError("ENA file reports require TSV output")
         if len(fields) != 1:
             raise ConnectorError("ENA file reports require one explicit field list")
-        requested_field_list = [item.strip() for item in fields[0].split(",") if item.strip()]
+        requested_field_list = [
+            item.strip() for item in fields[0].split(",") if item.strip()
+        ]
         requested_fields = set(requested_field_list)
         common_fields = {
             "run_accession",
@@ -412,7 +481,12 @@ def validate_read_only_semantics(provider_id: str, url: str) -> None:
         }
         representation_groups = (
             {"fastq_file_role", "fastq_ftp", "fastq_md5", "fastq_bytes"},
-            {"submitted_file_role", "submitted_ftp", "submitted_md5", "submitted_bytes"},
+            {
+                "submitted_file_role",
+                "submitted_ftp",
+                "submitted_md5",
+                "submitted_bytes",
+            },
             {"sra_file_role", "sra_ftp", "sra_md5", "sra_bytes"},
         )
         if (
@@ -420,16 +494,23 @@ def validate_read_only_semantics(provider_id: str, url: str) -> None:
             or len(requested_field_list) != len(requested_fields)
             or not requested_fields.issubset(allowed_fields)
             or not common_fields.issubset(requested_fields)
-            or sum(group.issubset(requested_fields) for group in representation_groups) != 1
+            or sum(group.issubset(requested_fields) for group in representation_groups)
+            != 1
             or any(
                 requested_fields.intersection(group)
                 and requested_fields.intersection(group) != group
                 for group in representation_groups
             )
         ):
-            raise ConnectorError("ENA file report fields exceed the reviewed run-manifest boundary")
-        if any(key not in {"accession", "result", "fields", "format"} for key in values):
-            raise ConnectorError("ENA file report parameters exceed the reviewed boundary")
+            raise ConnectorError(
+                "ENA file report fields exceed the reviewed run-manifest boundary"
+            )
+        if any(
+            key not in {"accession", "result", "fields", "format"} for key in values
+        ):
+            raise ConnectorError(
+                "ENA file report parameters exceed the reviewed boundary"
+            )
 
 
 def normalized_query_key(key: str) -> str:
@@ -443,8 +524,7 @@ def is_sensitive_query_key(key: str) -> bool:
         normalized in SECRET_QUERY_KEYS
         or normalized in SECRET_KEY_FAMILY
         or any(
-            component in SECRET_KEY_FAMILY
-            or component in {"pass", "passcode", "pwd"}
+            component in SECRET_KEY_FAMILY or component in {"pass", "passcode", "pwd"}
             for component in components
         )
         or any(fragment in normalized for fragment in SECRET_QUERY_FRAGMENTS)
@@ -465,7 +545,9 @@ def validate_url(
     policy: Policy,
 ) -> str:
     if any(ord(char) < 33 or ord(char) > 126 for char in url):
-        raise ConnectorError("URL must use printable ASCII with non-ASCII data percent-encoded")
+        raise ConnectorError(
+            "URL must use printable ASCII with non-ASCII data percent-encoded"
+        )
     try:
         parsed = urlsplit(url)
         hostname = parsed.hostname
@@ -481,7 +563,9 @@ def validate_url(
     if _decoded_path_has_traversal(parsed.path):
         raise ConnectorError("URL path traversal is not allowed")
     if sensitive_query_pairs(url):
-        raise ConnectorError("credentials and contact fields are not accepted by the shared executor")
+        raise ConnectorError(
+            "credentials and contact fields are not accepted by the shared executor"
+        )
     validate_read_only_semantics(provider_id, url)
 
     allowed = False
@@ -506,7 +590,15 @@ def validate_url(
 def redact_url(url: str) -> str:
     parsed = urlsplit(url)
     if sensitive_query_pairs(url):
-        return urlunsplit((parsed.scheme, parsed.netloc, parsed.path, "redacted_sensitive_query=1", ""))
+        return urlunsplit(
+            (
+                parsed.scheme,
+                parsed.netloc,
+                parsed.path,
+                "redacted_sensitive_query=1",
+                "",
+            )
+        )
     return urlunsplit((parsed.scheme, parsed.netloc, parsed.path, parsed.query, ""))
 
 
@@ -556,7 +648,9 @@ def read_bounded(response, remaining: int) -> bytes:  # type: ignore[no-untyped-
         chunk = response.read(min(64 * 1024, remaining - len(body) + 1))
         if not chunk:
             if declared_length is not None and len(body) != declared_length:
-                raise ConnectorError("response ended before its declared Content-Length")
+                raise ConnectorError(
+                    "response ended before its declared Content-Length"
+                )
             return bytes(body)
         body.extend(chunk)
         if len(body) > remaining:
@@ -570,8 +664,12 @@ def validate_response_payload(body: bytes, content_type: object) -> None:
         rb"^(?:\xef\xbb\xbf)?(?:\s|<!--.*?-->)*(?:<!doctype\s+html|<html(?:\s|>))",
         re.IGNORECASE | re.DOTALL,
     )
-    if media_type in {"text/html", "application/xhtml+xml"} or html_prefix.match(prefix):
-        raise ConnectorError("provider returned an HTML page instead of a research payload")
+    if media_type in {"text/html", "application/xhtml+xml"} or html_prefix.match(
+        prefix
+    ):
+        raise ConnectorError(
+            "provider returned an HTML page instead of a research payload"
+        )
     if not body.strip():
         raise ConnectorError("HTTP 200 GET response contained no payload")
     normalized_prefix = prefix.lstrip(b"\xef\xbb\xbf \t\r\n")
@@ -635,17 +733,57 @@ def request_once(
                 except (TypeError, ValueError) as exc:
                     raise ConnectorError("response status is invalid") from exc
                 if status not in SUCCESS_STATUS[method]:
-                    raise ConnectorError(f"HTTP response status {status} is not a completed result")
+                    raise ConnectorError(
+                        f"HTTP response status {status} is not a completed result"
+                    )
                 try:
-                    body = b"" if method == "HEAD" else read_bounded(response, max_bytes)
+                    body = (
+                        b"" if method == "HEAD" else read_bounded(response, max_bytes)
+                    )
                 except (OSError, HTTPException) as exc:
-                    raise ConnectorError("response body could not be read completely") from exc
+                    raise ConnectorError(
+                        "response body could not be read completely"
+                    ) from exc
                 if status == 204 and body:
-                    raise ConnectorError("HTTP 204 response unexpectedly contained a body")
+                    raise ConnectorError(
+                        "HTTP 204 response unexpectedly contained a body"
+                    )
                 response_headers = getattr(response, "headers")
                 content_type = response_headers.get("Content-Type")
                 if method == "GET" and status == 200:
-                    validate_response_payload(body, content_type)
+                    if provider_id == "ncbi-geo-files" and urlsplit(url).path.endswith(
+                        "/matrix/"
+                    ):
+                        accession = urlsplit(url).path.split("/")[-3]
+                        from html.parser import HTMLParser
+
+                        class MatrixIndex(HTMLParser):
+                            found = False
+
+                            def handle_starttag(self, tag, attrs):
+                                href = dict(attrs).get("href", "")
+                                if tag == "a" and re.fullmatch(
+                                    re.escape(accession)
+                                    + r"(?:-GPL[0-9]+)?_series_matrix\.txt\.gz",
+                                    href,
+                                ):
+                                    self.found = True
+
+                        parser = MatrixIndex()
+                        try:
+                            parser.feed(body.decode("utf-8"))
+                        except UnicodeError as exc:
+                            raise ConnectorError("invalid GEO index encoding") from exc
+                        if not parser.found:
+                            raise ConnectorError(
+                                "GEO directory contains no supported matching matrix file"
+                            )
+                    else:
+                        validate_response_payload(body, content_type)
+                        if provider_id == "ncbi-geo-files" and not body.startswith(
+                            b"\x1f\x8b"
+                        ):
+                            raise ConnectorError("GEO matrix response is not gzip data")
                 response_url = validate_url(
                     provider_id,
                     str(getattr(response, "geturl")()),
@@ -666,7 +804,9 @@ def request_once(
             last_error = exc
             try:
                 if exc.code not in RETRYABLE_STATUS or attempt == retries:
-                    raise ConnectorError(f"HTTP request failed with status {exc.code}") from exc
+                    raise ConnectorError(
+                        f"HTTP request failed with status {exc.code}"
+                    ) from exc
                 sleeper(retry_delay(exc, attempt))
             finally:
                 exc.close()
@@ -687,16 +827,35 @@ def request_once(
 
 def with_page(url: str, parameter: str, value: int) -> str:
     parsed = urlsplit(url)
-    params = [(key, item) for key, item in parse_qsl(parsed.query, keep_blank_values=True) if key != parameter]
+    params = [
+        (key, item)
+        for key, item in parse_qsl(parsed.query, keep_blank_values=True)
+        if key != parameter
+    ]
     params.append((parameter, str(value)))
-    return urlunsplit((parsed.scheme, parsed.netloc, parsed.path, urlencode(params), ""))
+    return urlunsplit(
+        (parsed.scheme, parsed.netloc, parsed.path, urlencode(params), "")
+    )
 
 
-def prepare_temp(path: Path, data: bytes) -> tuple[Path, tuple[int, int]]:
+@dataclass
+class StagedIdentity:
+    """Keep the staged inode allocated until publication or rollback finishes."""
+    device: int
+    inode: int
+    descriptor: int = -1
+
+    def close(self) -> None:
+        if self.descriptor >= 0:
+            os.close(self.descriptor)
+            self.descriptor = -1
+
+
+def prepare_temp(path: Path, data: bytes) -> tuple[Path, StagedIdentity]:
     if not path.parent.is_dir():
         raise ConnectorError(f"output directory does not exist: {path.parent}")
     temporary: Path | None = None
-    identity: tuple[int, int] | None = None
+    identity: StagedIdentity | None = None
     try:
         with tempfile.NamedTemporaryFile(
             mode="wb",
@@ -706,7 +865,8 @@ def prepare_temp(path: Path, data: bytes) -> tuple[Path, tuple[int, int]]:
         ) as handle:
             temporary = Path(handle.name)
             opened = os.fstat(handle.fileno())
-            identity = (opened.st_dev, opened.st_ino)
+            identity = StagedIdentity(opened.st_dev, opened.st_ino)
+            identity.descriptor = os.dup(handle.fileno())
             os.fchmod(handle.fileno(), 0o600)
             handle.write(data)
             handle.flush()
@@ -719,6 +879,8 @@ def prepare_temp(path: Path, data: bytes) -> tuple[Path, tuple[int, int]]:
                 cleanup_failed = not unlink_if_owned(temporary, identity)
             except OSError:
                 cleanup_failed = True
+        if identity is not None:
+            identity.close()
         if cleanup_failed:
             raise ConnectorError(
                 "could not prepare output and staged-file cleanup failed"
@@ -739,14 +901,14 @@ def file_identity(path: Path) -> tuple[int, int]:
     return metadata.st_dev, metadata.st_ino
 
 
-def is_owned(target: Path, identity: tuple[int, int]) -> bool:
+def is_owned(target: Path, identity: StagedIdentity) -> bool:
     try:
-        return file_identity(target) == identity
+        return file_identity(target) == (identity.device, identity.inode)
     except FileNotFoundError:
         return False
 
 
-def unlink_if_owned(target: Path, identity: tuple[int, int]) -> bool:
+def unlink_if_owned(target: Path, identity: StagedIdentity) -> bool:
     try:
         if not is_owned(target, identity):
             try:
@@ -761,7 +923,7 @@ def unlink_if_owned(target: Path, identity: tuple[int, int]) -> bool:
 
 
 def rollback_owned(
-    entries: list[tuple[Path, tuple[int, int]]],
+    entries: list[tuple[Path, StagedIdentity]],
     directories: set[Path],
 ) -> None:
     failures: list[str] = []
@@ -794,8 +956,8 @@ def publish_outputs(
             raise ConnectorError(f"output directory does not exist: {parent}")
     output_temp: Path | None = None
     provenance_temp: Path | None = None
-    output_identity: tuple[int, int] | None = None
-    provenance_identity: tuple[int, int] | None = None
+    output_identity: StagedIdentity | None = None
+    provenance_identity: StagedIdentity | None = None
     output_published = False
     provenance_published = False
     directories = {output.parent, provenance_path.parent}
@@ -827,7 +989,7 @@ def publish_outputs(
         ):
             raise OSError("published output identity changed before completion")
     except BaseException as original:
-        owned: list[tuple[Path, tuple[int, int]]] = []
+        owned: list[tuple[Path, StagedIdentity]] = []
         if provenance_identity is not None:
             if provenance_published:
                 owned.append((provenance_path, provenance_identity))
@@ -853,6 +1015,10 @@ def publish_outputs(
                 f"could not publish create-new output pair: {original}"
             ) from original
         raise
+    finally:
+        for identity in (output_identity, provenance_identity):
+            if identity is not None:
+                identity.close()
 
 
 def execute(
@@ -865,7 +1031,9 @@ def execute(
     policy = policy_for(args.provider, catalog, args.acknowledge_terms)
     base_url = validate_url(args.provider, args.url, policy)
     output = args.output
-    provenance_path = args.provenance or output.with_name(f"{output.name}.provenance.json")
+    provenance_path = args.provenance or output.with_name(
+        f"{output.name}.provenance.json"
+    )
     if output == provenance_path:
         raise ConnectorError("payload and provenance paths must differ")
     if output.exists():
@@ -914,7 +1082,9 @@ def execute(
             except (UnicodeError, json.JSONDecodeError) as exc:
                 raise ConnectorError("multi-page mode requires JSON responses") from exc
             pages.append({"page_value": response["page_value"], "data": decoded})
-        payload = (json.dumps({"pages": pages}, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+        payload = (
+            json.dumps({"pages": pages}, ensure_ascii=False, indent=2) + "\n"
+        ).encode("utf-8")
         if len(payload) > effective_max_bytes:
             raise ConnectorError("combined paginated output exceeds --max-bytes")
 
@@ -945,7 +1115,9 @@ def execute(
         "network_performed": True,
         "paid_use_authorized": False,
     }
-    provenance_bytes = (json.dumps(provenance, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
+    provenance_bytes = (
+        json.dumps(provenance, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    ).encode("utf-8")
     publish_outputs(output, payload, provenance_path, provenance_bytes)
     return {
         "event": "connector-result",
@@ -962,7 +1134,14 @@ def execute(
 
 
 class FakeResponse:
-    def __init__(self, url: str, body: bytes, *, status: int = 200, content_type: str = "application/json") -> None:
+    def __init__(
+        self,
+        url: str,
+        body: bytes,
+        *,
+        status: int = 200,
+        content_type: str = "application/json",
+    ) -> None:
         self.status = status
         self._url = url
         self._body = body
@@ -988,7 +1167,9 @@ class FakeResponse:
 def self_test(catalog: dict[str, object]) -> int:
     checks = 0
     uniprot = policy_for("uniprot-rest", catalog, False)
-    validate_url("uniprot-rest", "https://rest.uniprot.org/uniprotkb/P04637.json", uniprot)
+    validate_url(
+        "uniprot-rest", "https://rest.uniprot.org/uniprotkb/P04637.json", uniprot
+    )
     checks += 1
 
     ena = policy_for("ena-portal-api", catalog, False)
@@ -1033,7 +1214,9 @@ def self_test(catalog: dict[str, object]) -> int:
     )
     validate_url("ensembl-rest", orthology_url, ensembl)
     if redact_url(orthology_url) != orthology_url:
-        raise ConnectorError("safe request URL bytes changed during provenance redaction")
+        raise ConnectorError(
+            "safe request URL bytes changed during provenance redaction"
+        )
     orthology_args = argparse.Namespace(
         self_test=False,
         provider="ensembl-rest",
@@ -1133,7 +1316,9 @@ def self_test(catalog: dict[str, object]) -> int:
             validate_url("uniprot-rest", secret_url, uniprot)
         except ConnectorError as exc:
             if "not-a-secret" in str(exc) or "not-a-secret" in redact_url(secret_url):
-                raise ConnectorError("credential rejection leaked a query value") from exc
+                raise ConnectorError(
+                    "credential rejection leaked a query value"
+                ) from exc
         else:
             raise ConnectorError(f"credential query key was accepted: {secret_key}")
     for ambiguous_url in (
@@ -1145,8 +1330,12 @@ def self_test(catalog: dict[str, object]) -> int:
         try:
             validate_url("uniprot-rest", ambiguous_url, uniprot)
         except ConnectorError as exc:
-            if "not-a-secret" in str(exc) or "not-a-secret" in redact_url(ambiguous_url):
-                raise ConnectorError("credential rejection leaked a query value") from exc
+            if "not-a-secret" in str(exc) or "not-a-secret" in redact_url(
+                ambiguous_url
+            ):
+                raise ConnectorError(
+                    "credential rejection leaked a query value"
+                ) from exc
         else:
             raise ConnectorError("semicolon-delimited credential field was accepted")
     checks += 1
@@ -1215,12 +1404,20 @@ def self_test(catalog: dict[str, object]) -> int:
                 acknowledge_terms=False,
             )
             try:
-                execute(args, catalog, open_request=must_not_open, sleeper=lambda _seconds: None)
+                execute(
+                    args,
+                    catalog,
+                    open_request=must_not_open,
+                    sleeper=lambda _seconds: None,
+                )
             except ConnectorError:
                 pass
             else:
                 raise ConnectorError("unreviewed Enrichr execution was accepted")
-            if output.exists() or output.with_name(f"{output.name}.provenance.json").exists():
+            if (
+                output.exists()
+                or output.with_name(f"{output.name}.provenance.json").exists()
+            ):
                 raise ConnectorError("blocked Enrichr path created an artifact")
         if network_calls:
             raise ConnectorError("blocked Enrichr path attempted network access")
@@ -1249,7 +1446,10 @@ def self_test(catalog: dict[str, object]) -> int:
         Message(),
         "/uniprotkb/Q9Y6K9.json",
     )
-    if allowed_redirect is None or allowed_redirect.full_url != "https://rest.uniprot.org/uniprotkb/Q9Y6K9.json":
+    if (
+        allowed_redirect is None
+        or allowed_redirect.full_url != "https://rest.uniprot.org/uniprotkb/Q9Y6K9.json"
+    ):
         raise ConnectorError("reviewed redirect self-test failed")
     if allowed_redirect.get_method() != "GET":
         raise ConnectorError("GET redirect method changed")
@@ -1352,8 +1552,15 @@ def self_test(catalog: dict[str, object]) -> int:
         )
         secret = "self-test-secret-value"
         contact = "self-test-researcher@example.org"
-        environment_names = ("NCBI_API_KEY", "BIO02_NCBI_API_KEY", "NCBI_EMAIL", "BIO02_NCBI_EMAIL")
-        previous_environment = {name: os.environ.get(name) for name in environment_names}
+        environment_names = (
+            "NCBI_API_KEY",
+            "BIO02_NCBI_API_KEY",
+            "NCBI_EMAIL",
+            "BIO02_NCBI_EMAIL",
+        )
+        previous_environment = {
+            name: os.environ.get(name) for name in environment_names
+        }
         try:
             os.environ["NCBI_API_KEY"] = secret
             os.environ["NCBI_EMAIL"] = contact
@@ -1369,8 +1576,14 @@ def self_test(catalog: dict[str, object]) -> int:
                     os.environ.pop(name, None)
                 else:
                     os.environ[name] = previous
-        provenance_text = output.with_name(f"{output.name}.provenance.json").read_text(encoding="utf-8")
-        visible = json.dumps(event, sort_keys=True) + provenance_text + output.read_text(encoding="utf-8")
+        provenance_text = output.with_name(f"{output.name}.provenance.json").read_text(
+            encoding="utf-8"
+        )
+        visible = (
+            json.dumps(event, sort_keys=True)
+            + provenance_text
+            + output.read_text(encoding="utf-8")
+        )
         if (
             not captured_urls
             or secret in captured_urls[0]
@@ -1501,8 +1714,16 @@ def self_test(catalog: dict[str, object]) -> int:
         (b'{"error":"invalid record"}', 200, "application/json"),
         (b'{"Error":"invalid record"}', 200, "application/json"),
         (b'{"Fault":{"message":"invalid record"}}', 200, "application/json"),
-        (b"<eSearchResult><ERROR>invalid database</ERROR></eSearchResult>", 200, "application/xml"),
-        (b"<eSearchResult><ns:Fault>invalid database</ns:Fault></eSearchResult>", 200, "application/xml"),
+        (
+            b"<eSearchResult><ERROR>invalid database</ERROR></eSearchResult>",
+            200,
+            "application/xml",
+        ),
+        (
+            b"<eSearchResult><ns:Fault>invalid database</ns:Fault></eSearchResult>",
+            200,
+            "application/xml",
+        ),
         (b"", 204, "application/json"),
     )
     for invalid_body, invalid_status, invalid_content_type in invalid_payloads:
@@ -1559,9 +1780,12 @@ def self_test(catalog: dict[str, object]) -> int:
             pass
         else:
             raise ConnectorError("invalid payload execution was accepted")
-        if invalid_output.exists() or invalid_output.with_name(
-            f"{invalid_output.name}.provenance.json"
-        ).exists():
+        if (
+            invalid_output.exists()
+            or invalid_output.with_name(
+                f"{invalid_output.name}.provenance.json"
+            ).exists()
+        ):
             raise ConnectorError("invalid payload created a success artifact")
     checks += 1
 
@@ -1597,7 +1821,9 @@ def self_test(catalog: dict[str, object]) -> int:
             1,
             2,
             0,
-            open_request=lambda request, timeout: FakeResponse(request.full_url, b"large"),
+            open_request=lambda request, timeout: FakeResponse(
+                request.full_url, b"large"
+            ),
             sleeper=lambda _seconds: None,
         )
     except ConnectorError:
@@ -1645,12 +1871,17 @@ def self_test(catalog: dict[str, object]) -> int:
         provenance_sentinel = Path(temp_dir) / "provenance-sentinel.json"
         provenance_sentinel.write_bytes(b"keep-provenance")
         try:
-            publish_outputs(rolled_back, b"temporary", provenance_sentinel, b"overwrite")
+            publish_outputs(
+                rolled_back, b"temporary", provenance_sentinel, b"overwrite"
+            )
         except ConnectorError:
             pass
         else:
             raise ConnectorError("pair rollback self-test failed")
-        if rolled_back.exists() or provenance_sentinel.read_bytes() != b"keep-provenance":
+        if (
+            rolled_back.exists()
+            or provenance_sentinel.read_bytes() != b"keep-provenance"
+        ):
             raise ConnectorError("partial pair survived failed publication")
 
         race_target = Path(temp_dir) / "race-result.json"
@@ -1659,12 +1890,11 @@ def self_test(catalog: dict[str, object]) -> int:
         race_injected = False
 
         def replace_final_during_cleanup(
-            target_path: Path, identity: tuple[int, int]
+            target_path: Path, identity: StagedIdentity
         ) -> bool:
             nonlocal race_injected
-            if (
-                not race_injected
-                and target_path.name.startswith(f".{race_target.name}.")
+            if not race_injected and target_path.name.startswith(
+                f".{race_target.name}."
             ):
                 race_injected = True
                 race_target.unlink()
@@ -1697,7 +1927,7 @@ def self_test(catalog: dict[str, object]) -> int:
 
         def replace_stage_after_prepare(
             target_path: Path, data: bytes
-        ) -> tuple[Path, tuple[int, int]]:
+        ) -> tuple[Path, StagedIdentity]:
             nonlocal replaced_stage
             staged_path, staged_identity = original_prepare_temp(target_path, data)
             if target_path == prepare_race_target:
@@ -1754,7 +1984,9 @@ def bounded_int(value: str, *, minimum: int, maximum: int, label: str) -> int:
     except ValueError as exc:
         raise argparse.ArgumentTypeError(f"{label} must be an integer") from exc
     if not minimum <= parsed <= maximum:
-        raise argparse.ArgumentTypeError(f"{label} must be between {minimum} and {maximum}")
+        raise argparse.ArgumentTypeError(
+            f"{label} must be between {minimum} and {maximum}"
+        )
     return parsed
 
 
@@ -1795,9 +2027,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--timeout",
-        type=lambda value: bounded_int(
-            value, minimum=1, maximum=120, label="timeout"
-        ),
+        type=lambda value: bounded_int(value, minimum=1, maximum=120, label="timeout"),
         default=30,
     )
     parser.add_argument(
@@ -1815,8 +2045,19 @@ def build_parser() -> argparse.ArgumentParser:
 
 def validate_args(args: argparse.Namespace) -> None:
     if args.self_test:
-        if any((args.provider, args.url, args.output, args.provenance, args.page_param, args.acknowledge_terms)):
-            raise ConnectorError("--self-test cannot be combined with execution arguments")
+        if any(
+            (
+                args.provider,
+                args.url,
+                args.output,
+                args.provenance,
+                args.page_param,
+                args.acknowledge_terms,
+            )
+        ):
+            raise ConnectorError(
+                "--self-test cannot be combined with execution arguments"
+            )
         return
     if not args.provider or not args.url or args.output is None:
         raise ConnectorError("--provider, --url, and --output are required")
@@ -1834,7 +2075,9 @@ def validate_args(args: argparse.Namespace) -> None:
         if is_sensitive_query_key(args.page_param):
             raise ConnectorError("credential fields cannot be pagination parameters")
     elif args.page_param:
-        raise ConnectorError("--page-param is only valid when --pages is greater than one")
+        raise ConnectorError(
+            "--page-param is only valid when --pages is greater than one"
+        )
 
 
 def emit(event: dict[str, object]) -> None:

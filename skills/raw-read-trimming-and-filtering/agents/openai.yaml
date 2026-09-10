@@ -1,0 +1,4 @@
+interface:
+  display_name: "Raw Read Trimming and Filtering"
+  short_description: "Trim declared adapters and apply approved filters to a few local FASTQ files."
+  default_prompt: "Trim these explicitly listed local FASTQ files with the declared adapter and filter policy, write synchronized new outputs plus retention and provenance, and do not download, overwrite, interpret QC, handle UMIs, classify contamination, or align reads."

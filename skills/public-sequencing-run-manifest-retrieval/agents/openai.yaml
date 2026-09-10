@@ -1,0 +1,4 @@
+interface:
+  display_name: "Public Sequencing Run Manifest Retrieval"
+  short_description: "Resolve existing public sequencing accessions into a bounded run and file manifest."
+  default_prompt: "Retrieve the public run manifest for these exact accessions, including sample, layout, platform, file URL, byte size, MD5, and request provenance; do not download reads."

@@ -8,14 +8,15 @@
 
 # Goose Bio Skills
 
-Research-first bioinformatics skills for AI agents.
+Practical bioinformatics skills for AI agents, with explicit scientific boundaries.
 
-Goose Bio Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The v0.9.0 `main` Beta contains 48 packages across 13 Domains and 26 Clusters, including the four bounded Wave R5 packages.
+Goose Bio Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The current working tree contains **56 packages across 13 Domains and 27 Clusters**, 44 packages at `0.10.0` and 12 at `0.11.0`, with 37 bounded helpers. The immutable collection release remains `v0.9.0`; main contains a reviewed preview, not a newly tagged collection release.
 
 | Boundary | Packages | State | External services |
 | --- | ---: | --- | --- |
-| `main` Beta `0.9.0` | 48 | `preview + reviewed` | Bounded public read/download; anonymous-first |
-| `research` | Next candidate wave | No unpublished candidate is part of the Beta until promoted | Candidate-specific |
+| Immutable `v0.9.0` release | 48 | `preview + reviewed`; see package versions in the registry | Bounded public read/download; anonymous-first |
+| Current working-tree preview | 56 | `preview + reviewed` | Local helpers plus existing bounded public adapters |
+| Unpublished candidate branches | Outside the working-tree catalog | Candidates require a separate promotion decision | Candidate-specific |
 
 ## Why Goose Bio Skills
 
@@ -46,6 +47,12 @@ flowchart LR
 
 The detailed interaction and connector rules are in [docs/architecture.md](docs/architecture.md).
 
+## 快速开始
+
+从 [任务包](docs/task-bundles.md) 选择需要的 Skill，先检查本地依赖，再运行 [几 KB 的示例](examples/efficiency/README.md)。也可以运行 [约 100 KB 的扩展示例](examples/expansion/README.md)：两组比较、相关分析、结果对照，以及单细胞 QC、聚类、marker 证据和 pseudobulk。配套图表、方法记录和中英文报告。
+
+每个 Skill 都会先读已有事实，遇到关键缺失再具体反问，解释影响结果的术语，并提醒有证据支持的误区。输入齐全时直接推进。看 [对话示例](docs/user-experience.md)。
+
 ## Getting started
 
 Clone the repository:
@@ -56,6 +63,14 @@ cd goose-bio-skills
 ```
 
 Choose a Skill from [`skills/`](skills/) and install the complete `skills/<slug>/` directory in an Agent Skills-compatible host. Keep its `LICENSE`, `SKILL.md`, manifest, interface, references, and scripts together. The repository root is a catalog, not a single installable Skill.
+
+Install only the Skills needed for a project using the [selected installation guide](docs/install-selected-skills.md). For the current changes and evidence boundaries, read the [unreleased upgrade notes](docs/unreleased-upgrade.md).
+
+Proposed workflow improvements and the next small analysis additions are in [next steps](docs/next-steps.md); these are plans, not installed capabilities.
+
+For a first checked local result, follow the [offline starter example](docs/offline-starter.md). It includes synthetic input, the exact command, and expected output values.
+
+The current catalog has 37 packages with bundled helpers and 19 without bundled scripts. Helpers cover bounded tasks; guidance packages require the declared tools or a compatible adapter for execution. A bundled helper is not evidence that the entire scientific workflow has been evaluated. Fourteen packages declare network services as required or optional. Installing a Skill directory does not install the shared connector; see the [network integration boundary](docs/integration-contract.md#networked-skills).
 
 Then ask your agent naturally, for example:
 
@@ -194,7 +209,7 @@ skills/<slug>/
 
 ## Current release boundary
 
-The 48-package v0.9.0 `main` Beta is `preview + reviewed`. The 12 Wave R2/R3/R4 packages entered in v0.8.0, and four Wave R5 packages entered atomically in v0.9.0 after their retained minimum-reliability gates passed. Every package states its remaining unverified boundaries in its manifest.
+The immutable 48-package v0.9.0 Beta is `preview + reviewed`. The 12 Wave R2/R3/R4 packages entered in v0.8.0, and four Wave R5 packages entered atomically in v0.9.0 after their retained minimum-reliability gates passed. Every package states its remaining unverified boundaries in its manifest.
 
 Use the collection for supervised research work. Verify inputs, tool availability, QC, and biological interpretation for each project. The collection does not claim universal scientific correctness, clinical authority, or superiority over another workflow.
 

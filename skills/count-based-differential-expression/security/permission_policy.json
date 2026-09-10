@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "reviewed_at": "2026-09-10",
+  "capabilities": {
+    "file_write": {
+      "decision": "approved",
+      "reviewer": "codex-static-review",
+      "scope": "Create private temporary model files and one explicit new JSON report inside the current working directory. Never overwrite, mutate input, create user directories, follow symlinks or use the network.",
+      "reason": "Reviewed original implementation and passing bounded helper/public-data checks; this is not a host permission grant or human expert review.",
+      "expires_at": "2026-12-10",
+      "evidence": [
+        "SKILL.md",
+        "references/deseq2-adapter.md",
+        "scripts/run_count_de.py"
+      ],
+      "target_enforcement": {
+        "openai": "Apply the declared local boundary under the host permission system; the project declaration never grants additional authority.",
+        "claude": "Apply the declared local boundary under the host permission system; the project declaration never grants additional authority.",
+        "generic": "Apply the declared local boundary under the host permission system; the project declaration never grants additional authority.",
+        "vscode": "Apply the declared local boundary under the host permission system; the project declaration never grants additional authority."
+      }
+    },
+    "local_subprocess": {
+      "decision": "approved",
+      "reviewer": "codex-static-review",
+      "scope": "Execute only a trusted resolved local Rscript with --vanilla and the fixed embedded DESeq2 worker, explicit data arguments and exact declared DESeq2 version. No shell, installation, caller code or alternate model.",
+      "reason": "Reviewed original implementation and passing bounded helper/public-data checks; this is not a host permission grant or human expert review.",
+      "expires_at": "2026-12-10",
+      "evidence": [
+        "SKILL.md",
+        "references/deseq2-adapter.md",
+        "scripts/run_count_de.py"
+      ],
+      "target_enforcement": {
+        "openai": "Apply the declared local boundary under the host permission system; the project declaration never grants additional authority.",
+        "claude": "Apply the declared local boundary under the host permission system; the project declaration never grants additional authority.",
+        "generic": "Apply the declared local boundary under the host permission system; the project declaration never grants additional authority.",
+        "vscode": "Apply the declared local boundary under the host permission system; the project declaration never grants additional authority."
+      }
+    }
+  }
+}

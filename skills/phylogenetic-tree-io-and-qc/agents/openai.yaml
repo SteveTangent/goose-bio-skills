@@ -1,0 +1,4 @@
+interface:
+  display_name: "Phylogenetic Tree I/O and QC"
+  short_description: "Validate bounded local Newick trees and report structural QC."
+  default_prompt: "Check this local Newick tree, optionally require an exact tip-set match with a second tree, and write a new deterministic structural QC report without changing either tree."

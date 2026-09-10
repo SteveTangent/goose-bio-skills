@@ -1,9 +1,9 @@
 ---
 name: bulk-rnaseq-gene-count-matrix-assembly
-description: "Use to assemble at least two completed schema-1.0 single-sample gene-count JSON reports from bulk-rnaseq-gene-counting-from-alignment into one deterministic gene-by-sample raw-count JSON matrix. Require exact agreement on the GTF SHA-256, every gene's gene_id/contig/strand/exon_count tuple, and the full assignment contract; sort samples and genes and fail closed on duplicate keys, duplicate samples, mismatches, or invalid counts. Exclude SAM/BAM/CRAM counting, annotation repair or gene completion, filtering, normalization, transformation, batch correction, differential expression, and biological or clinical interpretation."
+description: "Assemble a gene-count matrix from completed compatible single-sample counting reports with the same annotation and assignment policy. Exclude read counting, normalization and differential expression."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Bulk RNA-seq Gene-count Matrix Assembly
@@ -11,6 +11,20 @@ metadata:
 `Preview + reviewed`; the deterministic helper self-test passed. Agent runtime,
 representative-data benchmarking, scientific evaluation, and expert review were
 not performed.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Use to assemble at least two completed schema-1.0 single-sample gene-count JSON reports from bulk-rnaseq-gene-counting-from-alignment into one deterministic gene-by-sample raw-count JSON matrix. Require exact agreement on the GTF SHA-256, every gene's gene_id/contig/strand/exon_count tuple, and the full assignment contract; sort samples and genes and fail closed on duplicate keys, duplicate samples, mismatches, or invalid counts. Exclude SAM/BAM/CRAM counting, annotation repair or gene completion, filtering, normalization, transformation, batch correction, differential expression, and biological or clinical interpretation.
 
 ## Owns
 
@@ -71,7 +85,7 @@ or annotation are scientifically valid or comparable.
   definitions or assignment policies.
 - Never fill missing genes, filter counts, normalize, transform, correct batch
   effects, test differential expression, or interpret biology.
-- Never overwrite, mutate inputs, create directories, follow symlinks, escape
+- Never overwrite, mutate inputs, create directories except the explicit DE handoff bundle, follow symlinks, escape
   the working directory, use the network, or start a subprocess.
 - Treat publication as create-new with tested rollback after staged identity is
   recorded, not as crash-atomic replacement. A rare pre-identity failure may

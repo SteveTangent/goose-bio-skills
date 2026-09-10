@@ -1,0 +1,4 @@
+interface:
+  display_name: "Single Cell Object Io And Qc"
+  short_description: "Inspect and explicitly filter a small RNA h5ad with authoritative counts and biological sample metadata."
+  default_prompt: "Inspect and explicitly filter a small RNA h5ad with authoritative counts and biological sample metadata. Inspect my inputs and clarify only facts that change the analysis."

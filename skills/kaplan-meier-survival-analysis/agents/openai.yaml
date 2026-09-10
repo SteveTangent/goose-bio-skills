@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kaplan-Meier Survival Analysis"
+  short_description: "Summarize local right-censored subject tables."
+  default_prompt: "Summarize this local subject-level time-to-event TSV with deterministic Kaplan-Meier estimates, medians, and at-risk/event/censor counts, optionally by one declared group column, and write a new descriptive JSON report without hypothesis testing."

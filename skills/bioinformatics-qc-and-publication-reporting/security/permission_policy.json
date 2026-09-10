@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "reviewed_at": "2026-09-10",
+  "capabilities": {
+    "file_write": {
+      "decision": "approved",
+      "reviewer": "project-owner-authorized-agent-review",
+      "scope": "Only scripts/build_analysis_report.py may create explicitly requested new outputs within the working directory. No input mutation, replacement or network. Temporary staging is removed. Trusted scientific libraries may use local threads and caches.",
+      "reason": "Explicit local outputs with path, size and create-new checks; this declaration never grants host permissions.",
+      "expires_at": "2026-12-10",
+      "evidence": [
+        "SKILL.md",
+        "scripts/build_analysis_report.py",
+        "references/local-adapter.md"
+      ],
+      "target_enforcement": {
+        "openai": "Apply host workspace permissions to the explicitly requested new output; do not repeat an already granted authorization.",
+        "claude": "Apply host workspace permissions to the explicitly requested new output; do not repeat an already granted authorization.",
+        "generic": "Apply host workspace permissions to the explicitly requested new output; do not repeat an already granted authorization.",
+        "vscode": "Apply host workspace permissions to the explicitly requested new output; do not repeat an already granted authorization."
+      }
+    }
+  }
+}

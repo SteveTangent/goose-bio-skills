@@ -1,0 +1,4 @@
+interface:
+  display_name: "Junction PSI and Delta Analysis"
+  short_description: "Compute PSI and declared group deltas from prepared counts."
+  default_prompt: "Compute per-sample PSI and a declared two-group delta from this prepared inclusion/exclusion junction-count TSV using the stated minimum coverage, then write a new JSON report without statistical inference."

@@ -2,8 +2,8 @@
 
 This reference defines the source-clean operating boundary for
 `count-based-differential-expression`. The table records each interface's
-freshness date; it does not claim that the tools were installed or runtime-tested
-in this preview.
+freshness date. The bundled DESeq2 adapter has a separate small execution
+smoke check; other adapter names do not imply tested execution.
 
 ## Scientific contract
 
@@ -30,7 +30,7 @@ For a future edgeR adapter, use the current `normLibSizes` name;
 | Component | Reviewed version/interface | Official documentation | Checked |
 | --- | --- | --- | --- |
 | Bioconductor | Bioconductor 3.23 with R 4.6 | [R/Bioconductor release contract](https://bioconductor.org/about/release-announcements/) | 2026-08-08 |
-| DESeq2 | 1.52.0 | [negative-binomial count differential expression](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) | 2026-08-08 |
+| DESeq2 | 1.52.0 | [negative-binomial count differential expression](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) | 2026-09-10 |
 | edgeR | 4.10.3 | [negative-binomial count differential expression](https://bioconductor.org/packages/release/bioc/html/edgeR.html) | 2026-08-13 |
 | tximport | 1.40.0 | [transcript-estimate import contract](https://bioconductor.org/packages/release/bioc/html/tximport.html) | 2026-08-08 |
 | PyDESeq2 | 0.5.4 | [independent Python DESeq2-style implementation](https://pydeseq2.readthedocs.io/en/stable/) | 2026-08-08 |
@@ -45,12 +45,13 @@ Never upload controlled or patient data under this preview contract.
 
 ## Verification status
 
-- Mode: `skipped-complex-tool`
-- Reason: R/Bioconductor and PyDESeq2 model fitting, dependency installation, and dataset-scale diagnostics were not run for this preview.
-- Relevant versions: Bioconductor 3.23 / R 4.6, DESeq2 1.52.0, edgeR 4.10.3, tximport 1.40.0, PyDESeq2 0.5.4
-- Unverified boundaries:
-  - No negative-binomial model, shrinkage, outlier, or diagnostic workflow was executed
-  - DESeq2, edgeR, and PyDESeq2 numerical results are not claimed to be interchangeable
+The original helper passed its dependency-free self-test and a separate small
+public-data execution smoke check: 14,599 input genes and seven samples, with
+one declared two-level contrast and categorical adjustment. The tested runtime
+was R 4.6.1 / DESeq2 1.52.0 / jsonlite 2.0.0. Input rejection, rank-deficient
+design rejection, metadata-order invariance and no-overwrite behavior were checked.
 
-A skip is not a pass. The exact package remains `preview + reviewed` until a
-separate bounded evaluation records what actually ran.
+Formal agent runtime evaluation, representative scientific benchmarking and
+expert review remain `not-performed`; assurance remains `preview + reviewed`.
+The [bounded adapter contract](deseq2-adapter.md) defines the executed scope.
+DESeq2, edgeR and PyDESeq2 numerical results are not claimed interchangeable.

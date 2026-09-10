@@ -1,0 +1,103 @@
+{
+  "schema_version": "0.2.0",
+  "name": "bioinformatics-result-visualization",
+  "version": "0.11.0",
+  "maturity_tier": "production",
+  "context_budget_tier": "production",
+  "domain_id": "D01",
+  "cluster_id": "C03",
+  "risk_tier": "R2",
+  "owner": "project-owner",
+  "updated_at": "2026-09-10",
+  "last_freshness_check": "2026-09-10",
+  "review_cadence": "quarterly",
+  "status": "active",
+  "lifecycle_stage": "production",
+  "distribution_status": "installable",
+  "release_stage": "preview",
+  "assurance_level": "reviewed",
+  "assurance": {
+    "runtime_evaluation": "not-performed",
+    "scientific_benchmark": "not-performed",
+    "human_expert_review": "not-performed",
+    "better_than_baseline_claim": false,
+    "clinical_use": "prohibited",
+    "unverified_boundaries": [
+      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "Scientific benchmarks, no-Skill comparisons and human-expert review are not performed.",
+      "Small local helper checks do not establish generalization, biological validity or large-dataset support.",
+      "Invented values, silent scale conversion, automatic feature fishing, biological conclusions and new statistical tests."
+    ]
+  },
+  "intake_contract_version": "1.3.0",
+  "intake_contract": {
+    "facts_before_questions": true,
+    "question_policy": "one-unresolved-load-bearing-decision-at-a-time-with-recommendation",
+    "wait_after_each_question": true,
+    "explicit_safe_local_execution": "proceed-without-repeat-confirmation",
+    "side_effect_confirmation": "only-when-not-already-authorized-for-current-action-and-scope",
+    "decision_sequence": [
+      {
+        "decision_id": "plot-purpose",
+        "applies_when": "The intended figure question is not specified.",
+        "question": "Which question should the figure answer: effect and significance, sample similarity, or expression pattern?",
+        "recommended_answer": "Use a volcano plot for effects, PCA for sample QC, and a small heatmap for a stated gene-pattern question."
+      },
+      {
+        "decision_id": "input-and-design",
+        "applies_when": "A safely inspected fact remains missing and changes the result or method.",
+        "question": "这张图最需要回答哪个具体问题?",
+        "recommended_answer": "建议先选一个问题：组间差异、变量关系、样本结构或候选 marker 支持。"
+      }
+    ]
+  },
+  "script_verification": {
+    "bundled_scripts": true,
+    "implementation_origin": "original-new",
+    "self_test_status": "passed",
+    "self_test_command": "python3 scripts/plot_results.py --self-test",
+    "runtime_versions": [
+      "Python >=3.10; dependency-free deterministic self-test",
+      "NumPy 2.4.4 / SciPy 1.17.1 small local execution",
+      "Matplotlib 3.10.8 PNG/SVG rendering smoke"
+    ],
+    "artifact_version": "0.11.0"
+  },
+  "runtime_verification": {
+    "mode": "not-performed",
+    "status": "not-performed",
+    "reason": "Basic helper execution and input/hand-off checks are recorded separately; no agent or scientific benchmark claim.",
+    "tool_versions": [
+      "Python >=3.10; dependency-free deterministic self-test",
+      "NumPy 2.4.4 / SciPy 1.17.1 small local execution",
+      "Matplotlib 3.10.8 PNG/SVG rendering smoke"
+    ],
+    "unverified_boundaries": [
+      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "Scientific benchmarks, no-Skill comparisons and human-expert review are not performed.",
+      "Small local helper checks do not establish generalization, biological validity or large-dataset support.",
+      "Invented values, silent scale conversion, automatic feature fishing, biological conclusions and new statistical tests."
+    ]
+  },
+  "legal_notices": {
+    "required": true,
+    "files": [
+      "LICENSE"
+    ]
+  },
+  "rollback": {
+    "previous_version": "0.10.0",
+    "boundary": "Restore preceding package 0.10.0 and its matching registry entry."
+  },
+  "network_mode": "none",
+  "local_adapters": [
+    "Python standard library",
+    "NumPy",
+    "Matplotlib"
+  ],
+  "external_services": [],
+  "depends_on": [],
+  "target_platforms": [
+    "agent-skills"
+  ]
+}

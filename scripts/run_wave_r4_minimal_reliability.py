@@ -12,13 +12,14 @@ import os
 import subprocess
 import sys
 import tempfile
+from validate_skeleton import package_digest
 from pathlib import Path
 from typing import Any, Callable
 
 
 ROOT = Path(__file__).resolve().parents[1]
-FIXTURE = ROOT / "evals" / "fixtures" / "research-wave-r4-minimal-v0.1.json"
-VERSION = "0.1.0"
+FIXTURE = ROOT / "evals" / "fixtures" / "research-wave-r4-minimal-v0.3.json"
+VERSION = "0.3.0"
 PACKAGES = {
     "bulk_gene_counting": "bulk-rnaseq-gene-counting-from-alignment",
     "junction_psi": "junction-psi-and-delta-analysis",
@@ -35,11 +36,6 @@ SCRIPTS = {
     "kaplan_meier": ROOT / "skills" / PACKAGES["kaplan_meier"] / "scripts" / "analyze_kaplan_meier.py",
     "clinvar_evidence": ROOT / "skills" / PACKAGES["clinvar_evidence"] / "scripts" / "normalize_clinvar_vcv.py",
 }
-LEGAL_PREFIXES = (
-    "LICENSE", "NOTICE", "COPYING", "COPYRIGHT", "ATTRIBUTION",
-    "THIRD_PARTY_NOTICES", "THIRD-PARTY-NOTICES",
-)
-CODE_SUFFIXES = {".py", ".r", ".sh", ".bash", ".zsh", ".pl", ".rb", ".js", ".ts"}
 
 
 class Checks:
@@ -73,28 +69,6 @@ def sha256_bytes(payload: bytes) -> str:
 
 def sha256_file(path: Path) -> str:
     return sha256_bytes(path.read_bytes())
-
-
-def package_digest(package: Path) -> str:
-    projection: list[dict[str, str]] = []
-    for path in sorted(item for item in package.rglob("*") if item.is_file()):
-        relative = path.relative_to(package)
-        if any(part.startswith(".") or part == "__pycache__" for part in relative.parts):
-            continue
-        upper_name = relative.name.upper()
-        if upper_name.startswith(LEGAL_PREFIXES):
-            kind = "license"
-        elif relative.as_posix() in {"manifest.json", "agents/interface.yaml"}:
-            kind = "metadata"
-        elif relative.parts[0] == "scripts" or relative.suffix.lower() in CODE_SUFFIXES:
-            kind = "code"
-        else:
-            kind = "text"
-        projection.append({"kind": kind, "path": relative.as_posix(), "sha256": sha256_file(path)})
-    encoded = json.dumps(
-        projection, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-    ).encode("utf-8")
-    return sha256_bytes(encoded)
 
 
 def run_cli(script: Path, arguments: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:

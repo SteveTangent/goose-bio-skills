@@ -1,9 +1,9 @@
 ---
 name: read-alignment-selection-and-execution
-description: "Use to align one tiny local plain-FASTQ file of single-end short genomic DNA reads to one exact local plain-FASTA reference with an explicitly supplied minimap2 2.31-r1302 executable, producing a create-new SAM and provenance report with executable fingerprinting. Exclude QC, trimming, paired-end or interleaved reads, RNA/splice or long-read alignment, reference choice, sorting, indexing, BAM/CRAM operations, variant calling, quantification, batches, and overwrites."
+description: "Align tiny single-end short genomic-DNA inputs with the bounded minimap2 2.31-r1302 adapter. Exclude RNA, paired-end or long-read execution and general aligner-performance claims."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Read Alignment Selection and Execution
@@ -12,6 +12,20 @@ metadata:
 macOS ARM64 canary with real minimap2 2.31-r1302 passed. Formal agent runtime
 evaluation, scientific benchmarking, representative-data testing, and expert
 review were not performed.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: Use to align one tiny local plain-FASTQ file of single-end short genomic DNA reads to one exact local plain-FASTA reference with an explicitly supplied minimap2 2.31-r1302 executable, producing a create-new SAM and provenance report with executable fingerprinting. Exclude QC, trimming, paired-end or interleaved reads, RNA/splice or long-read alignment, reference choice, sorting, indexing, BAM/CRAM operations, variant calling, quantification, batches, and overwrites.
 
 ## Owns
 

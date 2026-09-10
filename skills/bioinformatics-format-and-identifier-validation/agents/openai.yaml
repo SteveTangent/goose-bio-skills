@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bioinformatics Format And Identifier Validation"
+  short_description: "Validate and explicitly align sample metadata with a declared feature-by-sample matrix."
+  default_prompt: "Validate and explicitly align sample metadata with a declared feature-by-sample matrix. Inspect my inputs and clarify only facts that change the analysis."

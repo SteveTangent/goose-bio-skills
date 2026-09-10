@@ -1,0 +1,4 @@
+interface:
+  display_name: "Raw Read Quality Reporting"
+  short_description: "Summarize existing bounded FastQC text or ZIP reports and preserve module warning flags."
+  default_prompt: "Summarize existing bounded FastQC text or ZIP reports and preserve module warning flags. Inspect my inputs and clarify only facts that change the analysis."

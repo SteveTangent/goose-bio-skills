@@ -1,18 +1,32 @@
 ---
 name: single-cell-object-io-and-qc
-description: "A user needs to inspect, load, or quality-check a supported small single-cell object, or plan a conversion through a declared adapter. Exclude: silent make-unique, filtering or doublet removal; normalization and clustering; condition differential expression; cross-ecosystem conversion without a declared compatible converter."
+description: "Inspect single-cell objects, sample and feature metadata, and QC summaries; plan compatible conversion. Exclude automatic filtering, normalization, integration and cell-type annotation."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.11.0"
 ---
 
 # Single-cell Object I/O and QC
 
-`Preview + reviewed`; runtime, scientific, expert, and clinical validation were not performed.
+`Preview + reviewed`; small local helper checks are separate from agent, scientific, expert and clinical validation.
+
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: A user needs to inspect, load, or quality-check a supported small single-cell object, or plan a conversion through a declared adapter. Exclude: silent make-unique, filtering or doublet removal; normalization and clustering; condition differential expression; cross-ecosystem conversion without a declared compatible converter.
 
 ## Owns
 
-Inspect, load, and quality-check supported single-cell objects without silent mutation; cross-ecosystem conversion requires a declared converter. Exclusions are declared in the trigger above.
+Inspect, load, and quality-check supported single-cell objects without silent mutation; cross-ecosystem conversion requires a declared converter. Apply the detailed scope below.
 
 ## Inputs
 
@@ -63,3 +77,7 @@ disclose provider, purpose, data sent, and credentials; no silent fallback.
 - Record skipped complex-tool execution as unverified, never as passed
 - Keep credentials, private paths, patient and controlled data out of artifacts
 - Require researcher review for biological interpretation; no clinical authority
+
+## Small local execution adapter (0.11.0)
+
+Inspect and explicitly filter a small RNA h5ad with authoritative counts and biological sample metadata. Use [the local adapter](references/local-adapter.md) for exact inputs, flags, outputs and limits. Broader guidance above remains available; only this declared adapter has small execution evidence. No undocumented route is silently substituted.

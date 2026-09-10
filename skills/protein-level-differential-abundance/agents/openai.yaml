@@ -1,0 +1,4 @@
+interface:
+  display_name: "Protein-level Differential Abundance"
+  short_description: "Fit one declared protein-level limma contrast."
+  default_prompt: "Fit one declared contrast on this finite normalized log2 protein-level matrix and exact sample metadata with the fixed local R/limma adapter; preserve the design, effect, statistic, raw p-value, and BH-adjusted p-value in a new report."

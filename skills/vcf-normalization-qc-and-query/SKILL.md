@@ -1,18 +1,32 @@
 ---
 name: vcf-normalization-qc-and-query
-description: "A user needs VCF-specific reference, allele, genotype, normalization, filtering or query semantics on an existing callset. Exclude: syntax/schema-only validation without VCF-specific semantic QC or operation; variant calling; clinical classification; treating imputed dosage as a directly observed genotype."
+description: "Check reference, allele or genotype semantics; normalize, filter or query existing VCF records. Exclude syntax-only validation, variant calling, pathogenicity reassessment and clinical decisions."
 license: Apache-2.0
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # VCF Normalization, QC and Query
 
 `Preview + reviewed`; runtime, scientific, expert, and clinical validation were not performed.
 
+## Execution behavior
+
+Use supplied and safely inspected facts first. Explain an unfamiliar term only
+when it changes the decision. If a critical fact is missing or inconsistent,
+follow [the dialogue guide](references/user-dialogue.md): ask one focused
+question, explain why, recommend a defensible route, and wait on dependent work.
+Continue independent authorized work; never guess scientific facts or repeat a
+resolved question. With complete inputs, proceed. Show relevant figures/tables
+and their meaning; preserve the host's permissions and the boundaries below.
+Finish with outputs, key findings and concrete remaining limits.
+
+
+Detailed scope: A user needs VCF-specific reference, allele, genotype, normalization, filtering or query semantics on an existing callset. Exclude: syntax/schema-only validation without VCF-specific semantic QC or operation; variant calling; clinical classification; treating imputed dosage as a directly observed genotype.
+
 ## Owns
 
-Produce an auditable normalized or filtered variant representation and QC findings from an existing callset. Exclusions are declared in the trigger above.
+Produce an auditable normalized or filtered variant representation and QC findings from an existing callset. Apply the detailed scope below.
 
 ## Inputs
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Count-based Differential Expression"
+  short_description: "Estimate a declared contrast from counts with a defensible design, diagnostics and multiple-testing record."
+  default_prompt: "Compare treated versus control samples in this raw count matrix while adjusting for batch."

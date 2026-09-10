@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "bundles": {
+    "rnaseq-results": {
+      "description": "Prepared counts through DE, explicit mapping/enrichment, figures and report.",
+      "skills": [
+        "scientific-file-preflight-and-resource-planning",
+        "bulk-rnaseq-gene-count-matrix-assembly",
+        "count-based-differential-expression",
+        "biological-database-record-retrieval-and-identifier-resolution",
+        "over-representation-analysis",
+        "ranked-gene-set-enrichment",
+        "bioinformatics-result-visualization",
+        "bioinformatics-qc-and-publication-reporting"
+      ]
+    },
+    "single-cell-qc": {
+      "description": "Small h5ad object QC and exploratory core adapter; no automatic cell-type labels.",
+      "skills": [
+        "scientific-file-preflight-and-resource-planning",
+        "single-cell-object-io-and-qc",
+        "single-cell-core-analysis",
+        "bioinformatics-qc-and-publication-reporting"
+      ]
+    },
+    "evidence-review": {
+      "description": "Find public evidence, retrieve identifiers and preserve study traceability.",
+      "skills": [
+        "biomedical-literature-and-public-study-search",
+        "evidence-synthesis-and-research-traceability",
+        "biological-database-record-retrieval-and-identifier-resolution"
+      ]
+    },
+    "basic-statistics": {
+      "description": "Continuous two-group effects, declared correlations, correction, figures and report.",
+      "skills": [
+        "bioinformatics-format-and-identifier-validation",
+        "two-group-comparison-and-effect-estimation",
+        "correlation-and-association-screening",
+        "statistical-analysis-and-multiple-testing",
+        "multi-comparison-result-concordance",
+        "bioinformatics-result-visualization",
+        "bioinformatics-qc-and-publication-reporting"
+      ]
+    },
+    "public-expression": {
+      "description": "Prepare one public expression matrix; validate metadata and inspect the declared downstream method.",
+      "skills": [
+        "public-expression-dataset-preparation",
+        "bioinformatics-format-and-identifier-validation",
+        "bioinformatics-result-visualization",
+        "bioinformatics-qc-and-publication-reporting"
+      ]
+    },
+    "single-cell-practical": {
+      "description": "Small h5ad QC, core exploration, marker evidence, one-type pseudobulk, figures and report.",
+      "skills": [
+        "single-cell-object-io-and-qc",
+        "single-cell-core-analysis",
+        "single-cell-marker-evidence-review",
+        "single-cell-pseudobulk-aggregation",
+        "count-based-differential-expression",
+        "bioinformatics-result-visualization",
+        "bioinformatics-qc-and-publication-reporting"
+      ]
+    }
+  }
+}

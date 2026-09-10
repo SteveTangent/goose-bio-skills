@@ -1,0 +1,4 @@
+interface:
+  display_name: "Protein Structure Retrieval and Comparison"
+  short_description: "Resolve structure identity, assembly, chain and confidence before producing an auditable structural comparison."
+  default_prompt: "Retrieve the experimental structures for this accession and compare chain A across two entries."
