@@ -36,6 +36,9 @@ jobs:
           PINNED_RSCRIPT=$(python3 -c 'import pathlib, shutil; print(pathlib.Path(shutil.which("Rscript")).resolve())')
           sudo mkdir -p /usr/local/bin
           sudo ln -sf "$PINNED_RSCRIPT" /usr/local/bin/Rscript
+          # The existing limma worker deliberately excludes R_LIBS_USER from its environment.
+          PINNED_R_LIBRARY=$("$PINNED_RSCRIPT" --vanilla -e 'cat(R.home("library"))')
+          sudo cp -R "$R_LIBS_USER/limma" "$R_LIBS_USER/statmod" "$PINNED_R_LIBRARY/"
       - name: Validate packages and deterministic helper contracts
         run: python3 scripts/verify.py quick
         env:
