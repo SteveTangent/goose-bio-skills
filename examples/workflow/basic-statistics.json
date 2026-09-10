@@ -1,0 +1,121 @@
+{
+  "schema_version": "1.0",
+  "title": "两组比较、图表与报告",
+  "facts": {
+    "taxon": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    },
+    "scale": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    },
+    "biological_unit": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    },
+    "numerator": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    },
+    "denominator": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    }
+  },
+  "steps": [
+    {
+      "id": "compare",
+      "skill": "two-group-comparison-and-effect-estimation",
+      "inputs": {
+        "table": "data.tsv"
+      },
+      "parameters": {
+        "method": "paired",
+        "numerator": "treated",
+        "denominator": "control",
+        "scale": "continuous",
+        "unit": "a.u.",
+        "subject_column": "subject_id",
+        "missing_policy": "error",
+        "confidence": 0.95,
+        "independent_units_declared": true
+      },
+      "required_facts": [
+        "scale",
+        "biological_unit",
+        "numerator",
+        "denominator"
+      ],
+      "fact_parameters": {
+        "scale": "scale",
+        "numerator": "numerator",
+        "denominator": "denominator"
+      },
+      "depends_on": [],
+      "result": "comparison.json",
+      "outputs": [
+        "comparison.json"
+      ],
+      "receipt": "compare-receipt-1.json",
+      "tool_versions": {}
+    },
+    {
+      "id": "figure",
+      "skill": "bioinformatics-result-visualization",
+      "inputs": {
+        "result": "comparison.json"
+      },
+      "parameters": {
+        "kind": "groups"
+      },
+      "required_facts": [],
+      "fact_parameters": {},
+      "depends_on": [
+        "compare"
+      ],
+      "result": "figure/figure.json",
+      "outputs": [
+        "figure/figure.json",
+        "figure/figure.svg",
+        "figure/figure.png",
+        "figure/plot-data.tsv"
+      ],
+      "receipt": "figure-receipt-1.json",
+      "tool_versions": {}
+    },
+    {
+      "id": "report",
+      "skill": "bioinformatics-qc-and-publication-reporting",
+      "inputs": {
+        "source:comparison": "comparison.json",
+        "figure:groups": "figure/figure.json",
+        "png:groups": "figure/figure.png"
+      },
+      "parameters": {},
+      "required_facts": [],
+      "fact_parameters": {},
+      "depends_on": [
+        "figure"
+      ],
+      "result": "report/report.json",
+      "outputs": [
+        "report/report.json",
+        "report/report.md",
+        "report/methods.md"
+      ],
+      "receipt": "report-receipt-1.json",
+      "tool_versions": {}
+    }
+  ]
+}

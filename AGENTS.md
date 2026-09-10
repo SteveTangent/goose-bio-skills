@@ -66,3 +66,7 @@ not weaken the admission, privacy, input-validation or no-overwrite boundaries.
 - Do not describe a skipped path as evaluated. For `stable`, skipped behavior must remain outside the stable assurance claim.
 - Scan for secrets, private identifiers, upstream source presentation, stale interfaces, unsafe commands, and missing legally required notices.
 - Inspect the Git diff and rebuild the local code graph after meaningful code changes.
+
+## Optional multi-step handoff
+
+For an authorized multi-step analysis in a repository checkout, use `docs/analysis-workflow.md` and the optional `scripts/manage_workflow.py` companion when facts or results need to persist between steps. Read existing facts first; present only the first consequential missing question to the user. The agent maintains the plan file, while original Skills own scientific method and input decisions. Do not present `ready` as scientific approval or execute a plan as code. Preserve non-completed source outcomes, and reuse outputs only after their current handoff checks pass. A simple one-off Skill invocation does not require a plan or receipt.

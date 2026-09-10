@@ -49,6 +49,8 @@ The detailed interaction and connector rules are in [docs/architecture.md](docs/
 
 ## 快速开始
 
+多步骤任务可从 [分析流程入口](docs/analysis-workflow.md) 开始：复用已确认事实，检查已有结果，生成包含图表、方法和待补充事项的目录。这个可选工具保持本地，不执行分析或安装依赖。
+
 从 [任务包](docs/task-bundles.md) 选择需要的 Skill，先检查本地依赖，再运行 [几 KB 的示例](examples/efficiency/README.md)。也可以运行 [约 100 KB 的扩展示例](examples/expansion/README.md)：两组比较、相关分析、结果对照，以及单细胞 QC、聚类、marker 证据和 pseudobulk。配套图表、方法记录和中英文报告。
 
 每个 Skill 都会先读已有事实，遇到关键缺失再具体反问，解释影响结果的术语，并提醒有证据支持的误区。输入齐全时直接推进。看 [对话示例](docs/user-experience.md)。

@@ -19,3 +19,7 @@ These checks establish bounded execution and reviewed package contracts. They do
 The current maintenance gate is `python3 scripts/verify.py quick`; `release` adds retained connector and R1–R5 deterministic replay checks. The installer self-test is now included in both modes. A dependency inventory with unchecked helpers does not report readiness; consult each adapter before execution.
 
 Start with [task bundles](task-bundles.md), the [small expansion example](../examples/expansion/README.md), [user dialogue examples](user-experience.md), or the [full catalog](catalog.md). The [earlier stage notes](upgrade-history-2026-09-10.md) retain historical counts, pending states and evidence boundaries.
+
+## Optional workflow handoffs
+
+A repository companion now preserves declared facts and checks native results across small statistics, public-expression and single-cell flows. It records dependencies and source outcomes, invalidates changed results, accepts explicit failure notes and creates a linked overview. The 56 package digests remain unchanged; no new scientific adapter is introduced. See [workflow usage](analysis-workflow.md). The normal quick/CI entrypoint includes its bounded handoff regressions.

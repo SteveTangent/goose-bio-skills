@@ -60,3 +60,9 @@ the repository connector and package contracts.
 - no inheritance layer for manifests or interfaces
 - no replacement of domain-specific diagnostic fields with generic prose
 - no extra user confirmation when safe local work is already authorized
+
+## Optional project handoff companion
+
+The repository-level `scripts/manage_workflow.py` companion stores a small analysis plan and create-new receipts without executing commands. It compares native input hashes, declared parameters and tool versions, package identity, fact evidence, dependency receipts and output files. Scientific fields remain in their original helper outputs. Only eight explicitly supported native formats are accepted; installing a standalone Skill does not install this companion.
+
+Reporting may consume checked non-completed results and keeps the source outcome visible. Analysis steps require completed upstream handoffs. `ready` means no handoff gap was detected, not scientific or environment validation. Full usage and current limits: [analysis workflow](analysis-workflow.md).
