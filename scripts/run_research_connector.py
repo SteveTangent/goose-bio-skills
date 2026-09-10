@@ -838,11 +838,24 @@ def with_page(url: str, parameter: str, value: int) -> str:
     )
 
 
-def prepare_temp(path: Path, data: bytes) -> tuple[Path, tuple[int, int]]:
+@dataclass
+class StagedIdentity:
+    """Keep the staged inode allocated until publication or rollback finishes."""
+    device: int
+    inode: int
+    descriptor: int = -1
+
+    def close(self) -> None:
+        if self.descriptor >= 0:
+            os.close(self.descriptor)
+            self.descriptor = -1
+
+
+def prepare_temp(path: Path, data: bytes) -> tuple[Path, StagedIdentity]:
     if not path.parent.is_dir():
         raise ConnectorError(f"output directory does not exist: {path.parent}")
     temporary: Path | None = None
-    identity: tuple[int, int] | None = None
+    identity: StagedIdentity | None = None
     try:
         with tempfile.NamedTemporaryFile(
             mode="wb",
@@ -852,7 +865,8 @@ def prepare_temp(path: Path, data: bytes) -> tuple[Path, tuple[int, int]]:
         ) as handle:
             temporary = Path(handle.name)
             opened = os.fstat(handle.fileno())
-            identity = (opened.st_dev, opened.st_ino)
+            identity = StagedIdentity(opened.st_dev, opened.st_ino)
+            identity.descriptor = os.dup(handle.fileno())
             os.fchmod(handle.fileno(), 0o600)
             handle.write(data)
             handle.flush()
@@ -865,6 +879,8 @@ def prepare_temp(path: Path, data: bytes) -> tuple[Path, tuple[int, int]]:
                 cleanup_failed = not unlink_if_owned(temporary, identity)
             except OSError:
                 cleanup_failed = True
+        if identity is not None:
+            identity.close()
         if cleanup_failed:
             raise ConnectorError(
                 "could not prepare output and staged-file cleanup failed"
@@ -885,14 +901,14 @@ def file_identity(path: Path) -> tuple[int, int]:
     return metadata.st_dev, metadata.st_ino
 
 
-def is_owned(target: Path, identity: tuple[int, int]) -> bool:
+def is_owned(target: Path, identity: StagedIdentity) -> bool:
     try:
-        return file_identity(target) == identity
+        return file_identity(target) == (identity.device, identity.inode)
     except FileNotFoundError:
         return False
 
 
-def unlink_if_owned(target: Path, identity: tuple[int, int]) -> bool:
+def unlink_if_owned(target: Path, identity: StagedIdentity) -> bool:
     try:
         if not is_owned(target, identity):
             try:
@@ -907,7 +923,7 @@ def unlink_if_owned(target: Path, identity: tuple[int, int]) -> bool:
 
 
 def rollback_owned(
-    entries: list[tuple[Path, tuple[int, int]]],
+    entries: list[tuple[Path, StagedIdentity]],
     directories: set[Path],
 ) -> None:
     failures: list[str] = []
@@ -940,8 +956,8 @@ def publish_outputs(
             raise ConnectorError(f"output directory does not exist: {parent}")
     output_temp: Path | None = None
     provenance_temp: Path | None = None
-    output_identity: tuple[int, int] | None = None
-    provenance_identity: tuple[int, int] | None = None
+    output_identity: StagedIdentity | None = None
+    provenance_identity: StagedIdentity | None = None
     output_published = False
     provenance_published = False
     directories = {output.parent, provenance_path.parent}
@@ -973,7 +989,7 @@ def publish_outputs(
         ):
             raise OSError("published output identity changed before completion")
     except BaseException as original:
-        owned: list[tuple[Path, tuple[int, int]]] = []
+        owned: list[tuple[Path, StagedIdentity]] = []
         if provenance_identity is not None:
             if provenance_published:
                 owned.append((provenance_path, provenance_identity))
@@ -999,6 +1015,10 @@ def publish_outputs(
                 f"could not publish create-new output pair: {original}"
             ) from original
         raise
+    finally:
+        for identity in (output_identity, provenance_identity):
+            if identity is not None:
+                identity.close()
 
 
 def execute(
@@ -1870,7 +1890,7 @@ def self_test(catalog: dict[str, object]) -> int:
         race_injected = False
 
         def replace_final_during_cleanup(
-            target_path: Path, identity: tuple[int, int]
+            target_path: Path, identity: StagedIdentity
         ) -> bool:
             nonlocal race_injected
             if not race_injected and target_path.name.startswith(
@@ -1907,7 +1927,7 @@ def self_test(catalog: dict[str, object]) -> int:
 
         def replace_stage_after_prepare(
             target_path: Path, data: bytes
-        ) -> tuple[Path, tuple[int, int]]:
+        ) -> tuple[Path, StagedIdentity]:
             nonlocal replaced_stage
             staged_path, staged_identity = original_prepare_temp(target_path, data)
             if target_path == prepare_race_target:

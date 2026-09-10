@@ -18,9 +18,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
-      - name: Diagnose connector portability
+      - name: Check connector portability
         run: python3 scripts/run_research_connector.py --self-test
-        continue-on-error: true
       - uses: r-lib/actions/setup-r@465b7d8e732ca3921382b1674c59bada9cbf3399 # v2
         with:
           r-version: '4.4.1'
@@ -28,8 +27,9 @@ jobs:
       - name: Install the existing fixed limma adapter dependency
         shell: Rscript {0}
         run: |
+          install.packages("https://cran.r-project.org/src/contrib/Archive/statmod/statmod_1.5.0.tar.gz", repos = NULL, type = "source")
           install.packages("https://bioconductor.org/packages/3.19/bioc/src/contrib/limma_3.60.6.tar.gz", repos = NULL, type = "source")
-          stopifnot(as.character(getRversion()) == "4.4.1", as.character(packageVersion("limma")) == "3.60.6")
+          stopifnot(as.character(getRversion()) == "4.4.1", as.character(packageVersion("limma")) == "3.60.6", as.character(packageVersion("statmod")) == "1.5.0")
       - name: Expose the fixed R installation to the existing adapter
         shell: bash
         run: |
