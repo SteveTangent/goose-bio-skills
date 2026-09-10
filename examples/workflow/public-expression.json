@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0",
+  "title": "公共表达矩阵整理与待澄清事项",
+  "facts": {
+    "platform": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    },
+    "taxon": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    },
+    "scale": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    },
+    "biological_unit": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    }
+  },
+  "steps": [
+    {
+      "id": "prepare",
+      "skill": "public-expression-dataset-preparation",
+      "inputs": {
+        "matrix": "matrix.txt"
+      },
+      "parameters": {
+        "accession": "GSE1",
+        "platform": "GPL1",
+        "declared_scale": "unknown"
+      },
+      "required_facts": [
+        "platform"
+      ],
+      "fact_parameters": {
+        "platform": "platform"
+      },
+      "depends_on": [],
+      "result": "prepared/preparation.json",
+      "outputs": [
+        "prepared/preparation.json",
+        "prepared/expression.tsv",
+        "prepared/features.tsv",
+        "prepared/samples.tsv",
+        "prepared/original-samples.tsv"
+      ],
+      "receipt": "prepare-receipt-1.json",
+      "tool_versions": {}
+    },
+    {
+      "id": "report",
+      "skill": "bioinformatics-qc-and-publication-reporting",
+      "inputs": {
+        "source:preparation": "prepared/preparation.json"
+      },
+      "parameters": {},
+      "required_facts": [],
+      "fact_parameters": {},
+      "depends_on": [
+        "prepare"
+      ],
+      "result": "report/report.json",
+      "outputs": [
+        "report/report.json",
+        "report/report.md",
+        "report/methods.md"
+      ],
+      "receipt": "report-receipt-1.json",
+      "tool_versions": {}
+    }
+  ]
+}

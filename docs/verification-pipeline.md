@@ -11,12 +11,14 @@ flowchart TD
     Q --> S["all current packages\nall bundled self-tests"]
     Q --> V["validator self-test"]
     Q --> I["installer self-test"]
+    Q --> H["workflow handoff regressions"]
     Q --> D["diff check"]
     G --> R{"tagged release?"}
     S --> R
     V --> R
     D --> R
     I --> R
+    H --> R
     R -- "no" --> Done["ready for code review"]
     R -- "yes" --> Full["verify.py release"]
     Full --> X["connector self-test"]

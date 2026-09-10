@@ -1,0 +1,144 @@
+{
+  "schema_version": "1.0",
+  "title": "小型 RNA 单细胞 QC、探索与报告",
+  "facts": {
+    "taxon": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    },
+    "assay": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    },
+    "scale": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    },
+    "biological_unit": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    }
+  },
+  "steps": [
+    {
+      "id": "qc",
+      "skill": "single-cell-object-io-and-qc",
+      "inputs": {
+        "object": "data.h5ad"
+      },
+      "parameters": {
+        "assay": "rna",
+        "counts_layer": "counts",
+        "min_counts": 1,
+        "min_genes": 2
+      },
+      "required_facts": [
+        "assay",
+        "scale",
+        "biological_unit"
+      ],
+      "fact_parameters": {
+        "assay": "assay"
+      },
+      "depends_on": [],
+      "result": "qc/qc.json",
+      "outputs": [
+        "qc/qc.json",
+        "qc/checked.h5ad"
+      ],
+      "receipt": "qc-receipt-1.json",
+      "tool_versions": {}
+    },
+    {
+      "id": "core",
+      "skill": "single-cell-core-analysis",
+      "inputs": {
+        "object": "qc/checked.h5ad",
+        "qc_report": "qc/qc.json"
+      },
+      "parameters": {
+        "counts_layer": "counts",
+        "hvg_requested": 50,
+        "pcs_requested": 10,
+        "neighbors_actual": 10,
+        "resolution": 0.3,
+        "seed": 11,
+        "marker_count": 8
+      },
+      "required_facts": [
+        "assay",
+        "scale",
+        "biological_unit"
+      ],
+      "fact_parameters": {},
+      "depends_on": [
+        "qc"
+      ],
+      "result": "core/analysis.json",
+      "outputs": [
+        "core/analysis.json",
+        "core/processed.h5ad",
+        "core/markers.tsv",
+        "core/embedding.tsv"
+      ],
+      "receipt": "core-receipt-1.json",
+      "tool_versions": {}
+    },
+    {
+      "id": "figure",
+      "skill": "bioinformatics-result-visualization",
+      "inputs": {
+        "result": "core/embedding.tsv"
+      },
+      "parameters": {
+        "kind": "embedding"
+      },
+      "required_facts": [],
+      "fact_parameters": {},
+      "depends_on": [
+        "core"
+      ],
+      "result": "figure/figure.json",
+      "outputs": [
+        "figure/figure.json",
+        "figure/figure.svg",
+        "figure/figure.png",
+        "figure/plot-data.tsv"
+      ],
+      "receipt": "figure-receipt-1.json",
+      "tool_versions": {}
+    },
+    {
+      "id": "report",
+      "skill": "bioinformatics-qc-and-publication-reporting",
+      "inputs": {
+        "source:qc": "qc/qc.json",
+        "source:core": "core/analysis.json",
+        "figure:embedding": "figure/figure.json",
+        "png:embedding": "figure/figure.png"
+      },
+      "parameters": {},
+      "required_facts": [],
+      "fact_parameters": {},
+      "depends_on": [
+        "figure"
+      ],
+      "result": "report/report.json",
+      "outputs": [
+        "report/report.json",
+        "report/report.md",
+        "report/methods.md"
+      ],
+      "receipt": "report-receipt-1.json",
+      "tool_versions": {}
+    }
+  ]
+}
