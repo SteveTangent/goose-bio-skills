@@ -8,13 +8,15 @@ evidence; the thin orchestrator only chooses and reports them.
 flowchart TD
     C["change"] --> Q["quick\nverify.py quick"]
     Q --> G["generated registry check"]
-    Q --> S["50-package skeleton\nall bundled self-tests"]
+    Q --> S["all current packages\nall bundled self-tests"]
     Q --> V["validator self-test"]
+    Q --> I["installer self-test"]
     Q --> D["diff check"]
     G --> R{"tagged release?"}
     S --> R
     V --> R
     D --> R
+    I --> R
     R -- "no" --> Done["ready for code review"]
     R -- "yes" --> Full["verify.py release"]
     Full --> X["connector self-test"]

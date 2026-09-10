@@ -19,6 +19,7 @@ QUICK_COMMANDS = (
     ("registry-generated", (sys.executable, "scripts/render_registry.py", "--check")),
     ("skeleton", (sys.executable, "scripts/validate_skeleton.py")),
     ("validator-self-test", (sys.executable, "scripts/validate_skeleton.py", "--self-test")),
+    ("installer-self-test", (sys.executable, "scripts/manage_skills.py", "--self-test")),
     ("diff-check", ("git", "diff", "--check")),
 )
 RELEASE_COMMANDS = (

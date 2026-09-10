@@ -10,7 +10,7 @@
 
 Practical bioinformatics skills for AI agents, with explicit scientific boundaries.
 
-Goose Bio Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The current working tree contains **56 packages across 13 Domains and 27 Clusters**, 44 packages at `0.10.0` and 12 at `0.11.0`, with 37 bounded helpers. The immutable collection release remains `v0.9.0`; these changes are a local unreleased preview.
+Goose Bio Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The current working tree contains **56 packages across 13 Domains and 27 Clusters**, 44 packages at `0.10.0` and 12 at `0.11.0`, with 37 bounded helpers. The immutable collection release remains `v0.9.0`; main contains a reviewed preview, not a newly tagged collection release.
 
 | Boundary | Packages | State | External services |
 | --- | ---: | --- | --- |
@@ -65,6 +65,8 @@ cd goose-bio-skills
 Choose a Skill from [`skills/`](skills/) and install the complete `skills/<slug>/` directory in an Agent Skills-compatible host. Keep its `LICENSE`, `SKILL.md`, manifest, interface, references, and scripts together. The repository root is a catalog, not a single installable Skill.
 
 Install only the Skills needed for a project using the [selected installation guide](docs/install-selected-skills.md). For the current changes and evidence boundaries, read the [unreleased upgrade notes](docs/unreleased-upgrade.md).
+
+Proposed workflow improvements and the next small analysis additions are in [next steps](docs/next-steps.md); these are plans, not installed capabilities.
 
 For a first checked local result, follow the [offline starter example](docs/offline-starter.md). It includes synthetic input, the exact command, and expected output values.
 
@@ -207,7 +209,7 @@ skills/<slug>/
 
 ## Current release boundary
 
-The 48-package v0.9.0 `main` Beta is `preview + reviewed`. The 12 Wave R2/R3/R4 packages entered in v0.8.0, and four Wave R5 packages entered atomically in v0.9.0 after their retained minimum-reliability gates passed. Every package states its remaining unverified boundaries in its manifest.
+The immutable 48-package v0.9.0 Beta is `preview + reviewed`. The 12 Wave R2/R3/R4 packages entered in v0.8.0, and four Wave R5 packages entered atomically in v0.9.0 after their retained minimum-reliability gates passed. Every package states its remaining unverified boundaries in its manifest.
 
 Use the collection for supervised research work. Verify inputs, tool availability, QC, and biological interpretation for each project. The collection does not claim universal scientific correctness, clinical authority, or superiority over another workflow.
 

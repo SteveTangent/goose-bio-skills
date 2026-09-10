@@ -19,7 +19,7 @@ python3 scripts/manage_skills.py doctor --bundle rnaseq-results
 python3 scripts/manage_skills.py install --bundle rnaseq-results --destination NEW_SKILLS_DIRECTORY
 ```
 
-`doctor` 仅读取当前 Python/R 环境的依赖信息，不下载、不安装。它显示被检查的本地 helper 是否具备基础依赖；指导型 Skill 的其他工具仍需按任务检查。DESeq2 使用时还需要声明实际版本与模型设计。
+`doctor` 仅读取当前 Python/R 环境的依赖信息，不下载、不安装。它显示已覆盖的本地 helper 是否具备基础依赖；`unchecked_helpers` 列出尚未覆盖的 helper，此时不会报告已就绪。指导型 Skill 和超出 helper 范围的其他工具仍需按任务检查。DESeq2 使用时还需要声明实际版本与模型设计。
 
 `install` 需要一个不存在的目标目录，且父目录已经存在；例如已建立分析项目 `.agents` 后，将新目录 `.agents/skills` 作为目标。完整复制包并核对校验值，拒绝覆盖已有安装。已有 Skill 目录请先用新的暂存目录检查，再按宿主的安装方式迁移；不要把不同版本叠加复制。
 

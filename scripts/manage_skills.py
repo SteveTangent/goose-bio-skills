@@ -53,6 +53,32 @@ def select(names, bundle):
 
 
 def doctor(names, catalog):
+    # Only the bounded helper paths listed here have a dependency inventory.
+    # Manifest adapters may also describe broader guidance, so do not infer
+    # execution readiness from a present Python interpreter alone.
+    inventoried = {
+        "bioinformatics-result-visualization",
+        "ranked-gene-set-enrichment",
+        "over-representation-analysis",  # Local GMT path uses the standard library.
+        "count-based-differential-expression",  # DESeq2 path only.
+        "two-group-comparison-and-effect-estimation",
+        "correlation-and-association-screening",
+        "single-cell-object-io-and-qc",
+        "single-cell-core-analysis",
+        "single-cell-pseudobulk-aggregation",
+        "statistical-analysis-and-multiple-testing",
+    }
+    stdlib_adapters = {"Python standard library", "Python 3.10+ standard library"}
+    unchecked = [
+        name
+        for name in names
+        if catalog[name]["script_verification"]["bundled_scripts"]
+        and name not in inventoried
+        and not (
+            catalog[name].get("local_adapters")
+            and set(catalog[name]["local_adapters"]) <= stdlib_adapters
+        )
+    ]
     requirements = {}
     if "bioinformatics-result-visualization" in names:
         requirements.update(numpy=None, matplotlib=None)
@@ -139,12 +165,15 @@ def doctor(names, catalog):
     return {
         "status": "completed",
         "selected": names,
-        "checked_helpers_ready": all(x["ready"] for x in checks),
+        "checked_helpers_ready": not unchecked and all(x["ready"] for x in checks),
+        "dependency_inventory_complete": not unchecked,
+        "unchecked_helpers": unchecked,
         "checks": checks,
         "guidance_only": guidance,
         "limitations": [
             "Readiness is a dependency inventory, not an analysis or host-routing check.",
-            "Other declared adapters in guidance-only skills require their own environment checks.",
+            "Unchecked helpers require their own adapter checks; missing coverage is not a passed check.",
+            "Other declared adapters, including those beyond the inventoried helper path, require their own environment checks.",
             "DESeq2 execution still requires its exact installed version and a compatible declared design.",
         ],
         "automatic_installation": False,
@@ -209,6 +238,23 @@ def self_test():
     assert names.index("statistical-analysis-and-multiple-testing") < names.index(
         "count-based-differential-expression"
     )
+    for name in [
+        "protein-level-differential-abundance",
+        "read-alignment-selection-and-execution",
+    ]:
+        result = doctor([name], catalog)
+        assert not result["checked_helpers_ready"]
+        assert not result["dependency_inventory_complete"]
+        assert result["unchecked_helpers"] == [name]
+    result = doctor(["statistical-analysis-and-multiple-testing"], catalog)
+    assert result["checked_helpers_ready"] and result["dependency_inventory_complete"]
+    unknown = {
+        "new-helper": {
+            "script_verification": {"bundled_scripts": True},
+            "local_adapters": ["Unknown runtime"],
+        }
+    }
+    assert doctor(["new-helper"], unknown)["unchecked_helpers"] == ["new-helper"]
     with tempfile.TemporaryDirectory() as tmp:
         target = Path(tmp).resolve() / "skills"
         first = install(["statistical-analysis-and-multiple-testing"], target)
@@ -232,7 +278,7 @@ def self_test():
             pass
         else:
             raise AssertionError("Symlink ancestor accepted.")
-    return {"status": "pass", "checks": 4}
+    return {"status": "pass", "checks": 8}
 
 
 def main():
