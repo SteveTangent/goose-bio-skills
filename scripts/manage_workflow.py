@@ -647,6 +647,10 @@ def note_failure(root, plan, step_id, note):
 
 def confirm(root, plan, name, value, source, note, evidence, output):
     require(
+        PurePosixPath(relative(output)).parent == PurePosixPath("."),
+        "Save the new plan beside the current plan so relative input paths keep their meaning.",
+    )
+    require(
         name in plan["facts"] and note.strip() and evidence,
         "Choose a declared fact, explain its source and bind it to input files.",
     )

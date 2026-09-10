@@ -282,6 +282,21 @@ class WorkflowTests(unittest.TestCase):
         _, updated = w.load_plan(self.root / "confirmed.json")
         self.assertIsNone(w.fact_problem(self.root, updated["facts"]["scale"]))
 
+    def test_confirm_cannot_move_project_root(self):
+        (self.root / "nested").mkdir()
+        with self.assertRaises(w.WorkflowError):
+            w.confirm(
+                self.root,
+                self.plan,
+                "scale",
+                "continuous",
+                "user",
+                "Confirmed",
+                ["data.tsv"],
+                "nested/confirmed.json",
+            )
+        self.assertFalse((self.root / "nested/confirmed.json").exists())
+
     def test_overview_escapes_untrusted_title(self):
         self.plan["title"] = "<script>alert(1)</script> [link](https://example.invalid)"
         self.save()
