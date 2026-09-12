@@ -10,12 +10,12 @@
 
 Practical bioinformatics skills for AI agents, with explicit scientific boundaries.
 
-Goose Bio Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The current working tree contains **57 packages across 13 Domains and 27 Clusters**, 42 packages at `0.10.0`, nine at `0.11.0` and six at `0.12.0`, with 38 bounded helpers. The immutable collection release remains `v0.9.0`; main contains a reviewed preview, not a newly tagged collection release.
+Goose Bio Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The current working tree contains **58 packages across 13 Domains and 27 Clusters**, 40 packages at `0.10.0`, 9 at `0.11.0`, 4 at `0.12.0` and 5 at `0.13.0`, with 40 bounded helpers. The immutable collection release remains `v0.9.0`; main contains a reviewed preview, not a newly tagged collection release.
 
 | Boundary | Packages | State | External services |
 | --- | ---: | --- | --- |
 | Immutable `v0.9.0` release | 48 | `preview + reviewed`; see package versions in the registry | Bounded public read/download; anonymous-first |
-| Current working-tree preview | 57 | `preview + reviewed` | Local helpers plus existing bounded public adapters |
+| Current working-tree preview | 58 | `preview + reviewed` | Local helpers plus existing bounded public adapters |
 | Unpublished candidate branches | Outside the working-tree catalog | Candidates require a separate promotion decision | Candidate-specific |
 
 Start with [expression workflows](docs/expression-workflows.md) for counts, reviewed pseudobulk or normalized microarrays, or [task bundles](docs/task-bundles.md) for other inputs.
@@ -82,7 +82,7 @@ Proposed workflow improvements and the next small analysis additions are in [nex
 
 For a first checked local result, follow the [offline starter example](docs/offline-starter.md). It includes synthetic input, the exact command, and expected output values.
 
-The current catalog has 38 packages with bundled helpers and 19 without bundled scripts. Helpers cover bounded tasks; guidance packages require the declared tools or a compatible adapter for execution. A bundled helper is not evidence that the entire scientific workflow has been evaluated. Fourteen packages declare network services as required or optional. Installing a Skill directory does not install the shared connector; see the [network integration boundary](docs/integration-contract.md#networked-skills).
+The current catalog has 40 packages with bundled helpers and 18 without bundled scripts. Helpers cover bounded tasks; guidance packages require the declared tools or a compatible adapter for execution. A bundled helper is not evidence that the entire scientific workflow has been evaluated. Fourteen packages declare network services as required or optional. Installing a Skill directory does not install the shared connector; see the [network integration boundary](docs/integration-contract.md#networked-skills).
 
 Then ask your agent naturally, for example:
 
@@ -271,3 +271,5 @@ Goose Bio Skills is licensed under the [Apache License 2.0](LICENSE). Each insta
 - [Release flow](docs/release-flow.md)
 - [Research candidate promotion gates](docs/research-skill-promotion-gates.md)
 - [Contributing](CONTRIBUTING.md)
+
+The current protein/PCoA preview connects small quantified protein tables and existing sample distances to figures and reports. Try [the bounded examples](examples/protein-pcoa/README.md) or the `protein-results` / `microbiome-ordination` task bundles.

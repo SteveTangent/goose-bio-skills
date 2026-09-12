@@ -1,15 +1,15 @@
 {
   "schema_version": "0.2.0",
   "name": "proteomics-quantification-table-qc",
-  "version": "0.10.0",
+  "version": "0.13.0",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D08",
   "cluster_id": "C22",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-09-10",
-  "last_freshness_check": "2026-08-09",
+  "updated_at": "2026-09-12",
+  "last_freshness_check": "2026-09-12",
   "review_cadence": "quarterly",
   "status": "active",
   "lifecycle_stage": "production",
@@ -23,12 +23,10 @@
     "better_than_baseline_claim": false,
     "clinical_use": "prohibited",
     "unverified_boundaries": [
-      "Agent routing and interactive behavior have not been runtime-evaluated.",
-      "Scientific benchmark performance has not been established.",
-      "Human-expert review has not been performed.",
-      "Large quantification tables, vendor-specific exports, and complex quantitative objects have not been runtime-evaluated.",
-      "Bioconductor, QFeatures, and MSstats execution was skipped; no normalization, imputation, or statistical model was run.",
-      "Raw-MS processing, identification/FDR, protein inference, and differential-abundance behavior are outside this package."
+      "Agent interaction, scientific benchmarks, no-Skill comparisons and human-expert review are not performed.",
+      "Small local execution does not establish representative scientific performance.",
+      "Protein table QC only; no imputation, normalization, peptide inference or differential modeling.",
+      "Only complete normalized log2 independent-sample inputs are exported for the existing model."
     ]
   },
   "intake_contract_version": "1.3.0",
@@ -60,28 +58,27 @@
     ]
   },
   "script_verification": {
-    "bundled_scripts": false,
-    "implementation_origin": "none",
-    "self_test_status": "not-applicable",
-    "self_test_command": null,
-    "runtime_versions": []
+    "bundled_scripts": true,
+    "implementation_origin": "original-new",
+    "self_test_status": "passed",
+    "self_test_command": "python3 scripts/check_protein_table.py --self-test",
+    "runtime_versions": [
+      "Python >=3.10; deterministic self-test; small execution recorded separately"
+    ],
+    "artifact_version": "0.13.0"
   },
   "runtime_verification": {
-    "mode": "skipped-complex-tool",
-    "status": "skipped",
-    "reason": "The package is instruction-only. Large-table execution and optional R/Bioconductor quantitative-proteomics adapters require complex tooling and were deliberately not run.",
+    "mode": "not-performed",
+    "status": "not-performed",
+    "reason": "Basic helper checks are separate from Agent and scientific evaluation.",
     "tool_versions": [
-      "Bioconductor 3.23 with R 4.6 reference interface",
-      "QFeatures 1.22.0",
-      "MSstats 4.20.0 downstream modeling interface"
+      "Python >=3.10; deterministic self-test; small execution recorded separately"
     ],
     "unverified_boundaries": [
-      "Agent routing and interactive behavior have not been runtime-evaluated.",
-      "Scientific benchmark performance has not been established.",
-      "Human-expert review has not been performed.",
-      "Large quantification tables, vendor-specific exports, and complex quantitative objects have not been runtime-evaluated.",
-      "Bioconductor, QFeatures, and MSstats execution was skipped; no normalization, imputation, or statistical model was run.",
-      "Raw-MS processing, identification/FDR, protein inference, and differential-abundance behavior are outside this package."
+      "Agent interaction, scientific benchmarks, no-Skill comparisons and human-expert review are not performed.",
+      "Small local execution does not establish representative scientific performance.",
+      "Protein table QC only; no imputation, normalization, peptide inference or differential modeling.",
+      "Only complete normalized log2 independent-sample inputs are exported for the existing model."
     ]
   },
   "legal_notices": {
@@ -91,13 +88,12 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.9.1",
+    "previous_version": "0.10.0",
     "boundary": "Restore the preceding package 0.9.1 and its matching registry entry."
   },
   "network_mode": "none",
   "local_adapters": [
-    "QFeatures 1.22.0",
-    "MSstats 4.20.0"
+    "Python standard library"
   ],
   "external_services": [],
   "depends_on": [

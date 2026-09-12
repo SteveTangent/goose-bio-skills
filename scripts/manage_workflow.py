@@ -15,9 +15,12 @@ import sys
 from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "0.2.0"
+VERSION = "0.3.0"
 MAX_FILE = 16 * 1024 * 1024
 TOOLS = {
+    "proteomics-quantification-table-qc": "goose_protein_table_qc",
+    "protein-level-differential-abundance": "protein-level-differential-abundance",
+    "distance-matrix-principal-coordinates-analysis": "goose_pcoa",
     "count-based-differential-expression": "goose_deseq2",
     "normalized-microarray-differential-expression": "goose_microarray_limma",
     "biological-database-record-retrieval-and-identifier-resolution": "goose_local_id_mapping",
@@ -375,8 +378,30 @@ def native_check(root, step, ctx):
         path = ROOT / "skills" / step["skill"] / "scripts/run_count_de.py"
         spec = spec_from_file_location("goose_checked_de", path)
         module = module_from_spec(spec)
-        spec.loader.exec_module(module)
+        previous_bytecode_policy = sys.dont_write_bytecode
+        try:
+            sys.dont_write_bytecode = True
+            spec.loader.exec_module(module)
+        finally:
+            sys.dont_write_bytecode = previous_bytecode_policy
         require(data.get("worker_sha256") == digest(module.WORKER.encode()), "DESeq2 worker identity mismatch.")
+    if step["skill"] == "protein-level-differential-abundance":
+        require(isinstance(data, dict) and isinstance(data.get("tool"), dict), "Protein model metadata is missing.")
+        tool = data["tool"]
+        require({k: tool.get(k) for k in ("name", "version")} == ctx["package"]["tool"], "Protein helper identity differs.")
+        from importlib.util import spec_from_file_location, module_from_spec
+        path = ROOT / "skills" / step["skill"] / "scripts/run_limma.py"
+        spec = spec_from_file_location("goose_checked_protein", path)
+        module = module_from_spec(spec)
+        previous_bytecode_policy = sys.dont_write_bytecode
+        try:
+            sys.dont_write_bytecode = True
+            spec.loader.exec_module(module)
+        finally:
+            sys.dont_write_bytecode = previous_bytecode_policy
+        require(tool.get("worker_sha256") == module.bundled_worker()[1], "Protein worker identity mismatch.")
+        require(data.get("runtime_versions") == {"R": tool.get("r_version"), "limma": tool.get("limma_version")}, "Protein runtime versions disagree.")
+        data = {**data, "tool": ctx["package"]["tool"]}
     require(
         isinstance(data, dict) and data.get("status") in OUTCOMES,
         "Missing or unsupported native result status.",
@@ -714,6 +739,9 @@ def overview(root, state, output):
     names = {
         "goose_deseq2": "原始计数差异分析",
         "goose_microarray_limma": "微阵列表达差异分析",
+        "goose_protein_table_qc": "蛋白定量表检查",
+        "protein-level-differential-abundance": "蛋白差异丰度分析",
+        "goose_pcoa": "距离矩阵 PCoA",
         "goose_local_id_mapping": "注释准备与 ID 映射",
         "goose_local_ora": "候选基因集富集",
         "goose_gseapy_prerank": "排序基因集富集",

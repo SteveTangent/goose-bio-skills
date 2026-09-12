@@ -1,6 +1,6 @@
 # 从任务开始
 
-仓库有 57 个独立 Skill。通常只装当前任务需要的几个，安装工具会补齐 manifest 声明的依赖。
+仓库有 58 个独立 Skill。通常只装当前任务需要的几个，安装工具会补齐 manifest 声明的依赖。
 
 | 任务包 | 适合的起点 | 交付 |
 | --- | --- | --- |
@@ -39,3 +39,13 @@ python3 scripts/manage_skills.py install --bundle rnaseq-results --destination N
 新增统计任务依赖 NumPy、SciPy。小型 h5ad 适配依赖 AnnData、h5py；核心分析还需要 Scanpy 1.12.4 和 igraph 0.11.9。版本清单：[基础统计](../requirements-statistics.txt)、[单细胞](../requirements-single-cell.txt)。示例环境实际使用 Python 3.13；请使用与这些版本兼容的 Python。GEO core 是离线解析器，包安装不会附带仓库级网络 companion。
 
 表达数据可从 [研究问题入口](expression-workflows.md) 开始。微阵列使用 R 4.4.1 / limma 3.60.6；doctor 检查当前 PATH 中 Rscript 的精确版本。将该任务环境的 R 放在 PATH 前部，或执行器显式使用 --rscript；无需覆盖其他 R 安装。安装包不下载参考数据库，已有 ID Skill 可转换已选定的映射 TSV 与 GMT。
+
+## 蛋白组和微生物距离入口
+
+| 任务包 | 已有输入 | 先澄清什么 | 环境与交付 |
+| --- | --- | --- | --- |
+| protein-results | protein-level 定量 TSV + sample/condition/subject 元数据 | 尺度、归一化依据、零/缺失含义和独立对象；有批次时检查混杂 | QC 为标准库；模型 R 4.4.1 / limma 3.60.6；图需要 NumPy/Matplotlib；输出 QC、差异、图和报告 |
+| microbiome-ordination | 完整距离矩阵，或现有整数特征表生成的 beta 距离 | 距离指标、零深度/缺失对、样本分组 | PCoA 需要 NumPy，图需要 Matplotlib；距离计算不作归一化，PCoA 不做组间显著性检验 |
+
+新 QC/PCoA、protein limma 及既有标准库 beta helper 的 doctor 依赖已覆盖。
+依赖就绪不代表距离语义或研究设计正确；仍按各 helper 边界检查。试用 [小数据与命令](../examples/protein-pcoa/README.md)。

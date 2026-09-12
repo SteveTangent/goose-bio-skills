@@ -1,0 +1,92 @@
+{
+  "schema_version": "0.2.0",
+  "name": "distance-matrix-principal-coordinates-analysis",
+  "version": "0.13.0",
+  "maturity_tier": "production",
+  "context_budget_tier": "production",
+  "domain_id": "D07",
+  "cluster_id": "C20",
+  "risk_tier": "R2",
+  "owner": "project-owner",
+  "updated_at": "2026-09-12",
+  "last_freshness_check": "2026-09-12",
+  "review_cadence": "quarterly",
+  "status": "active",
+  "lifecycle_stage": "production",
+  "distribution_status": "installable",
+  "release_stage": "preview",
+  "assurance_level": "reviewed",
+  "assurance": {
+    "runtime_evaluation": "not-performed",
+    "scientific_benchmark": "not-performed",
+    "human_expert_review": "not-performed",
+    "better_than_baseline_claim": false,
+    "clinical_use": "prohibited",
+    "unverified_boundaries": [
+      "Agent interaction, scientific benchmarks, no-Skill comparisons and human-expert review are not performed.",
+      "Small local execution does not establish representative scientific performance.",
+      "Classical PCoA on 3–128 complete sample distances; no corrections, normalization or group inference.",
+      "Negative eigenvalues are retained; positive-axis views can distort non-Euclidean distances."
+    ]
+  },
+  "intake_contract_version": "1.3.0",
+  "intake_contract": {
+    "facts_before_questions": true,
+    "question_policy": "one-unresolved-load-bearing-decision-at-a-time-with-recommendation",
+    "wait_after_each_question": true,
+    "explicit_safe_local_execution": "proceed-without-repeat-confirmation",
+    "side_effect_confirmation": "only-when-not-already-authorized-for-current-action-and-scope",
+    "decision_sequence": [
+      {
+        "decision_id": "distance-semantics",
+        "applies_when": "The metric, undefined distances or sample identity is unresolved.",
+        "question": "这个矩阵使用什么距离指标，是否有未定义的样本对?",
+        "recommended_answer": "请提供生成记录和样本表；不要填补零深度样本的距离。"
+      }
+    ]
+  },
+  "script_verification": {
+    "bundled_scripts": true,
+    "implementation_origin": "original-new",
+    "self_test_status": "passed",
+    "self_test_command": "python3 scripts/run_pcoa.py --self-test",
+    "runtime_versions": [
+      "Python >=3.10; deterministic self-test; small execution recorded separately"
+    ],
+    "artifact_version": "0.13.0"
+  },
+  "runtime_verification": {
+    "mode": "not-performed",
+    "status": "not-performed",
+    "reason": "Basic helper checks are separate from Agent and scientific evaluation.",
+    "tool_versions": [
+      "Python >=3.10; deterministic self-test; small execution recorded separately"
+    ],
+    "unverified_boundaries": [
+      "Agent interaction, scientific benchmarks, no-Skill comparisons and human-expert review are not performed.",
+      "Small local execution does not establish representative scientific performance.",
+      "Classical PCoA on 3–128 complete sample distances; no corrections, normalization or group inference.",
+      "Negative eigenvalues are retained; positive-axis views can distort non-Euclidean distances."
+    ]
+  },
+  "legal_notices": {
+    "required": true,
+    "files": [
+      "LICENSE"
+    ]
+  },
+  "rollback": {
+    "previous_version": null,
+    "boundary": "Remove this newly admitted package and its matching registry entry."
+  },
+  "network_mode": "none",
+  "local_adapters": [
+    "Python standard library",
+    "NumPy"
+  ],
+  "external_services": [],
+  "depends_on": [],
+  "target_platforms": [
+    "agent-skills"
+  ]
+}

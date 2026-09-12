@@ -3,12 +3,12 @@ name: proteomics-quantification-table-qc
 description: "Check quantified proteomics tables, sample metadata and missingness before downstream modeling. Exclude raw spectrum processing, automatic normalization and differential abundance."
 license: Apache-2.0
 metadata:
-  version: "0.10.0"
+  version: "0.13.0"
 ---
 
 # Proteomics Quantification Table QC
 
-`Preview + reviewed`; large-table and R/Bioconductor execution were not performed.
+`Preview + reviewed`; small protein-table checks are separate from Agent/scientific evaluation.
 
 ## Execution behavior
 
@@ -66,3 +66,15 @@ distribution warnings, design blockers, assumptions, and skipped checks.
 - Skipped R/Bioconductor or large-table work remains `partial` or `needs-tool`, never passed.
 
 See [runtime boundaries](references/runtime-boundaries.md) for reviewed interfaces and unverified behavior.
+
+## Bounded local helper
+
+Use [check_protein_table.py](scripts/check_protein_table.py) for a small protein
+matrix (1–10,000 rows, 4–32 samples). Broad peptide/protein-group QC guidance
+above does not make those levels eligible for this helper's protein model route.
+See [local input and handoff contract](references/local-adapter.md). It summarizes
+missingness and observed min/median/max, checks independent subjects and at most
+one categorical batch, and preserves declared units, scale and zero semantics.
+Only completed QC with model_ready=true exports complete normalized log2 model
+inputs; unresolved facts yield needs-decision and no model input files. A ready
+entry requires at least 20 proteins and two independent samples per group.

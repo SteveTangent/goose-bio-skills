@@ -3,7 +3,7 @@ name: protein-level-differential-abundance
 description: "Analyze one declared contrast in already-normalized log2 protein abundances using a compatible local limma adapter. Exclude raw mass-spectrometry processing, normalization and RNA count models."
 license: Apache-2.0
 metadata:
-  version: "0.10.0"
+  version: "0.13.0"
 ---
 
 # Protein-level Differential Abundance
@@ -87,3 +87,8 @@ replaced.
 - Exclude raw spectra, PSMs, peptides, identification/FDR, protein inference, normalization, imputation, RNA counts, enrichment, batch correction, feature selection, and clinical use.
 - Never install tools, use the network, mutate inputs, follow input/output symlinks, escape the current directory, overwrite, or run caller-supplied code.
 - Require researcher review of provenance, normalization, design, contrast, multiplicity, and biological interpretation.
+
+The 0.13.0 helper preserves numeric-looking IDs as text and emits native config,
+input digests and runtime metadata for checked handoffs. Use the protein-table QC
+Skill first when sample independence, missingness or scale needs review. Protein
+volcano and matrix QC plots accept this completed native result.

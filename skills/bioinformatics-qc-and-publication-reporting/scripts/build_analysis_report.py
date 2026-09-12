@@ -310,7 +310,7 @@ def cli(run):
         return 3
 
 
-VERSION = "0.12.0"
+VERSION = "0.13.0"
 
 
 def md(value):
@@ -371,6 +371,12 @@ def summarize(report):
         samples = qc.get("samples")
         if isinstance(samples, list):
             metrics["samples"] = len(samples)
+    elif name == "goose_protein_table_qc":
+        metrics = {k: report["summary"][k] for k in ["proteins", "samples", "missing_cells", "zero_cells"]}
+    elif name == "protein-level-differential-abundance":
+        metrics = {"proteins": len(report["results"]), "samples": report["inputs"]["matrix"]["samples"]}
+    elif name == "goose_pcoa":
+        metrics = {"samples": len(report["sample_ids"]), "positive_axes": report["positive_axes"], "negative_axes": report["negative_axes"]}
     elif name in {"goose_local_ora", "goose_gseapy_prerank"}:
         rows = report.get("results")
         require(
@@ -577,6 +583,17 @@ def main():
                 if zh: unit={"probe":"探针","gene":"基因"}.get(unit,unit)
                 detail=(f"在 BH 校正阈值 {alpha:g} 下，{len(significant)} 个 {unit} 特征达到阈值；正向 {positive}，负向 {negative}。比较方向为 {cfg.get('numerator')} / {cfg.get('denominator')}。这未附加效应大小筛选；探针数不能直接当作基因数。" if zh else f"At BH threshold {alpha:g}, {len(significant)} {unit} features pass: {positive} positive and {negative} negative for {cfg.get('numerator')} / {cfg.get('denominator')}. No effect-size threshold is applied here; probe counts are not gene counts.")
                 interpretations.append(f"- [{md(label)}]({filename}): "+md(detail))
+        if name == "goose_pcoa":
+            detail = (f"PCoA 轴比例使用正特征值之和作分母；负惯量占绝对惯量的 {100*report['negative_inertia_fraction']:.2f}%。未校正距离，分组分离不等于显著差异。" if zh else f"PCoA axes use positive inertia as denominator; negative inertia is {100*report['negative_inertia_fraction']:.2f}% of absolute inertia. Distances are uncorrected; group separation is not a significance test.")
+            interpretations.append(f"- [{md(label)}]({filename}): "+md(detail))
+        if name == "goose_protein_table_qc":
+            cfg=report['config']
+            detail=(f"蛋白定量表：单位 {cfg['unit']}，尺度 {cfg['scale']}，归一化声明 {cfg['normalization_method']}，零值定义 {cfg['zero_semantics']}。模型入口 {'可用' if report['model_ready'] else '需补充决定'}；没有填补、删除或自动归一化。" if zh else f"Protein table: unit {cfg['unit']}, scale {cfg['scale']}, normalization {cfg['normalization_method']}, zero semantics {cfg['zero_semantics']}. Model ready: {report['model_ready']}; no imputation, deletion or normalization.")
+            interpretations.append(f"- [{md(label)}]({filename}): "+md(detail))
+        if name == "protein-level-differential-abundance":
+            cfg=report['config']
+            detail=(f"差异丰度单位为蛋白，正效应表示 {cfg['numerator']} 相对 {cfg['denominator']} 的 log2 丰度增加；BH 校正在所有报告蛋白中进行。报告未自行选择显著阈值。" if zh else f"Protein-level effects are log2 abundance differences: {cfg['numerator']} minus {cfg['denominator']}; BH adjustment covers all reported proteins. This report chooses no significance threshold.")
+            interpretations.append(f"- [{md(label)}]({filename}): "+md(detail))
         if name in {"goose_local_ora","goose_gseapy_prerank"}:
             detail=("结合背景基因、映射损失、基因集版本及具体贡献基因解释；富集不能单独证明通路激活。" if zh else "Interpret the eligible background, mapping losses, gene-set version and contributing genes; enrichment alone does not establish pathway activation.")
             interpretations.append(f"- [{md(label)}]({filename}): "+detail)

@@ -18,8 +18,8 @@ from validate_skeleton import package_digest
 
 
 ROOT = Path(__file__).resolve().parents[1]
-FIXTURE = ROOT / "evals" / "fixtures" / "research-wave-r2-minimal-v0.3.json"
-VERSION = "0.3.0"
+FIXTURE = ROOT / "evals" / "fixtures" / "research-wave-r2-minimal-v0.4.json"
+VERSION = "0.4.0"
 PACKAGES = {
     "amplicon_qc": "amplicon-feature-table-and-taxonomy-qc",
     "peak_qc": "chromatin-peak-set-qc",
@@ -112,7 +112,7 @@ def check_self_tests(fixture: dict[str, Any], root: Path, checks: Checks) -> Non
         checks.require(event == {
             "checks": fixture[key]["self_test_checks"],
             "status": "pass",
-            "version": "0.9.0",
+            "version": fixture[key].get("artifact_version", "0.9.0"),
         }, f"{key} self-test event differs")
 
 

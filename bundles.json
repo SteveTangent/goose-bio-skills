@@ -72,6 +72,24 @@
         "over-representation-analysis",
         "ranked-gene-set-enrichment"
       ]
+    },
+    "protein-results": {
+      "description": "Quantified protein table QC, complete normalized log2 limma, figures and report.",
+      "skills": [
+        "proteomics-quantification-table-qc",
+        "protein-level-differential-abundance",
+        "bioinformatics-result-visualization",
+        "bioinformatics-qc-and-publication-reporting"
+      ]
+    },
+    "microbiome-ordination": {
+      "description": "Existing feature counts or distances to classical PCoA, figures and report; no group inference.",
+      "skills": [
+        "amplicon-beta-diversity-distance-analysis",
+        "distance-matrix-principal-coordinates-analysis",
+        "bioinformatics-result-visualization",
+        "bioinformatics-qc-and-publication-reporting"
+      ]
     }
   }
 }

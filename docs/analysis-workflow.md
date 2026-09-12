@@ -78,4 +78,11 @@ python3 scripts/manage_workflow.py note-failure --plan PROJECT/analysis.json \
 
 ## 表达分析扩展
 
-[表达流程指南](expression-workflows.md) 提供两条新模板和小型示例，支持从已检查的 pseudobulk counts 中途接入。流程工具 0.2.0 会重新检查旧回执；旧文件保留，只有在原生结果、包和输入身份仍匹配时才能重新登记沿用。方法或执行器版本不匹配时，使用匹配的旧包或显式重算，不修改旧结果冒充新执行。
+[表达流程指南](expression-workflows.md) 提供两条新模板和小型示例，支持从已检查的 pseudobulk counts 中途接入。流程工具 0.3.0 会重新检查旧回执；旧文件保留，只有在原生结果、包和输入身份仍匹配时才能重新登记沿用。方法或执行器版本不匹配时，使用匹配的旧包或显式重算，不修改旧结果冒充新执行。
+
+## 蛋白表与距离结果
+
+- 已量化蛋白表先看 protein-results 的 QC 入口；缺失、未知尺度和重复对象保留为 needs-decision，不能由报告成功生成覆盖。
+- 已有 beta 距离可直接进入 distance-matrix-principal-coordinates-analysis；上游的零深度不允许用零距离填补。
+- companion 新增 protein QC、protein limma 和 PCoA 三种原生格式，总计 17 种。蛋白模型核对固定 worker 指纹；PCoA 保留原距离及分组文件指纹。
+- 示例位于 examples/protein-pcoa。记录的是输入/输出身份及依赖就绪；ready/completed 不代表生物学结论成立。

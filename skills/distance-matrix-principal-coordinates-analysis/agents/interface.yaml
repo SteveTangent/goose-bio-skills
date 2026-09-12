@@ -1,0 +1,20 @@
+interface:
+  display_name: "Distance Matrix Principal Coordinates Analysis"
+  short_description: "Represent complete sample distances with PCoA and explicit negative inertia."
+  default_prompt: "Ordinate my distance matrix. Inspect the metric and sample IDs, clarify missing distances, and retain eigenvalues and exploratory interpretation."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"
