@@ -24,11 +24,23 @@ jobs:
         with:
           r-version: '4.4.1'
           use-public-rspm: false
+      - name: Download the fixed limma archive
+        shell: bash
+        run: |
+          # Fixed archive from mirrors listed by Bioconductor; never resolve latest.
+          for mirror in https://bioconductor.posit.co https://bioconductor.statistik.tu-dortmund.de https://bioconductor.org; do
+            if curl --fail --location --retry 1 --connect-timeout 15 --max-time 60 --max-filesize 8388608 \
+              "$mirror/packages/3.19/bioc/src/contrib/limma_3.60.6.tar.gz" \
+              --output "$RUNNER_TEMP/limma_3.60.6.tar.gz"; then
+              break
+            fi
+          done
+          echo "95cc480268b8e463cf142d99c392a919b327416ea2de94bbbec5c4c6d75213a7  $RUNNER_TEMP/limma_3.60.6.tar.gz" | shasum -a 256 -c -
       - name: Install the existing fixed limma adapter dependency
         shell: Rscript {0}
         run: |
           install.packages("https://cran.r-project.org/src/contrib/Archive/statmod/statmod_1.5.0.tar.gz", repos = NULL, type = "source")
-          install.packages("https://bioconductor.org/packages/3.19/bioc/src/contrib/limma_3.60.6.tar.gz", repos = NULL, type = "source")
+          install.packages(file.path(Sys.getenv("RUNNER_TEMP"), "limma_3.60.6.tar.gz"), repos = NULL, type = "source")
           stopifnot(as.character(getRversion()) == "4.4.1", as.character(packageVersion("limma")) == "3.60.6", as.character(packageVersion("statmod")) == "1.5.0")
       - name: Expose the fixed R installation to the existing adapter
         shell: bash
