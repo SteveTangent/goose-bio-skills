@@ -15,9 +15,15 @@ import sys
 from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 MAX_FILE = 16 * 1024 * 1024
 TOOLS = {
+    "count-based-differential-expression": "goose_deseq2",
+    "normalized-microarray-differential-expression": "goose_microarray_limma",
+    "biological-database-record-retrieval-and-identifier-resolution": "goose_local_id_mapping",
+    "over-representation-analysis": "goose_local_ora",
+    "ranked-gene-set-enrichment": "goose_gseapy_prerank",
+    "bioinformatics-format-and-identifier-validation": "goose_sample_validation",
     "bioinformatics-qc-and-publication-reporting": "goose_qc_report",
     "two-group-comparison-and-effect-estimation": "goose_two_group",
     "public-expression-dataset-preparation": "goose_geo_preparation",
@@ -122,7 +128,7 @@ def read_bytes(path, limit=MAX_FILE):
     return data
 
 
-def read_json(path):
+def read_json(path, limit=1024 * 1024):
     def pairs(items):
         result = {}
         for key, value in items:
@@ -134,7 +140,7 @@ def read_json(path):
         raise WorkflowError("Non-finite JSON values are not accepted.")
 
     return json.loads(
-        read_bytes(path, 1024 * 1024),
+        read_bytes(path, limit),
         object_pairs_hook=pairs,
         parse_constant=bad_constant,
     )
@@ -360,7 +366,17 @@ def context(root, plan, step, previous):
 
 
 def native_check(root, step, ctx):
-    data = read_json(local(root, step["result"]))
+    data = read_json(local(root, step["result"]), limit=MAX_FILE)
+    if step["skill"] == "count-based-differential-expression":
+        require(isinstance(data, dict) and data.get("method") == "DESeq2" and data.get("adapter_version") == ctx["package"]["tool"]["version"], "Expected the exact bounded DESeq2 adapter result.")
+        require(isinstance(data.get("model"), dict), "DESeq2 model metadata is missing.")
+        data = {**data, "tool": ctx["package"]["tool"], "runtime_versions": data["model"].get("versions", {})}
+        from importlib.util import spec_from_file_location, module_from_spec
+        path = ROOT / "skills" / step["skill"] / "scripts/run_count_de.py"
+        spec = spec_from_file_location("goose_checked_de", path)
+        module = module_from_spec(spec)
+        spec.loader.exec_module(module)
+        require(data.get("worker_sha256") == digest(module.WORKER.encode()), "DESeq2 worker identity mismatch.")
     require(
         isinstance(data, dict) and data.get("status") in OUTCOMES,
         "Missing or unsupported native result status.",
@@ -437,6 +453,10 @@ def native_check(root, step, ctx):
     for name in native_files:
         outputs.add(str(directory / relative(name)))
     artifacts = {v: digest(read_bytes(local(root, v))) for v in sorted(outputs)}
+    output_hashes = data.get("output_sha256", {})
+    require(isinstance(output_hashes, dict) and len(output_hashes) <= 100, "Invalid native output digest inventory.")
+    for name, sha in output_hashes.items():
+        require(artifacts.get(str(directory / relative(name))) == sha, "Native output file differs from its retained digest.")
     object_names = {
         "goose_single_cell_qc": "checked.h5ad",
         "goose_single_cell_core": "processed.h5ad",
@@ -692,6 +712,12 @@ def overview(root, state, output):
         "invalid-output": "输出不符合要求",
     }
     names = {
+        "goose_deseq2": "原始计数差异分析",
+        "goose_microarray_limma": "微阵列表达差异分析",
+        "goose_local_id_mapping": "注释准备与 ID 映射",
+        "goose_local_ora": "候选基因集富集",
+        "goose_gseapy_prerank": "排序基因集富集",
+        "goose_sample_validation": "样本与设计检查",
         "goose_two_group": "两组比较",
         "goose_geo_preparation": "表达矩阵准备",
         "goose_single_cell_qc": "单细胞 QC",

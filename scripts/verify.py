@@ -20,6 +20,7 @@ QUICK_COMMANDS = (
     ("skeleton", (sys.executable, "scripts/validate_skeleton.py")),
     ("validator-self-test", (sys.executable, "scripts/validate_skeleton.py", "--self-test")),
     ("installer-self-test", (sys.executable, "scripts/manage_skills.py", "--self-test")),
+    ("expression-contracts", (sys.executable, "tests/test_expression_contracts.py")),
     ("workflow-self-test", (sys.executable, "tests/test_workflow.py")),
     ("diff-check", ("git", "diff", "--check")),
 )

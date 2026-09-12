@@ -61,6 +61,7 @@ def doctor(names, catalog):
         "ranked-gene-set-enrichment",
         "over-representation-analysis",  # Local GMT path uses the standard library.
         "count-based-differential-expression",  # DESeq2 path only.
+        "normalized-microarray-differential-expression",
         "two-group-comparison-and-effect-estimation",
         "correlation-and-association-screening",
         "single-cell-object-io-and-qc",
@@ -159,6 +160,18 @@ def doctor(names, catalog):
                 )
         else:
             checks.append({"tool": "Rscript", "ready": False})
+    if "normalized-microarray-differential-expression" in names:
+        runner = shutil.which("Rscript")
+        versions = {}
+        if runner:
+            expression = 'cat("R=",as.character(getRversion()),"\\n",sep="");cat("limma=",if(requireNamespace("limma",quietly=TRUE)) as.character(packageVersion("limma")) else "missing","\\n",sep="")'
+            try:
+                result = subprocess.run([runner,"--vanilla","-e",expression],text=True,capture_output=True,timeout=30,check=False)
+                if result.returncode == 0:
+                    versions = dict(line.split("=",1) for line in result.stdout.splitlines() if "=" in line)
+            except (OSError, subprocess.TimeoutExpired):
+                pass
+        checks.append({"tool":"microarray R / limma","versions":versions,"required_versions":{"R":"4.4.1","limma":"3.60.6"},"ready":versions=={"R":"4.4.1","limma":"3.60.6"}})
     guidance = [
         n for n in names if not catalog[n]["script_verification"]["bundled_scripts"]
     ]

@@ -10,13 +10,15 @@
 
 Practical bioinformatics skills for AI agents, with explicit scientific boundaries.
 
-Goose Bio Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The current working tree contains **56 packages across 13 Domains and 27 Clusters**, 44 packages at `0.10.0` and 12 at `0.11.0`, with 37 bounded helpers. The immutable collection release remains `v0.9.0`; main contains a reviewed preview, not a newly tagged collection release.
+Goose Bio Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The current working tree contains **57 packages across 13 Domains and 27 Clusters**, 42 packages at `0.10.0`, nine at `0.11.0` and six at `0.12.0`, with 38 bounded helpers. The immutable collection release remains `v0.9.0`; main contains a reviewed preview, not a newly tagged collection release.
 
 | Boundary | Packages | State | External services |
 | --- | ---: | --- | --- |
 | Immutable `v0.9.0` release | 48 | `preview + reviewed`; see package versions in the registry | Bounded public read/download; anonymous-first |
-| Current working-tree preview | 56 | `preview + reviewed` | Local helpers plus existing bounded public adapters |
+| Current working-tree preview | 57 | `preview + reviewed` | Local helpers plus existing bounded public adapters |
 | Unpublished candidate branches | Outside the working-tree catalog | Candidates require a separate promotion decision | Candidate-specific |
+
+Start with [expression workflows](docs/expression-workflows.md) for counts, reviewed pseudobulk or normalized microarrays, or [task bundles](docs/task-bundles.md) for other inputs.
 
 ## Why Goose Bio Skills
 

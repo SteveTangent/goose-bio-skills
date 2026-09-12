@@ -11,7 +11,8 @@
         "over-representation-analysis",
         "ranked-gene-set-enrichment",
         "bioinformatics-result-visualization",
-        "bioinformatics-qc-and-publication-reporting"
+        "bioinformatics-qc-and-publication-reporting",
+        "bioinformatics-format-and-identifier-validation"
       ]
     },
     "single-cell-qc": {
@@ -44,12 +45,16 @@
       ]
     },
     "public-expression": {
-      "description": "Prepare one public expression matrix; validate metadata and inspect the declared downstream method.",
+      "description": "Prepare one GEO platform; when normalized log2 microarray semantics and independent samples are confirmed, continue to limma, annotation, enrichment and report.",
       "skills": [
         "public-expression-dataset-preparation",
         "bioinformatics-format-and-identifier-validation",
         "bioinformatics-result-visualization",
-        "bioinformatics-qc-and-publication-reporting"
+        "bioinformatics-qc-and-publication-reporting",
+        "normalized-microarray-differential-expression",
+        "biological-database-record-retrieval-and-identifier-resolution",
+        "over-representation-analysis",
+        "ranked-gene-set-enrichment"
       ]
     },
     "single-cell-practical": {
@@ -61,7 +66,11 @@
         "single-cell-pseudobulk-aggregation",
         "count-based-differential-expression",
         "bioinformatics-result-visualization",
-        "bioinformatics-qc-and-publication-reporting"
+        "bioinformatics-qc-and-publication-reporting",
+        "bioinformatics-format-and-identifier-validation",
+        "biological-database-record-retrieval-and-identifier-resolution",
+        "over-representation-analysis",
+        "ranked-gene-set-enrichment"
       ]
     }
   }

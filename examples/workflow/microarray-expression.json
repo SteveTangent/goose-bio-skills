@@ -1,0 +1,456 @@
+{
+  "schema_version": "1.0",
+  "title": "微阵列表达 → 注释 → 富集 → 图表报告（模板参数需按实际数据核对）",
+  "facts": {
+    "taxon": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    },
+    "numerator": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    },
+    "denominator": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    },
+    "platform": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    },
+    "scale": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    },
+    "normalization_provenance": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    },
+    "namespace": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    },
+    "target_namespace": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    },
+    "mapping_release": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    },
+    "gene_set_release": {
+      "value": null,
+      "source": "unknown",
+      "note": "",
+      "evidence": {}
+    }
+  },
+  "steps": [
+    {
+      "id": "validate",
+      "skill": "bioinformatics-format-and-identifier-validation",
+      "inputs": {
+        "metadata": "samples.tsv",
+        "matrix": "expression.tsv"
+      },
+      "parameters": {
+        "columns": [
+          "sample_id",
+          "condition",
+          "subject_id",
+          "batch"
+        ],
+        "denominator": "control",
+        "design": "independent",
+        "matrix_scale": "log2-normalized",
+        "numerator": "treated",
+        "renames": {}
+      },
+      "required_facts": [
+        "denominator",
+        "numerator",
+        "scale"
+      ],
+      "fact_parameters": {
+        "denominator": "denominator",
+        "numerator": "numerator",
+        "matrix_scale": "scale"
+      },
+      "depends_on": [],
+      "result": "validation/validation.json",
+      "outputs": [
+        "validation/validation.json"
+      ],
+      "receipt": "validate-receipt.json",
+      "tool_versions": {}
+    },
+    {
+      "id": "mapping-resource",
+      "skill": "biological-database-record-retrieval-and-identifier-resolution",
+      "inputs": {
+        "reference": "reference.tsv"
+      },
+      "parameters": {
+        "mapping_release": "synthetic-1",
+        "mode": "mapping",
+        "source_column": "probe",
+        "source_namespace": "synthetic-probe",
+        "target_column": "gene",
+        "target_namespace": "synthetic-gene",
+        "taxon": "9606",
+        "taxon_column": "species"
+      },
+      "required_facts": [
+        "mapping_release",
+        "target_namespace",
+        "taxon",
+        "namespace"
+      ],
+      "fact_parameters": {
+        "mapping_release": "mapping_release",
+        "target_namespace": "target_namespace",
+        "taxon": "taxon",
+        "source_namespace": "namespace"
+      },
+      "depends_on": [],
+      "result": "mapping-resource/resource.json",
+      "outputs": [
+        "mapping-resource/resource.json"
+      ],
+      "receipt": "mapping-resource-receipt.json",
+      "tool_versions": {}
+    },
+    {
+      "id": "set-resource",
+      "skill": "biological-database-record-retrieval-and-identifier-resolution",
+      "inputs": {
+        "reference": "sets.gmt"
+      },
+      "parameters": {
+        "mapping_release": "synthetic-1",
+        "mode": "gene-sets",
+        "target_namespace": "synthetic-gene",
+        "taxon": "9606"
+      },
+      "required_facts": [
+        "mapping_release",
+        "target_namespace",
+        "taxon",
+        "gene_set_release"
+      ],
+      "fact_parameters": {
+        "mapping_release": "gene_set_release",
+        "target_namespace": "target_namespace",
+        "taxon": "taxon"
+      },
+      "depends_on": [],
+      "result": "set-resource/resource.json",
+      "outputs": [
+        "set-resource/resource.json"
+      ],
+      "receipt": "set-resource-receipt.json",
+      "tool_versions": {}
+    },
+    {
+      "id": "de",
+      "skill": "normalized-microarray-differential-expression",
+      "inputs": {
+        "expression": "expression.tsv",
+        "metadata": "validation/microarray-samples.tsv"
+      },
+      "parameters": {
+        "alpha": 0.05,
+        "assay": "microarray",
+        "covariate": "batch",
+        "denominator": "control",
+        "feature_unit": "probe",
+        "independent_samples_declared": true,
+        "namespace": "synthetic-probe",
+        "normalization_provenance": "Original simulated log2 expression; no measured study claim",
+        "numerator": "treated",
+        "platform": "synthetic-platform",
+        "scale": "log2-normalized",
+        "taxon": "9606"
+      },
+      "required_facts": [
+        "denominator",
+        "namespace",
+        "normalization_provenance",
+        "numerator",
+        "platform",
+        "scale",
+        "taxon"
+      ],
+      "fact_parameters": {
+        "denominator": "denominator",
+        "namespace": "namespace",
+        "normalization_provenance": "normalization_provenance",
+        "numerator": "numerator",
+        "platform": "platform",
+        "scale": "scale",
+        "taxon": "taxon"
+      },
+      "depends_on": [
+        "validate"
+      ],
+      "result": "fit/de.json",
+      "outputs": [
+        "fit/de.json"
+      ],
+      "receipt": "de-receipt.json",
+      "tool_versions": {}
+    },
+    {
+      "id": "map",
+      "skill": "biological-database-record-retrieval-and-identifier-resolution",
+      "inputs": {
+        "source": "fit/de.json",
+        "mapping": "mapping-resource/mapping.tsv"
+      },
+      "parameters": {
+        "alpha": 0.05,
+        "effect_threshold": 1.0,
+        "mapping_release": "synthetic-1",
+        "source_namespace": "synthetic-probe",
+        "strip_source_version": false,
+        "target_namespace": "synthetic-gene",
+        "taxon": "9606",
+        "unresolved_policy": "preserve"
+      },
+      "required_facts": [
+        "mapping_release",
+        "target_namespace",
+        "taxon",
+        "namespace"
+      ],
+      "fact_parameters": {
+        "mapping_release": "mapping_release",
+        "target_namespace": "target_namespace",
+        "taxon": "taxon",
+        "source_namespace": "namespace"
+      },
+      "depends_on": [
+        "de",
+        "mapping-resource"
+      ],
+      "result": "mapped.json",
+      "outputs": [
+        "mapped.json"
+      ],
+      "receipt": "map-receipt.json",
+      "tool_versions": {}
+    },
+    {
+      "id": "ora",
+      "skill": "over-representation-analysis",
+      "inputs": {
+        "handoff": "mapped.json",
+        "gene_sets": "set-resource/gene-sets.tsv"
+      },
+      "parameters": {
+        "alpha": 0.05,
+        "gene_set_release": "synthetic-1",
+        "max_size": 100,
+        "min_size": 5,
+        "namespace": "synthetic-gene",
+        "taxon": "9606"
+      },
+      "required_facts": [
+        "gene_set_release",
+        "target_namespace",
+        "taxon"
+      ],
+      "fact_parameters": {
+        "gene_set_release": "gene_set_release",
+        "namespace": "target_namespace",
+        "taxon": "taxon"
+      },
+      "depends_on": [
+        "map",
+        "set-resource"
+      ],
+      "result": "ora.json",
+      "outputs": [
+        "ora.json"
+      ],
+      "receipt": "ora-receipt.json",
+      "tool_versions": {}
+    },
+    {
+      "id": "gsea",
+      "skill": "ranked-gene-set-enrichment",
+      "inputs": {
+        "handoff": "mapped.json",
+        "gene_sets": "set-resource/gene-sets.tsv"
+      },
+      "parameters": {
+        "gene_set_release": "synthetic-1",
+        "max_size": 100,
+        "min_size": 5,
+        "namespace": "synthetic-gene",
+        "permutations": 100,
+        "positive_direction": "treated",
+        "ranking_metric": "moderated t",
+        "seed": 127,
+        "taxon": "9606",
+        "tie_policy": "gene-id"
+      },
+      "required_facts": [
+        "gene_set_release",
+        "target_namespace",
+        "taxon",
+        "numerator"
+      ],
+      "fact_parameters": {
+        "gene_set_release": "gene_set_release",
+        "namespace": "target_namespace",
+        "taxon": "taxon",
+        "positive_direction": "numerator"
+      },
+      "depends_on": [
+        "map",
+        "set-resource"
+      ],
+      "result": "gsea.json",
+      "outputs": [
+        "gsea.json"
+      ],
+      "receipt": "gsea-receipt.json",
+      "tool_versions": {}
+    },
+    {
+      "id": "volcano",
+      "skill": "bioinformatics-result-visualization",
+      "inputs": {
+        "de_report": "fit/de.json"
+      },
+      "parameters": {
+        "alpha": 0.05,
+        "effect_threshold": 1.0,
+        "kind": "volcano",
+        "significance": "padj"
+      },
+      "required_facts": [],
+      "fact_parameters": {},
+      "depends_on": [
+        "de",
+        "validate"
+      ],
+      "result": "volcano/figure.json",
+      "outputs": [
+        "volcano/figure.json"
+      ],
+      "receipt": "volcano-receipt.json",
+      "tool_versions": {}
+    },
+    {
+      "id": "pca",
+      "skill": "bioinformatics-result-visualization",
+      "inputs": {
+        "de_report": "fit/de.json",
+        "matrix_or_counts": "expression.tsv",
+        "metadata": "validation/plot-groups.tsv"
+      },
+      "parameters": {
+        "feature_scale": "center",
+        "input_scale": "log2-normalized",
+        "kind": "pca",
+        "requested_features": 100
+      },
+      "required_facts": [],
+      "fact_parameters": {},
+      "depends_on": [
+        "de",
+        "validate"
+      ],
+      "result": "pca/figure.json",
+      "outputs": [
+        "pca/figure.json"
+      ],
+      "receipt": "pca-receipt.json",
+      "tool_versions": {}
+    },
+    {
+      "id": "sample-correlation",
+      "skill": "bioinformatics-result-visualization",
+      "inputs": {
+        "de_report": "fit/de.json",
+        "matrix_or_counts": "expression.tsv",
+        "metadata": "validation/plot-groups.tsv"
+      },
+      "parameters": {
+        "correlation_method": "Pearson",
+        "feature_scale": "not-applied",
+        "input_scale": "log2-normalized",
+        "kind": "sample-correlation",
+        "requested_features": 100
+      },
+      "required_facts": [],
+      "fact_parameters": {},
+      "depends_on": [
+        "de",
+        "validate"
+      ],
+      "result": "sample-correlation/figure.json",
+      "outputs": [
+        "sample-correlation/figure.json"
+      ],
+      "receipt": "sample-correlation-receipt.json",
+      "tool_versions": {}
+    },
+    {
+      "id": "report",
+      "skill": "bioinformatics-qc-and-publication-reporting",
+      "inputs": {
+        "source:validation": "validation/validation.json",
+        "source:de": "fit/de.json",
+        "source:mapping": "mapped.json",
+        "source:ora": "ora.json",
+        "source:gsea": "gsea.json",
+        "figure:volcano": "volcano/figure.json",
+        "png:volcano": "volcano/figure.png",
+        "figure:pca": "pca/figure.json",
+        "png:pca": "pca/figure.png",
+        "figure:sample-correlation": "sample-correlation/figure.json",
+        "png:sample-correlation": "sample-correlation/figure.png"
+      },
+      "parameters": {},
+      "required_facts": [],
+      "fact_parameters": {},
+      "depends_on": [
+        "validate",
+        "de",
+        "map",
+        "ora",
+        "gsea",
+        "volcano",
+        "pca",
+        "sample-correlation"
+      ],
+      "result": "report/report.json",
+      "outputs": [
+        "report/report.json"
+      ],
+      "receipt": "report-receipt.json",
+      "tool_versions": {}
+    }
+  ]
+}

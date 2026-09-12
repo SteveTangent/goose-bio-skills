@@ -395,7 +395,7 @@ def report_base(name, config, hashes):
     }
 
 
-VERSION = "0.11.0"
+VERSION = "0.12.0"
 
 
 def main():
@@ -411,7 +411,10 @@ def main():
     p.add_argument("--subject-column")
     p.add_argument("--batch-column")
     p.add_argument("--rename", action="append", default=[])
-    p.add_argument("--matrix-scale", choices=["raw-counts", "continuous", "unknown"])
+    p.add_argument("--design", choices=["independent", "paired", "unknown"], default="unknown")
+    p.add_argument("--numerator")
+    p.add_argument("--denominator")
+    p.add_argument("--matrix-scale", choices=["raw-counts", "log2-normalized", "continuous", "unknown"])
     a = p.parse_args()
     if a.self_test:
         count = base_checks()
@@ -505,7 +508,7 @@ def main():
     unresolved = []
     warnings = []
     for c in required:
-        missing = [r[a.sample_column] for r in rows if r[c] in {"", "NA", "unknown"}]
+        missing = [r[a.sample_column] for r in rows if r[c].strip().lower() in {"", "na", "unknown", "nan", "null"}]
         if missing:
             unresolved.append(
                 {"column": c, "sample_ids": missing, "reason": "missing-declared-fact"}
@@ -540,11 +543,60 @@ def main():
                     "message": "Every batch contains only one condition. With fixed categorical batch terms, the condition cannot be separated; inspect the study design.",
                 }
             )
+    design = {"declared": a.design, "groups": {}, "batch_by_group": {}, "metadata_ready": False}
+    if a.group_column:
+        for r in rows:
+            group=r[a.group_column]
+            entry=design["groups"].setdefault(group,{"sample_rows":0,"declared_units":set()})
+            entry["sample_rows"]+=1
+            if a.subject_column and r[a.subject_column] not in {"", "NA", "unknown"}:
+                entry["declared_units"].add(r[a.subject_column])
+            if a.batch_column:
+                d=design["batch_by_group"].setdefault(r[a.batch_column],{})
+                d[group]=d.get(group,0)+1
+        for entry in design["groups"].values():
+            entry["declared_units"]=len(entry["declared_units"]) if a.subject_column else None
+    if a.design != "unknown":
+        if not a.subject_column or not a.group_column:
+            unresolved.append("Declare subject and group columns for design screening.")
+        elif not a.numerator or not a.denominator or a.numerator==a.denominator or set(design["groups"])!={a.numerator,a.denominator}:
+            unresolved.append("Declare exactly two comparison levels and their direction.")
+        elif any(x["declared_units"]<2 for x in design["groups"].values()):
+            unresolved.append("At least two declared biological units per group are required for this bounded route; adequacy still needs review.")
+        if a.design=="independent" and any(w["code"]=="repeated-subject" for w in warnings):
+            unresolved.append("Repeated subjects conflict with an independent-sample model.")
+        if a.design=="paired" and a.subject_column and a.group_column:
+            pairs={}
+            for r in rows: pairs.setdefault(r[a.subject_column],[]).append(r[a.group_column])
+            if not a.numerator or not a.denominator or any(sorted(v)!=sorted([a.numerator,a.denominator]) for v in pairs.values()):
+                unresolved.append("A paired design needs one record per subject per declared group.")
+            design["paired_units"]=len(pairs)
+            unresolved.append("Paired expression DE is outside the bundled expression models; retain the pairs for a suitable external model.")
+        if a.matrix and a.matrix_scale=="unknown":
+            unresolved.append("Confirm expression scale before model selection.")
+        if any(w["code"]=="group-nested-in-batch" for w in warnings):
+            unresolved.append("Condition is confounded with the recorded batch; do not assume batch adjustment can separate them.")
+        if a.batch_column in {"sample_id", "condition", "subject_id"}:
+            unresolved.append("Rename the adjustment column to avoid reserved downstream metadata headings.")
+        design["metadata_ready"]=not unresolved
+    extra={}
+    if a.group_column and not any(r[a.group_column] in {"", "NA", "unknown"} for r in rows):
+        extra["plot-groups.tsv"]=table_bytes(["sample_id","group"],[[r[a.sample_column],r[a.group_column]] for r in rows])
+        if a.batch_column:
+            extra["plot-batches.tsv"]=table_bytes(["sample_id","group"],[[r[a.sample_column],r[a.batch_column]] for r in rows])
+    if design["metadata_ready"]:
+        de_columns=[a.sample_column,a.group_column]+([a.batch_column] if a.batch_column else [])
+        extra["count-de-samples.tsv"]=table_bytes(["sample_id","condition"]+([a.batch_column] if a.batch_column else []),[[r[k] for k in de_columns] for r in rows])
+        micro_columns=[a.sample_column,a.group_column,a.subject_column]+([a.batch_column] if a.batch_column else [])
+        extra["microarray-samples.tsv"]=table_bytes(["sample_id","condition","subject_id"]+([a.batch_column] if a.batch_column else []),[[r[k] for k in micro_columns] for r in rows])
     report = report_base(
-        "goose_sample_validation", {"columns": required, "renames": mapping}, {**hashes}
+        "goose_sample_validation", {"columns": required, "renames": mapping, "design": a.design, "numerator": a.numerator, "denominator": a.denominator, "matrix_scale": a.matrix_scale}, {**hashes}
     )
     report.update(
         samples=len(rows),
+        design=design,
+        files=["samples.tsv", "validation.json", *extra],
+        output_sha256={k: hashlib.sha256(v).hexdigest() for k,v in extra.items()},
         matrix=matrix_summary,
         warnings=warnings,
         unresolved=unresolved,
@@ -560,6 +612,7 @@ def main():
         {
             "samples.tsv": table_bytes(header, [[r[c] for c in header] for r in rows]),
             "validation.json": encoded(report),
+            **extra,
         },
     )
     return {

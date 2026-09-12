@@ -1,13 +1,13 @@
 # 从任务开始
 
-仓库有 56 个独立 Skill。通常只装当前任务需要的几个，安装工具会补齐 manifest 声明的依赖。
+仓库有 57 个独立 Skill。通常只装当前任务需要的几个，安装工具会补齐 manifest 声明的依赖。
 
 | 任务包 | 适合的起点 | 交付 |
 | --- | --- | --- |
 | `rnaseq-results` | 已有计数或差异结果 | 映射、富集、火山图/PCA/热图、汇总报告 |
 | `single-cell-qc` | 已有单细胞对象 | 对象与 QC 指引、结果汇总；不包含自动细胞注释 |
 | `basic-statistics` | 连续测量与已有结果表 | 两组效应、相关、结果一致性与图表 |
-| `public-expression` | 一个公共表达矩阵 | 平台与尺度检查、样本表、结果报告 |
+| `public-expression` | 一个公共表达矩阵 | 平台与尺度检查；适用的 log2 微阵列接差异、映射、富集和报告 |
 | `single-cell-practical` | 小型 RNA h5ad | QC、探索性聚类、候选证据、按样本汇总与报告 |
 | `evidence-review` | 文献或公共记录问题 | 检索、标识符处理与证据追溯 |
 
@@ -37,3 +37,5 @@ python3 scripts/manage_skills.py install --bundle rnaseq-results --destination N
 先试 [几 KB 的离线示例](../examples/efficiency/README.md)，再接入自己的数据。对话规则与实例见 [用户体验说明](user-experience.md)。
 
 新增统计任务依赖 NumPy、SciPy。小型 h5ad 适配依赖 AnnData、h5py；核心分析还需要 Scanpy 1.12.4 和 igraph 0.11.9。版本清单：[基础统计](../requirements-statistics.txt)、[单细胞](../requirements-single-cell.txt)。示例环境实际使用 Python 3.13；请使用与这些版本兼容的 Python。GEO core 是离线解析器，包安装不会附带仓库级网络 companion。
+
+表达数据可从 [研究问题入口](expression-workflows.md) 开始。微阵列使用 R 4.4.1 / limma 3.60.6；doctor 检查当前 PATH 中 Rscript 的精确版本。将该任务环境的 R 放在 PATH 前部，或执行器显式使用 --rscript；无需覆盖其他 R 安装。安装包不下载参考数据库，已有 ID Skill 可转换已选定的映射 TSV 与 GMT。

@@ -3,7 +3,7 @@ name: ranked-gene-set-enrichment
 description: "Analyze enrichment from a complete declared gene ranking and compatible gene sets. Exclude selected-gene over-representation, identifier guessing and mechanistic conclusions."
 license: Apache-2.0
 metadata:
-  version: "0.10.0"
+  version: "0.12.0"
 ---
 
 # Ranked Gene-set Enrichment
@@ -91,3 +91,5 @@ not replace a versioned collection or make results causal.
 - Record skipped complex-tool execution as unverified, never as passed
 - Keep credentials, private paths, patient and controlled data out of artifacts
 - Require researcher review for biological interpretation; no clinical authority
+
+The current mapping handoff names its signed statistic and positive direction. Match both declarations exactly; a microarray moderated t statistic must not be relabeled as a DESeq2 Wald statistic.

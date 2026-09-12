@@ -310,7 +310,7 @@ def cli(run):
         return 3
 
 
-VERSION = "0.10.0"
+VERSION = "0.12.0"
 
 
 def resolve_ids(ids, rows, taxon, strip_versions):
@@ -370,6 +370,53 @@ def resolve_ids(ids, rows, taxon, strip_versions):
     return result, collisions
 
 
+def prepare_reference(a):
+    require(a.reference_input and a.output and a.taxon and a.target_namespace and a.mapping_release,
+            "reference-contract", "Declare a local reference export, taxon, target namespace, release and a new destination.", "needs-decision")
+    raw=read_local(a.reference_input)
+    config={"mode":a.prepare_reference,"taxon":a.taxon,"target_namespace":a.target_namespace,"mapping_release":a.mapping_release}
+    if a.prepare_reference=="mapping":
+        require(a.source_column and a.target_column and a.source_namespace,
+                "reference-columns", "Declare the export's source/target columns and source namespace.", "needs-decision")
+        table=tsv(raw)
+        required=[a.source_column,a.target_column]+([a.taxon_column] if a.taxon_column else [])
+        require(len(set(required))==len(required) and set(required)<=set(table[0]),"reference-columns","Use distinct existing column names.")
+        si,ti=table[0].index(a.source_column),table[0].index(a.target_column)
+        if a.taxon_column:
+            ci=table[0].index(a.taxon_column)
+            require(all(r[ci]==a.taxon for r in table[1:]),"taxon-mismatch","The export must contain only the declared taxon; select the resource explicitly upstream.")
+        pairs={(r[si],r[ti]) for r in table[1:]}
+        require(1<=len(pairs)<=60000,"reference-size","Use at most 60,000 mapping pairs.")
+        require(all(x.lower() not in {'na','nan','null','unknown','---'} for p in pairs for x in p),"missing-reference-id","Resolve missing identifiers explicitly; they are not mapping targets.")
+        require(all(not re.search(r"[\s;,|]|///", x) for pair in pairs for x in pair), "compound-reference-id", "Export one atomic identifier per row; do not concatenate multiple mappings in a cell.")
+        output=[['source_id','target_id','taxon']]+[[s,t,a.taxon] for s,t in sorted(pairs)]
+        filename='mapping.tsv'
+        config.update(source_namespace=a.source_namespace,source_column=a.source_column,target_column=a.target_column,taxon_column=a.taxon_column)
+        duplicates=len(table)-1-len(pairs)
+    else:
+        # GMT has set name, description and identifiers. Descriptions are not commands or fetched URLs.
+        lines=raw.decode('utf-8').splitlines(); sets={};duplicate_members=0
+        require(1<=len(lines)<=2000,"gene-set-count","Use 1–2,000 GMT lines.")
+        for line in lines:
+            row=line.split('\t')
+            require(len(row)>=3 and row[0] and row[0] not in sets,"gmt-shape","Use one uniquely named gene set per GMT line, with a description column.")
+            require(all(x and len(x)<=256 and not any(ord(ch)<32 for ch in x) for x in [row[0],*row[2:]]),"gmt-id","Use nonempty bounded set and gene identifiers.")
+            members=set(row[2:]);duplicate_members+=len(row[2:])-len(members)
+            sets[row[0]]=members
+        require(sum(map(len,sets.values()))<=100000,"gene-set-size","Use at most 100,000 memberships.")
+        output=[['set_id','gene_id','taxon','namespace']]+[[s,g,a.taxon,a.target_namespace] for s in sorted(sets) for g in sorted(sets[s])]
+        filename='gene-sets.tsv';duplicates=duplicate_members
+    stream=io.StringIO();csv.writer(stream,delimiter='\t',lineterminator='\n').writerows(output);payload=stream.getvalue().encode()
+    require(len(payload)<=MAX_BYTES,"reference-output-size","Prepared reference exceeds the downstream 8 MiB limit.")
+    report={'schema_version':'1.0','status':'completed','tool':{'name':'goose_local_id_mapping','version':VERSION},'config':config,
+            'input_sha256':{'reference':hashlib.sha256(raw).hexdigest()},'files':[filename,'resource.json'],
+            'output_sha256':{filename:hashlib.sha256(payload).hexdigest()},'rows':len(output)-1,'exact_duplicates_removed':duplicates,
+            'network_performed':False,'limitations':['Taxon, namespaces and resource release are supplied declarations. No database is downloaded or inferred.',
+                'Exact duplicate records are counted and removed; one-to-many and many-to-one mappings remain unchanged. GMT descriptions are omitted; retain source rights/provenance separately.']}
+    new_bundle(a.output,{filename:payload,'resource.json':encoded(report)})
+    return {'status':'completed','rows':len(output)-1,'version':VERSION}
+
+
 def main():
     p = argparse.ArgumentParser(
         description="Resolve a bounded gene-ID list with an explicit local mapping table; preserve ambiguity."
@@ -385,6 +432,9 @@ def main():
     p.add_argument("--unresolved-policy", choices=["preserve", "exclude"])
     p.add_argument("--alpha", type=float)
     p.add_argument("--effect-threshold", type=float)
+    p.add_argument("--prepare-reference", choices=["mapping", "gene-sets"])
+    for key in ["reference-input", "source-column", "target-column", "taxon-column"]:
+        p.add_argument("--"+key)
     a = p.parse_args()
     if a.self_test:
         count = base_checks()
@@ -416,6 +466,9 @@ def main():
         )
         assert result[0]["lookup_id"] == "ENSG000001"
         return {"status": "pass", "version": VERSION, "checks": count + 3}
+    if a.prepare_reference:
+        require(not a.ids and not a.de_report, "mode-conflict", "Reference preparation cannot be combined with ID resolution.")
+        return prepare_reference(a)
     require(
         bool(a.ids) != bool(a.de_report),
         "input-choice",
@@ -445,10 +498,12 @@ def main():
         require(
             isinstance(de, dict)
             and de.get("status") == "completed"
-            and de.get("method") == "DESeq2",
+            and de.get("method") in {"DESeq2", "limma-microarray"},
             "de-contract",
-            "Use a completed bounded Goose DESeq2 report.",
+            "Use a completed bounded Goose DESeq2 or microarray limma report.",
         )
+        if de["method"] == "limma-microarray":
+            require(de.get("tool", {}).get("name") == "goose_microarray_limma" and de.get("config", {}).get("taxon") == a.taxon and de.get("config", {}).get("namespace") == a.source_namespace, "de-identity", "The microarray taxon and source namespace must match the mapping declaration.")
         model = de.get("model", {})
         source_rows = model.get("results")
         require(
@@ -503,6 +558,8 @@ def main():
             "mapping_release": a.mapping_release,
             "strip_source_version": a.strip_source_version,
             "unresolved_policy": a.unresolved_policy,
+            "alpha": a.alpha,
+            "effect_threshold": a.effect_threshold,
         },
         "input_sha256": {
             "source": digest,
@@ -514,6 +571,10 @@ def main():
             "input_ids": len(ids),
             "one_to_one": len(ids) - len(unresolved),
             "unresolved": len(unresolved),
+            "one_to_one_fraction": (len(ids)-len(unresolved))/len(ids),
+            "unmapped": sum(r["status"]=="unmapped" for r in resolved),
+            "ambiguous": sum(r["status"]=="ambiguous" for r in resolved),
+            "many_to_one": sum(r["status"]=="many-to-one" for r in resolved),
         },
         "network_performed": False,
         "limitations": [
@@ -579,7 +640,10 @@ def main():
             "excluded_source_ids": excluded,
             "ranking_excluded_source_ids": ranking_excluded,
             "universe_definition": "One-to-one mapped genes with finite pvalue, padj, stat and log2FoldChange in the completed DE report. This is eligibility for this declared selection, not all measured genes.",
-            "ranking_definition": "All one-to-one mapped finite Wald statistics, including genes without adjusted p-values; positive toward the numerator. Only listed unavailable statistics and unresolved mappings are excluded.",
+            "ranking_definition": "All one-to-one mapped finite signed test statistics (DESeq2 Wald or microarray limma moderated t), including genes without adjusted p-values; positive toward the numerator. Only listed unavailable statistics and unresolved mappings are excluded.",
+            "source_method": de["method"],
+            "ranking_metric": "Wald statistic" if de["method"] == "DESeq2" else "moderated t",
+            "positive_direction": de.get("config", {}).get("numerator"),
             "alpha": a.alpha,
             "absolute_log2fc_threshold": a.effect_threshold,
         }
