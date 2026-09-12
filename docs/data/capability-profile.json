@@ -1,0 +1,559 @@
+{
+  "schema_version": "1.0",
+  "reviewed_at": "2026-09-12",
+  "basis_commit": "2eb6baab5f3a02b8c34881dcd9a0117d4f1a8cbb",
+  "registry_sha256": "ae36a95b2c722dc6d6d9a3004bf38eb9bfd163b3a0516b06bb1c13a9481f7c61",
+  "assessment_kind": "Editorial capability-stage assessment, not measured accuracy, demand or an Agent benchmark.",
+  "scale": {
+    "0": "No declared coverage",
+    "1": "Guidance with explicit boundaries",
+    "2": "Bounded preparation, QC or retrieval",
+    "3": "One or more bounded analytical calculations",
+    "4": "A connected small-data path through analysis and delivery",
+    "5": "Several distinct common paths connected with documented small-data checks"
+  },
+  "domains": [
+    {
+      "id": "D01",
+      "label_zh": "数据整理与分析交付",
+      "chart_label": "Data &\ndelivery",
+      "stage": 4,
+      "rationale": "样本检查、ID/参考资源准备、公共表达整理、图表与报告已经接入小型表达流程。",
+      "limits": "共享基础能力；不等于任意文件和任意环境均可执行。",
+      "next": "补充其他领域的结果交接；完善任务包的环境说明。",
+      "skills": [
+        {
+          "name": "bioinformatics-format-and-identifier-validation",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "9517baa731d78de8168f2a195ead4a7fe7e1050f1d2b11b970855c6f60dfa2b7",
+          "package_digest": "cc5e61466de059ce794fe4e7369ceed7b00e0f4e5306aa60dc356852be4260e5"
+        },
+        {
+          "name": "bioinformatics-qc-and-publication-reporting",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "728b0d5ba1fb71098dd6bd9be5dd0299d80e599c2c9105f6cf5b00bf11d69ad0",
+          "package_digest": "697627f95a49c57fa9e57351ef7c0d3af51c4de490aaa6d0cbe59963517f46b7"
+        },
+        {
+          "name": "bioinformatics-result-visualization",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "6add11e3f7a4149f7460363f94aa95ff2c0a93ba8246202a20630b0745b78b2b",
+          "package_digest": "15739af4b87cbfe46c0a57e08cfa964d5518ac403129f0f453b07d9c2a129209"
+        },
+        {
+          "name": "biological-database-record-retrieval-and-identifier-resolution",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "9e1370a53d08a9cba7f6b23c8bf5bcdc3cf9eca0292ced58cd106268501453db",
+          "package_digest": "a69b602402a5fa30992cc163017c04dbac684a88c7a854944d66cf6b43dec957"
+        },
+        {
+          "name": "environment-and-provenance-capture",
+          "has_helper": false,
+          "helper_count": 0,
+          "manifest_sha256": "173772dec2bfbeba7ae775adf8b794582e7b67f92d159dd832bd081e76474775",
+          "package_digest": "466828626298d52907d94c36259f0e9375a9889dbe6c12d52a6b0adf6cc348e6"
+        },
+        {
+          "name": "multi-comparison-result-concordance",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "1b1680e95357a607c357de81f8e5ce8c756ac660b1ea540b2c5d348809b37b5e",
+          "package_digest": "6e86eb24a0124e9568887672056bbbeba79c9a877e4adec655e00577d9856cb2"
+        },
+        {
+          "name": "public-expression-dataset-preparation",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "74d87d1132a7713257e42dc6833e32bbd35a0e55ea289f4bba686b5d036634ae",
+          "package_digest": "79744c9f1b4fe63794ea689db30fdf3e5147117df2d5794a33752ef40a0ae20b"
+        },
+        {
+          "name": "public-sequencing-run-manifest-retrieval",
+          "has_helper": false,
+          "helper_count": 0,
+          "manifest_sha256": "d77e66c0d05933aae6aa936a208d6d4cf6a30967ce1724129c81ec3e66e810c9",
+          "package_digest": "33f1c229a12ba493be1945027dc4d1e833e39b288c6b1eb44f38bd9057b12040"
+        },
+        {
+          "name": "scientific-file-preflight-and-resource-planning",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "05aa91b0f9d7f531c4456e2b60a4c6c955fb4ec09f6426cd9a5c92a00b50a126",
+          "package_digest": "730fb103f00695045098c29cf8a10d29d8ce645aea1f140206a8608176d01782"
+        },
+        {
+          "name": "taxonomy-name-and-taxid-resolution",
+          "has_helper": false,
+          "helper_count": 0,
+          "manifest_sha256": "c7c60b5fc93e05556ec4870e2de784eca301ccbd971b6c528909c3919418dd60",
+          "package_digest": "f155451fcf6b76a7ae57677d64520c7577f41eec13029c8c84eb52cca1c60e15"
+        }
+      ]
+    },
+    {
+      "id": "D02",
+      "label_zh": "序列、基因组与进化",
+      "chart_label": "Sequences &\ngenomes",
+      "stage": 3,
+      "rationale": "已有 read QC、限定比对、基因模型 QC 和树文件检查；序列与区间操作中仍有指导型包。",
+      "limits": "不代表完整组装、全基因组进化或大规模测序流水线。",
+      "next": "优先为现有区间操作补一个同版本 BED 执行路径。",
+      "skills": [
+        {
+          "name": "alignment-file-operations",
+          "has_helper": false,
+          "helper_count": 0,
+          "manifest_sha256": "e489400965325780492dc9d07c90e27d5676f20ed28f4db869fc45f6b15501dc",
+          "package_digest": "2411e4a8ed82172e16dc84a0158bfb2ece96252f6853262c1d64d3939373a2bf"
+        },
+        {
+          "name": "genomic-interval-operations",
+          "has_helper": false,
+          "helper_count": 0,
+          "manifest_sha256": "0cccef55f374988ff1d6d0c82ee04b5d6296068dba1c2ccda6e4e6665aab6098",
+          "package_digest": "31eecc22aad62d7d9c04474de20555968f5b72c0993e09fa4b3cd8183e4a15eb"
+        },
+        {
+          "name": "gff-gtf-gene-model-qc",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "ddf4e18faf33a824b3882ff2a619833a858de3082603da177a1f9edd490cc320",
+          "package_digest": "3c592072f8729a018192b125468ae582e09d2cbc885d0a038a1bd7a3105ef0ab"
+        },
+        {
+          "name": "pairwise-and-multiple-sequence-alignment",
+          "has_helper": false,
+          "helper_count": 0,
+          "manifest_sha256": "5ccf943d7d3c41fd693da68decdc33b4e3d2507c05362812f0ca50c1584d2da2",
+          "package_digest": "458b66a4d4ddf23a43bc8fcfc90204329506bf51a2f727ee2f01a04730f63c4d"
+        },
+        {
+          "name": "phylogenetic-tree-io-and-qc",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "4570107c14b2f2719d47e66630c8bf5ece05df2362cff53ebebc36569c71b885",
+          "package_digest": "4b73809cf6cedc0a60f7d2030cac488a5abc96f7f07f60070467830ffcdbeda7"
+        },
+        {
+          "name": "public-orthology-retrieval-and-qc",
+          "has_helper": false,
+          "helper_count": 0,
+          "manifest_sha256": "2ab59ca34519aa53b434f159599afcabd6009dcd3756d5a361dcc6361e985e05",
+          "package_digest": "5992975a4ad4cede952ec6451743fd32548a92bedb9c9d79382f1bc0cd1f3d82"
+        },
+        {
+          "name": "raw-read-quality-reporting",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "05d8e9a8596412c586903b82f5b3b9fc8a2542a7b07846e8510d87d4b6e9f4a0",
+          "package_digest": "ada66d98c4eaa53a5f2062cdeb1006cd741026eff033ba8e8b89431933556ed9"
+        },
+        {
+          "name": "raw-read-trimming-and-filtering",
+          "has_helper": false,
+          "helper_count": 0,
+          "manifest_sha256": "fe77837a6735f1d9b0b56ab2cc625b643be872b521d369093f176472d0e6b006",
+          "package_digest": "7e0e7248c70f8689325f0dac50fe3bddf210353f18790f9818a9a32a6a7084b3"
+        },
+        {
+          "name": "read-alignment-selection-and-execution",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "ca866da1b1d79c52b5152b136ca62e466c3d0a7aed184c789988295ce155802b",
+          "package_digest": "cc41d128be5d9f69616574f0306001ea3d7464aa1c08dc424113d24b18f36109"
+        },
+        {
+          "name": "sequence-io-and-transformation",
+          "has_helper": false,
+          "helper_count": 0,
+          "manifest_sha256": "3abbf50e1f65160690ff9f2c1b6c454724311ccf0dd1022f01fb74c6666197bb",
+          "package_digest": "73cd0eff1db23a0af611147311e816b60d6ae37ccaef611b1630d2b2c44b4a87"
+        },
+        {
+          "name": "sequence-similarity-and-homology-search",
+          "has_helper": false,
+          "helper_count": 0,
+          "manifest_sha256": "33f68358638f2fe7d06312b5db49d4bc9b00be34f68ef8f8824ae2bc0e90df9c",
+          "package_digest": "0556738614b04e93112867ccdfbafa298f79238f26c13d60b1e3e0ae56e69b95"
+        }
+      ]
+    },
+    {
+      "id": "D03",
+      "label_zh": "变异数据处理",
+      "chart_label": "Variant\ndata",
+      "stage": 1,
+      "rationale": "VCF 操作有明确参考与基因型语义指导，但该领域没有内置 helper。",
+      "limits": "不包含已执行的变异检测、GWAS、群体遗传或因果推断。",
+      "next": "先考虑小型 VCF 检查/摘要，再评估规范化适配器。",
+      "skills": [
+        {
+          "name": "vcf-normalization-qc-and-query",
+          "has_helper": false,
+          "helper_count": 0,
+          "manifest_sha256": "19be2eb586f512aff047e11a0a49c1a8da9f39c223de3a8a4f01b6a6ba2698fb",
+          "package_digest": "026cc8273050e7c38dd4a55fa4815745175b86f2973c6d7d2363832d4d955c5e"
+        }
+      ]
+    },
+    {
+      "id": "D04",
+      "label_zh": "转录组与表达分析",
+      "chart_label": "Transcriptomics",
+      "stage": 4,
+      "rationale": "counts 组装、DESeq2、微阵列 limma 和剪接描述均有 helper；表达结果可接映射、富集、图表报告。",
+      "limits": "已检查的是限定设计的小数据；配对、多因素交互、原始微阵列归一化仍不支持。",
+      "next": "新增 qPCR；保留明确的 assay、重复单位和效率条件。",
+      "skills": [
+        {
+          "name": "bulk-rnaseq-gene-count-matrix-assembly",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "206082c78c696d5810bd87a6dcc0e50d6dfe43c7c45242a90e0db196739ae3b9",
+          "package_digest": "829ce1dc733862941a838ed9ffb4d6c31787b06d82031d6f4b4e8afbfee2ae2a"
+        },
+        {
+          "name": "bulk-rnaseq-gene-counting-from-alignment",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "71c01f3f7ff8da1dae81016c6db93b5fb1916a26da49e81d8df3bafa98f4fdca",
+          "package_digest": "08831a7349db2adb02495faec182626e392abf376d9306ee2e5144174ae7fc0f"
+        },
+        {
+          "name": "count-based-differential-expression",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "fa1476e0f263db4636234226bcaea6c999a3fa0dd9e8d9deb8ef30656964bfcc",
+          "package_digest": "8f85a4315bbdc3cd8c20e291ed1407146e7ae8ef3f6745753bb06ce311f41fa4"
+        },
+        {
+          "name": "junction-psi-and-delta-analysis",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "e9ed78c8f3ab833992603c64b31ea17ef6eefbc783f7346c83f242c039ddc6bc",
+          "package_digest": "9a0e1376ff7cd2e3dd87c4b84dbd0c8bdb0b3b6dc76a29972517830d5a177649"
+        },
+        {
+          "name": "normalized-microarray-differential-expression",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "129de26e935a1d7fc9968bb45fd165369e4404c61a3edb62e5580d2ceb242eba",
+          "package_digest": "93f9f7c7e50c3a508eab190365abe88b0d61eec8285981576934428cf376a263"
+        }
+      ]
+    },
+    {
+      "id": "D05",
+      "label_zh": "单细胞分析",
+      "chart_label": "Single-cell",
+      "stage": 4,
+      "rationale": "小型 h5ad 的 QC、核心探索、marker 证据和 pseudobulk 可串接现有差异分析。",
+      "limits": "当前评分不覆盖空间组学、大型对象、轨迹、细胞通讯或自动最终注释。",
+      "next": "先改善输入体积与对象接入边界；不增加复杂推断。",
+      "skills": [
+        {
+          "name": "single-cell-core-analysis",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "5984dd333101c1e78ee69fa8c6b3928528675c88b35fb1651d1c5603af3f8ab5",
+          "package_digest": "fde625a498c39c436756bda1968b35e99edab61e09e722e8a6d52334b8ea2e04"
+        },
+        {
+          "name": "single-cell-marker-evidence-review",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "8478584f4cd888d36d20f4e1c16e7064350f691313861695bddde9cbfd1b2bee",
+          "package_digest": "d5cb3bc13ced6e33e95e8bf8819ff6ab788ae202e2858dc2ea0e7469973859dc"
+        },
+        {
+          "name": "single-cell-object-io-and-qc",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "9dbe6087edd0ece5003fd2f8049afd599b5e2f004f96f6fadaa806cdfd46775c",
+          "package_digest": "c702ee761a313e3d99e5a64df29947b7f97f81c83eb26af3b4c4a46fc7aefccd"
+        },
+        {
+          "name": "single-cell-pseudobulk-aggregation",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "63fad2ff4bc859ba08dfde3c14c11f6dd0bda8ae02f29d494c637f1d86fcbc39",
+          "package_digest": "7210d5821d85312ddac67036419e4b9f271a807839a18a80d155787909ec300b"
+        }
+      ]
+    },
+    {
+      "id": "D06",
+      "label_zh": "染色质与表观遗传",
+      "chart_label": "Chromatin",
+      "stage": 2,
+      "rationale": "已有同版本峰集的坐标、黑名单和覆盖重叠 QC。",
+      "limits": "没有 peak calling、差异可及性、motif、FRiP 或 IDR 执行链路。",
+      "next": "复用区间操作补峰集注释/比较的入口，先不做差异峰。",
+      "skills": [
+        {
+          "name": "chromatin-peak-set-qc",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "f3fce491efe76562fac964472f20a138d0ee8dc7c6049f52ea007cc67dba4a6d",
+          "package_digest": "0c224117bf9c3741a24dd58f0467655abb4a53af9675ae5afe0014d9caf7fcbd"
+        }
+      ]
+    },
+    {
+      "id": "D07",
+      "label_zh": "微生物组分析",
+      "chart_label": "Microbiome",
+      "stage": 3,
+      "rationale": "已有扩增子表/分类 QC、alpha 指标和 Bray–Curtis/Jaccard 距离计算。",
+      "limits": "没有 PCoA、PERMANOVA、差异丰度、宏基因组组装或病原判断。",
+      "next": "优先 PCoA 与报告；组间推断放到单独一批。",
+      "skills": [
+        {
+          "name": "amplicon-alpha-diversity-analysis",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "ee2416bea94c56926590622c11f9d70c7d4b9b5853c51aab3bde9752012852e3",
+          "package_digest": "fa79a4b842264e3643f07d2afe271a86cd216f314e0d25bc7286ff75385eaed7"
+        },
+        {
+          "name": "amplicon-beta-diversity-distance-analysis",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "ae0badd43b62001747c28f07d238668e3b251d9b4f359a616f1df6ffb79a98e7",
+          "package_digest": "a6f2943b8081d2149f5ccbca86b50bc05f996cbb4d1aa53e6c6fee3cfaf1fcce"
+        },
+        {
+          "name": "amplicon-feature-table-and-taxonomy-qc",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "1ba01986f19e0dea417a9bc38b810d09ddca1d436b745a30f42732fcf1ec95e2",
+          "package_digest": "e5f2c8c856a9a6486fdb18d5e9c7b380f8f709380cb4c0654b336f25e883df0e"
+        }
+      ]
+    },
+    {
+      "id": "D08",
+      "label_zh": "蛋白组、代谢组与流式",
+      "chart_label": "Proteomics /\nmetabolomics /\ncytometry",
+      "stage": 3,
+      "rationale": "蛋白差异、代谢特征 QC、流式补偿和 arcsinh 有局部执行能力。",
+      "limits": "这是原有组合领域，不是各子领域的平均分：蛋白组 2 包/1 helper；代谢组 1/1；流式 3/2。不含原始质谱、自动填补或自动门控。",
+      "next": "先给现有蛋白组 QC 补脚本，再接差异、图表和报告。",
+      "skills": [
+        {
+          "name": "fcs-file-io-and-metadata-qc",
+          "has_helper": false,
+          "helper_count": 0,
+          "manifest_sha256": "ee14392f1e6e488ce63a9cc64e9c29c9b58d2591c07974feefeeb2f3d8ed27f9",
+          "package_digest": "9a8f5243e2b2f5a84156f6ab8e115c0439a5f2b24f96b49da7747f3cb07db1af"
+        },
+        {
+          "name": "flow-cytometry-arcsinh-transformation",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "b15d96251c0acc4cfcda409c80835ddc07a8bd5d24966fad1fe56e77ee702bb5",
+          "package_digest": "329dfda212b18094cbd70540ef5dd3ddd3a407b966fdb8bbc4c9985411300a47"
+        },
+        {
+          "name": "flow-cytometry-compensation-application",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "408d675ad855f5cda1b3c44c38acc2ab0f794a527497b31bef1f473ef316c78b",
+          "package_digest": "b2b85af454566683102edb129323202437b3681b7ce3187bb314efcdafb5e582"
+        },
+        {
+          "name": "protein-level-differential-abundance",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "feeb3ee6b064bef3aca60b851799f1887c0d31b3af00b9031815c2c89728a189",
+          "package_digest": "107e69c2861899077cd62401dd7b57a24ef7addbbe7ab683aac89c0d04160fc8"
+        },
+        {
+          "name": "proteomics-quantification-table-qc",
+          "has_helper": false,
+          "helper_count": 0,
+          "manifest_sha256": "560beb97d7a364a803663d458b75674b60e8d5420b6b40799d5f6137a657d039",
+          "package_digest": "e7ee3f5a392bbb3e23cc3b02cce9a62fe596ce5bdf09396298379f28925b005d"
+        },
+        {
+          "name": "untargeted-metabolomics-feature-table-qc",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "95733bd9ed92e0f8b0cd27cf160fcd9f2260d56fe3543be5d25418aadbf627ac",
+          "package_digest": "26926fa4e6090fb26c93baf68b1c875e75bb1bca795b89133ec98e77d274d9e3"
+        }
+      ]
+    },
+    {
+      "id": "D09",
+      "label_zh": "蛋白质结构",
+      "chart_label": "Protein\nstructure",
+      "stage": 3,
+      "rationale": "有本地蛋白界面接触分析，并有公共结构获取/比较的指导和共享检索入口。",
+      "limits": "结构比对不等于已内置并验证；不支持新结构预测、对接、动力学或亲和力推断。",
+      "next": "随后补明确链/残基映射的简单结构比较。",
+      "skills": [
+        {
+          "name": "protein-interface-contact-analysis",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "12afa9b9b183fdb8a010a1641b8b614c2e2e014b29680c0c94bf1c50dc11ebbc",
+          "package_digest": "7de48c61e3c8a8102275cbaf89e7f9984dc50942c211ee13bd58a5fb3572a841"
+        },
+        {
+          "name": "protein-structure-retrieval-and-comparison",
+          "has_helper": false,
+          "helper_count": 0,
+          "manifest_sha256": "7f11ed507be9d4d867c4649b0a97e58dedf4f12825a3d6d385cc16274ec658e6",
+          "package_digest": "f20d4d712b8991d94da058ada8fc66ee008d4c42ed2a3e815aac410eae182e5b"
+        }
+      ]
+    },
+    {
+      "id": "D10",
+      "label_zh": "化学信息",
+      "chart_label": "Cheminformatics",
+      "stage": 1,
+      "rationale": "分子标准化、描述符和相似性搜索有边界清晰的指导，但没有内置 helper。",
+      "limits": "不声称可运行药物筛选、活性预测或药物发现流程。",
+      "next": "中期为现有分子 QC/描述符补一个小型 RDKit 适配器。",
+      "skills": [
+        {
+          "name": "chemical-similarity-and-substructure-search",
+          "has_helper": false,
+          "helper_count": 0,
+          "manifest_sha256": "6f678fc84b50979e504ad8562943c6e5f3626a9ee14fdc593bccb39e165ecbf3",
+          "package_digest": "22ad2ba22b4331a4c430ca7b7385721c627d9a92b95b82b1462e1179d9c9cef4"
+        },
+        {
+          "name": "molecule-standardization-and-descriptors",
+          "has_helper": false,
+          "helper_count": 0,
+          "manifest_sha256": "af0e9a08d7601951a526ddfe4c23c6018510f15eb61ec432f931e26f6af66813",
+          "package_digest": "27d93c2ef81a556b5571593fe0d3469594d1443503318559394417c4c425a0ee"
+        }
+      ]
+    },
+    {
+      "id": "D11",
+      "label_zh": "功能富集",
+      "chart_label": "Gene-set\nenrichment",
+      "stage": 4,
+      "rationale": "ORA 和有符号排名 GSEA 均有脚本，可接表达映射和结果报告。",
+      "limits": "评分只覆盖基因集富集；网络推断、多组学融合和通路激活判断不在内。",
+      "next": "改善资源与基因集结果展示，优先复用已有两个 Skill。",
+      "skills": [
+        {
+          "name": "over-representation-analysis",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "3983f5ceb9802fe81306b952e1ca8538754292044bd2c077bb9af9b16a9e2879",
+          "package_digest": "55b69cc18bb3bf348f787e29bf9ea589d5488fe20bef5ab077badf8d84f79b86"
+        },
+        {
+          "name": "ranked-gene-set-enrichment",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "1afb031a702aad824f759fd525c2135e0f4b4470b94c3c59d718eb90b38fe8ca",
+          "package_digest": "2aa99f16865049f9157b5ffb3cebd3dc9e55192e8fb278be9e966cf2a421b4bf"
+        }
+      ]
+    },
+    {
+      "id": "D12",
+      "label_zh": "研究设计与生物统计",
+      "chart_label": "Biostatistics",
+      "stage": 4,
+      "rationale": "连续两组比较、相关、多重校正、缺失敏感性、KM/log-rank 有小型执行路径，并可复用图表报告。",
+      "limits": "设计/功效仍含指导；不包含通用回归、混合模型、配对分析或因果推断。",
+      "next": "新增独立样本 2×2 分类结局比较。",
+      "skills": [
+        {
+          "name": "correlation-and-association-screening",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "45bf8f93d7517f18440648994250a826c5b22039015473e51c796a79f60dbe00",
+          "package_digest": "1dc51e3dd29f829fc0919c0196ce0e6673570eb8320471920de72931cbe5aae6"
+        },
+        {
+          "name": "experimental-design-power-and-batch-planning",
+          "has_helper": false,
+          "helper_count": 0,
+          "manifest_sha256": "000482edbd7d0cc661387da01a8d1e5bbd900d39ce71c045305a7ea4bd5de0eb",
+          "package_digest": "ac29d6267dc3fed51a6bd36a72990c9ed089377d57da03f904a273403f9462fe"
+        },
+        {
+          "name": "kaplan-meier-survival-analysis",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "eb1faed8048473b9c987d91f1f1fc7b42d1330cb26bc6cdf24accc37b5d0797b",
+          "package_digest": "ccbc28e37d60627c444eabfea384ba6c124909cfcc5e5e122af5cd79df96e5e4"
+        },
+        {
+          "name": "missing-data-and-sensitivity-analysis",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "91c8bbb4c0545dbee63a0f77eeb61d865cd59e7b681f5e11baef9d954abaa561",
+          "package_digest": "b211c82eeaae129f6055513186411bdd4f365f6e172abc359458066e289e13b1"
+        },
+        {
+          "name": "statistical-analysis-and-multiple-testing",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "481f8d5891223541727b781c48cb3e1cfa0fc352f82eeb6f144389c0188b7fd5",
+          "package_digest": "a724f23057d1002a350aa9f8381d1c743c578382ce862381f81845c02892ad23"
+        },
+        {
+          "name": "two-group-comparison-and-effect-estimation",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "995c11c3612661d37bfd39bd26cc198075bc03248d259d14c3164570b16e909f",
+          "package_digest": "b7a4532f8d5a4673b958f36b8b94abb43fb2fd43e6cef8d8d9c563974942a88c"
+        },
+        {
+          "name": "two-group-log-rank-survival-comparison",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "680fe3a1f380e967c957a0e962c9fa59c0b194dddb985e530d9c0998c3537739",
+          "package_digest": "f36bf7ae0e1e5dc6561bed484745dd17833aa3717357bbe59283cfc119f651ac"
+        }
+      ]
+    },
+    {
+      "id": "D13",
+      "label_zh": "文献与公共证据",
+      "chart_label": "Literature &\nevidence",
+      "stage": 2,
+      "rationale": "有文献/公共研究检索指导与共享连接器，变异证据有本地规范化 helper。",
+      "limits": "文件内置脚本数不包括共享连接器；不代表自动系统综述或临床解释。",
+      "next": "中期补文献导出表去重与来源整理，不自动代替筛选判断。",
+      "skills": [
+        {
+          "name": "biomedical-literature-and-public-study-search",
+          "has_helper": false,
+          "helper_count": 0,
+          "manifest_sha256": "69f6fae312392232c56ba1b9f7c7d7b1c4cdaf36c57a11145c013b647ffc889f",
+          "package_digest": "9dda7cee05cf5685f67f1a3702765dd6afa7f80d2c978f6b5238cef144113699"
+        },
+        {
+          "name": "evidence-synthesis-and-research-traceability",
+          "has_helper": false,
+          "helper_count": 0,
+          "manifest_sha256": "bcd6777b255b050b410500577e122692d2c486879506d6ef97dea3f82bba8af6",
+          "package_digest": "82847ac50489138befe75b46c5d923f5f10f53697c11f8cc776ca1f50578082e"
+        },
+        {
+          "name": "human-variant-evidence-retrieval",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "74abf51191bdebc1068324b3d10dd0641832baa2f206ad94423cc96ed52a644e",
+          "package_digest": "61d6f4a5f36ca3730d70583821a877590c3c574135a39f9ea60a075bd3956854"
+        }
+      ]
+    }
+  ]
+}

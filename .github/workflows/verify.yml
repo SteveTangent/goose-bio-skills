@@ -18,6 +18,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
+      - name: Check capability profile inventory
+        run: python3 scripts/render_capability_profile.py --check
       - name: Check connector portability
         run: python3 scripts/run_research_connector.py --self-test
       - uses: r-lib/actions/setup-r@465b7d8e732ca3921382b1674c59bada9cbf3399 # v2

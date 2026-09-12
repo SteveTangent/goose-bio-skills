@@ -20,6 +20,14 @@ Goose Bio Skills is a focused collection of one-job Agent Skills for common bioi
 
 Start with [expression workflows](docs/expression-workflows.md) for counts, reviewed pseudobulk or normalized microarrays, or [task bundles](docs/task-bundles.md) for other inputs.
 
+## Capability profile / 领域能力画像
+
+![Capability stages across thirteen domains, from guidance to connected small-data workflows; values and boundaries are in the linked table](assets/figures/capability-radar.svg)
+
+The chart shows **reviewed capability stages (0–5)** for the current main preview, not accuracy, field-coverage percentages or benchmark performance. Domain names are shortened to match actual scope. Shared helpers are counted once, and one working path does not imply full-domain support.
+
+查看 [13 个领域的评分、脚本数量与能力边界](docs/capability-profile.md)，以及 [没有用户反馈时的下一步计划](docs/next-steps.md)。当前优先补齐蛋白组 QC 与微生物距离结果的可视化，再扩展 qPCR 和 2×2 分类结局分析。规划中的能力不计入图中。
+
 ## Why Goose Bio Skills
 
 - **Research question first.** The agent establishes the scientific task, assumptions, and available evidence before choosing a tool.
@@ -74,7 +82,7 @@ Proposed workflow improvements and the next small analysis additions are in [nex
 
 For a first checked local result, follow the [offline starter example](docs/offline-starter.md). It includes synthetic input, the exact command, and expected output values.
 
-The current catalog has 37 packages with bundled helpers and 19 without bundled scripts. Helpers cover bounded tasks; guidance packages require the declared tools or a compatible adapter for execution. A bundled helper is not evidence that the entire scientific workflow has been evaluated. Fourteen packages declare network services as required or optional. Installing a Skill directory does not install the shared connector; see the [network integration boundary](docs/integration-contract.md#networked-skills).
+The current catalog has 38 packages with bundled helpers and 19 without bundled scripts. Helpers cover bounded tasks; guidance packages require the declared tools or a compatible adapter for execution. A bundled helper is not evidence that the entire scientific workflow has been evaluated. Fourteen packages declare network services as required or optional. Installing a Skill directory does not install the shared connector; see the [network integration boundary](docs/integration-contract.md#networked-skills).
 
 Then ask your agent naturally, for example:
 
