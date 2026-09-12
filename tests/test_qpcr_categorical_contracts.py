@@ -269,6 +269,29 @@ class Contracts(unittest.TestCase):
             with self.assertRaises(v.UserError):
                 v.categorical_data(x)
 
+    def test_native_qpcr_handoff_asks_plain_first_question(self):
+        import hashlib
+        import tempfile
+        sys.path.insert(0, str(ROOT / 'scripts'))
+        import manage_workflow as w
+        self.cq[1][4:]=['','undetermined']
+        report,files=self.qpcr()
+        raw={'cq':q.table_bytes(self.cq),'samples':q.table_bytes(self.samples),'assays':q.table_bytes(self.assays),'design':q.encoded(self.design)}
+        report['input_sha256']={k:hashlib.sha256(v).hexdigest() for k,v in raw.items()}
+        report['files']=list(files);report['output_sha256']={k:hashlib.sha256(v).hexdigest() for k,v in files.items()}
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve()
+            for k,v in raw.items():(root/(k+'.data')).write_bytes(v)
+            for k,v in files.items():(root/k).write_bytes(v)
+            (root/'qpcr.json').write_bytes(q.encoded(report))
+            row=dict(id='qc',skill='qpcr-relative-expression-and-qc',inputs={k:k+'.data' for k in raw},parameters=self.design,fact_parameters={},required_facts=[],depends_on=[],result='qpcr.json',outputs=['qpcr.json',*files],receipt='receipt.json',tool_versions=report['runtime_versions'])
+            (root/'plan.json').write_text(json.dumps(dict(schema_version='1.0',title='Unresolved Cq',facts={},steps=[row])))
+            root,plan=w.load_plan(root/'plan.json');w.record(root,plan,'qc')
+            state=w.evaluate(root,plan)['steps'][0]
+            self.assertEqual(state['status'],'needs-decision')
+            self.assertEqual(state['question'],report['unresolved'][0]['question'])
+            self.assertNotIn("'code':",state['reason'])
+
     def test_nonfinite_json_rejected(self):
         with self.assertRaises(q.UserError):
             q.parse_json(b'{"x":NaN}')

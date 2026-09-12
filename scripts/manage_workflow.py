@@ -611,9 +611,14 @@ def evaluate(root, plan):
                         "data-scale": QUESTIONS["scale"],
                         "missing-measurements": "矩阵存在缺失值；请确认它们的含义和适用的处理方法，再进行下游分析。",
                     }
-                    row["question"] = questions.get(
-                        str(item), "请核对原始结果中第一个未解决事项：" + str(item)
-                    )
+                    native_question = item.get("question") if isinstance(item, dict) else None
+                    if isinstance(native_question, str) and native_question.strip():
+                        row["question"] = native_question
+                        row["reason"] = "Native analysis requires a decision before quantification."
+                    else:
+                        row["question"] = questions.get(
+                            str(item), "请核对原始结果中第一个未解决事项：" + str(item)
+                        )
         except (OSError, ValueError, TypeError, KeyError) as exc:
             row.update(status="stale", reason=str(exc))
     rows = list(previous.values())
