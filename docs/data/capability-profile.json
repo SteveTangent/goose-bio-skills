@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
   "reviewed_at": "2026-09-12",
-  "basis_commit": "dabf004d12f7333f0a370d842833b047def86e8b",
-  "registry_sha256": "5038f458cf2e81af67e86edd3dba0d4022d8be36e43a8718afddb0f15efa4dbb",
+  "basis_commit": "87eb2b15b29ff91833dda720a5609a747ac8ed7e",
+  "registry_sha256": "09a88fe9a154980df501301e97d00767af23793c971b1a128d7ecee24717abd0",
   "assessment_kind": "Editorial capability-stage assessment of this exact registry and manifests after original small helper checks; not measured accuracy, demand or an Agent benchmark.",
   "scale": {
     "0": "No declared coverage",
@@ -33,15 +33,15 @@
           "name": "bioinformatics-qc-and-publication-reporting",
           "has_helper": true,
           "helper_count": 1,
-          "manifest_sha256": "d5cf14c47b661191ee1fc2bcad9599e90437fa8c1ce21eb5d87e92bf6fb18138",
-          "package_digest": "19d67cbee3edcd1f19fbad34e34187f025ae914e39db99895717ff8607f58759"
+          "manifest_sha256": "053d15f08f56d1394d527e3d3603d445dec99fdc9b4d00219749e2ec140d6561",
+          "package_digest": "5e18889ad46c3f2bd9e1e3f5bcab41695f4d2c640906dd6239829e57cd17ca3b"
         },
         {
           "name": "bioinformatics-result-visualization",
           "has_helper": true,
           "helper_count": 1,
-          "manifest_sha256": "c03873e2eb19b50ace4496b7f4ef9ac86e2bb5963065ccca4204f1ce377a949f",
-          "package_digest": "2d53c4a652e7df304ba667db3a25b0209dfb35d80fd7b7782fa85f71a03ef5e7"
+          "manifest_sha256": "97f70cac0088fb90f1ca8b809b5776daa57755eef9908cd370152884bd8177a0",
+          "package_digest": "033e25a1e14f67932e2979bad66107bf6436f4e144dc3ae27ae34a2ab1a4ff48"
         },
         {
           "name": "biological-database-record-retrieval-and-identifier-resolution",
@@ -205,9 +205,9 @@
       "label_zh": "转录组与表达分析",
       "chart_label": "Transcriptomics",
       "stage": 4,
-      "rationale": "counts 组装、DESeq2、微阵列 limma 和剪接描述均有 helper；表达结果可接映射、富集、图表报告。",
-      "limits": "已检查的是限定设计的小数据；配对、多因素交互、原始微阵列归一化仍不支持。",
-      "next": "新增 qPCR；保留明确的 assay、重复单位和效率条件。",
+      "rationale": "counts、微阵列及剪接 helper 已连接表达交付；新增单运行 RT-qPCR 的技术 QC、效率校正相对量、逐对象图及报告。",
+      "limits": "限定小数据与独立对象；qPCR 不做缺失填补、自动内参选择、跨板校准、组间检验或效率不确定性传播。",
+      "next": "维护输入示例和定量依据；新增复杂设计前先明确实际重复单位。",
       "skills": [
         {
           "name": "bulk-rnaseq-gene-count-matrix-assembly",
@@ -243,6 +243,13 @@
           "helper_count": 1,
           "manifest_sha256": "129de26e935a1d7fc9968bb45fd165369e4404c61a3edb62e5580d2ceb242eba",
           "package_digest": "93f9f7c7e50c3a508eab190365abe88b0d61eec8285981576934428cf376a263"
+        },
+        {
+          "name": "qpcr-relative-expression-and-qc",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "e21541f818a7a2ef640c8e822179b67712a31a9e1cd02729d82e8f2e0df67d91",
+          "package_digest": "1c1b91893e05dc097beb166d890d64223b3c86424aa2d005ad54929aa7c55dcc"
         }
       ]
     },
@@ -475,9 +482,9 @@
       "label_zh": "研究设计与生物统计",
       "chart_label": "Biostatistics",
       "stage": 4,
-      "rationale": "连续两组比较、相关、多重校正、缺失敏感性、KM/log-rank 有小型执行路径，并可复用图表报告。",
-      "limits": "设计/功效仍含指导；不包含通用回归、混合模型、配对分析或因果推断。",
-      "next": "新增独立样本 2×2 分类结局比较。",
+      "rationale": "已有两组连续量、相关、生存及多重校正；新增独立 2×2 的 Fisher、条件优势比/精确区间、计数图与报告。",
+      "limits": "不包含复杂回归、配对分类结局；2×2 OR 不是风险比，病例对照行比例不估计总体风险。",
+      "next": "优先保持效应方向、独立性和假设族的澄清；不自动扩为批量显著性筛选。",
       "skills": [
         {
           "name": "correlation-and-association-screening",
@@ -492,6 +499,13 @@
           "helper_count": 0,
           "manifest_sha256": "000482edbd7d0cc661387da01a8d1e5bbd900d39ce71c045305a7ea4bd5de0eb",
           "package_digest": "ac29d6267dc3fed51a6bd36a72990c9ed089377d57da03f904a273403f9462fe"
+        },
+        {
+          "name": "independent-2x2-categorical-comparison",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "94351cfc02f7a176c1c2a45876403aab3178c144d5f60f2334f66f419c24b1e3",
+          "package_digest": "47c18f3e02b412aa3aaf9c4b2718f05ec754164ead5aa5f3fd1dee2cf664a114"
         },
         {
           "name": "kaplan-meier-survival-analysis",

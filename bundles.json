@@ -33,10 +33,11 @@
       ]
     },
     "basic-statistics": {
-      "description": "Continuous two-group effects, declared correlations, correction, figures and report.",
+      "description": "Continuous two-group effects, independent 2x2 outcomes, correlations, correction, figures and report.",
       "skills": [
         "bioinformatics-format-and-identifier-validation",
         "two-group-comparison-and-effect-estimation",
+        "independent-2x2-categorical-comparison",
         "correlation-and-association-screening",
         "statistical-analysis-and-multiple-testing",
         "multi-comparison-result-concordance",
@@ -87,6 +88,14 @@
       "skills": [
         "amplicon-beta-diversity-distance-analysis",
         "distance-matrix-principal-coordinates-analysis",
+        "bioinformatics-result-visualization",
+        "bioinformatics-qc-and-publication-reporting"
+      ]
+    },
+    "qpcr-results": {
+      "description": "Declared one-run RT-qPCR Cq tables to technical QC, relative expression, figures and report.",
+      "skills": [
+        "qpcr-relative-expression-and-qc",
         "bioinformatics-result-visualization",
         "bioinformatics-qc-and-publication-reporting"
       ]

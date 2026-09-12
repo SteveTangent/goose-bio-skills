@@ -1,7 +1,7 @@
 {
   "schema_version": "0.2.0",
   "name": "bioinformatics-qc-and-publication-reporting",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D01",
@@ -57,9 +57,9 @@
     "self_test_status": "passed",
     "self_test_command": "python3 scripts/build_analysis_report.py --self-test",
     "runtime_versions": [
-      "Python >=3.10; deterministic self-test; small execution recorded separately"
+      "Python >=3.10; deterministic self-test; small runtime checks recorded separately"
     ],
-    "artifact_version": "0.13.0"
+    "artifact_version": "0.14.0"
   },
   "runtime_verification": {
     "mode": "not-performed",
@@ -82,7 +82,7 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.12.0",
+    "previous_version": "0.13.0",
     "boundary": "Restore package 0.11.0 and its matching registry entry."
   },
   "network_mode": "none",

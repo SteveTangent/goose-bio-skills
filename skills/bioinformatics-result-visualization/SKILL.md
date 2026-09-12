@@ -3,7 +3,7 @@ name: bioinformatics-result-visualization
 description: "Export source-backed volcano, PCA, heatmap, group, correlation, concordance, marker or embedding figures. Exclude: Invented values, silent scale conversion, automatic feature fishing, biological conclusions and new statistical tests."
 license: Apache-2.0
 metadata:
-  version: "0.13.0"
+  version: "0.14.0"
 ---
 
 # Bioinformatics Result Visualization
@@ -50,3 +50,7 @@ Protein limma 0.13.0 results support volcano and matching-matrix QC plots.
 Native PCoA 0.13.0 results use --kind pcoa --result FILE; equal axis scale,
 positive-inertia percentages and negative-inertia notes are retained. See
 [protein and PCoA adapters](references/protein-pcoa.md).
+
+Native qPCR and independent 2×2 results are supported; preserve biological sample
+counts, relative-expression scale and conditional odds-ratio semantics. See
+[qPCR and categorical adapters](references/qpcr-categorical.md).

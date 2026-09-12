@@ -1,0 +1,20 @@
+interface:
+  display_name: "qPCR Relative Expression and QC"
+  short_description: "Check one-run RT-qPCR Cq tables and compute declared-efficiency relative expression."
+  default_prompt: "Check one-run RT-qPCR Cq tables and compute declared-efficiency relative expression. Inspect available facts first, clarify the first consequential unknown, preserve units and independent samples, and deliver the bounded result with its limits."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

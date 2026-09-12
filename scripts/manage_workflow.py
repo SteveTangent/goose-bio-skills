@@ -15,9 +15,11 @@ import sys
 from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "0.3.0"
+VERSION = "0.4.0"
 MAX_FILE = 16 * 1024 * 1024
 TOOLS = {
+    "qpcr-relative-expression-and-qc": "goose_qpcr",
+    "independent-2x2-categorical-comparison": "goose_independent_2x2",
     "proteomics-quantification-table-qc": "goose_protein_table_qc",
     "protein-level-differential-abundance": "protein-level-differential-abundance",
     "distance-matrix-principal-coordinates-analysis": "goose_pcoa",
@@ -609,9 +611,14 @@ def evaluate(root, plan):
                         "data-scale": QUESTIONS["scale"],
                         "missing-measurements": "矩阵存在缺失值；请确认它们的含义和适用的处理方法，再进行下游分析。",
                     }
-                    row["question"] = questions.get(
-                        str(item), "请核对原始结果中第一个未解决事项：" + str(item)
-                    )
+                    native_question = item.get("question") if isinstance(item, dict) else None
+                    if isinstance(native_question, str) and native_question.strip():
+                        row["question"] = native_question
+                        row["reason"] = "Native analysis requires a decision before quantification."
+                    else:
+                        row["question"] = questions.get(
+                            str(item), "请核对原始结果中第一个未解决事项：" + str(item)
+                        )
         except (OSError, ValueError, TypeError, KeyError) as exc:
             row.update(status="stale", reason=str(exc))
     rows = list(previous.values())
@@ -742,6 +749,8 @@ def overview(root, state, output):
         "goose_protein_table_qc": "蛋白定量表检查",
         "protein-level-differential-abundance": "蛋白差异丰度分析",
         "goose_pcoa": "距离矩阵 PCoA",
+        "goose_qpcr": "qPCR 相对表达与 QC",
+        "goose_independent_2x2": "独立样本 2×2 分类比较",
         "goose_local_id_mapping": "注释准备与 ID 映射",
         "goose_local_ora": "候选基因集富集",
         "goose_gseapy_prerank": "排序基因集富集",

@@ -310,7 +310,7 @@ def cli(run):
         return 3
 
 
-VERSION = "0.13.0"
+VERSION = "0.14.0"
 
 
 def md(value):
@@ -371,6 +371,10 @@ def summarize(report):
         samples = qc.get("samples")
         if isinstance(samples, list):
             metrics["samples"] = len(samples)
+    elif name == "goose_qpcr":
+        metrics={k:report['summary'][k] for k in ['samples','subjects','targets','references','wells']}
+    elif name == "goose_independent_2x2":
+        metrics={'observations':report['total'],'groups':2}
     elif name == "goose_protein_table_qc":
         metrics = {k: report["summary"][k] for k in ["proteins", "samples", "missing_cells", "zero_cells"]}
     elif name == "protein-level-differential-abundance":
@@ -583,6 +587,21 @@ def main():
                 if zh: unit={"probe":"探针","gene":"基因"}.get(unit,unit)
                 detail=(f"在 BH 校正阈值 {alpha:g} 下，{len(significant)} 个 {unit} 特征达到阈值；正向 {positive}，负向 {negative}。比较方向为 {cfg.get('numerator')} / {cfg.get('denominator')}。这未附加效应大小筛选；探针数不能直接当作基因数。" if zh else f"At BH threshold {alpha:g}, {len(significant)} {unit} features pass: {positive} positive and {negative} negative for {cfg.get('numerator')} / {cfg.get('denominator')}. No effect-size threshold is applied here; probe counts are not gene counts.")
                 interpretations.append(f"- [{md(label)}]({filename}): "+md(detail))
+        if name == "goose_qpcr":
+            cfg=report['config']
+            detail=(f"qPCR 使用 {cfg['method']}，校准组为 {cfg['calibrator_group']}；技术重复只在样本内汇总，生物样本数为 {report['summary']['subjects']}。相对表达只能在同一目标内比较，不能跨 assay 当作绝对表达量；没有组间显著性检验或效率不确定性区间。" if zh else f"qPCR uses {cfg['method']} with calibrator group {cfg['calibrator_group']}. Technical wells are averaged within sample; biological n={report['summary']['subjects']}. Compare within target, not absolute abundance across assays. No group test or efficiency uncertainty interval.")
+            if report['status'] != 'completed':
+                detail=('该 qPCR 结果仅完成技术 QC；仍有关键事实或孔值未解决，没有生成相对表达量。请先处理报告中的首个待补充事项。' if zh else 'This qPCR result contains technical QC only; unresolved facts or wells prevent relative expression. Resolve the first open item before quantification.')
+            interpretations.append(f"- [{md(label)}]({filename}): "+md(detail))
+        if name == "goose_independent_2x2":
+            cfg=report['config']
+            if report['status']=='completed':
+                effect=report['effect'];ci=effect['confidence_interval']
+                def number(x):return ('无穷大' if zh else 'infinity') if x=='infinity' else f'{x:.6g}'
+                detail=(f"{cfg['numerator']} 相对 {cfg['denominator']}，事件为 {cfg['event_label']}：条件最大似然优势比 {number(effect['estimate'])}，{100*ci['level']:g}% 条件精确区间 [{number(ci['low'])}, {number(ci['high'])}]，双侧 Fisher p={report['test']['pvalue']:.6g}。优势比不是风险比；病例对照抽样的行比例不能解释为总体风险。检验和区间的双侧约定不同，阈值判断不必完全一致。" if zh else f"Event {cfg['event_label']}, {cfg['numerator']} vs {cfg['denominator']}: conditional MLE odds ratio {number(effect['estimate'])}, {100*ci['level']:g}% conditional exact CI [{number(ci['low'])}, {number(ci['high'])}], two-sided Fisher p={report['test']['pvalue']:.6g}. Odds ratio is not risk ratio; case-control row fractions are not population risks. Test and interval use different two-sided conventions.")
+            else:
+                detail=('该 2×2 表尚未满足独立性、抽样说明或可估计边界；没有生成优势比或检验结论。' if zh else 'This 2x2 table still needs independence, sampling or estimability decisions; no effect or test conclusion was generated.')
+            interpretations.append(f"- [{md(label)}]({filename}): "+md(detail))
         if name == "goose_pcoa":
             detail = (f"PCoA 轴比例使用正特征值之和作分母；负惯量占绝对惯量的 {100*report['negative_inertia_fraction']:.2f}%。未校正距离，分组分离不等于显著差异。" if zh else f"PCoA axes use positive inertia as denominator; negative inertia is {100*report['negative_inertia_fraction']:.2f}% of absolute inertia. Distances are uncorrected; group separation is not a significance test.")
             interpretations.append(f"- [{md(label)}]({filename}): "+md(detail))

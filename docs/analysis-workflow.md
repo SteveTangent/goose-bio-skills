@@ -78,11 +78,15 @@ python3 scripts/manage_workflow.py note-failure --plan PROJECT/analysis.json \
 
 ## 表达分析扩展
 
-[表达流程指南](expression-workflows.md) 提供两条新模板和小型示例，支持从已检查的 pseudobulk counts 中途接入。流程工具 0.3.0 会重新检查旧回执；旧文件保留，只有在原生结果、包和输入身份仍匹配时才能重新登记沿用。方法或执行器版本不匹配时，使用匹配的旧包或显式重算，不修改旧结果冒充新执行。
+[表达流程指南](expression-workflows.md) 提供两条新模板和小型示例，支持从已检查的 pseudobulk counts 中途接入。流程工具 0.4.0 会重新检查旧回执；旧文件保留，只有在原生结果、包和输入身份仍匹配时才能重新登记沿用。方法或执行器版本不匹配时，使用匹配的旧包或显式重算，不修改旧结果冒充新执行。
 
 ## 蛋白表与距离结果
 
 - 已量化蛋白表先看 protein-results 的 QC 入口；缺失、未知尺度和重复对象保留为 needs-decision，不能由报告成功生成覆盖。
 - 已有 beta 距离可直接进入 distance-matrix-principal-coordinates-analysis；上游的零深度不允许用零距离填补。
-- companion 新增 protein QC、protein limma 和 PCoA 三种原生格式，总计 17 种。蛋白模型核对固定 worker 指纹；PCoA 保留原距离及分组文件指纹。
+- companion 新增 protein QC、protein limma 和 PCoA 三种原生格式，该批新增后为 17 种；当前加上 qPCR 与独立 2×2 后为 19 种。蛋白模型核对固定 worker 指纹；PCoA 保留原距离及分组文件指纹。
 - 示例位于 examples/protein-pcoa。记录的是输入/输出身份及依赖就绪；ready/completed 不代表生物学结论成立。
+
+## qPCR 与独立 2×2 结果交接
+
+qPCR 的 cq/samples/assays/design 四个输入指纹与科学配置共同登记；未解决的 QC 保持 needs-decision，只有 completed 才能作相对表达图。2×2 的 table 指纹、事件定义、比较方向、独立性、抽样设计与置信水平共同登记。图表不覆盖源分析状态；报告生成成功不能把待补事实变成分析完成。当前 companion 0.4.0 支持 19 种原生结果，两个新工具名是 goose_qpcr 和 goose_independent_2x2。[小数据入口](../examples/qpcr-categorical/README.md)。

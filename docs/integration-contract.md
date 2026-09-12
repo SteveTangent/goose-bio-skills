@@ -69,4 +69,8 @@ Reporting may consume checked non-completed results and keeps the source outcome
 
 ## 0.13.0 protein / PCoA additions
 
-Native companion support now includes goose_protein_table_qc, protein-level-differential-abundance and goose_pcoa (17 formats total). Protein model metadata keeps its existing tool runtime fields; the companion verifies its bundled R worker identity before comparing tool name/version. QC uses matrix/samples input hashes, the model matrix/metadata hashes, and PCoA distances plus optional metadata hashes. Successful QC alone emits model input files. Persist QC as a required ancestor of the model when using that entry path. Report creation preserves non-completed source outcomes.
+Native companion support now includes goose_protein_table_qc, protein-level-differential-abundance and goose_pcoa (17 formats at that addition). Protein model metadata keeps its existing tool runtime fields; the companion verifies its bundled R worker identity before comparing tool name/version. QC uses matrix/samples input hashes, the model matrix/metadata hashes, and PCoA distances plus optional metadata hashes. Successful QC alone emits model input files. Persist QC as a required ancestor of the model when using that entry path. Report creation preserves non-completed source outcomes.
+
+## 0.14.0 qPCR / categorical additions
+
+Companion 0.4.0 recognizes 19 native formats, including goose_qpcr and goose_independent_2x2. qPCR records cq/samples/assays/design hashes; 2×2 records table. Both bind exact configuration, tool version and declared output hashes. A needs-decision result can document QC but cannot be consumed as a completed analysis. The visualization uses one point per qPCR subject for one explicit target, or observed counts with conditional odds ratio and exact interval for 2×2. Neither implies group inference from qPCR nor population risk from case-control row proportions.

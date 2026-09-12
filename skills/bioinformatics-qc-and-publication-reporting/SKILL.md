@@ -3,7 +3,7 @@ name: bioinformatics-qc-and-publication-reporting
 description: "Assemble local analysis outputs into a source-linked report and execution-methods record. Exclude: Invented results, automatic scientific certification, clinical advice, manuscript conclusions and analysis reruns."
 license: Apache-2.0
 metadata:
-  version: "0.13.0"
+  version: "0.14.0"
 ---
 
 # Bioinformatics Qc And Publication Reporting
@@ -49,3 +49,7 @@ Recognize bounded microarray limma alongside DESeq2. Preserve actual R/package v
 Native protein-table QC, protein limma and PCoA results also retain quantitative
 units, model readiness, protein effect direction and distance interpretation.
 See [protein and PCoA reporting](references/protein-pcoa.md).
+
+Native qPCR and independent 2×2 results are supported; preserve biological sample
+counts, relative-expression scale and conditional odds-ratio semantics. See
+[qPCR and categorical adapters](references/qpcr-categorical.md).

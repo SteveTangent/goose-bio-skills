@@ -109,7 +109,7 @@
     {
       "manifest_schema_version": "0.2.0",
       "name": "bioinformatics-qc-and-publication-reporting",
-      "version": "0.13.0",
+      "version": "0.14.0",
       "path": "skills/bioinformatics-qc-and-publication-reporting",
       "domain_id": "D01",
       "cluster_id": "C03",
@@ -120,13 +120,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "19d67cbee3edcd1f19fbad34e34187f025ae914e39db99895717ff8607f58759",
-      "previous_version": "0.12.0"
+      "package_digest": "5e18889ad46c3f2bd9e1e3f5bcab41695f4d2c640906dd6239829e57cd17ca3b",
+      "previous_version": "0.13.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "bioinformatics-result-visualization",
-      "version": "0.13.0",
+      "version": "0.14.0",
       "path": "skills/bioinformatics-result-visualization",
       "domain_id": "D01",
       "cluster_id": "C03",
@@ -137,8 +137,8 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "2d53c4a652e7df304ba667db3a25b0209dfb35d80fd7b7782fa85f71a03ef5e7",
-      "previous_version": "0.12.0"
+      "package_digest": "033e25a1e14f67932e2979bad66107bf6436f4e144dc3ae27ae34a2ab1a4ff48",
+      "previous_version": "0.13.0"
     },
     {
       "manifest_schema_version": "0.2.0",
@@ -463,6 +463,23 @@
     },
     {
       "manifest_schema_version": "0.2.0",
+      "name": "independent-2x2-categorical-comparison",
+      "version": "0.14.0",
+      "path": "skills/independent-2x2-categorical-comparison",
+      "domain_id": "D12",
+      "cluster_id": "C35",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "47c18f3e02b412aa3aaf9c4b2718f05ec754164ead5aa5f3fd1dee2cf664a114",
+      "previous_version": null
+    },
+    {
+      "manifest_schema_version": "0.2.0",
       "name": "junction-psi-and-delta-analysis",
       "version": "0.10.0",
       "path": "skills/junction-psi-and-delta-analysis",
@@ -745,6 +762,23 @@
       ],
       "package_digest": "33f1c229a12ba493be1945027dc4d1e833e39b288c6b1eb44f38bd9057b12040",
       "previous_version": "0.9.1"
+    },
+    {
+      "manifest_schema_version": "0.2.0",
+      "name": "qpcr-relative-expression-and-qc",
+      "version": "0.14.0",
+      "path": "skills/qpcr-relative-expression-and-qc",
+      "domain_id": "D04",
+      "cluster_id": "C12",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "1c1b91893e05dc097beb166d890d64223b3c86424aa2d005ad54929aa7c55dcc",
+      "previous_version": null
     },
     {
       "manifest_schema_version": "0.2.0",

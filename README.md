@@ -10,12 +10,12 @@
 
 Practical bioinformatics skills for AI agents, with explicit scientific boundaries.
 
-Goose Bio Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The current working tree contains **58 packages across 13 Domains and 27 Clusters**, 40 packages at `0.10.0`, 9 at `0.11.0`, 4 at `0.12.0` and 5 at `0.13.0`, with 40 bounded helpers. The immutable collection release remains `v0.9.0`; main contains a reviewed preview, not a newly tagged collection release.
+Goose Bio Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The current working tree contains **60 packages across 13 Domains and 27 Clusters**, 40 packages at `0.10.0`, 9 at `0.11.0`, 4 at `0.12.0`, 3 at `0.13.0` and 4 at `0.14.0`, with 42 bounded helpers. The immutable collection release remains `v0.9.0`; main contains a reviewed preview, not a newly tagged collection release.
 
 | Boundary | Packages | State | External services |
 | --- | ---: | --- | --- |
 | Immutable `v0.9.0` release | 48 | `preview + reviewed`; see package versions in the registry | Bounded public read/download; anonymous-first |
-| Current working-tree preview | 58 | `preview + reviewed` | Local helpers plus existing bounded public adapters |
+| Current working-tree preview | 60 | `preview + reviewed` | Local helpers plus existing bounded public adapters |
 | Unpublished candidate branches | Outside the working-tree catalog | Candidates require a separate promotion decision | Candidate-specific |
 
 Start with [expression workflows](docs/expression-workflows.md) for counts, reviewed pseudobulk or normalized microarrays, or [task bundles](docs/task-bundles.md) for other inputs.
@@ -26,7 +26,7 @@ Start with [expression workflows](docs/expression-workflows.md) for counts, revi
 
 The chart shows **reviewed capability stages (0–5)** for the current main preview, not accuracy, field-coverage percentages or benchmark performance. Domain names are shortened to match actual scope. Shared helpers are counted once, and one working path does not imply full-domain support.
 
-查看 [13 个领域的评分、脚本数量与能力边界](docs/capability-profile.md)，以及 [没有用户反馈时的下一步计划](docs/next-steps.md)。当前优先补齐蛋白组 QC 与微生物距离结果的可视化，再扩展 qPCR 和 2×2 分类结局分析。规划中的能力不计入图中。
+查看 [13 个领域的评分、脚本数量与能力边界](docs/capability-profile.md)，以及 [没有用户反馈时的下一步计划](docs/next-steps.md)。蛋白组 QC、微生物 PCoA、qPCR 与独立 2×2 分类结局的小数据交付路径现已补齐；下一步优先同版本 BED3 区间操作。规划中的能力不计入图中。
 
 ## Why Goose Bio Skills
 
@@ -82,7 +82,7 @@ Proposed workflow improvements and the next small analysis additions are in [nex
 
 For a first checked local result, follow the [offline starter example](docs/offline-starter.md). It includes synthetic input, the exact command, and expected output values.
 
-The current catalog has 40 packages with bundled helpers and 18 without bundled scripts. Helpers cover bounded tasks; guidance packages require the declared tools or a compatible adapter for execution. A bundled helper is not evidence that the entire scientific workflow has been evaluated. Fourteen packages declare network services as required or optional. Installing a Skill directory does not install the shared connector; see the [network integration boundary](docs/integration-contract.md#networked-skills).
+The current catalog has 42 packages with bundled helpers and 18 without bundled scripts. Helpers cover bounded tasks; guidance packages require the declared tools or a compatible adapter for execution. A bundled helper is not evidence that the entire scientific workflow has been evaluated. Fourteen packages declare network services as required or optional. Installing a Skill directory does not install the shared connector; see the [network integration boundary](docs/integration-contract.md#networked-skills).
 
 Then ask your agent naturally, for example:
 
@@ -135,7 +135,7 @@ Align this tiny single-end short-DNA FASTQ to the exact local reference using th
 | Data and workflow foundations | `bioinformatics-format-and-identifier-validation`<br>`scientific-file-preflight-and-resource-planning`<br>`biological-database-record-retrieval-and-identifier-resolution`<br>`taxonomy-name-and-taxid-resolution`<br>`public-sequencing-run-manifest-retrieval`<br>`environment-and-provenance-capture` |
 | Sequence, reads, genomes, and evolution | `sequence-io-and-transformation`<br>`sequence-similarity-and-homology-search`<br>`pairwise-and-multiple-sequence-alignment`<br>`phylogenetic-tree-io-and-qc`<br>`raw-read-quality-reporting`<br>`raw-read-trimming-and-filtering`<br>`read-alignment-selection-and-execution`<br>`alignment-file-operations`<br>`genomic-interval-operations`<br>`gff-gtf-gene-model-qc`<br>`public-orthology-retrieval-and-qc` |
 | Variant and cohort genomics | `vcf-normalization-qc-and-query`<br>`human-variant-evidence-retrieval` |
-| Bulk transcriptomics | `count-based-differential-expression`<br>`bulk-rnaseq-gene-counting-from-alignment`<br>`bulk-rnaseq-gene-count-matrix-assembly`<br>`junction-psi-and-delta-analysis` |
+| Bulk transcriptomics | `count-based-differential-expression`<br>`bulk-rnaseq-gene-counting-from-alignment`<br>`bulk-rnaseq-gene-count-matrix-assembly`<br>`junction-psi-and-delta-analysis`<br>`qpcr-relative-expression-and-qc` |
 | Single-cell analysis | `single-cell-object-io-and-qc`<br>`single-cell-core-analysis` |
 | Epigenomics | `chromatin-peak-set-qc` |
 | Microbiome and amplicon data | `amplicon-feature-table-and-taxonomy-qc`<br>`amplicon-alpha-diversity-analysis`<br>`amplicon-beta-diversity-distance-analysis` |
@@ -143,7 +143,7 @@ Align this tiny single-end short-DNA FASTQ to the exact local reference using th
 | Protein structure | `protein-structure-retrieval-and-comparison`<br>`protein-interface-contact-analysis` |
 | Cheminformatics | `molecule-standardization-and-descriptors`<br>`chemical-similarity-and-substructure-search` |
 | Functional interpretation | `over-representation-analysis`<br>`ranked-gene-set-enrichment` |
-| Study design and biostatistics | `experimental-design-power-and-batch-planning`<br>`statistical-analysis-and-multiple-testing`<br>`missing-data-and-sensitivity-analysis`<br>`kaplan-meier-survival-analysis`<br>`two-group-log-rank-survival-comparison` |
+| Study design and biostatistics | `experimental-design-power-and-batch-planning`<br>`statistical-analysis-and-multiple-testing`<br>`missing-data-and-sensitivity-analysis`<br>`kaplan-meier-survival-analysis`<br>`two-group-log-rank-survival-comparison`<br>`independent-2x2-categorical-comparison` |
 | Biomedical evidence | `biomedical-literature-and-public-study-search`<br>`evidence-synthesis-and-research-traceability` |
 
 Wave R5 added `bulk-rnaseq-gene-count-matrix-assembly`, `amplicon-beta-diversity-distance-analysis`, `two-group-log-rank-survival-comparison`, and `flow-cytometry-arcsinh-transformation` to the v0.9.0 Beta. They remain `preview + reviewed`; promotion does not upgrade them to evaluated or stable assurance.
@@ -273,3 +273,5 @@ Goose Bio Skills is licensed under the [Apache License 2.0](LICENSE). Each insta
 - [Contributing](CONTRIBUTING.md)
 
 The current protein/PCoA preview connects small quantified protein tables and existing sample distances to figures and reports. Try [the bounded examples](examples/protein-pcoa/README.md) or the `protein-results` / `microbiome-ordination` task bundles.
+
+The qPCR/categorical preview adds declared-efficiency RT-qPCR relative expression and independent 2×2 comparisons. See [small original examples](examples/qpcr-categorical/README.md), the `qpcr-results` bundle, or `basic-statistics`. Neither path infers missing experimental facts.

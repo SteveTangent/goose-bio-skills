@@ -310,7 +310,7 @@ def cli(run):
         return 3
 
 
-VERSION = "0.13.0"
+VERSION = "0.14.0"
 
 
 def protein_de(report):
@@ -482,6 +482,37 @@ def matrix_data(args, de):
     )
 
 
+def qpcr_data(report, target):
+    require(report.get("status") == "completed" and report.get("tool") == {"name":"goose_qpcr","version":"0.14.0"}, "qpcr-result", "Use a completed native qPCR 0.14.0 result; unresolved QC cannot be plotted as quantified expression.")
+    targets = [x["assay_id"] for x in report["assays"] if x["role"] == "target"]
+    selected = target or (targets[0] if len(targets) == 1 else None)
+    require(selected in targets, "qpcr-target", "Choose one target assay explicitly with --outcome.", "needs-decision")
+    metadata = {r["sample_id"]: r for r in report["sample_metadata"]}
+    require(len(metadata) == len(report['sample_metadata']) and len({r['subject_id'] for r in metadata.values()}) == len(metadata) and 2 <= len({r['group'] for r in metadata.values()}) <= 4, 'qpcr-independent-metadata', 'Native samples must represent distinct subjects in 2–4 groups.')
+    rows = [r for r in report["results"] if r["target"] == selected]
+    require(4 <= len(metadata) == len(rows) <= 32 and {r["sample_id"] for r in rows} == set(metadata), "qpcr-identities", "Quantified rows must contain every sample exactly once for this target.")
+    for r in rows:
+        require(r["group"] == metadata[r["sample_id"]]["group"] and r["subject_id"] == metadata[r["sample_id"]]["subject_id"], "qpcr-labels", "Group and independent-subject identities must agree with metadata.")
+        x,y=r["log2_relative_expression"],r["relative_expression"]
+        require(all(type(v) in {int,float} and math.isfinite(v) for v in [x,y]) and abs(x)<=200 and y>0 and math.isclose(2**x,y,rel_tol=1e-10), "qpcr-scale", "Linear and log2 relative expression must agree.")
+    return selected, rows
+
+
+def categorical_data(report):
+    require(report.get("status") == "completed" and report.get("tool") == {"name":"goose_independent_2x2","version":"0.14.0"}, "categorical-result", "Use a completed native independent 2x2 result.")
+    table=report["table"]; cfg=report["config"]
+    require(isinstance(table,list) and len(table)==2 and all(isinstance(r,list) and len(r)==2 and all(type(v) is int and v>=0 for v in r) for r in table) and 0<sum(map(sum,table))<=100000, "categorical-counts", "Use a bounded nonnegative integer 2x2 table.")
+    require(report["row_labels"] == [cfg["numerator"],cfg["denominator"]] and report["column_labels"] == [cfg["event_label"],cfg["nonevent_label"]] and cfg["numerator"]!=cfg["denominator"], "categorical-labels", "Native table directions and labels disagree.")
+    effect=report["effect"]; interval=effect["confidence_interval"]
+    require(min([*map(sum,table),table[0][0]+table[1][0],table[0][1]+table[1][1]]) > 0 and cfg['independent'] is True and cfg['sampling_design'] in {'cohort','randomized','cross-sectional','case-control'}, 'categorical-design', 'Require nonzero margins and a declared independent sampling design.')
+    require(effect['measure']=='odds-ratio' and effect['estimate_method']=='conditional maximum likelihood' and interval['method']=='conditional exact equal-tailed' and type(interval['level']) in {int,float} and .8 <= interval['level'] <= .999 and report['test']['method']=='Fisher exact, two-sided probability ordering', 'categorical-method', 'Preserve the native conditional OR, exact interval and Fisher method labels.')
+    values=[interval['low'],effect['estimate'],interval['high']]
+    require(all(x == "infinity" or (type(x) in {int,float} and math.isfinite(x) and x>=0) for x in values), "categorical-effect", "Preserve finite nonnegative odds and explicit infinity.")
+    lo,estimate,hi=[float('inf') if x=='infinity' else x for x in values]
+    require(lo<=estimate<=hi and type(report['test']['pvalue']) in {int,float} and 0<=report['test']['pvalue']<=1, "categorical-interval", "Effect, interval and probability are inconsistent.")
+    return table
+
+
 def expansion_plot(a):
     require(
         a.result and a.output,
@@ -503,6 +534,8 @@ def expansion_plot(a):
         "concordance": "goose_result_concordance",
         "marker-dot": "goose_marker_evidence",
         "pcoa": "goose_pcoa",
+        "qpcr": "goose_qpcr",
+        "categorical": "goose_independent_2x2",
     }
     if report is not None:
         require(
@@ -536,7 +569,39 @@ def expansion_plot(a):
         rows = []
         config = {"kind": a.kind}
         title = a.title or a.kind.replace("-", " ").title()
-        if a.kind == "pcoa":
+        if a.kind == "qpcr":
+            target, records = qpcr_data(report, a.outcome)
+            labels = sorted({r['group'] for r in records})
+            header = ['sample_id','subject_id','group','target','log2_relative_expression','relative_expression']
+            rows = [[r[k] for k in header] for r in records]
+            for i,label in enumerate(labels):
+                selected = sorted([r for r in records if r['group']==label], key=lambda r:r['sample_id'])
+                offsets = np.linspace(-.12,.12,len(selected))
+                values = [r['log2_relative_expression'] for r in selected]
+                ax.scatter(i+offsets,values,s=48,marker=['o','s','^','D'][i],label=f"{label} (n={len(values)} subjects)")
+                ax.plot([i-.2,i+.2],[sum(values)/len(values)]*2,color='#334155',linewidth=1.5)
+            ax.set_xticks(range(len(labels)),labels)
+            ax.axhline(0,color='#94a3b8',linestyle=':',linewidth=.8)
+            ax.set_ylabel('log2 relative expression vs calibrator group')
+            ax.set_xlabel('Biological group'); ax.legend(frameon=False,fontsize=9)
+            title = a.title or ('qPCR · '+target)
+            config.update(target=target,calibrator_group=report['config']['calibrator_group'],method=report['config']['method'],display_scale='log2 relative expression',independent_unit='subject')
+            notes = ['One point per independent subject; technical wells are averaged, not additional n.', 'Bars show mean log2 relative expression; no significance test or uncertainty interval.']
+        elif a.kind == "categorical":
+            table = categorical_data(report);cfg=report['config'];labels=report['row_labels']
+            ax.bar([0,1],[r[0] for r in table],color='#167d9a',label=cfg['event_label'])
+            ax.bar([0,1],[r[1] for r in table],bottom=[r[0] for r in table],color='#d6e3e7',label=cfg['nonevent_label'],hatch='//')
+            for i,r in enumerate(table):
+                ax.text(i,sum(r),f"  {r[0]} / {sum(r)} observed",ha='center',va='bottom',fontsize=10)
+            ax.set_xticks([0,1],labels);ax.set_ylabel('Observed counts (not population risk)');ax.margins(y=.25)
+            ax.legend(frameon=False)
+            header=['group','event','non_event','sample_total'];rows=[[label,*r,sum(r)] for label,r in zip(labels,table)]
+            effect=report['effect'];ci=effect['confidence_interval']
+            def number(x):return 'infinity' if x=='infinity' else f'{x:.4g}'
+            notes=[f"Conditional OR {number(effect['estimate'])}; {100*ci['level']:g}% exact CI [{number(ci['low'])}, {number(ci['high'])}].",f"Two-sided Fisher p={report['test']['pvalue']:.4g}; OR direction: {cfg['numerator']} / {cfg['denominator']}.",'No continuity correction; odds ratio is not risk ratio. Case-control fractions are not population risks.']
+            config.update(sampling_design=cfg['sampling_design'],numerator=cfg['numerator'],denominator=cfg['denominator'],event_label=cfg['event_label'],nonevent_label=cfg['nonevent_label'],effect=effect)
+            title=a.title or 'Independent 2×2 comparison'
+        elif a.kind == "pcoa":
             require(report.get("status") == "completed" and report.get("tool", {}).get("version") == "0.13.0", "pcoa-status", "Use a completed native PCoA 0.13.0 result.")
             ids = report["sample_ids"]; coordinates = report["coordinates"]; groups = report["groups"]
             axes = report["positive_axes"]
@@ -879,6 +944,8 @@ def main():
             "generic-volcano",
             "embedding",
             "pcoa",
+            "qpcr",
+            "categorical",
         ],
     )
     for name in ["de-report", "matrix", "counts", "metadata", "output", "title"]:
@@ -927,6 +994,8 @@ def main():
         "generic-volcano",
         "embedding",
         "pcoa",
+        "qpcr",
+        "categorical",
     }:
         return expansion_plot(a)
     require(
