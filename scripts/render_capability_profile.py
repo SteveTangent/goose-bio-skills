@@ -111,6 +111,8 @@ def render(data):
     fig.savefig(output / 'capability-radar.svg', metadata={'Date': None, 'Creator': 'Goose Bio Skills'}, facecolor=fig.get_facecolor())
     fig.savefig(output / 'capability-radar.png', dpi=160, metadata={'Software': 'Goose Bio Skills'}, facecolor=fig.get_facecolor())
     plt.close(fig)
+    svg = output / 'capability-radar.svg'
+    svg.write_text('\n'.join(line.rstrip() for line in svg.read_text().splitlines()) + '\n')
     identity = {'data_sha256': digest(DATA), 'files': {f'capability-radar.{suffix}': digest(output / f'capability-radar.{suffix}') for suffix in ('svg', 'png')}}
     (output / 'capability-radar.json').write_text(json.dumps(identity, indent=2) + '\n')
 
