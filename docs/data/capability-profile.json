@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
   "reviewed_at": "2026-09-12",
-  "basis_commit": "2eb6baab5f3a02b8c34881dcd9a0117d4f1a8cbb",
-  "registry_sha256": "ae36a95b2c722dc6d6d9a3004bf38eb9bfd163b3a0516b06bb1c13a9481f7c61",
-  "assessment_kind": "Editorial capability-stage assessment, not measured accuracy, demand or an Agent benchmark.",
+  "basis_commit": "dabf004d12f7333f0a370d842833b047def86e8b",
+  "registry_sha256": "5038f458cf2e81af67e86edd3dba0d4022d8be36e43a8718afddb0f15efa4dbb",
+  "assessment_kind": "Editorial capability-stage assessment of this exact registry and manifests after original small helper checks; not measured accuracy, demand or an Agent benchmark.",
   "scale": {
     "0": "No declared coverage",
     "1": "Guidance with explicit boundaries",
@@ -33,15 +33,15 @@
           "name": "bioinformatics-qc-and-publication-reporting",
           "has_helper": true,
           "helper_count": 1,
-          "manifest_sha256": "728b0d5ba1fb71098dd6bd9be5dd0299d80e599c2c9105f6cf5b00bf11d69ad0",
-          "package_digest": "697627f95a49c57fa9e57351ef7c0d3af51c4de490aaa6d0cbe59963517f46b7"
+          "manifest_sha256": "d5cf14c47b661191ee1fc2bcad9599e90437fa8c1ce21eb5d87e92bf6fb18138",
+          "package_digest": "19d67cbee3edcd1f19fbad34e34187f025ae914e39db99895717ff8607f58759"
         },
         {
           "name": "bioinformatics-result-visualization",
           "has_helper": true,
           "helper_count": 1,
-          "manifest_sha256": "6add11e3f7a4149f7460363f94aa95ff2c0a93ba8246202a20630b0745b78b2b",
-          "package_digest": "15739af4b87cbfe46c0a57e08cfa964d5518ac403129f0f453b07d9c2a129209"
+          "manifest_sha256": "c03873e2eb19b50ace4496b7f4ef9ac86e2bb5963065ccca4204f1ce377a949f",
+          "package_digest": "2d53c4a652e7df304ba667db3a25b0209dfb35d80fd7b7782fa85f71a03ef5e7"
         },
         {
           "name": "biological-database-record-retrieval-and-identifier-resolution",
@@ -307,10 +307,10 @@
       "id": "D07",
       "label_zh": "微生物组分析",
       "chart_label": "Microbiome",
-      "stage": 3,
-      "rationale": "已有扩增子表/分类 QC、alpha 指标和 Bray–Curtis/Jaccard 距离计算。",
-      "limits": "没有 PCoA、PERMANOVA、差异丰度、宏基因组组装或病原判断。",
-      "next": "优先 PCoA 与报告；组间推断放到单独一批。",
+      "stage": 4,
+      "rationale": "整数特征表的 beta 距离已接 PCoA、分组图和报告；8 样本检查保留负特征值并核对距离重建。",
+      "limits": "不包含自动归一化、稀释、PERMANOVA、差异丰度、宏基因组组装或病原判断。",
+      "next": "先收集距离定义与样本设计的常见问题；推断方法另行评估。",
       "skills": [
         {
           "name": "amplicon-alpha-diversity-analysis",
@@ -332,6 +332,13 @@
           "helper_count": 1,
           "manifest_sha256": "1ba01986f19e0dea417a9bc38b810d09ddca1d436b745a30f42732fcf1ec95e2",
           "package_digest": "e5f2c8c856a9a6486fdb18d5e9c7b380f8f709380cb4c0654b336f25e883df0e"
+        },
+        {
+          "name": "distance-matrix-principal-coordinates-analysis",
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "bb9a254cc6e5856c77091ab16c7ce138f2d1e1a2f50287a8ec2da379d8e5847e",
+          "package_digest": "e6643d0600ee4ed2941ae0c060093ac18d420079cade297895d3119ae8669595"
         }
       ]
     },
@@ -339,10 +346,10 @@
       "id": "D08",
       "label_zh": "蛋白组、代谢组与流式",
       "chart_label": "Proteomics /\nmetabolomics /\ncytometry",
-      "stage": 3,
-      "rationale": "蛋白差异、代谢特征 QC、流式补偿和 arcsinh 有局部执行能力。",
-      "limits": "这是原有组合领域，不是各子领域的平均分：蛋白组 2 包/1 helper；代谢组 1/1；流式 3/2。不含原始质谱、自动填补或自动门控。",
-      "next": "先给现有蛋白组 QC 补脚本，再接差异、图表和报告。",
+      "stage": 4,
+      "rationale": "蛋白定量表 QC 已接完整 log2 limma、图表报告；100 蛋白 × 8 样本跑通，缺失/未知尺度/重复对象阻断建模。",
+      "limits": "组合领域；此档位由蛋白路径支持。蛋白组 2 包/2 helper，代谢组 1/1，流式 3/2；不含原始质谱、自动填补或自动门控。",
+      "next": "保持蛋白输入层级、缺失和独立对象的显式边界；其他子领域按实际断点扩展。",
       "skills": [
         {
           "name": "fcs-file-io-and-metadata-qc",
@@ -369,15 +376,15 @@
           "name": "protein-level-differential-abundance",
           "has_helper": true,
           "helper_count": 1,
-          "manifest_sha256": "feeb3ee6b064bef3aca60b851799f1887c0d31b3af00b9031815c2c89728a189",
-          "package_digest": "107e69c2861899077cd62401dd7b57a24ef7addbbe7ab683aac89c0d04160fc8"
+          "manifest_sha256": "a61b99154cacdbba83353b1bfbf0ec145fba405550dbc5c2f724e76732381a2c",
+          "package_digest": "25a314bed84d798fa99b60a7cd2ad354625ed8183e27def39526acc31c23eccb"
         },
         {
           "name": "proteomics-quantification-table-qc",
-          "has_helper": false,
-          "helper_count": 0,
-          "manifest_sha256": "560beb97d7a364a803663d458b75674b60e8d5420b6b40799d5f6137a657d039",
-          "package_digest": "e7ee3f5a392bbb3e23cc3b02cce9a62fe596ce5bdf09396298379f28925b005d"
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "747b29936d4e90ef3da95bbb9c8d0b03f2f6242f29ce490068c4e16067b1f695",
+          "package_digest": "880d6d3be3edbdc437c08403105a52f5a656c86b29530fb4e7a84d111a45c3d4"
         },
         {
           "name": "untargeted-metabolomics-feature-table-qc",

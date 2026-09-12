@@ -310,16 +310,26 @@ def cli(run):
         return 3
 
 
-VERSION = "0.12.0"
+VERSION = "0.13.0"
+
+
+def protein_de(report):
+    if report.get("tool", {}).get("name") != "protein-level-differential-abundance":
+        return report
+    require(report.get("status") == "completed" and report.get("tool", {}).get("version") == "0.13.0", "protein-result", "Use the completed protein helper 0.13.0 result.")
+    rows = report.get("results")
+    require(isinstance(rows, list) and rows, "protein-results", "Protein results must be a nonempty list.")
+    mapped = [{"gene_id": r["protein_id"], "log2FoldChange": r["effect_log2"], "pvalue": r["raw_p_value"], "padj": r["adjusted_p_value"]} for r in rows]
+    return {**report, "method": "limma-protein", "model": {"results": mapped}}
 
 
 def validate_de(report):
     require(
         isinstance(report, dict)
         and report.get("status") == "completed"
-        and report.get("method") in {"DESeq2", "limma-microarray"},
+        and report.get("method") in {"DESeq2", "limma-microarray", "limma-protein"},
         "de-report",
-        "Use a completed Goose DESeq2 or microarray limma result; plotting does not fit a model.",
+        "Use a completed Goose DESeq2, microarray limma or protein limma result; plotting does not fit a model.",
     )
     rows = report.get("model", {}).get("results")
     require(
@@ -448,9 +458,11 @@ def matrix_data(args, de):
     raw = read_local(args.matrix)
     if de is not None and de.get("method") == "limma-microarray":
         require(hashlib.sha256(raw).hexdigest() == de.get("input_sha256", {}).get("expression") and args.matrix_scale == "log2-normalized", "expression-fingerprint", "Use the exact normalized log2 expression input of the microarray model.")
+    if de is not None and de.get("method") == "limma-protein":
+        require(hashlib.sha256(raw).hexdigest() == de.get("input_sha256", {}).get("matrix") and args.matrix_scale == "log2-normalized", "protein-fingerprint", "Use the exact complete normalized log2 protein input of this model.")
     table = tsv(raw)
     require(
-        table[0][0] in {"gene_id", "feature_id"}, "matrix-header", "A transformed matrix must start with gene_id or feature_id."
+        table[0][0] in {"gene_id", "feature_id", "protein_id"}, "matrix-header", "A transformed matrix must start with gene_id, feature_id or protein_id."
     )
     try:
         data = [[float(x) for x in row[1:]] for row in table[1:]]
@@ -490,6 +502,7 @@ def expansion_plot(a):
         "correlation": "goose_correlation",
         "concordance": "goose_result_concordance",
         "marker-dot": "goose_marker_evidence",
+        "pcoa": "goose_pcoa",
     }
     if report is not None:
         require(
@@ -523,7 +536,28 @@ def expansion_plot(a):
         rows = []
         config = {"kind": a.kind}
         title = a.title or a.kind.replace("-", " ").title()
-        if a.kind == "groups":
+        if a.kind == "pcoa":
+            require(report.get("status") == "completed" and report.get("tool", {}).get("version") == "0.13.0", "pcoa-status", "Use a completed native PCoA 0.13.0 result.")
+            ids = report["sample_ids"]; coordinates = report["coordinates"]; groups = report["groups"]
+            axes = report["positive_axes"]
+            require(isinstance(axes, int) and not isinstance(axes, bool) and 1 <= axes < len(ids) <= 128 and len(ids) == len(coordinates) == len(set(ids)) and set(groups) == set(ids), "pcoa-identities", "PCoA samples, groups and coordinate rows must agree.")
+            require(all(len(r) == axes and all(isinstance(x, (int,float)) and not isinstance(x,bool) and math.isfinite(x) for x in r) for r in coordinates), "pcoa-coordinates", "Use finite native coordinates for every sample.")
+            fractions = [r["fraction_positive_sum"] for r in report["eigenvalues"] if r["classification"] == "positive"]
+            require(len(fractions) == axes and all(isinstance(x,(int,float)) and not isinstance(x,bool) and 0 <= x <= 1 for x in fractions) and math.isclose(sum(fractions),1,rel_tol=1e-9), "pcoa-fractions", "Positive-axis fractions must sum to one.")
+            header = ["sample_id", "group", "PCoA1", "PCoA2"]
+            rows = [[i, groups[i], r[0], r[1] if axes > 1 else 0.0] for i,r in zip(ids,coordinates)]
+            labels = sorted(set(groups.values())); require(len(labels)<=20, "group-limit", "Use at most 20 display groups.")
+            for index,label in enumerate(labels):
+                points = [r for r in rows if r[1] == label]
+                ax.scatter([r[2] for r in points], [r[3] for r in points], label=label, s=45, marker=['o','s','^','D','v'][index%5])
+            ax.set_xlabel(f"PCoA1 ({100*fractions[0]:.1f}% of positive inertia)")
+            ax.set_ylabel(f"PCoA2 ({100*fractions[1]:.1f}% of positive inertia)" if axes>1 else "PCoA2 (zero padding; only one positive axis)")
+            ax.set_aspect("equal", adjustable="datalim")
+            ax.legend(title="Group", loc="upper left", bbox_to_anchor=(1,1), frameon=False)
+            config.update(metric=report['config']['metric'], negative_inertia_fraction=report['negative_inertia_fraction'], axis_fraction_definition=report['axis_fraction_definition'], second_axis_zero_padded=axes==1)
+            notes = [f"Negative inertia: {100*report['negative_inertia_fraction']:.2f}% of absolute inertia; no correction.", "Exploratory distances; visual group separation does not establish significance."]
+            title = a.title or ("PCoA · " + report['config']['metric'])
+        elif a.kind == "groups":
             outcomes = sorted({r["outcome"] for r in report["results"]})
             selected = a.outcome or (outcomes[0] if len(outcomes) == 1 else None)
             require(
@@ -844,6 +878,7 @@ def main():
             "marker-dot",
             "generic-volcano",
             "embedding",
+            "pcoa",
         ],
     )
     for name in ["de-report", "matrix", "counts", "metadata", "output", "title"]:
@@ -891,6 +926,7 @@ def main():
         "marker-dot",
         "generic-volcano",
         "embedding",
+        "pcoa",
     }:
         return expansion_plot(a)
     require(
@@ -914,6 +950,7 @@ def main():
     hashes = {}
     if a.de_report:
         de, hashes["de_report"] = read_json(a.de_report)
+        de = protein_de(de)
         validate_de(de)
     notes = []
     config = {"kind": a.kind}
@@ -1001,7 +1038,7 @@ def main():
                 + ")"
             )
             ax.set_title(
-                a.title or "Differential-expression effect and significance",
+                a.title or ("Protein abundance: effect and significance" if de.get("method") == "limma-protein" else "Differential-expression effect and significance"),
                 loc="left",
                 fontweight="bold",
                 pad=24,
@@ -1016,7 +1053,7 @@ def main():
             )
             ax.legend(frameon=False, fontsize=9)
             header = [
-                "gene_id",
+                "protein_id" if de.get("method") == "limma-protein" else "gene_id",
                 "log2_fold_change",
                 a.significance,
                 "negative_log10_significance",

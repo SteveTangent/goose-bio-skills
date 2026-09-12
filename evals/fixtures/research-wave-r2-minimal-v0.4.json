@@ -1,0 +1,136 @@
+{
+  "schema_version": "0.1.0",
+  "suite_version": "0.4.0",
+  "evidence_kind": "retained-minimal-reliability-fixtures",
+  "scope": {
+    "offline": true,
+    "small_synthetic_data_only": true,
+    "formal_scientific_evaluation": false,
+    "purpose": "Retained fixtures rebound to protein helper 0.13.0. All inputs and scientific expected values unchanged; complete previous report fields compared against previous helper, except tool identity. Native metadata is additive. No Agent benchmark."
+  },
+  "amplicon_qc": {
+    "package_digest": "e5f2c8c856a9a6486fdb18d5e9c7b380f8f709380cb4c0654b336f25e883df0e",
+    "self_test_checks": 21,
+    "arguments": {
+      "metadata_sample_column": "sample_id",
+      "negative_control_column": "sample_type",
+      "negative_control_value": "negative"
+    },
+    "feature_table": {
+      "filename": "amplicon-features.tsv",
+      "content": "feature_id\tS1\tNC1\nASV1\t10\t0\nASV2\t0\t0\n",
+      "sha256": "d720c4d7dcf7e94158be8f4b021df51572b0b8d68d155e48bc910bafcf1102e3"
+    },
+    "metadata": {
+      "filename": "amplicon-metadata.tsv",
+      "content": "sample_id\tsample_type\nS1\tsample\nNC1\tnegative\n",
+      "sha256": "17bb96f67a1ce2225241a0ed63ea4295f47dddfdc290623ad20fa5545d9f14b8"
+    },
+    "taxonomy": {
+      "filename": "amplicon-taxonomy.tsv",
+      "content": "feature_id\tdomain\tgenus\nASV1\tBacteria\tBacillus\nASV2\tBacteria\t\n",
+      "sha256": "e0ebd1676bf9ec36689e0acc74d8b3617ddffd7f9df80eb65066afe30c4b8ff9"
+    },
+    "invalid_feature_table": {
+      "filename": "amplicon-invalid.tsv",
+      "content": "feature_id\tS1\tNC1\nASV1\t-1\t0\n",
+      "sha256": "fd1a0d92aa23aa1da4fa33998ff193f5e5c316e9a143663371636ece05d4ba72",
+      "expected_issue": "negative-count"
+    },
+    "expected": {
+      "feature_count": 2,
+      "sample_count": 2,
+      "zero_depth_samples": [
+        "NC1"
+      ],
+      "output_sha256": "9604c4b7bcde88ae00136eb4a3990241b912040a2c21c8313f91455f028c1a59"
+    }
+  },
+  "peak_qc": {
+    "package_digest": "0c224117bf9c3741a24dd58f0467655abb4a53af9675ae5afe0014d9caf7fcbd",
+    "self_test_checks": 27,
+    "arguments": {
+      "contig_build": "GRCh38-test",
+      "peak_formats": [
+        "narrowPeak",
+        "bed"
+      ],
+      "peak_builds": [
+        "GRCh38-test",
+        "GRCh38-test"
+      ],
+      "blacklist_build": "GRCh38-test"
+    },
+    "contigs": {
+      "filename": "tiny.chrom.sizes",
+      "content": "chr1\t1000\nchr2\t500\n",
+      "sha256": "5c34164c68f1455078150dc8c0d0b5354faf13b3e8124196d00f69fe5af9cd37"
+    },
+    "blacklist": {
+      "filename": "tiny-blacklist.bed",
+      "content": "chr1\t180\t200\n",
+      "sha256": "dee64c6c80e10e44a536e3e820946587f5acb379bf95691eaae15f31a83acbb1"
+    },
+    "peaks": [
+      {
+        "filename": "first.narrowPeak",
+        "content": "chr1\t100\t200\tp1\t100\t.\t10\t5\t4\t50\nchr1\t100\t200\tp1-duplicate\t90\t.\t9\t4\t3\t75\nchr1\t300\t350\tp2\t80\t+\t8\t-1\t-1\t-1\nchr2\t0\t50\tp3\t70\t-\t7\t3\t2\t10\n",
+        "sha256": "3cfdd24dedb80521296978fbab7584380bc96b906ae4278696b6bcd56f946103"
+      },
+      {
+        "filename": "second.bed",
+        "content": "chr1\t150\t250\nchr1\t300\t400\nchr2\t40\t60\n",
+        "sha256": "5224c9b9c1df0d56504307cee9ec3270c445407c847ee839f6064799e4678489"
+      }
+    ],
+    "expected": {
+      "duplicate_coordinate_count": 1,
+      "pairwise_jaccard": 0.354838709677,
+      "output_sha256": "6908d4df41ebd2330d240187e6c213137cded03cb49484d8f39397c153c54976"
+    },
+    "invalid": {
+      "peak_builds": [
+        "GRCh38-test",
+        "hg19"
+      ],
+      "expected_error": "build-mismatch"
+    }
+  },
+  "protein_da": {
+    "package_digest": "25a314bed84d798fa99b60a7cd2ad354625ed8183e27def39526acc31c23eccb",
+    "self_test_checks": 24,
+    "arguments": {
+      "protein_id_column": "protein_id",
+      "sample_id_column": "sample_id",
+      "condition_column": "condition",
+      "numerator": "treated",
+      "denominator": "control",
+      "covariate_column": "batch"
+    },
+    "matrix": {
+      "filename": "protein-matrix.csv",
+      "content": "protein_id,C1,C2,C3,T1,T2,T3\nP1,10.0,10.2,9.7,12.1,11.8,12.3\nP2,8.0,7.6,8.3,7.1,6.8,7.4\nP3,5.0,5.5,4.8,5.1,4.7,5.4\nP4,20.0,19.2,20.6,23.2,22.5,23.4\nP5,2.0,2.3,1.8,1.2,1.5,0.9\nP6,14.0,13.5,14.8,15.0,15.4,14.7\n",
+      "sha256": "bb7dd0377148fae2a99468bf9596dfebd4038903dad13023bfdb74a332e14134"
+    },
+    "metadata": {
+      "filename": "protein-metadata.csv",
+      "content": "sample_id,condition,batch\nC1,control,A\nC2,control,B\nC3,control,A\nT1,treated,A\nT2,treated,B\nT3,treated,B\n",
+      "sha256": "6b1df0580fd71b48028c356b0ac29592eb22ef7d74d1c3ab3641c254c96c6925"
+    },
+    "invalid_matrix": {
+      "filename": "protein-invalid.csv",
+      "content": "protein_id,C1,C2,C3,T1,T2,T3\nP1,Inf,10.2,9.7,12.1,11.8,12.3\n",
+      "sha256": "0cab554229aa0d0216faf358ce63ef22068fe54e0881c2a13010243d5b4e3a2b",
+      "expected_error": "nonfinite-abundance"
+    },
+    "expected": {
+      "protein_count": 6,
+      "design_rank": 3,
+      "residual_degrees_of_freedom": 3,
+      "p1_effect_log2": 2.05,
+      "output_sha256": "99d6edffce4ab9d34bbdc0a3fd46a58cd137cc746e3d569c4a1674508d4c5289"
+    },
+    "artifact_version": "0.13.0"
+  },
+  "supersedes_fixture": "evals/fixtures/research-wave-r2-minimal-v0.3.json"
+}

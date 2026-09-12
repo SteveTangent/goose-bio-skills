@@ -62,6 +62,8 @@ def doctor(names, catalog):
         "over-representation-analysis",  # Local GMT path uses the standard library.
         "count-based-differential-expression",  # DESeq2 path only.
         "normalized-microarray-differential-expression",
+        "protein-level-differential-abundance",
+        "distance-matrix-principal-coordinates-analysis",
         "two-group-comparison-and-effect-estimation",
         "correlation-and-association-screening",
         "single-cell-object-io-and-qc",
@@ -83,6 +85,8 @@ def doctor(names, catalog):
     requirements = {}
     if "bioinformatics-result-visualization" in names:
         requirements.update(numpy=None, matplotlib=None)
+    if "distance-matrix-principal-coordinates-analysis" in names:
+        requirements.update(numpy=None)
     if "ranked-gene-set-enrichment" in names:
         requirements.update(gseapy="1.3.0", pandas=None)
     if set(names) & {
@@ -160,7 +164,7 @@ def doctor(names, catalog):
                 )
         else:
             checks.append({"tool": "Rscript", "ready": False})
-    if "normalized-microarray-differential-expression" in names:
+    if set(names) & {"normalized-microarray-differential-expression", "protein-level-differential-abundance"}:
         runner = shutil.which("Rscript")
         versions = {}
         if runner:
@@ -171,7 +175,7 @@ def doctor(names, catalog):
                     versions = dict(line.split("=",1) for line in result.stdout.splitlines() if "=" in line)
             except (OSError, subprocess.TimeoutExpired):
                 pass
-        checks.append({"tool":"microarray R / limma","versions":versions,"required_versions":{"R":"4.4.1","limma":"3.60.6"},"ready":versions=={"R":"4.4.1","limma":"3.60.6"}})
+        checks.append({"tool":"normalized expression/protein R / limma","versions":versions,"required_versions":{"R":"4.4.1","limma":"3.60.6"},"ready":versions=={"R":"4.4.1","limma":"3.60.6"}})
     guidance = [
         n for n in names if not catalog[n]["script_verification"]["bundled_scripts"]
     ]
@@ -251,14 +255,13 @@ def self_test():
     assert names.index("statistical-analysis-and-multiple-testing") < names.index(
         "count-based-differential-expression"
     )
-    for name in [
-        "protein-level-differential-abundance",
-        "read-alignment-selection-and-execution",
-    ]:
+    for name in ["read-alignment-selection-and-execution"]:
         result = doctor([name], catalog)
         assert not result["checked_helpers_ready"]
         assert not result["dependency_inventory_complete"]
         assert result["unchecked_helpers"] == [name]
+    result = doctor(["protein-level-differential-abundance"], catalog)
+    assert result["dependency_inventory_complete"] and not result["unchecked_helpers"]
     result = doctor(["statistical-analysis-and-multiple-testing"], catalog)
     assert result["checked_helpers_ready"] and result["dependency_inventory_complete"]
     unknown = {

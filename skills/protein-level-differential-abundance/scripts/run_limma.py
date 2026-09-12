@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Any, Iterator
 
 
-VERSION = "0.9.0"
+VERSION = "0.13.0"
 EXPECTED_R_VERSION = "4.4.1"
 EXPECTED_LIMMA_VERSION = "3.60.6"
 MAX_INPUT_BYTES = 16 * 1024 * 1024
@@ -91,7 +91,7 @@ tryCatch({
     check.names = FALSE,
     quote = "",
     comment.char = "",
-    na.strings = NULL
+    na.strings = NULL, colClasses = "character"
   )
   sample_table <- utils::read.delim(
     metadata_path,
@@ -99,7 +99,7 @@ tryCatch({
     check.names = FALSE,
     quote = "",
     comment.char = "",
-    na.strings = NULL
+    na.strings = NULL, colClasses = "character"
   )
 
   if (ncol(abundance_table) < 2L || nrow(abundance_table) < 1L) {
@@ -372,7 +372,8 @@ def _parse_rows(text: str, delimiter: str, role: str) -> list[list[str]]:
 
 
 def _validate_header(header: list[str], role: str) -> None:
-    if any(not SAFE_COLUMN.fullmatch(field) for field in header):
+    allowed = SAFE_IDENTIFIER if role == "matrix" else SAFE_COLUMN
+    if any(not allowed.fullmatch(field) for field in header):
         raise fail("invalid-input", f"invalid-{role}-header", f"{role} has an unsafe column name")
     if len(set(header)) != len(header):
         raise fail("invalid-input", f"duplicate-{role}-header", f"{role} has duplicate columns")
@@ -750,6 +751,9 @@ def analyze_files(
         raise fail("needs-tool", "worker-dimension-mismatch", "fixed R worker dimensions differ")
     return {
         "schema_version": "1.0",
+        "config": {"numerator": numerator, "denominator": denominator, "condition_column": condition_column, "covariate_columns": covariate_columns, "feature_unit": "protein", "scale": "log2-normalized"},
+        "input_sha256": {"matrix": hashlib.sha256(matrix_payload).hexdigest(), "metadata": hashlib.sha256(metadata_payload).hexdigest()},
+        "runtime_versions": {"R": worker_metadata["r_version"], "limma": worker_metadata["limma_version"]},
         "status": "completed",
         "analysis_performed": True,
         "tool": {
@@ -1079,6 +1083,21 @@ def self_test() -> None:
         if not math.isclose(p1["effect_log2"], 2.1, abs_tol=1e-12):
             raise RuntimeError("fixture effect differs")
         checks += 2
+
+        numeric_matrix = root / "numeric-matrix.csv"
+        numeric_metadata = root / "numeric-metadata.csv"
+        matrix_text, metadata_text = FIXTURE_MATRIX, FIXTURE_METADATA
+        for i, label in enumerate(["C1", "C2", "C3", "T1", "T2", "T3"], 1):
+            matrix_text = matrix_text.replace(label, f"{i:03d}")
+            metadata_text = metadata_text.replace(label, f"{i:03d}")
+        for i in range(1, 7):
+            matrix_text = matrix_text.replace(f"P{i},", f"{i:04d},")
+        numeric_matrix.write_text(matrix_text, encoding="utf-8")
+        numeric_metadata.write_text(metadata_text, encoding="utf-8")
+        numeric = analyze_files(**{**arguments, "matrix_path": numeric_matrix, "metadata_path": numeric_metadata})
+        if [row["protein_id"] for row in numeric["results"]] != [f"{i:04d}" for i in range(1, 7)] or numeric["inputs"]["matrix"]["sample_order"] != [f"{i:03d}" for i in range(1, 7)]:
+            raise RuntimeError("numeric-looking identifiers changed in R")
+        checks += 1
 
         duplicate = root / "duplicate.csv"
         duplicate.write_text(FIXTURE_MATRIX.replace("P2,", "P1,"), encoding="utf-8")

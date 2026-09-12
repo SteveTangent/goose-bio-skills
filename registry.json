@@ -109,7 +109,7 @@
     {
       "manifest_schema_version": "0.2.0",
       "name": "bioinformatics-qc-and-publication-reporting",
-      "version": "0.12.0",
+      "version": "0.13.0",
       "path": "skills/bioinformatics-qc-and-publication-reporting",
       "domain_id": "D01",
       "cluster_id": "C03",
@@ -120,13 +120,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "697627f95a49c57fa9e57351ef7c0d3af51c4de490aaa6d0cbe59963517f46b7",
-      "previous_version": "0.11.0"
+      "package_digest": "19d67cbee3edcd1f19fbad34e34187f025ae914e39db99895717ff8607f58759",
+      "previous_version": "0.12.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "bioinformatics-result-visualization",
-      "version": "0.12.0",
+      "version": "0.13.0",
       "path": "skills/bioinformatics-result-visualization",
       "domain_id": "D01",
       "cluster_id": "C03",
@@ -137,8 +137,8 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "15739af4b87cbfe46c0a57e08cfa964d5518ac403129f0f453b07d9c2a129209",
-      "previous_version": "0.11.0"
+      "package_digest": "2d53c4a652e7df304ba667db3a25b0209dfb35d80fd7b7782fa85f71a03ef5e7",
+      "previous_version": "0.12.0"
     },
     {
       "manifest_schema_version": "0.2.0",
@@ -286,6 +286,23 @@
       "external_services": [],
       "package_digest": "8f85a4315bbdc3cd8c20e291ed1407146e7ae8ef3f6745753bb06ce311f41fa4",
       "previous_version": "0.9.2"
+    },
+    {
+      "manifest_schema_version": "0.2.0",
+      "name": "distance-matrix-principal-coordinates-analysis",
+      "version": "0.13.0",
+      "path": "skills/distance-matrix-principal-coordinates-analysis",
+      "domain_id": "D07",
+      "cluster_id": "C20",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "e6643d0600ee4ed2941ae0c060093ac18d420079cade297895d3119ae8669595",
+      "previous_version": null
     },
     {
       "manifest_schema_version": "0.2.0",
@@ -623,7 +640,7 @@
     {
       "manifest_schema_version": "0.2.0",
       "name": "protein-level-differential-abundance",
-      "version": "0.10.0",
+      "version": "0.13.0",
       "path": "skills/protein-level-differential-abundance",
       "domain_id": "D08",
       "cluster_id": "C22",
@@ -634,8 +651,8 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "107e69c2861899077cd62401dd7b57a24ef7addbbe7ab683aac89c0d04160fc8",
-      "previous_version": "0.9.1"
+      "package_digest": "25a314bed84d798fa99b60a7cd2ad354625ed8183e27def39526acc31c23eccb",
+      "previous_version": "0.10.0"
     },
     {
       "manifest_schema_version": "0.2.0",
@@ -660,7 +677,7 @@
     {
       "manifest_schema_version": "0.2.0",
       "name": "proteomics-quantification-table-qc",
-      "version": "0.10.0",
+      "version": "0.13.0",
       "path": "skills/proteomics-quantification-table-qc",
       "domain_id": "D08",
       "cluster_id": "C22",
@@ -671,8 +688,8 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "e7ee3f5a392bbb3e23cc3b02cce9a62fe596ce5bdf09396298379f28925b005d",
-      "previous_version": "0.9.1"
+      "package_digest": "880d6d3be3edbdc437c08403105a52f5a656c86b29530fb4e7a84d111a45c3d4",
+      "previous_version": "0.10.0"
     },
     {
       "manifest_schema_version": "0.2.0",
