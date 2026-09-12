@@ -1,6 +1,6 @@
 # 从任务开始
 
-仓库有 58 个独立 Skill。通常只装当前任务需要的几个，安装工具会补齐 manifest 声明的依赖。
+仓库有 60 个独立 Skill。通常只装当前任务需要的几个，安装工具会补齐 manifest 声明的依赖。
 
 | 任务包 | 适合的起点 | 交付 |
 | --- | --- | --- |
@@ -49,3 +49,12 @@ python3 scripts/manage_skills.py install --bundle rnaseq-results --destination N
 
 新 QC/PCoA、protein limma 及既有标准库 beta helper 的 doctor 依赖已覆盖。
 依赖就绪不代表距离语义或研究设计正确；仍按各 helper 边界检查。试用 [小数据与命令](../examples/protein-pcoa/README.md)。
+
+## qPCR 与分类结局入口
+
+| 任务包 | 已有输入 | 先澄清什么 | 环境与交付 |
+| --- | --- | --- | --- |
+| qpcr-results | RT-qPCR Cq 长表、样本表、assay 验证表、design.json | 生物对象、内参依据、每周期扩增因子、未检出与校准组 | QC/相对量仅标准库；图需要 NumPy/Matplotlib；每个靶标单独作图，无显著性检验 |
+| basic-statistics | 两个独立组的事件/非事件整数计数 | 事件含义、分母、独立性、抽样设计和 OR 方向 | 2×2 helper 固定 SciPy 1.17.1；输出 Fisher 双侧检验与条件 OR/精确区间；零单元格不自动加 0.5 |
+
+这里的 qPCR 是 RNA 逆转录后的相对表达，扩增因子 1.9 表示约 90% 效率。OR 是优势比，不等于风险比；病例对照表不能给出总体发病风险。依赖检查已覆盖两个 helper。[可运行的小表与命令](../examples/qpcr-categorical/README.md)。当前共 9 个安装任务包。

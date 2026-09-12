@@ -1,0 +1,10 @@
+{
+  "assay": "RT-qPCR",
+  "method": "efficiency-corrected",
+  "independent_subjects": true,
+  "assay_qc_reviewed": true,
+  "assay_qc_note": "Synthetic example: controls and quantitative range assumed reviewed; not evidence for real assays.",
+  "reference_rationale": "Synthetic stable references only; replace with experiment-specific evidence.",
+  "calibrator_group": "control",
+  "max_technical_cq_range": 0.5
+}

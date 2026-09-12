@@ -1,0 +1,5 @@
+assay_id	role	amplification_factor	cq_min	cq_max	validation_note
+T1	target	2	10	35	synthetic declaration only
+T2	target	2	10	35	synthetic declaration only
+R1	reference	2	10	35	synthetic declaration only
+R2	reference	2	10	35	synthetic declaration only

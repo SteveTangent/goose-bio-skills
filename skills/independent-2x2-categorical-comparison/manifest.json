@@ -1,0 +1,92 @@
+{
+  "schema_version": "0.2.0",
+  "name": "independent-2x2-categorical-comparison",
+  "version": "0.14.0",
+  "maturity_tier": "production",
+  "context_budget_tier": "production",
+  "domain_id": "D12",
+  "cluster_id": "C35",
+  "risk_tier": "R2",
+  "owner": "project-owner",
+  "updated_at": "2026-09-12",
+  "last_freshness_check": "2026-09-12",
+  "review_cadence": "quarterly",
+  "status": "active",
+  "lifecycle_stage": "production",
+  "distribution_status": "installable",
+  "release_stage": "preview",
+  "assurance_level": "reviewed",
+  "assurance": {
+    "runtime_evaluation": "not-performed",
+    "scientific_benchmark": "not-performed",
+    "human_expert_review": "not-performed",
+    "better_than_baseline_claim": false,
+    "clinical_use": "prohibited",
+    "unverified_boundaries": [
+      "Agent routing, representative scientific benchmarks, no-Skill comparisons and human-expert review are not performed.",
+      "Small original fixtures establish only the recorded helper checks.",
+      "One prespecified independent 2x2 integer table, up to 100,000 observations; SciPy 1.17.1.",
+      "No paired data, repeated subjects, weighting, strata, regression, continuity correction or population risk estimation."
+    ]
+  },
+  "intake_contract_version": "1.3.0",
+  "intake_contract": {
+    "facts_before_questions": true,
+    "question_policy": "one-unresolved-load-bearing-decision-at-a-time-with-recommendation",
+    "wait_after_each_question": true,
+    "explicit_safe_local_execution": "proceed-without-repeat-confirmation",
+    "side_effect_confirmation": "only-when-not-already-authorized-for-current-action-and-scope",
+    "decision_sequence": [
+      {
+        "decision_id": "load-bearing-facts",
+        "applies_when": "Assay, measurement, independent unit or method declarations are unresolved.",
+        "question": "请补充会改变本次分析的实验类型、独立单位或测量方法依据?",
+        "recommended_answer": "先提供数据生成记录和样本/assay 说明；不靠默认值补齐生物学事实。"
+      }
+    ]
+  },
+  "script_verification": {
+    "bundled_scripts": true,
+    "implementation_origin": "original-new",
+    "self_test_status": "passed",
+    "self_test_command": "python3 scripts/compare_2x2.py --self-test",
+    "runtime_versions": [
+      "Python >=3.10; deterministic self-test; small runtime checks recorded separately"
+    ],
+    "artifact_version": "0.14.0"
+  },
+  "runtime_verification": {
+    "mode": "not-performed",
+    "status": "not-performed",
+    "reason": "Basic helper checks are separate from Agent and scientific evaluation.",
+    "tool_versions": [
+      "Python >=3.10; deterministic self-test; small execution recorded separately"
+    ],
+    "unverified_boundaries": [
+      "Agent routing, representative scientific benchmarks, no-Skill comparisons and human-expert review are not performed.",
+      "Small original fixtures establish only the recorded helper checks.",
+      "One prespecified independent 2x2 integer table, up to 100,000 observations; SciPy 1.17.1.",
+      "No paired data, repeated subjects, weighting, strata, regression, continuity correction or population risk estimation."
+    ]
+  },
+  "legal_notices": {
+    "required": true,
+    "files": [
+      "LICENSE"
+    ]
+  },
+  "rollback": {
+    "previous_version": null,
+    "boundary": "Remove this newly admitted package and its matching registry entry."
+  },
+  "network_mode": "none",
+  "local_adapters": [
+    "Python standard library",
+    "SciPy 1.17.1"
+  ],
+  "external_services": [],
+  "depends_on": [],
+  "target_platforms": [
+    "agent-skills"
+  ]
+}

@@ -57,6 +57,7 @@ def doctor(names, catalog):
     # Manifest adapters may also describe broader guidance, so do not infer
     # execution readiness from a present Python interpreter alone.
     inventoried = {
+        "independent-2x2-categorical-comparison",
         "bioinformatics-result-visualization",
         "ranked-gene-set-enrichment",
         "over-representation-analysis",  # Local GMT path uses the standard library.
@@ -104,6 +105,8 @@ def doctor(names, catalog):
         )
     if "single-cell-core-analysis" in names:
         requirements.update(scanpy="1.12.4", igraph="0.11.9")
+    if "independent-2x2-categorical-comparison" in names:
+        requirements.update(numpy=None, scipy="1.17.1")
     checks = [
         {
             "tool": "Python",
