@@ -319,10 +319,11 @@ WORKER = r'''
 fail <- function(code) stop(paste0("GOOSE_ERROR:", code), call.=FALSE)
 if (as.character(getRversion()) != "4.4.1" || !requireNamespace("limma", quietly=TRUE) || as.character(packageVersion("limma")) != "3.60.6") fail("runtime-version")
 suppressPackageStartupMessages(library(limma))
-cfg <- read.delim("config.tsv", stringsAsFactors=FALSE, check.names=FALSE)
+cfg <- read.delim("config.tsv", colClasses="character", na.strings=NULL, check.names=FALSE)
 get <- function(k) cfg$value[match(k,cfg$key)]
-x <- as.matrix(read.delim("expression.tsv", row.names=1, check.names=FALSE))
-m <- read.delim("samples.tsv", stringsAsFactors=FALSE, check.names=FALSE)
+x <- as.matrix(read.delim("expression.tsv", row.names=1, colClasses="character", na.strings=NULL, check.names=FALSE))
+storage.mode(x) <- "double"
+m <- read.delim("samples.tsv", colClasses="character", na.strings=NULL, check.names=FALSE)
 m$condition <- factor(m$condition, levels=c(get("denominator"),get("numerator")))
 design <- model.matrix(~condition,m)
 if (nzchar(get("covariate"))) {
