@@ -1,15 +1,15 @@
 {
   "schema_version": "0.2.0",
   "name": "bioinformatics-result-visualization",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "maturity_tier": "production",
   "context_budget_tier": "production",
   "domain_id": "D01",
   "cluster_id": "C03",
   "risk_tier": "R2",
   "owner": "project-owner",
-  "updated_at": "2026-09-10",
-  "last_freshness_check": "2026-09-10",
+  "updated_at": "2026-09-12",
+  "last_freshness_check": "2026-09-12",
   "review_cadence": "quarterly",
   "status": "active",
   "lifecycle_stage": "production",
@@ -61,7 +61,7 @@
       "NumPy 2.4.4 / SciPy 1.17.1 small local execution",
       "Matplotlib 3.10.8 PNG/SVG rendering smoke"
     ],
-    "artifact_version": "0.11.0"
+    "artifact_version": "0.12.0"
   },
   "runtime_verification": {
     "mode": "not-performed",
@@ -86,8 +86,8 @@
     ]
   },
   "rollback": {
-    "previous_version": "0.10.0",
-    "boundary": "Restore preceding package 0.10.0 and its matching registry entry."
+    "previous_version": "0.11.0",
+    "boundary": "Restore package 0.11.0 and its matching registry entry."
   },
   "network_mode": "none",
   "local_adapters": [

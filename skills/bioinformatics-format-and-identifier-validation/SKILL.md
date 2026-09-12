@@ -3,7 +3,7 @@ name: bioinformatics-format-and-identifier-validation
 description: "Validate FASTA/FASTQ/GenBank, SAM/BAM/CRAM, VCF/BCF structure or NCBI/UniProt identifier syntax, with optional exact-accession existence checks. Exclude retrieval, remapping, conversion and format-specific biological interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.11.0"
+  version: "0.12.0"
 ---
 
 # Bioinformatics Format and Identifier Validation
@@ -85,3 +85,7 @@ the checked provider response, not semantic correctness or scientific validity.
 ## Small local execution adapter (0.11.0)
 
 Validate and explicitly align sample metadata with a declared feature-by-sample matrix. Use [the local adapter](references/local-adapter.md) for exact inputs, flags, outputs and limits. Broader guidance above remains available; only this declared adapter has small execution evidence. No undocumented route is silently substituted.
+
+## Expression design preparation
+
+Use `--design independent --numerator GROUP --denominator REFERENCE` with explicit group and subject columns for the expression route. The new design summary counts biological units by group and shows batch/group composition. A compatible declaration produces exact count-DE and microarray metadata plus group/batch plotting tables. Repeated subjects, complete batch confounding, unknown scale or unsupported paired expression designs remain `needs-decision`; no model adequacy is inferred. See [expression preparation](references/expression-preparation.md).

@@ -1,0 +1,99 @@
+{
+  "schema_version": "0.2.0",
+  "name": "normalized-microarray-differential-expression",
+  "version": "0.12.0",
+  "maturity_tier": "production",
+  "context_budget_tier": "production",
+  "domain_id": "D04",
+  "cluster_id": "C12",
+  "risk_tier": "R2",
+  "owner": "project-owner",
+  "updated_at": "2026-09-12",
+  "last_freshness_check": "2026-09-12",
+  "review_cadence": "quarterly",
+  "status": "active",
+  "lifecycle_stage": "production",
+  "distribution_status": "installable",
+  "release_stage": "preview",
+  "assurance_level": "reviewed",
+  "assurance": {
+    "runtime_evaluation": "not-performed",
+    "scientific_benchmark": "not-performed",
+    "human_expert_review": "not-performed",
+    "better_than_baseline_claim": false,
+    "clinical_use": "prohibited",
+    "unverified_boundaries": [
+      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "Scientific benchmarks, no-Skill comparisons and human-expert review are not performed.",
+      "Small helper execution does not establish representative study performance or biological validity.",
+      "One already-normalized log2 microarray platform, 20–30,000 probe/gene features, 4–32 independent samples, one contrast and at most one categorical adjustment.",
+      "Raw counts, TPM/FPKM, paired or longitudinal designs, probe collapsing, missing-value imputation and automatic normalization are excluded.",
+      "Only R 4.4.1 and limma 3.60.6 are supported by this initial adapter."
+    ]
+  },
+  "intake_contract_version": "1.3.0",
+  "intake_contract": {
+    "facts_before_questions": true,
+    "question_policy": "one-unresolved-load-bearing-decision-at-a-time-with-recommendation",
+    "wait_after_each_question": true,
+    "explicit_safe_local_execution": "proceed-without-repeat-confirmation",
+    "side_effect_confirmation": "only-when-not-already-authorized-for-current-action-and-scope",
+    "decision_sequence": [
+      {
+        "decision_id": "assay-and-scale",
+        "applies_when": "The assay, scale, independent units or normalization provenance is unresolved.",
+        "question": "这些数值是否来自同一微阵列平台，并已经完成归一化及 log2 转换?",
+        "recommended_answer": "请提供处理方法和 sample_id、condition、subject_id 表；计数或 TPM 需要另一条分析路径。"
+      }
+    ]
+  },
+  "script_verification": {
+    "bundled_scripts": true,
+    "implementation_origin": "original-new",
+    "self_test_status": "passed",
+    "self_test_command": "python3 scripts/run_microarray_de.py --self-test",
+    "runtime_versions": [
+      "Python >=3.10; dependency-free deterministic self-test",
+      "R 4.4.1 / limma 3.60.6 small local execution"
+    ],
+    "artifact_version": "0.12.0"
+  },
+  "runtime_verification": {
+    "mode": "not-performed",
+    "status": "not-performed",
+    "reason": "Basic helper execution and input/hand-off checks are recorded separately; no agent or scientific benchmark claim.",
+    "tool_versions": [
+      "Python >=3.10; dependency-free deterministic self-test",
+      "R 4.4.1 / limma 3.60.6 small local execution"
+    ],
+    "unverified_boundaries": [
+      "Agent routing and interactive behavior have not been runtime-evaluated.",
+      "Scientific benchmarks, no-Skill comparisons and human-expert review are not performed.",
+      "Small helper execution does not establish representative study performance or biological validity.",
+      "One already-normalized log2 microarray platform, 20–30,000 probe/gene features, 4–32 independent samples, one contrast and at most one categorical adjustment.",
+      "Raw counts, TPM/FPKM, paired or longitudinal designs, probe collapsing, missing-value imputation and automatic normalization are excluded.",
+      "Only R 4.4.1 and limma 3.60.6 are supported by this initial adapter."
+    ]
+  },
+  "legal_notices": {
+    "required": true,
+    "files": [
+      "LICENSE"
+    ]
+  },
+  "rollback": {
+    "previous_version": null,
+    "boundary": "Remove this newly admitted package and its matching registry entry."
+  },
+  "network_mode": "none",
+  "local_adapters": [
+    "Python standard library",
+    "R 4.4.1",
+    "limma 3.60.6"
+  ],
+  "external_services": [],
+  "depends_on": [],
+  "target_platforms": [
+    "agent-skills"
+  ]
+}

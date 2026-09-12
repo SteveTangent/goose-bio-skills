@@ -1,0 +1,20 @@
+interface:
+  display_name: "Normalized Microarray Differential Expression"
+  short_description: "Compare independent groups in normalized log2 microarray expression."
+  default_prompt: "Analyze my normalized microarray expression. Inspect the platform, scale and independent samples, clarify consequential unknowns, and preserve probe identity in the results."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    generic: "neutral-source"

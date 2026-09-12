@@ -1,6 +1,6 @@
 {
   "schema_version": "0.5.0",
-  "updated_at": "2026-09-10",
+  "updated_at": "2026-09-12",
   "policy": "installable-packages-only",
   "lifecycle_axes": {
     "release_stage": [
@@ -89,7 +89,7 @@
     {
       "manifest_schema_version": "0.2.0",
       "name": "bioinformatics-format-and-identifier-validation",
-      "version": "0.11.0",
+      "version": "0.12.0",
       "path": "skills/bioinformatics-format-and-identifier-validation",
       "domain_id": "D01",
       "cluster_id": "C01",
@@ -103,13 +103,13 @@
         "ncbi-eutils",
         "uniprot-rest"
       ],
-      "package_digest": "1b7db132b9d0c64b282ade034759ba87dc10b03886f615081717f0a0b5541ab8",
-      "previous_version": "0.10.0"
+      "package_digest": "cc5e61466de059ce794fe4e7369ceed7b00e0f4e5306aa60dc356852be4260e5",
+      "previous_version": "0.11.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "bioinformatics-qc-and-publication-reporting",
-      "version": "0.11.0",
+      "version": "0.12.0",
       "path": "skills/bioinformatics-qc-and-publication-reporting",
       "domain_id": "D01",
       "cluster_id": "C03",
@@ -120,13 +120,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "4cbe1eed63fffa18e23e1c71b6d39036959bb9961ddaade53f101c1cd73062c7",
-      "previous_version": "0.10.0"
+      "package_digest": "697627f95a49c57fa9e57351ef7c0d3af51c4de490aaa6d0cbe59963517f46b7",
+      "previous_version": "0.11.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "bioinformatics-result-visualization",
-      "version": "0.11.0",
+      "version": "0.12.0",
       "path": "skills/bioinformatics-result-visualization",
       "domain_id": "D01",
       "cluster_id": "C03",
@@ -137,13 +137,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "4db1667d77fd7de56f2f5ea51076c26a4a919b6495d4383cfd150c17ee5a7d54",
-      "previous_version": "0.10.0"
+      "package_digest": "15739af4b87cbfe46c0a57e08cfa964d5518ac403129f0f453b07d9c2a129209",
+      "previous_version": "0.11.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "biological-database-record-retrieval-and-identifier-resolution",
-      "version": "0.10.0",
+      "version": "0.12.0",
       "path": "skills/biological-database-record-retrieval-and-identifier-resolution",
       "domain_id": "D01",
       "cluster_id": "C01",
@@ -158,8 +158,8 @@
         "ensembl-rest",
         "ncbi-eutils"
       ],
-      "package_digest": "7758856d304a3476fb2c8107a69048b405a5825e0c4d25a1d3c8ec03ef999b64",
-      "previous_version": "0.9.1"
+      "package_digest": "a69b602402a5fa30992cc163017c04dbac684a88c7a854944d66cf6b43dec957",
+      "previous_version": "0.10.0"
     },
     {
       "manifest_schema_version": "0.2.0",
@@ -531,6 +531,23 @@
     },
     {
       "manifest_schema_version": "0.2.0",
+      "name": "normalized-microarray-differential-expression",
+      "version": "0.12.0",
+      "path": "skills/normalized-microarray-differential-expression",
+      "domain_id": "D04",
+      "cluster_id": "C12",
+      "status": "active",
+      "lifecycle_stage": "production",
+      "distribution_status": "installable",
+      "release_stage": "preview",
+      "assurance_level": "reviewed",
+      "network_mode": "none",
+      "external_services": [],
+      "package_digest": "6b51148e2e1690ca6b7eae01fdc19cfb88d838672c965c2e8b9eeaa6e9c5d656",
+      "previous_version": null
+    },
+    {
+      "manifest_schema_version": "0.2.0",
       "name": "over-representation-analysis",
       "version": "0.10.0",
       "path": "skills/over-representation-analysis",
@@ -715,7 +732,7 @@
     {
       "manifest_schema_version": "0.2.0",
       "name": "ranked-gene-set-enrichment",
-      "version": "0.10.0",
+      "version": "0.12.0",
       "path": "skills/ranked-gene-set-enrichment",
       "domain_id": "D11",
       "cluster_id": "C31",
@@ -728,8 +745,8 @@
       "external_services": [
         "enrichr"
       ],
-      "package_digest": "d9251c320e95ef84069336e2f02b59d9067c7eeb82f586ae71b2c6356d3d58c9",
-      "previous_version": "0.9.1"
+      "package_digest": "2aa99f16865049f9157b5ffb3cebd3dc9e55192e8fb278be9e966cf2a421b4bf",
+      "previous_version": "0.10.0"
     },
     {
       "manifest_schema_version": "0.2.0",

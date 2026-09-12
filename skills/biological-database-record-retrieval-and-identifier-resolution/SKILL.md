@@ -3,7 +3,7 @@ name: biological-database-record-retrieval-and-identifier-resolution
 description: "Resolve gene identifiers with a declared local mapping table or retrieve bounded public gene, transcript and protein records. Preserve ambiguous mappings and provenance; exclude remote bulk jobs, literature and clinical interpretation."
 license: Apache-2.0
 metadata:
-  version: "0.10.0"
+  version: "0.12.0"
 ---
 
 # Biological Database Record Retrieval and Identifier Resolution
@@ -97,3 +97,7 @@ are provider assertions, not proof of biological equivalence.
 - Route syntax, literature, homology, structure, and chemistry to their owning Skills.
 - Keep sensitive, private, patient, unpublished, and controlled data out of public providers.
 - Require researcher review; this Skill has no clinical authority.
+
+## Prepare local annotation resources
+
+The same helper can convert explicitly selected TSV mapping exports or GMT gene sets to the bounded downstream formats. See [reference preparation](references/reference-preparation.md). It records resource declarations, input/output hashes and exact duplicate removal, retaining mapping ambiguity. DE handoffs now accept the bounded microarray limma result as well as DESeq2; the ranking metric is labeled explicitly.

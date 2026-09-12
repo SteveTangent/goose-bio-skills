@@ -310,16 +310,16 @@ def cli(run):
         return 3
 
 
-VERSION = "0.11.0"
+VERSION = "0.12.0"
 
 
 def validate_de(report):
     require(
         isinstance(report, dict)
         and report.get("status") == "completed"
-        and report.get("method") == "DESeq2",
+        and report.get("method") in {"DESeq2", "limma-microarray"},
         "de-report",
-        "Use a completed Goose DESeq2 result; plotting does not fit a model.",
+        "Use a completed Goose DESeq2 or microarray limma result; plotting does not fit a model.",
     )
     rows = report.get("model", {}).get("results")
     require(
@@ -446,9 +446,11 @@ def matrix_data(args, de):
         "needs-decision",
     )
     raw = read_local(args.matrix)
+    if de is not None and de.get("method") == "limma-microarray":
+        require(hashlib.sha256(raw).hexdigest() == de.get("input_sha256", {}).get("expression") and args.matrix_scale == "log2-normalized", "expression-fingerprint", "Use the exact normalized log2 expression input of the microarray model.")
     table = tsv(raw)
     require(
-        table[0][0] == "gene_id", "matrix-header", "Matrix must start with gene_id."
+        table[0][0] in {"gene_id", "feature_id"}, "matrix-header", "A transformed matrix must start with gene_id or feature_id."
     )
     try:
         data = [[float(x) for x in row[1:]] for row in table[1:]]
@@ -834,6 +836,7 @@ def main():
         choices=[
             "volcano",
             "pca",
+            "sample-correlation",
             "heatmap",
             "groups",
             "correlation",
@@ -1006,7 +1009,7 @@ def main():
             ax.text(
                 0,
                 1.02,
-                f"{len(data_rows):,} genes shown · {missing:,} unavailable · threshold {a.alpha:g}, |log2FC| ≥ {a.effect_threshold:g}",
+                f"{len(data_rows):,} features shown · {missing:,} unavailable · threshold {a.alpha:g}, |log2FC| ≥ {a.effect_threshold:g}",
                 transform=ax.transAxes,
                 fontsize=9,
                 color="#64748B",
@@ -1025,6 +1028,7 @@ def main():
                 effect_threshold=a.effect_threshold,
                 contrast=direction,
                 unavailable_genes=missing,
+                feature_unit=de.get("config", {}).get("feature_unit", "gene"),
             )
             notes = [
                 "Null values are omitted and counted; numeric zero p-values are capped at 1e-300 for display only.",
@@ -1034,7 +1038,7 @@ def main():
             require(
                 a.top_features is not None and a.feature_scale,
                 "matrix-display-policy",
-                "Declare how many variable genes to show/use and whether to center or z-score them.",
+                "Declare how many variable features to show/use and whether to center or z-score them.",
                 "needs-decision",
             )
             genes, samples, values, digest, scale = matrix_data(a, de)
@@ -1059,7 +1063,7 @@ def main():
             require(
                 len(eligible) >= 2,
                 "constant-matrix",
-                "At least two variable genes are required.",
+                "At least two variable features are required.",
             )
             selected = sorted(eligible, key=lambda i: (-variance[i], genes[i]))[
                 : a.top_features
@@ -1090,7 +1094,24 @@ def main():
                     "Plot metadata requires sample_id/group with exactly the matrix samples.",
                 )
                 groups = dict(table[1:])
-            if a.kind == "pca":
+            if a.kind == "sample-correlation":
+                # Pearson correlations on the declared transformed features, before per-gene centering.
+                uncentered=array[selected,:]
+                require(np.all(np.std(uncentered,axis=0,ddof=1)>0), "constant-sample", "Sample correlation is undefined for a constant sample; inspect it without silently dropping it.")
+                correlation=np.corrcoef(uncentered,rowvar=False)
+                require(np.isfinite(correlation).all(), "undefined-correlation", "Sample correlations must be finite.")
+                fig.set_size_inches(max(8,.35*len(samples)+3),max(6,.3*len(samples)+2))
+                im=ax.imshow(correlation,cmap="RdBu_r",vmin=-1,vmax=1)
+                fig.colorbar(im,ax=ax,label="Pearson r",shrink=.8)
+                displayed=[sample+(" ("+groups[sample]+")" if a.metadata else "") for sample in samples]
+                ax.set_xticks(range(len(samples)),labels=displayed,rotation=60,ha="right",fontsize=8)
+                ax.set_yticks(range(len(samples)),labels=displayed,fontsize=8)
+                ax.set_title(a.title or "Sample expression similarity",loc="left",fontweight="bold",pad=20)
+                header=["sample_id",*samples]
+                data_rows=[[sample,*correlation[i].tolist()] for i,sample in enumerate(samples)]
+                config.update(correlation_method="Pearson",feature_scale="not-applied")
+                notes=["Pearson similarity uses the selected features on the declared transformed scale, without per-gene centering or z-scoring.","No significance test, sample exclusion, biological identity inference or batch correction is performed."]
+            elif a.kind == "pca":
                 u, singular, vt = np.linalg.svd(x.T, full_matrices=False)
                 require(
                     len(singular) >= 2 and singular[1] > 1e-12,
@@ -1182,7 +1203,7 @@ def main():
                 )
                 ax.set_yticks(range(len(chosen)), labels=chosen, fontsize=8)
                 ax.set_title(
-                    a.title or "Variable-gene expression heatmap",
+                    a.title or "Variable-feature expression heatmap",
                     loc="left",
                     fontweight="bold",
                     pad=24,
@@ -1196,7 +1217,7 @@ def main():
             ax.text(
                 0,
                 1.02,
-                f"{len(samples)} samples · {len(chosen)} variable genes · {scale} · {a.feature_scale}",
+                f"{len(samples)} samples · {len(chosen)} variable features · {scale} · {config['feature_scale']}",
                 transform=ax.transAxes,
                 fontsize=9,
                 color="#64748B",

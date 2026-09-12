@@ -310,7 +310,7 @@ def cli(run):
         return 3
 
 
-VERSION = "0.10.0"
+VERSION = "0.12.0"
 
 
 def ranks_from_rows(rows, tie_policy):
@@ -443,6 +443,9 @@ def main():
             "handoff-identity",
             "Use a completed matching-taxon/namespace ID handoff.",
         )
+        payload = report.get("handoff", {})
+        require(not payload.get("ranking_metric") or payload["ranking_metric"] == a.ranking_metric, "ranking-metric-mismatch", "Use the signed statistic named by the mapping handoff.")
+        require(not payload.get("positive_direction") or payload["positive_direction"] == a.positive_direction, "ranking-direction-mismatch", "Use the numerator named by the mapping handoff.")
         ranking = report.get("handoff", {}).get("ranking")
         require(
             isinstance(ranking, list)

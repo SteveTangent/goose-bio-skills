@@ -310,7 +310,7 @@ def cli(run):
         return 3
 
 
-VERSION = "0.11.0"
+VERSION = "0.12.0"
 
 
 def md(value):
@@ -356,7 +356,7 @@ def summarize(report):
     if report.get("method") == "DESeq2":
         name = "DESeq2"
     metrics = {}
-    if name == "DESeq2":
+    if name in {"DESeq2", "goose_microarray_limma"}:
         qc = report.get("model", {}).get("qc", {})
         for key in [
             "genes_input",
@@ -529,12 +529,13 @@ def main():
             "| --- | --- | --- |",
         ]
     )
+    interpretations = []
     incomplete = False
     total = 0
     metric_names = {
-        "genes_input": "输入基因",
-        "genes_retained": "保留基因",
-        "genes_filtered": "过滤基因",
+        "genes_input": "输入特征",
+        "genes_retained": "保留特征",
+        "genes_filtered": "过滤特征",
         "pvalue_missing": "缺失原始 p 值",
         "padj_missing": "缺失校正 p 值",
         "samples": "样本",
@@ -566,6 +567,19 @@ def main():
         lines.append(
             f'| [{md(label)}]({filename}) | {md(report["status"])} | {md(summary)} |'
         )
+        if report["status"]=="completed" and name in {"DESeq2","goose_microarray_limma"}:
+            cfg=report.get("config",{}); alpha=cfg.get("alpha")
+            result_rows=report.get("model",{}).get("results",[])
+            if isinstance(alpha,(float,int)) and not isinstance(alpha,bool) and 0<alpha<1:
+                significant=[r for r in result_rows if isinstance(r.get("padj"),(float,int)) and not isinstance(r.get("padj"),bool) and math.isfinite(r["padj"]) and 0<=r["padj"]<=alpha and isinstance(r.get("log2FoldChange"),(float,int)) and math.isfinite(r["log2FoldChange"])]
+                positive=sum(r["log2FoldChange"]>0 for r in significant);negative=sum(r["log2FoldChange"]<0 for r in significant)
+                unit=cfg.get("feature_unit","gene")
+                if zh: unit={"probe":"探针","gene":"基因"}.get(unit,unit)
+                detail=(f"在 BH 校正阈值 {alpha:g} 下，{len(significant)} 个 {unit} 特征达到阈值；正向 {positive}，负向 {negative}。比较方向为 {cfg.get('numerator')} / {cfg.get('denominator')}。这未附加效应大小筛选；探针数不能直接当作基因数。" if zh else f"At BH threshold {alpha:g}, {len(significant)} {unit} features pass: {positive} positive and {negative} negative for {cfg.get('numerator')} / {cfg.get('denominator')}. No effect-size threshold is applied here; probe counts are not gene counts.")
+                interpretations.append(f"- [{md(label)}]({filename}): "+md(detail))
+        if name in {"goose_local_ora","goose_gseapy_prerank"}:
+            detail=("结合背景基因、映射损失、基因集版本及具体贡献基因解释；富集不能单独证明通路激活。" if zh else "Interpret the eligible background, mapping losses, gene-set version and contributing genes; enrichment alone does not establish pathway activation.")
+            interpretations.append(f"- [{md(label)}]({filename}): "+detail)
         sources.append(
             {
                 "label": label,
@@ -574,7 +588,7 @@ def main():
                 "metrics": metrics,
                 "sha256": hashlib.sha256(raw).hexdigest(),
                 "config": report.get("config", {}),
-                "versions": report.get("runtime_versions", report.get("versions", {})),
+                "versions": report.get("runtime_versions", report.get("versions", report.get("model", {}).get("versions", {}))),
                 "open_items": {
                     k: report[k]
                     for k in ["unresolved", "excluded", "warnings"]
@@ -585,6 +599,8 @@ def main():
             }
         )
     lines.extend(["", tr("partial" if incomplete else "complete"), ""])
+    if interpretations:
+        lines.extend(["## "+("如何阅读这些结果" if zh else "Reading these results"),"",*interpretations,""])
     if figures:
         lines.extend(["## " + tr("figures"), ""])
     figure_records = []

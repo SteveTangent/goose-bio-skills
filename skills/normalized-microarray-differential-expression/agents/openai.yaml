@@ -1,0 +1,4 @@
+interface:
+  display_name: "Normalized Microarray Differential Expression"
+  short_description: "Compare independent groups in normalized log2 microarray expression."
+  default_prompt: "Analyze my normalized microarray expression. Inspect the platform, scale and independent samples, clarify consequential unknowns, and preserve probe identity in the results."
