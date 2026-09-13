@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
-  "reviewed_at": "2026-09-12",
-  "basis_commit": "87eb2b15b29ff91833dda720a5609a747ac8ed7e",
-  "registry_sha256": "09a88fe9a154980df501301e97d00767af23793c971b1a128d7ecee24717abd0",
+  "reviewed_at": "2026-09-13",
+  "basis_commit": "b106789fb70e73cfa21ad02427b0be967734de9e",
+  "registry_sha256": "9953eefdb75f2d50c57950baea2471e27492cd9d593df4588560809b741f64da",
   "assessment_kind": "Editorial capability-stage assessment of this exact registry and manifests after original small helper checks; not measured accuracy, demand or an Agent benchmark.",
   "scale": {
     "0": "No declared coverage",
@@ -33,15 +33,15 @@
           "name": "bioinformatics-qc-and-publication-reporting",
           "has_helper": true,
           "helper_count": 1,
-          "manifest_sha256": "053d15f08f56d1394d527e3d3603d445dec99fdc9b4d00219749e2ec140d6561",
-          "package_digest": "5e18889ad46c3f2bd9e1e3f5bcab41695f4d2c640906dd6239829e57cd17ca3b"
+          "manifest_sha256": "6a4be1269bbd2c7b3134b5375d788fc8cfd8f4dad1bc2a55cca5c74fb1b03392",
+          "package_digest": "3b3d7e437d34981c2aaf63dc16fa71bd559deecb093bfb52160d7ab696dbec41"
         },
         {
           "name": "bioinformatics-result-visualization",
           "has_helper": true,
           "helper_count": 1,
-          "manifest_sha256": "97f70cac0088fb90f1ca8b809b5776daa57755eef9908cd370152884bd8177a0",
-          "package_digest": "033e25a1e14f67932e2979bad66107bf6436f4e144dc3ae27ae34a2ab1a4ff48"
+          "manifest_sha256": "9f2b03df278f76e134b7be1bf0866a3482a71ff83f3cb049f5db73716438483f",
+          "package_digest": "35523a5e1534e787fd97f4604bedaf18c2430fdc3634b0d137a37250071ef7a5"
         },
         {
           "name": "biological-database-record-retrieval-and-identifier-resolution",
@@ -98,10 +98,10 @@
       "id": "D02",
       "label_zh": "序列、基因组与进化",
       "chart_label": "Sequences &\ngenomes",
-      "stage": 3,
-      "rationale": "已有 read QC、限定比对、基因模型 QC 和树文件检查；序列与区间操作中仍有指导型包。",
-      "limits": "不代表完整组装、全基因组进化或大规模测序流水线。",
-      "next": "优先为现有区间操作补一个同版本 BED 执行路径。",
+      "stage": 4,
+      "rationale": "已有 read QC、限定比对、基因模型/树文件检查；同版本 BED3 相交/合并现已连接非空峰集 QC、逐行区间图、报告和带指纹交接。",
+      "limits": "新增路径只支持小型 BED3；不含 liftover、链特异操作、自动基因注释、全基因组性能或完整组装/进化流水线。",
+      "next": "维护同版本、半开边界、重复和空结果语义；复杂区间操作按实际任务单独扩展。",
       "skills": [
         {
           "name": "alignment-file-operations",
@@ -112,10 +112,10 @@
         },
         {
           "name": "genomic-interval-operations",
-          "has_helper": false,
-          "helper_count": 0,
-          "manifest_sha256": "0cccef55f374988ff1d6d0c82ee04b5d6296068dba1c2ccda6e4e6665aab6098",
-          "package_digest": "31eecc22aad62d7d9c04474de20555968f5b72c0993e09fa4b3cd8183e4a15eb"
+          "has_helper": true,
+          "helper_count": 1,
+          "manifest_sha256": "e0672a7dc77b3ad668c443c7921ee14353da7dd503a14e6cb687bdf0357803bc",
+          "package_digest": "2993466dc6eb3fe3b0ed1debf71f5fd167a668f5478d5eb5afe83d12c59d7d59"
         },
         {
           "name": "gff-gtf-gene-model-qc",

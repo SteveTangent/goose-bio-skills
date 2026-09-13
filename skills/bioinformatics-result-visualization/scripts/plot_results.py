@@ -310,7 +310,7 @@ def cli(run):
         return 3
 
 
-VERSION = "0.14.0"
+VERSION = "0.15.0"
 
 
 def protein_de(report):
@@ -513,6 +513,22 @@ def categorical_data(report):
     return table
 
 
+def interval_data(report, contig):
+    require(report.get('status') == 'completed' and report.get('tool') == {'name':'goose_bed3_intervals','version':'0.15.0'}, 'interval-result', 'Use a completed native BED3 interval result.')
+    cfg=report['config'];sizes=report['reference']['contigs']
+    require(cfg['coordinate_system']=='bed0-half-open' and cfg['strand_policy']=='ignore' and cfg['operation'] in {'merge','intersect'}, 'interval-contract', 'Preserve the declared BED3 coordinate, operation and strand contract.')
+    selected=contig or (next(iter(sizes)) if len(sizes)==1 else None)
+    require(selected in sizes, 'interval-contig', 'Choose one exact contig with --outcome; the figure covers only this contig.', 'needs-decision')
+    rows=[]
+    for label,records in [('A',report['inputs']['a']),('B',report['inputs']['b']),('result',report['results'])]:
+        require(isinstance(records,list), 'interval-rows', 'Native interval rows must be a list.')
+        for i,r in enumerate(records,1):
+            require(r['chrom'] in sizes and type(r['start']) is int and type(r['end']) is int and 0<=r['start']<r['end']<=sizes[r['chrom']], 'interval-bounds', 'Intervals must have positive width within their contig bounds.')
+            if r['chrom']==selected:rows.append([label,r.get('row',i),selected,r['start'],r['end']])
+    require(len(rows)<=60, 'interval-plot-size', 'This row-preserving diagram supports at most 60 displayed intervals; use a smaller explicitly selected input region.', 'needs-tool')
+    return selected,rows
+
+
 def expansion_plot(a):
     require(
         a.result and a.output,
@@ -534,6 +550,7 @@ def expansion_plot(a):
         "concordance": "goose_result_concordance",
         "marker-dot": "goose_marker_evidence",
         "pcoa": "goose_pcoa",
+        "intervals": "goose_bed3_intervals",
         "qpcr": "goose_qpcr",
         "categorical": "goose_independent_2x2",
     }
@@ -569,7 +586,25 @@ def expansion_plot(a):
         rows = []
         config = {"kind": a.kind}
         title = a.title or a.kind.replace("-", " ").title()
-        if a.kind == "qpcr":
+        if a.kind == "intervals":
+            contig,rows=interval_data(report,a.outcome)
+            header=['track','row','chrom','start','end']
+            fig.set_size_inches(10,max(4,2+len(rows)*.2))
+            colors={'A':'#167d9a','B':'#d98636','result':'#4c7650'}
+            labels=[]
+            for index,row in enumerate(rows):
+                ax.broken_barh([(row[3],row[4]-row[3])],(index-.3,.6),facecolors=colors[row[0]],edgecolors='white')
+                labels.append(row[0]+':'+str(row[1]))
+            ax.set_yticks(range(len(rows)),labels,fontsize=8);ax.invert_yaxis()
+            if not rows:
+                ax.text(.5,.5,'No intervals on the selected contig',transform=ax.transAxes,ha='center');ax.set_xlim(0,report['reference']['contigs'][contig])
+            ax.ticklabel_format(axis='x',style='plain',useOffset=False)
+            ax.set_xlabel('Zero-based half-open coordinates on '+contig)
+            ax.set_ylabel('Input/output row identity')
+            title=a.title or ('BED3 '+report['config']['operation']+' · '+contig)
+            config.update(contig=contig,build=report['reference']['build'],operation=report['config']['operation'],scope='One selected contig; summary covers all contigs')
+            notes=['Each row is retained; repeated coordinates may represent several overlap pairs.', 'Touching endpoints share zero bases. This diagram does not establish biological consensus.']
+        elif a.kind == "qpcr":
             target, records = qpcr_data(report, a.outcome)
             labels = sorted({r['group'] for r in records})
             header = ['sample_id','subject_id','group','target','log2_relative_expression','relative_expression']
@@ -946,6 +981,7 @@ def main():
             "pcoa",
             "qpcr",
             "categorical",
+            "intervals",
         ],
     )
     for name in ["de-report", "matrix", "counts", "metadata", "output", "title"]:
@@ -996,6 +1032,7 @@ def main():
         "pcoa",
         "qpcr",
         "categorical",
+        "intervals",
     }:
         return expansion_plot(a)
     require(

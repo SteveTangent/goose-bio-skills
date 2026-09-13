@@ -99,6 +99,15 @@
         "bioinformatics-result-visualization",
         "bioinformatics-qc-and-publication-reporting"
       ]
+    },
+    "genomic-intervals": {
+      "description": "Declared same-build BED3 algebra, nonempty peak-set QC, one-contig figure and report.",
+      "skills": [
+        "genomic-interval-operations",
+        "chromatin-peak-set-qc",
+        "bioinformatics-result-visualization",
+        "bioinformatics-qc-and-publication-reporting"
+      ]
     }
   }
 }

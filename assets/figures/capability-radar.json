@@ -1,7 +1,7 @@
 {
-  "data_sha256": "21a11031ca5d5a09dcaf00d6904c6a48f6824a4897c1f76a58f964f476f04b14",
+  "data_sha256": "6251736c4f815ffe4d3d210d355ff03c542aa26a49803e6468c0483be38bcf08",
   "files": {
-    "capability-radar.svg": "37b474d981b77b7523568b90a5572b0b6a88c905f3a7b91cd7f58ba1bc7608ab",
-    "capability-radar.png": "3cf1264f95a0de4a361a0c5c398336fc7abaf5a43c2b0fbaf378f864b4557296"
+    "capability-radar.svg": "b329d44cbd94fb1a1749538d2f202a3cca2662a016bfe6c9e390be06e93b2905",
+    "capability-radar.png": "f97dcbec18b3d05e413865e1c31f496cfce7312abf4ea8427b5dfe96636542f0"
   }
 }

@@ -21,6 +21,7 @@ QUICK_COMMANDS = (
     ("validator-self-test", (sys.executable, "scripts/validate_skeleton.py", "--self-test")),
     ("installer-self-test", (sys.executable, "scripts/manage_skills.py", "--self-test")),
     ("expression-contracts", (sys.executable, "tests/test_expression_contracts.py")),
+    ("interval-contracts", (sys.executable, "tests/test_interval_contracts.py")),
     ("qpcr-categorical-contracts", (sys.executable, "tests/test_qpcr_categorical_contracts.py")),
     ("protein-pcoa-contracts", (sys.executable, "tests/test_protein_pcoa_contracts.py")),
     ("workflow-self-test", (sys.executable, "tests/test_workflow.py")),

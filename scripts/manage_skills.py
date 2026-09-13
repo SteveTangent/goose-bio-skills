@@ -57,6 +57,8 @@ def doctor(names, catalog):
     # Manifest adapters may also describe broader guidance, so do not infer
     # execution readiness from a present Python interpreter alone.
     inventoried = {
+        "genomic-interval-operations",
+        "chromatin-peak-set-qc",
         "independent-2x2-categorical-comparison",
         "bioinformatics-result-visualization",
         "ranked-gene-set-enrichment",

@@ -1,6 +1,6 @@
 {
   "schema_version": "0.5.0",
-  "updated_at": "2026-09-12",
+  "updated_at": "2026-09-13",
   "policy": "installable-packages-only",
   "lifecycle_axes": {
     "release_stage": [
@@ -109,7 +109,7 @@
     {
       "manifest_schema_version": "0.2.0",
       "name": "bioinformatics-qc-and-publication-reporting",
-      "version": "0.14.0",
+      "version": "0.15.0",
       "path": "skills/bioinformatics-qc-and-publication-reporting",
       "domain_id": "D01",
       "cluster_id": "C03",
@@ -120,13 +120,13 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "5e18889ad46c3f2bd9e1e3f5bcab41695f4d2c640906dd6239829e57cd17ca3b",
-      "previous_version": "0.13.0"
+      "package_digest": "3b3d7e437d34981c2aaf63dc16fa71bd559deecb093bfb52160d7ab696dbec41",
+      "previous_version": "0.14.0"
     },
     {
       "manifest_schema_version": "0.2.0",
       "name": "bioinformatics-result-visualization",
-      "version": "0.14.0",
+      "version": "0.15.0",
       "path": "skills/bioinformatics-result-visualization",
       "domain_id": "D01",
       "cluster_id": "C03",
@@ -137,8 +137,8 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "033e25a1e14f67932e2979bad66107bf6436f4e144dc3ae27ae34a2ab1a4ff48",
-      "previous_version": "0.13.0"
+      "package_digest": "35523a5e1534e787fd97f4604bedaf18c2430fdc3634b0d137a37250071ef7a5",
+      "previous_version": "0.14.0"
     },
     {
       "manifest_schema_version": "0.2.0",
@@ -411,7 +411,7 @@
     {
       "manifest_schema_version": "0.2.0",
       "name": "genomic-interval-operations",
-      "version": "0.10.0",
+      "version": "0.15.0",
       "path": "skills/genomic-interval-operations",
       "domain_id": "D02",
       "cluster_id": "C06",
@@ -422,8 +422,8 @@
       "assurance_level": "reviewed",
       "network_mode": "none",
       "external_services": [],
-      "package_digest": "31eecc22aad62d7d9c04474de20555968f5b72c0993e09fa4b3cd8183e4a15eb",
-      "previous_version": "0.9.1"
+      "package_digest": "2993466dc6eb3fe3b0ed1debf71f5fd167a668f5478d5eb5afe83d12c59d7d59",
+      "previous_version": "0.10.0"
     },
     {
       "manifest_schema_version": "0.2.0",

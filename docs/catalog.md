@@ -1,6 +1,6 @@
 # Goose Bio Skills catalog
 
-The checked-out preview contains **60 independently installable Skills**, with **42 bounded helpers**, across 13 Domains and 27 Clusters. All packages remain `preview + reviewed`. The immutable collection release is v0.9.0; `registry.json` defines current package versions and exact digests. Merging to main does not create a tagged collection release or change assurance.
+The checked-out preview contains **60 independently installable Skills**, with **43 bounded helpers**, across 13 Domains and 27 Clusters. All packages remain `preview + reviewed`. The immutable collection release is v0.9.0; `registry.json` defines current package versions and exact digests. Merging to main does not create a tagged collection release or change assurance.
 
 Start with [task bundles](task-bundles.md) for a research task, or use the complete list below. Install the whole package directory. A helper covers only its declared input and method; the wider Skill may still need an external tool or a scientific decision.
 
@@ -13,8 +13,8 @@ Start with [task bundles](task-bundles.md) for a research task, or use the compl
 | 5 | D01 Data & Workflow Foundations | C01 Data intake, validation, and public records | [scientific-file-preflight-and-resource-planning](../skills/scientific-file-preflight-and-resource-planning/SKILL.md) | 0.10.0 | Yes |
 | 6 | D01 Data & Workflow Foundations | C01 Data intake, validation, and public records | [taxonomy-name-and-taxid-resolution](../skills/taxonomy-name-and-taxid-resolution/SKILL.md) | 0.10.0 | No |
 | 7 | D01 Data & Workflow Foundations | C02 Execution and provenance | [environment-and-provenance-capture](../skills/environment-and-provenance-capture/SKILL.md) | 0.10.0 | No |
-| 8 | D01 Data & Workflow Foundations | C03 Reporting and visualization | [bioinformatics-qc-and-publication-reporting](../skills/bioinformatics-qc-and-publication-reporting/SKILL.md) | 0.14.0 | Yes |
-| 9 | D01 Data & Workflow Foundations | C03 Reporting and visualization | [bioinformatics-result-visualization](../skills/bioinformatics-result-visualization/SKILL.md) | 0.14.0 | Yes |
+| 8 | D01 Data & Workflow Foundations | C03 Reporting and visualization | [bioinformatics-qc-and-publication-reporting](../skills/bioinformatics-qc-and-publication-reporting/SKILL.md) | 0.15.0 | Yes |
+| 9 | D01 Data & Workflow Foundations | C03 Reporting and visualization | [bioinformatics-result-visualization](../skills/bioinformatics-result-visualization/SKILL.md) | 0.15.0 | Yes |
 | 10 | D01 Data & Workflow Foundations | C03 Reporting and visualization | [multi-comparison-result-concordance](../skills/multi-comparison-result-concordance/SKILL.md) | 0.11.0 | Yes |
 | 11 | D02 Sequence, Reads, Genomes & Evolution | C04 Sequence objects and homology | [pairwise-and-multiple-sequence-alignment](../skills/pairwise-and-multiple-sequence-alignment/SKILL.md) | 0.10.0 | No |
 | 12 | D02 Sequence, Reads, Genomes & Evolution | C04 Sequence objects and homology | [sequence-io-and-transformation](../skills/sequence-io-and-transformation/SKILL.md) | 0.10.0 | No |
@@ -23,7 +23,7 @@ Start with [task bundles](task-bundles.md) for a research task, or use the compl
 | 15 | D02 Sequence, Reads, Genomes & Evolution | C05 Read preprocessing and alignment | [raw-read-quality-reporting](../skills/raw-read-quality-reporting/SKILL.md) | 0.11.0 | Yes |
 | 16 | D02 Sequence, Reads, Genomes & Evolution | C05 Read preprocessing and alignment | [raw-read-trimming-and-filtering](../skills/raw-read-trimming-and-filtering/SKILL.md) | 0.10.0 | No |
 | 17 | D02 Sequence, Reads, Genomes & Evolution | C05 Read preprocessing and alignment | [read-alignment-selection-and-execution](../skills/read-alignment-selection-and-execution/SKILL.md) | 0.10.0 | Yes |
-| 18 | D02 Sequence, Reads, Genomes & Evolution | C06 Genome coordinates | [genomic-interval-operations](../skills/genomic-interval-operations/SKILL.md) | 0.10.0 | No |
+| 18 | D02 Sequence, Reads, Genomes & Evolution | C06 Genome coordinates | [genomic-interval-operations](../skills/genomic-interval-operations/SKILL.md) | 0.15.0 | Yes |
 | 19 | D02 Sequence, Reads, Genomes & Evolution | C07 Gene models and annotation | [gff-gtf-gene-model-qc](../skills/gff-gtf-gene-model-qc/SKILL.md) | 0.10.0 | Yes |
 | 20 | D02 Sequence, Reads, Genomes & Evolution | C08 Comparative and evolutionary genomics | [phylogenetic-tree-io-and-qc](../skills/phylogenetic-tree-io-and-qc/SKILL.md) | 0.10.0 | Yes |
 | 21 | D02 Sequence, Reads, Genomes & Evolution | C08 Comparative and evolutionary genomics | [public-orthology-retrieval-and-qc](../skills/public-orthology-retrieval-and-qc/SKILL.md) | 0.10.0 | No |
