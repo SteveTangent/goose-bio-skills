@@ -3,7 +3,7 @@ name: bioinformatics-result-visualization
 description: "Export source-backed volcano, PCA, heatmap, group, correlation, concordance, marker or embedding figures. Exclude: Invented values, silent scale conversion, automatic feature fishing, biological conclusions and new statistical tests."
 license: Apache-2.0
 metadata:
-  version: "0.14.0"
+  version: "0.15.0"
 ---
 
 # Bioinformatics Result Visualization
@@ -54,3 +54,5 @@ positive-inertia percentages and negative-inertia notes are retained. See
 Native qPCR and independent 2×2 results are supported; preserve biological sample
 counts, relative-expression scale and conditional odds-ratio semantics. See
 [qPCR and categorical adapters](references/qpcr-categorical.md).
+
+For bounded BED3 algebra delivery, read [interval results](references/bed3-interval.md).

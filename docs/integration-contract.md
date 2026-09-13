@@ -74,3 +74,13 @@ Native companion support now includes goose_protein_table_qc, protein-level-diff
 ## 0.14.0 qPCR / categorical additions
 
 Companion 0.4.0 recognizes 19 native formats, including goose_qpcr and goose_independent_2x2. qPCR records cq/samples/assays/design hashes; 2×2 records table. Both bind exact configuration, tool version and declared output hashes. A needs-decision result can document QC but cannot be consumed as a completed analysis. The visualization uses one point per qPCR subject for one explicit target, or observed counts with conditional odds ratio and exact interval for 2×2. Neither implies group inference from qPCR nor population risk from case-control row proportions.
+
+## 0.15.0 BED3 additions
+
+Companion 0.5.0 supports 20 native formats, adding goose_bed3_intervals. Exact a,
+optional b and contigs hashes bind the coordinate/strand/build/duplicate/adjacency
+configuration; output hashes retain result.bed and trace.tsv identity. Empty result
+files are valid. Existing check_peak_sets.py JSON is report evidence only, not a
+new native format. The producer is unchanged; nonempty BED3 output can enter it
+with identical declared build and contig dictionary. Reports distinguish union
+coverage from pair-row sums and never infer biological consensus from geometry.

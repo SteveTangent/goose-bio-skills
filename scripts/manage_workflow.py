@@ -15,9 +15,10 @@ import sys
 from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "0.4.0"
+VERSION = "0.5.0"
 MAX_FILE = 16 * 1024 * 1024
 TOOLS = {
+    "genomic-interval-operations": "goose_bed3_intervals",
     "qpcr-relative-expression-and-qc": "goose_qpcr",
     "independent-2x2-categorical-comparison": "goose_independent_2x2",
     "proteomics-quantification-table-qc": "goose_protein_table_qc",
@@ -749,6 +750,7 @@ def overview(root, state, output):
         "goose_protein_table_qc": "蛋白定量表检查",
         "protein-level-differential-abundance": "蛋白差异丰度分析",
         "goose_pcoa": "距离矩阵 PCoA",
+        "goose_bed3_intervals": "同版本 BED3 区间运算",
         "goose_qpcr": "qPCR 相对表达与 QC",
         "goose_independent_2x2": "独立样本 2×2 分类比较",
         "goose_local_id_mapping": "注释准备与 ID 映射",

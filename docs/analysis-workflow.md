@@ -90,3 +90,9 @@ python3 scripts/manage_workflow.py note-failure --plan PROJECT/analysis.json \
 ## qPCR 与独立 2×2 结果交接
 
 qPCR 的 cq/samples/assays/design 四个输入指纹与科学配置共同登记；未解决的 QC 保持 needs-decision，只有 completed 才能作相对表达图。2×2 的 table 指纹、事件定义、比较方向、独立性、抽样设计与置信水平共同登记。图表不覆盖源分析状态；报告生成成功不能把待补事实变成分析完成。当前 companion 0.4.0 支持 19 种原生结果，两个新工具名是 goose_qpcr 和 goose_independent_2x2。[小数据入口](../examples/qpcr-categorical/README.md)。
+
+## BED3 区间运算与峰集检查
+
+Companion 0.5.0 新增 goose_bed3_intervals，当前 20 种原生格式。区间结果登记 a、可选 b、contigs 的输入指纹和完整 config；result.bed/trace.tsv 的输出指纹参与交接。可串接 interval → one-contig figure → report。
+
+已有峰集 QC 产物可以作为报告的带指纹来源；本批没有改动该历史 producer，也没有把它声明成新原生格式。非空 result.bed 可使用同一 contigs/build 进行峰集 QC。空结果保留成功状态，跳过要求非空的峰集 QC；不把空数据修成一行或强行送入下游。图选中的 contig 与全输入汇总范围分别记录。

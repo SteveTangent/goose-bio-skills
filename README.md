@@ -10,7 +10,7 @@
 
 Practical bioinformatics skills for AI agents, with explicit scientific boundaries.
 
-Goose Bio Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The current working tree contains **60 packages across 13 Domains and 27 Clusters**, 40 packages at `0.10.0`, 9 at `0.11.0`, 4 at `0.12.0`, 3 at `0.13.0` and 4 at `0.14.0`, with 42 bounded helpers. The immutable collection release remains `v0.9.0`; main contains a reviewed preview, not a newly tagged collection release.
+Goose Bio Skills is a focused collection of one-job Agent Skills for common bioinformatics and biostatistics tasks. The current working tree contains **60 packages across 13 Domains and 27 Clusters**, 39 packages at `0.10.0`, 9 at `0.11.0`, 4 at `0.12.0`, 3 at `0.13.0`, 2 at `0.14.0` and 3 at `0.15.0`, with 43 bounded helpers. The immutable collection release remains `v0.9.0`; main contains a reviewed preview, not a newly tagged collection release.
 
 | Boundary | Packages | State | External services |
 | --- | ---: | --- | --- |
@@ -26,7 +26,7 @@ Start with [expression workflows](docs/expression-workflows.md) for counts, revi
 
 The chart shows **reviewed capability stages (0–5)** for the current main preview, not accuracy, field-coverage percentages or benchmark performance. Domain names are shortened to match actual scope. Shared helpers are counted once, and one working path does not imply full-domain support.
 
-查看 [13 个领域的评分、脚本数量与能力边界](docs/capability-profile.md)，以及 [没有用户反馈时的下一步计划](docs/next-steps.md)。蛋白组 QC、微生物 PCoA、qPCR 与独立 2×2 分类结局的小数据交付路径现已补齐；下一步优先同版本 BED3 区间操作。规划中的能力不计入图中。
+查看 [13 个领域的评分、脚本数量与能力边界](docs/capability-profile.md)，以及 [没有用户反馈时的下一步计划](docs/next-steps.md)。蛋白组 QC、微生物 PCoA、qPCR 与独立 2×2 分类结局的小数据交付路径现已补齐；同版本 BED3 区间操作也已接通；下一步考虑小分子 SMILES 检查与基础描述符。规划中的能力不计入图中。
 
 ## Why Goose Bio Skills
 
@@ -82,7 +82,7 @@ Proposed workflow improvements and the next small analysis additions are in [nex
 
 For a first checked local result, follow the [offline starter example](docs/offline-starter.md). It includes synthetic input, the exact command, and expected output values.
 
-The current catalog has 42 packages with bundled helpers and 18 without bundled scripts. Helpers cover bounded tasks; guidance packages require the declared tools or a compatible adapter for execution. A bundled helper is not evidence that the entire scientific workflow has been evaluated. Fourteen packages declare network services as required or optional. Installing a Skill directory does not install the shared connector; see the [network integration boundary](docs/integration-contract.md#networked-skills).
+The current catalog has 43 packages with bundled helpers and 17 without bundled scripts. Helpers cover bounded tasks; guidance packages require the declared tools or a compatible adapter for execution. A bundled helper is not evidence that the entire scientific workflow has been evaluated. Fourteen packages declare network services as required or optional. Installing a Skill directory does not install the shared connector; see the [network integration boundary](docs/integration-contract.md#networked-skills).
 
 Then ask your agent naturally, for example:
 
@@ -275,3 +275,5 @@ Goose Bio Skills is licensed under the [Apache License 2.0](LICENSE). Each insta
 The current protein/PCoA preview connects small quantified protein tables and existing sample distances to figures and reports. Try [the bounded examples](examples/protein-pcoa/README.md) or the `protein-results` / `microbiome-ordination` task bundles.
 
 The qPCR/categorical preview adds declared-efficiency RT-qPCR relative expression and independent 2×2 comparisons. See [small original examples](examples/qpcr-categorical/README.md), the `qpcr-results` bundle, or `basic-statistics`. Neither path infers missing experimental facts.
+
+The `genomic-intervals` task bundle connects exact same-build BED3 merge/intersection to nonempty peak QC, one-contig diagrams and reports. [Try the tiny interval examples](examples/bed3-interval/README.md).

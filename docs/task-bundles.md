@@ -57,4 +57,12 @@ python3 scripts/manage_skills.py install --bundle rnaseq-results --destination N
 | qpcr-results | RT-qPCR Cq 长表、样本表、assay 验证表、design.json | 生物对象、内参依据、每周期扩增因子、未检出与校准组 | QC/相对量仅标准库；图需要 NumPy/Matplotlib；每个靶标单独作图，无显著性检验 |
 | basic-statistics | 两个独立组的事件/非事件整数计数 | 事件含义、分母、独立性、抽样设计和 OR 方向 | 2×2 helper 固定 SciPy 1.17.1；输出 Fisher 双侧检验与条件 OR/精确区间；零单元格不自动加 0.5 |
 
-这里的 qPCR 是 RNA 逆转录后的相对表达，扩增因子 1.9 表示约 90% 效率。OR 是优势比，不等于风险比；病例对照表不能给出总体发病风险。依赖检查已覆盖两个 helper。[可运行的小表与命令](../examples/qpcr-categorical/README.md)。当前共 9 个安装任务包。
+这里的 qPCR 是 RNA 逆转录后的相对表达，扩增因子 1.9 表示约 90% 效率。OR 是优势比，不等于风险比；病例对照表不能给出总体发病风险。依赖检查已覆盖两个 helper。[可运行的小表与命令](../examples/qpcr-categorical/README.md)。该批后为 9 个安装任务包；本批加入 genomic-intervals 后共 10 个。
+
+## 同版本基因组区间入口
+
+| 任务包 | 已有输入 | 先澄清什么 | 环境与交付 |
+| --- | --- | --- | --- |
+| genomic-intervals | 一到两份 exact BED3 + contig-size 表 | 各输入的准确 build、零基半开、忽略链方向、重复保留/拒绝；合并是否包含边界相接 | 运算与峰集 QC 仅标准库，图需要 NumPy/Matplotlib；输出 BED3、原行追溯、去重覆盖、图与报告 |
+
+区间 helper 上限为每表 2,000 行、20,000 个重叠对；图只显示一个明确的 contig、最多 60 行，不静默抽样。空输出是合法结果，直接报告；非空结果才接现有峰集 QC。doctor 仅检查限定 helper 的环境，不声称 bedtools/Gtars/polars-bio 已安装或已验证。[原始小表与命令](../examples/bed3-interval/README.md)。

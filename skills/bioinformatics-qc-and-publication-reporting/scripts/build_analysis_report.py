@@ -310,7 +310,7 @@ def cli(run):
         return 3
 
 
-VERSION = "0.14.0"
+VERSION = "0.15.0"
 
 
 def md(value):
@@ -371,6 +371,10 @@ def summarize(report):
         samples = qc.get("samples")
         if isinstance(samples, list):
             metrics["samples"] = len(samples)
+    elif name == "goose_bed3_intervals":
+        metrics={k:report['summary'][k] for k in ['a_rows','b_rows','output_rows','output_row_bp_sum','output_coverage_bp']}
+    elif name == "check_peak_sets.py" and report.get('analysis') == 'chromatin-peak-set-qc':
+        metrics={'peak_sets':len(report['peak_sets']),'checked_interval_rows':sum(x['summary']['interval_count'] for x in report['peak_sets'])}
     elif name == "goose_qpcr":
         metrics={k:report['summary'][k] for k in ['samples','subjects','targets','references','wells']}
     elif name == "goose_independent_2x2":
@@ -587,6 +591,13 @@ def main():
                 if zh: unit={"probe":"探针","gene":"基因"}.get(unit,unit)
                 detail=(f"在 BH 校正阈值 {alpha:g} 下，{len(significant)} 个 {unit} 特征达到阈值；正向 {positive}，负向 {negative}。比较方向为 {cfg.get('numerator')} / {cfg.get('denominator')}。这未附加效应大小筛选；探针数不能直接当作基因数。" if zh else f"At BH threshold {alpha:g}, {len(significant)} {unit} features pass: {positive} positive and {negative} negative for {cfg.get('numerator')} / {cfg.get('denominator')}. No effect-size threshold is applied here; probe counts are not gene counts.")
                 interpretations.append(f"- [{md(label)}]({filename}): "+md(detail))
+        if name == "goose_bed3_intervals":
+            cfg=report['config'];summary=report['summary']
+            detail=(f"BED3 {cfg['operation']}，参考声明 {report['reference']['build']}，零基半开、忽略链方向。输出 {summary['output_rows']} 行；逐行长度和 {summary['output_row_bp_sum']} bp，去重覆盖 {summary['output_coverage_bp']} bp。重叠对可重复覆盖同一位置；边界相接不共享碱基，合并不代表生物学共识。" if zh else f"BED3 {cfg['operation']} on declared {report['reference']['build']}; zero-based half-open, strand ignored. Output {summary['output_rows']} rows; row-length sum {summary['output_row_bp_sum']} bp versus union coverage {summary['output_coverage_bp']} bp. Pair multiplicity can double-count; bookended intervals share no bases and merging is not biological consensus.")
+            interpretations.append(f"- [{md(label)}]({filename}): "+md(detail))
+        if name == "check_peak_sets.py" and report.get('analysis') == 'chromatin-peak-set-qc':
+            detail=('峰集 QC 检查坐标、宽度、重复和去重覆盖；Jaccard 只是碱基覆盖的描述性相似度，不能单独证明重复性、质量或生物学一致。空的区间运算结果应保留为合法空结果，不送入要求非空峰集的 QC 路径。' if zh else 'Peak QC checks coordinates, widths, duplicates and union coverage. Jaccard is descriptive base-coverage similarity, not evidence of reproducibility or quality. Empty algebra results remain valid; the existing peak QC requires nonempty inputs.')
+            interpretations.append(f"- [{md(label)}]({filename}): "+md(detail))
         if name == "goose_qpcr":
             cfg=report['config']
             detail=(f"qPCR 使用 {cfg['method']}，校准组为 {cfg['calibrator_group']}；技术重复只在样本内汇总，生物样本数为 {report['summary']['subjects']}。相对表达只能在同一目标内比较，不能跨 assay 当作绝对表达量；没有组间显著性检验或效率不确定性区间。" if zh else f"qPCR uses {cfg['method']} with calibrator group {cfg['calibrator_group']}. Technical wells are averaged within sample; biological n={report['summary']['subjects']}. Compare within target, not absolute abundance across assays. No group test or efficiency uncertainty interval.")
